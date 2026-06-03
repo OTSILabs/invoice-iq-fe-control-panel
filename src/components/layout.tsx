@@ -1,4 +1,5 @@
-import { Outlet, useLocation } from "react-router-dom"
+import { Outlet, useLocation, useNavigate } from "react-router-dom"
+import { useEffect } from "react"
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import { AppSidebar } from "./app-sidebar"
@@ -13,6 +14,15 @@ import { Separator } from "@/components/ui/separator"
 
 export function Layout() {
   const location = useLocation()
+  const navigate = useNavigate()
+  
+  useEffect(() => {
+    const handleLogout = () => {
+      navigate('/login', { replace: true });
+    };
+    window.addEventListener('auth:logout', handleLogout);
+    return () => window.removeEventListener('auth:logout', handleLogout);
+  }, [navigate]);
   
   // Find the current route from our central config
   const currentRoute = APP_ROUTES.find(route => route.path === location.pathname) || APP_ROUTES[0]
