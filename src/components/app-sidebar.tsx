@@ -77,7 +77,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   <span>Profile</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => {
-                  window.location.href = "/login"
+                  sessionStorage.clear();
+                  window.dispatchEvent(new Event('auth:logout'));
                 }}>
                   <LogOut className="mr-2 h-4 w-4" />
                   <span>Logout</span>

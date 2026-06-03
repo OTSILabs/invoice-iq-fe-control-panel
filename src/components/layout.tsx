@@ -18,6 +18,7 @@ export function Layout() {
   
   useEffect(() => {
     const handleLogout = () => {
+      sessionStorage.clear(); // Ensure it's cleared globally on any logout event
       navigate('/login', { replace: true });
     };
     window.addEventListener('auth:logout', handleLogout);

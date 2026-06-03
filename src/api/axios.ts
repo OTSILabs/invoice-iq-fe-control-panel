@@ -6,6 +6,18 @@ const api = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
+const getSession = () => {
+  try { return JSON.parse(sessionStorage.getItem('token') || '{}'); } 
+  catch { return {}; }
+};
+
+const getAuthHeader = (session = getSession()) => {
+  const token = session.access_token || session.token;
+  if (!token) return null;
+  const type = session.token_type || 'Bearer';
+  return `${type.charAt(0).toUpperCase() + type.slice(1)} ${token}`;
+};
+
 const logout = (err: any) => {
   sessionStorage.clear();
   window.dispatchEvent(new Event('auth:logout'));
@@ -13,63 +25,34 @@ const logout = (err: any) => {
 };
 
 api.interceptors.request.use((config) => {
-  try {
-    const sessionStr = sessionStorage.getItem('token');
-    if (sessionStr && config.headers) {
-      const sessionData = JSON.parse(sessionStr);
-      const token = sessionData.access_token || sessionData.token;
-      const tokenType = sessionData.token_type || 'Bearer';
-      const formattedType = tokenType.charAt(0).toUpperCase() + tokenType.slice(1);
-      
-      if (token) {
-        config.headers.Authorization = `${formattedType} ${token}`;
-      }
-    }
-  } catch (e) {
-    // Ignore parse errors, let it pass without token
-  }
+  const authHeader = getAuthHeader();
+  if (authHeader && config.headers) config.headers.Authorization = authHeader;
   return config;
 }, Promise.reject);
 
 api.interceptors.response.use((res) => res, async (error) => {
-  const req = error.config;
-  const status = error.response?.status;
+  const { config, response } = error;
+  const status = response?.status;
 
-  if (status === 401 && !req._retry) {
-    req._retry = true;
-    
-    let sessionData: any = null;
-    try {
-      const sessionStr = sessionStorage.getItem('token');
-      if (sessionStr) sessionData = JSON.parse(sessionStr);
-    } catch (e) {}
-
-    const rt = sessionData?.refresh_token;
-    if (!rt) return logout(error);
+  if (status === 401 && !config._retry) {
+    config._retry = true;
+    const session = getSession();
+    if (!session.refresh_token) return logout(error);
 
     try {
-      const { data } = await axios.post(`${api.defaults.baseURL}/auth/refresh`, { refresh_token: rt }, {
-        headers: { 'accept': 'application/json', 'Content-Type': 'application/json' }
-      });
-      const t = data.access_token || data.token;
-      if (t) {
-        const newData = { ...sessionData, ...data };
-        sessionStorage.setItem('token', JSON.stringify(newData));
-        
-        const tokenType = newData.token_type || 'Bearer';
-        const formattedType = tokenType.charAt(0).toUpperCase() + tokenType.slice(1);
-        req.headers.Authorization = `${formattedType} ${t}`;
-        return api(req);
-      }
+      const { data } = await axios.post(`${api.defaults.baseURL}/auth/refresh`, { refresh_token: session.refresh_token });
+      const newSession = { ...session, ...data };
+      sessionStorage.setItem('token', JSON.stringify(newSession));
+      
+      config.headers.Authorization = getAuthHeader(newSession);
+      return api(config);
     } catch (e) {
-      console.error('Session expired.');
-      return logout(e);
+      return logout(e); // Session truly expired
     }
   }
 
-  if (status === 403) console.error('Forbidden access');
-  else if (status >= 500) console.error('Server error');
-  else if (!error.response) console.error('Network error or no response received');
+  const errMap: Record<number, string> = { 403: 'Forbidden access', 500: 'Server error' };
+  console.error(errMap[status as number] || 'Network error or response missing');
 
   return Promise.reject(error);
 });

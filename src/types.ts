@@ -4,7 +4,7 @@ export interface LoginPayload {
 }
 
 export interface LoginResponse {
-  // Define actual response fields based on your API here
-  token?: string;
-  [key: string]: any;
+  access_token: string;
+  refresh_token: string;
+  token_type: string;
 }
