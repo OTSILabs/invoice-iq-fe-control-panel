@@ -208,8 +208,8 @@ export function Plans() {
     <div className="flex w-full animate-in flex-col gap-6 pb-12 duration-300 fade-in">
       <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
-            Plans
+          <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
+            Plans & Pricing
           </h1>
           <p className="mt-0.5 text-sm text-slate-500 dark:text-slate-400">
             Manage your subscription configurations.

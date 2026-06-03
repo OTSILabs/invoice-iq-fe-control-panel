@@ -17,7 +17,7 @@ export function Organizations() {
       {/* Page Header */}
       <div className="flex items-center justify-between pb-2 shrink-0">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900">Organizations</h1>
+          <h1 className="text-xl font-bold tracking-tight text-slate-900">Organizations</h1>
           <p className="text-slate-500 mt-1 text-sm">Manage and create organizations within your control panel.</p>
         </div>
         <CreateOrganizationModal>
@@ -36,7 +36,7 @@ export function Organizations() {
       ) : organizations && organizations.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {organizations.map((org) => (
-            <div key={org.id} onClick={() => navigate(`/organizations/${org.id}`)} className="bg-white border border-slate-200 p-5 rounded-xl shadow-sm hover:border-blue-300 hover:shadow-md transition-all cursor-pointer group">
+            <div key={org.id} onClick={() => navigate(`/organizations/${org.id}`)} className="bg-white border border-slate-200 p-5 rounded-xl hover:border-blue-300 transition-all cursor-pointer group">
               <div className="flex items-center gap-3 mb-4">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50 text-blue-600 border border-blue-100">
                   <Building2 className="h-5 w-5" />
@@ -55,8 +55,8 @@ export function Organizations() {
         </div>
       ) : (
         <div className="flex-1 flex flex-col items-center justify-center -mt-16">
-          <div className="flex flex-col items-center justify-center py-12 px-8 text-center border-[1.5px] border-dashed border-slate-300/80 rounded-2xl bg-white w-[90%] sm:w-[400px] shadow-sm">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-50 mb-4 text-blue-600 shadow-[inset_0_2px_10px_rgba(0,0,0,0.02)] border border-blue-100">
+          <div className="flex flex-col items-center justify-center py-12 px-8 text-center border-[1.5px] border-dashed border-slate-300/80 rounded-2xl bg-white w-[90%] sm:w-[400px]">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-50 mb-4 text-blue-600 border border-blue-100">
               <Building2 className="h-5 w-5" />
             </div>
             <h3 className="text-base font-bold text-slate-900 mb-1.5 tracking-tight">No organizations found</h3>

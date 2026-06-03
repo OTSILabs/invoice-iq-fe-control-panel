@@ -277,19 +277,7 @@ export function CreateOrganizationModal({ children }: { children?: React.ReactNo
                         </SelectContent>
                       </Select>
                     </Field>
-                    <div className="rounded-md border border-slate-200/50 bg-[#0A0A0A] overflow-hidden shadow-xl mt-8">
-                      <div className="flex items-center gap-2 bg-[#1A1A1A] px-4 py-2 border-b border-slate-800">
-                        <div className="flex gap-1.5">
-                          <div className="h-3 w-3 rounded-full bg-[#FF5F56]"></div>
-                          <div className="h-3 w-3 rounded-full bg-[#FFBD2E]"></div>
-                          <div className="h-3 w-3 rounded-full bg-[#27C93F]"></div>
-                        </div>
-                        <span className="text-[11px] text-slate-400 font-mono tracking-wider">planPayload.json</span>
-                      </div>
-                      <div className="p-4 overflow-auto max-h-[160px] text-[12px] leading-relaxed scrollbar-thin">
-                        <pre className="text-[#A5D6FF] font-mono">{JSON.stringify(planPayload, null, 2)}</pre>
-                      </div>
-                    </div>
+                   
                   </form>
                 )}
               </div>

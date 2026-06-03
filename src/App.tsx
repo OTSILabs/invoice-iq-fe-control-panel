@@ -13,7 +13,7 @@ export function App() {
         <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
         
         <Route path="/" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
-          <Route index element={<Navigate to="dashboard" replace />} />
+          <Route index element={<Navigate to="organizations" replace />} />
           {APP_ROUTES.map((route) => (
             <Route 
               key={route.path} 
@@ -24,7 +24,7 @@ export function App() {
           <Route path="organizations/:id" element={<OrganizationDetail />} />
         </Route>
 
-        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        <Route path="*" element={<Navigate to="/organizations" replace />} />
       </Routes>
     </BrowserRouter>
   )

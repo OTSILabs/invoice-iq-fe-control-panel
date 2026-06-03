@@ -45,7 +45,7 @@ export function OrganizationDetail() {
         </div>
       </div>
 
-      <div className="flex-1 bg-white border border-slate-200 rounded-xl shadow-sm p-8">
+      <div className="flex-1 bg-white border border-slate-200 rounded-xl p-8">
         <div className="flex items-center gap-3 mb-6">
           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50 text-blue-600 border border-blue-100">
             <Building2 className="h-5 w-5" />

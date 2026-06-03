@@ -17,5 +17,5 @@ export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 };
 
 export const PublicRoute = ({ children }: { children: React.ReactNode }) => {
-  return isAuthenticated() ? <Navigate to="/dashboard" replace /> : <>{children}</>;
+  return isAuthenticated() ? <Navigate to="/organizations" replace /> : <>{children}</>;
 };

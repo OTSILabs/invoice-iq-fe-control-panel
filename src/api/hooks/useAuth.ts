@@ -11,7 +11,7 @@ export const useLogin = () => {
     onSuccess: (data) => {
       // Store the entire auth response as a single JSON string
       sessionStorage.setItem('token', JSON.stringify(data));
-      navigate('/dashboard', { replace: true });
+      navigate('/organizations', { replace: true });
     },
   });
 };
