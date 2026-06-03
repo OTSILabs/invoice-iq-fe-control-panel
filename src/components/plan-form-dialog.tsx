@@ -38,10 +38,12 @@ const planSchema = z.object({
 type FormValues = z.infer<typeof planSchema>
 
 interface PlanFormProps {
-  onSuccess?: () => void
+  onSuccess?: (data?: any) => void
   onCancel?: () => void
   mode?: "create" | "edit"
   plan?: Plan | null
+  showFooter?: boolean
+  formId?: string
 }
 
 // REUSABLE FORM COMPONENT with Zod validation
@@ -50,6 +52,8 @@ export function PlanForm({
   onCancel,
   mode = "create",
   plan = null,
+  showFooter = true,
+  formId = "plan-form-inner",
 }: PlanFormProps) {
   const createPlanMutation = useCreatePlanMutation()
 
@@ -83,10 +87,10 @@ export function PlanForm({
           is_active: data.is_active,
         }
 
-        await createPlanMutation.mutateAsync(payload)
+        const createdPlan = await createPlanMutation.mutateAsync(payload)
         toast.success("Plan created successfully!")
         reset()
-        onSuccess?.()
+        onSuccess?.(createdPlan)
       } else {
         toast.info("Edit plan is not implemented yet.")
         onSuccess?.()
@@ -98,7 +102,7 @@ export function PlanForm({
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form id={formId} onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       {/* Description */}
       <div className="space-y-1.5">
         <Label
@@ -236,31 +240,33 @@ export function PlanForm({
       </div>
 
       {/* Footer Actions */}
-      <div className="flex gap-3 border-t border-slate-100 pt-4 dark:border-slate-800/80">
-        <Button
-          type="button"
-          variant="outline"
-          className="w-1/2 rounded-xl"
-          onClick={onCancel}
-          disabled={createPlanMutation.isPending}
-        >
-          Cancel
-        </Button>
-        <Button
-          type="submit"
-          className="w-1/2 rounded-xl font-semibold"
-          disabled={createPlanMutation.isPending}
-        >
-          {createPlanMutation.isPending ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Saving...
-            </>
-          ) : (
-            "Save"
-          )}
-        </Button>
-      </div>
+      {showFooter && (
+        <div className="flex gap-3 border-t border-slate-100 pt-4 dark:border-slate-800/80">
+          <Button
+            type="button"
+            variant="outline"
+            className="w-1/2 rounded-md"
+            onClick={onCancel}
+            disabled={createPlanMutation.isPending}
+          >
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            className="w-1/2 rounded-md font-semibold"
+            disabled={createPlanMutation.isPending}
+          >
+            {createPlanMutation.isPending ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Saving...
+              </>
+            ) : (
+              "Save"
+            )}
+          </Button>
+        </div>
+      )}
     </form>
   )
 }

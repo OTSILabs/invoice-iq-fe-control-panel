@@ -23,6 +23,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { InputField } from "./ui/input-field"
+import { PlanForm } from "@/components/plan-form-dialog"
 import { organizationsService } from "@/api/services/organizations.service"
 import { plansService } from "@/api/services/plans.service"
 import { useQueryClient, useQuery } from "@tanstack/react-query"
@@ -31,6 +32,7 @@ export function CreateOrganizationModal({ children }: { children?: React.ReactNo
   const [activeStepIndex, setActiveStepIndex] = useState(0)
   const [isOpen, setIsOpen] = useState(false)
   const [isPending, setIsPending] = useState(false)
+  const [isCreatingPlan, setIsCreatingPlan] = useState(false)
   const [createdOrgId, setCreatedOrgId] = useState<string | null>(null)
   const queryClient = useQueryClient()
   
@@ -94,13 +96,21 @@ export function CreateOrganizationModal({ children }: { children?: React.ReactNo
     }
   }
 
-  const handleFinalSubmit = async () => {
+  const handleFinalSubmit = async (planIdOverride?: string) => {
     setIsPending(true)
     try {
       // 1. Create the Organization internally first
       const createdOrg = await organizationsService.create({ name: orgPayload.name })
       
       // 2. Build the payload for creating the Tenant, including the new Organization ID
+      // If planIdOverride is provided (from the newly created plan), use it. 
+      // Otherwise use the selected plan from the dropdown.
+      const finalPlanId = planIdOverride || planPayload.plan_id;
+      
+      if (!finalPlanId) {
+        throw new Error("Plan ID is required to create a tenant.");
+      }
+
       const tenantPayloadData = {
         organization_id: createdOrg.id,
         slug: tenantPayload.slug.replace(/-/g, ''),
@@ -117,14 +127,14 @@ export function CreateOrganizationModal({ children }: { children?: React.ReactNo
           reporting_currency: "INR",
           timezone: "IST"
         },
-        plan_id: planPayload.plan_id,
+        plan_id: finalPlanId,
         plan_valid_from: new Date().toISOString(),
         plan_valid_to: new Date(new Date().setMonth(new Date().getMonth() + 1)).toISOString(),
         admin_user: tenantPayload.admin_user,
         requested_by: tenantPayload.admin_user.email || "system"
       };
 
-      // 3. Create the Tenant
+      // 3. Create the Tenant (this will also create the admin_user if the backend logic handles it)
       await organizationsService.createTenant(createdOrg.id, tenantPayloadData)
 
       // Invalidate the cache to trigger a re-fetch of the organizations list
@@ -257,28 +267,56 @@ export function CreateOrganizationModal({ children }: { children?: React.ReactNo
                 )}
 
                 {activeStepIndex === 2 && (
-                  <form id="plan-form" onSubmit={(e) => { e.preventDefault(); if(isFormReadyToSubmit) handleFinalSubmit(); }} className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
-                    <div>
-                      <h3 className="text-lg font-semibold text-slate-900 mb-1">Plan Selection</h3>
-                      <p className="text-sm text-slate-500 mb-6">Choose a billing tier for this organization.</p>
-                    </div>
-                    <Field>
-                      <FieldLabel htmlFor="planSelect">Select Plan <span className="text-red-500">*</span></FieldLabel>
-                      <Select value={planPayload.plan_id} onValueChange={(val: string) => setPlanPayload({ plan_id: val })}>
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder={isPlansLoading ? "Loading plans..." : "Select a plan"} />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {plans?.map((plan: any) => (
-                            <SelectItem key={plan.id} value={plan.id}>
-                              {plan.description}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </Field>
-                   
-                  </form>
+                  <>
+                    <form id="plan-form" onSubmit={(e) => { e.preventDefault(); if(isFormReadyToSubmit && !isCreatingPlan) handleFinalSubmit(); }} className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
+                      <div>
+                        <h3 className="text-lg font-semibold text-slate-900 mb-1">Plan Selection</h3>
+                        <p className="text-sm text-slate-500 mb-6">Choose a billing tier for this organization.</p>
+                      </div>
+                      <Field>
+                        <div className="flex items-center justify-between mb-2">
+                          <FieldLabel htmlFor="planSelect" className="mb-0">Select Plan <span className="text-red-500">*</span></FieldLabel>
+                          {!isCreatingPlan && (
+                            <Button type="button" variant="ghost" size="sm" className="h-8 text-blue-600 hover:text-blue-700 hover:bg-blue-50 px-2" onClick={() => setIsCreatingPlan(true)}>
+                              <Plus className="h-4 w-4 mr-1" /> Add Plan
+                            </Button>
+                          )}
+                        </div>
+                        <Select value={planPayload.plan_id} onValueChange={(val: string) => setPlanPayload({ plan_id: val })} disabled={isCreatingPlan}>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder={isPlansLoading ? "Loading plans..." : "Select a plan"} />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {plans?.map((plan: any) => (
+                              <SelectItem key={plan.id} value={plan.id}>
+                                {plan.description}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </Field>
+                    </form>
+
+                    {isCreatingPlan && (
+                      <div className="mt-8 pt-6 border-t border-slate-100 animate-in fade-in slide-in-from-bottom-4 duration-300">
+                        <div className="mb-4">
+                          <h4 className="text-sm font-bold text-slate-900 mb-1">Create New Plan</h4>
+                          <p className="text-xs text-slate-500">Add a new plan to the system. It will be automatically available to select once created.</p>
+                        </div>
+                        <PlanForm 
+                          formId="inline-plan-form"
+                          showFooter={false}
+                          onCancel={() => setIsCreatingPlan(false)} 
+                          onSuccess={(newPlan) => {
+                            // When the plan is successfully created via the PlanForm submission,
+                            // immediately trigger the final organization+tenant submission!
+                            setPlanPayload({ plan_id: newPlan?.id });
+                            handleFinalSubmit(newPlan?.id);
+                          }} 
+                        />
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             </ScrollArea>
@@ -287,7 +325,13 @@ export function CreateOrganizationModal({ children }: { children?: React.ReactNo
 
         <DialogFooter className="border-t bg-white px-5 py-3.5">
           {!isFirstStep && (
-            <Button type="button" variant="outline" disabled={isPending} onClick={handlePreviousStep} className="rounded-md px-5 font-medium shadow-sm">
+            <Button 
+              type="button" 
+              variant="outline" 
+              disabled={isPending} 
+              onClick={() => isCreatingPlan ? setIsCreatingPlan(false) : handlePreviousStep()} 
+              className="rounded-md px-5 font-medium shadow-sm"
+            >
               Back
             </Button>
           )}
@@ -297,7 +341,13 @@ export function CreateOrganizationModal({ children }: { children?: React.ReactNo
               Create Organization Only
             </Button>
           )}
-          <Button type="submit" form={activeStepIndex === 0 ? "org-form" : activeStepIndex === 1 ? "tenant-form" : "plan-form"} variant="outline" className={cn("rounded-md px-5 font-medium shadow-sm", isLastStep || isFirstStep ? "bg-blue-600 hover:bg-blue-700 text-white hover:text-white" : "")}>
+          <Button 
+            type="submit" 
+            form={activeStepIndex === 0 ? "org-form" : activeStepIndex === 1 ? "tenant-form" : (isCreatingPlan ? "inline-plan-form" : "plan-form")} 
+            variant="outline" 
+            className={cn("rounded-md px-5 font-medium shadow-sm", isLastStep || isFirstStep ? "bg-blue-600 hover:bg-blue-700 text-white hover:text-white" : "")}
+            disabled={isPending}
+          >
             {isPending && isLastStep ? <Loader2 className="size-4 animate-spin mr-2" /> : (isLastStep ? <Plus className="size-4 mr-2" /> : null)}
             {isLastStep ? "Create Organization & Tenant" : "Next"}
           </Button>
