@@ -8,3 +8,14 @@ export interface LoginResponse {
   refresh_token: string;
   token_type: string;
 }
+
+export interface Plan {
+  id: string;
+  description: string;
+  plan_type: string;
+  plan_interval: string;
+  price_per_invoice_amount: number;
+  price_per_invoice_currency: string;
+  is_active: boolean;
+  created_at: string;
+}

@@ -39,7 +39,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       
       <SidebarContent>
         <SidebarMenu className="mt-4 px-2">
-          {APP_ROUTES.map((route) => (
+          {APP_ROUTES.filter((route) => route.showInSidebar).map((route) => (
             <SidebarMenuItem key={route.title}>
               <SidebarMenuButton asChild tooltip={route.title}>
                 <Link to={route.path}>
