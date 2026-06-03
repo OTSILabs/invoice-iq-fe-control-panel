@@ -4,6 +4,7 @@ import { Layout } from "./components/layout"
 import { LoginPage } from "./components/Login/login-page"
 import { APP_ROUTES } from "./config/routes"
 import { ProtectedRoute, PublicRoute } from "./components/auth-guards"
+import { OrganizationDetail } from "./pages/organization/organization-detail"
 
 export function App() {
   return (
@@ -20,6 +21,7 @@ export function App() {
               element={<route.component />} 
             />
           ))}
+          <Route path="organizations/:id" element={<OrganizationDetail />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/dashboard" replace />} />

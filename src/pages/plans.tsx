@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { DataTable } from "@/components/ui/data-table"
 import type { CustomColumnDef } from "@/components/ui/data-table"
-import { usePlansQuery } from "@/api/hooks/usePlans"
+import { usePlans } from "@/api/hooks/usePlans"
 import type { Plan } from "@/types"
 import { Input } from "@/components/ui/input"
 import {
@@ -26,7 +26,7 @@ export function Plans() {
     isError,
     refetch,
     isFetching,
-  } = usePlansQuery()
+  } = usePlans()
   const navigate = useNavigate()
 
   // State for search and filters
