@@ -19,3 +19,14 @@ export interface Plan {
   is_active: boolean;
   created_at: string;
 }
+
+export interface Organization {
+id: string;
+name: string;
+slug: string;
+tenant_role: string;
+plan_id?: string;
+tenant_count?: number;
+status?: string;
+created_at?: string;
+}
