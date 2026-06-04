@@ -1,8 +1,8 @@
-import { LayoutDashboard, Building2, CreditCard } from "lucide-react"
+import {  Building2, CreditCard, Users as UsersIcon } from "lucide-react"
 import { Organizations } from "@/pages/organization/organizations"
 import { Plans } from "@/pages/plans"
 import { CreatePlan } from "@/pages/create-plan"
-
+import { Users } from "@/pages/users"
 
 export type AppRoute = {
   path: string;
@@ -26,6 +26,13 @@ export const APP_ROUTES: AppRoute[] = [
     title: "Plan",
     icon: CreditCard,
     component: Plans,
+    showInSidebar: true,
+  },
+  {
+    path: "/users",
+    title: "Users",
+    icon: UsersIcon,
+    component: Users,
     showInSidebar: true,
   },
   {

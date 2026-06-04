@@ -38,3 +38,29 @@ export interface Tenant {
   access_status: string;
   created_at: string;
 }
+
+export interface CreatePlatformUserPayload {
+  email: string;
+  password?: string;
+  full_name: string;
+  role_names: string[];
+  status: "ACTIVE" | "INACTIVE";
+}
+
+export interface PlatformUser {
+  id: string;
+  full_name: string;
+  email: string;
+  role_names?: string[];
+  roles?: unknown[];
+  role?: string;
+  role_name?: string;
+  status: "ACTIVE" | "INACTIVE";
+  created_at: string;
+}
+
+export interface PlatformRole {
+  id: string;
+  name: string;
+  description?: string;
+}
