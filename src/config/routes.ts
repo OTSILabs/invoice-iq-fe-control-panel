@@ -4,7 +4,7 @@ import type { LucideIcon } from "lucide-react"
 import { Organizations } from "@/pages/organization/organizations"
 import { Plans } from "@/pages/plans/plans"
 import { CreatePlan } from "@/pages/plans/create-plan"
-import { Users } from "@/pages/users"
+import { Users } from "@/pages/user/users"
 import { ErpSettings } from "@/pages/erp-setting/erp-setting"
 
 export type AppRoute = {
