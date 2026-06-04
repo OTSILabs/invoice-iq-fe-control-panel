@@ -12,11 +12,7 @@ export function TenantDetail() {
   const { orgId, tenantId } = useParams<{ orgId: string; tenantId: string }>()
   const navigate = useNavigate()
 
-  const { data: organization } = useQuery({
-    queryKey: ['organizations', orgId],
-    queryFn: () => organizationsService.getById(orgId!),
-    enabled: !!orgId
-  })
+ 
 
   // In a real app, you might have a getTenantById endpoint.
   // For now, we'll fetch all tenants and find the one that matches.

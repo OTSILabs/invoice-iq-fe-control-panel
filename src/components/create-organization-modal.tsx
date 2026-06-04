@@ -8,7 +8,6 @@ import {
   DialogTitle,
   DialogTrigger,
   DialogFooter,
-  DialogFooter,
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Field, FieldLabel } from "@/components/ui/field"
