@@ -101,7 +101,7 @@ export function OrganizationDetail() {
   }
 
   return (
-    <div className="flex flex-col gap-6 w-full max-w-6xl mx-auto h-full pb-8">
+     <div className="flex w-full animate-in flex-col gap-6 pb-12 duration-300 fade-in">
       {/* <div className="flex items-center gap-4 pb-2 shrink-0">
         <Button variant="ghost" size="icon" onClick={() => navigate('/organizations')} className="h-8 w-8 rounded-full border border-slate-200 shadow-sm bg-white hover:bg-slate-50">
           <ArrowLeft className="h-4 w-4 text-slate-600" />

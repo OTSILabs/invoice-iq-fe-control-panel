@@ -13,7 +13,7 @@ export function Organizations() {
   })
 
   return (
-    <div className="flex flex-col gap-6 w-full max-w-6xl mx-auto h-full">
+      <div className="flex w-full animate-in flex-col gap-6 pb-12 duration-300 fade-in">
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 shrink-0">
         <div>
