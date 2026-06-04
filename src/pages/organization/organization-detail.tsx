@@ -8,6 +8,7 @@ import { organizationsService } from "@/api/services/organizations.service"
 import { DataTable } from "@/components/ui/data-table"
 import type { CustomColumnDef } from "@/components/ui/data-table"
 import type { Tenant } from "@/types"
+import { CreateOrganizationModal } from "@/components/create-organization-modal"
 
 export function OrganizationDetail() {
   const { id } = useParams<{ id: string }>()
@@ -122,9 +123,11 @@ export function OrganizationDetail() {
               <p className="text-[13px] text-slate-500">Key details and configuration for this organization.</p>
             </div>
           </div>
-          <Button className="gap-1.5 rounded-xl font-semibold shadow-sm bg-blue-600 hover:bg-blue-700 text-white">
-            <Plus className="h-4 w-4" /> Add Tenant
-          </Button>
+          <CreateOrganizationModal existingOrganization={{ id: organization.id, name: organization.name }}>
+            <Button className="gap-1.5 rounded-xl font-semibold shadow-sm bg-blue-600 hover:bg-blue-700 text-white">
+              <Plus className="h-4 w-4" /> Add Tenant
+            </Button>
+          </CreateOrganizationModal>
         </div>
         
         <div className="flex flex-wrap items-center gap-x-10 gap-y-6 pt-2">

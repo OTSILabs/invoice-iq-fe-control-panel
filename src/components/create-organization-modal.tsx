@@ -28,7 +28,13 @@ import { organizationsService } from "@/api/services/organizations.service"
 import { plansService } from "@/api/services/plans.service"
 import { useQueryClient, useQuery } from "@tanstack/react-query"
 
-export function CreateOrganizationModal({ children }: { children?: React.ReactNode }) {
+export function CreateOrganizationModal({ 
+  children,
+  existingOrganization
+}: { 
+  children?: React.ReactNode,
+  existingOrganization?: { id: string; name: string }
+}) {
   const [activeStepIndex, setActiveStepIndex] = useState(0)
   const [isOpen, setIsOpen] = useState(false)
   const [isPending, setIsPending] = useState(false)
@@ -42,7 +48,7 @@ export function CreateOrganizationModal({ children }: { children?: React.ReactNo
   })
   
   const [orgPayload, setOrgPayload] = useState({
-    name: ""
+    name: existingOrganization?.name || ""
   })
   
   const [tenantPayload, setTenantPayload] = useState({
@@ -88,7 +94,7 @@ export function CreateOrganizationModal({ children }: { children?: React.ReactNo
       queryClient.invalidateQueries({ queryKey: ['organizations'] })
       setIsOpen(false)
       setActiveStepIndex(0)
-      setOrgPayload({ name: "" })
+      setOrgPayload({ name: existingOrganization?.name || "" })
     } catch (error) {
       console.error("Failed to create organization:", error)
     } finally {
@@ -99,8 +105,12 @@ export function CreateOrganizationModal({ children }: { children?: React.ReactNo
   const handleFinalSubmit = async (planIdOverride?: string) => {
     setIsPending(true)
     try {
-      // 1. Create the Organization internally first
-      const createdOrg = await organizationsService.create({ name: orgPayload.name })
+      // 1. Get or Create the Organization
+      let orgId = existingOrganization?.id;
+      if (!orgId) {
+        const createdOrg = await organizationsService.create({ name: orgPayload.name })
+        orgId = createdOrg.id;
+      }
       
       // 2. Build the payload for creating the Tenant, including the new Organization ID
       // If planIdOverride is provided (from the newly created plan), use it. 
@@ -112,7 +122,7 @@ export function CreateOrganizationModal({ children }: { children?: React.ReactNo
       }
 
       const tenantPayloadData = {
-        organization_id: createdOrg.id,
+        organization_id: orgId,
         slug: tenantPayload.slug.replace(/-/g, ''),
         tenant_role: tenantPayload.tenant_role,
         configurations: {
@@ -135,14 +145,14 @@ export function CreateOrganizationModal({ children }: { children?: React.ReactNo
       };
 
       // 3. Create the Tenant (this will also create the admin_user if the backend logic handles it)
-      await organizationsService.createTenant(createdOrg.id, tenantPayloadData)
+      await organizationsService.createTenant(orgId, tenantPayloadData)
 
       // Invalidate the cache to trigger a re-fetch of the organizations list
       queryClient.invalidateQueries({ queryKey: ['organizations'] })
       
       setIsOpen(false)
       setActiveStepIndex(0)
-      setOrgPayload({ name: "" })
+      setOrgPayload({ name: existingOrganization?.name || "" })
       setTenantPayload({
         slug: "",
         tenant_role: "",
@@ -183,9 +193,13 @@ export function CreateOrganizationModal({ children }: { children?: React.ReactNo
       >
         <DialogHeader className="border-b px-5 py-4 bg-white">
           <div className="max-w-2xl">
-            <DialogTitle className="text-xl font-bold tracking-tight text-slate-900">Create Organization</DialogTitle>
+            <DialogTitle className="text-xl font-bold tracking-tight text-slate-900">
+              {existingOrganization ? "Add Tenant" : "Create Organization"}
+            </DialogTitle>
             <DialogDescription className="text-sm mt-1 text-slate-500">
-              Set up a new organization, configure its tenant details, and select a billing plan.
+              {existingOrganization 
+                ? "Configure tenant details and select a billing plan for this organization."
+                : "Set up a new organization, configure its tenant details, and select a billing plan."}
             </DialogDescription>
           </div>
         </DialogHeader>
@@ -240,6 +254,7 @@ export function CreateOrganizationModal({ children }: { children?: React.ReactNo
                       placeholder="e.g. Acme Corp" 
                       value={orgPayload.name}
                       onChange={(e: any) => setOrgPayload({...orgPayload, name: e.target.value})}
+                      disabled={!!existingOrganization}
                     />
                   </form>
                 )}
@@ -335,7 +350,7 @@ export function CreateOrganizationModal({ children }: { children?: React.ReactNo
               Back
             </Button>
           )}
-          {isFirstStep && (
+          {isFirstStep && !existingOrganization && (
             <Button type="button" className="bg-white hover:bg-slate-50 text-blue-600 border border-blue-200 shadow-sm rounded-md px-5 font-medium" onClick={handleCreateOrganizationOnly} disabled={!canProceedToNext()}>
               {isPending ? <Loader2 className="size-4 animate-spin mr-2" /> : <Plus className="size-4 mr-2" />}
               Create Organization Only
@@ -349,7 +364,7 @@ export function CreateOrganizationModal({ children }: { children?: React.ReactNo
             disabled={isPending}
           >
             {isPending && isLastStep ? <Loader2 className="size-4 animate-spin mr-2" /> : (isLastStep ? <Plus className="size-4 mr-2" /> : null)}
-            {isLastStep ? "Create Organization & Tenant" : "Next"}
+            {isLastStep ? (existingOrganization ? "Create Tenant" : "Create Organization & Tenant") : "Next"}
           </Button>
         </DialogFooter>
       </DialogContent>
