@@ -64,3 +64,21 @@ export interface PlatformRole {
   name: string;
   description?: string;
 }
+
+export interface ErpSetting {
+  erp_id: number;
+  erp_type: string;
+  display_name?: string;
+  is_enabled?: boolean;
+  settings: Record<string, unknown>;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface CreateErpSettingPayload {
+  erp_type: string;
+  settings: Record<string, unknown>;
+}
+
+
+

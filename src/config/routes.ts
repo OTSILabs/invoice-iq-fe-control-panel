@@ -1,14 +1,17 @@
-import {  Building2, CreditCard, Users as UsersIcon } from "lucide-react"
+import type { ComponentType } from "react"
+import {  Building2, CreditCard, Database, Users as UsersIcon } from "lucide-react"
+import type { LucideIcon } from "lucide-react"
 import { Organizations } from "@/pages/organization/organizations"
 import { Plans } from "@/pages/plans"
 import { CreatePlan } from "@/pages/create-plan"
 import { Users } from "@/pages/users"
+import { ErpSettings } from "@/pages/erp-setting/erp-setting"
 
 export type AppRoute = {
   path: string;
   title: string;
-  icon: any;
-  component: any;
+  icon: LucideIcon;
+  component: ComponentType;
   showInSidebar?: boolean;
 }
 
@@ -33,6 +36,13 @@ export const APP_ROUTES: AppRoute[] = [
     title: "Users",
     icon: UsersIcon,
     component: Users,
+    showInSidebar: true,
+  },
+   {
+    path: "/erp-settings",
+    title: "ERP Settings",
+    icon: Database,
+    component: ErpSettings,
     showInSidebar: true,
   },
   {
