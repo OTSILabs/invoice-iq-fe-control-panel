@@ -71,7 +71,8 @@ import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import { AppSidebar } from "./app-sidebar"
 import { APP_ROUTES } from "@/config/routes"
-import { useQueryClient } from "@tanstack/react-query"
+import { useQueryClient, useQuery } from "@tanstack/react-query"
+import { organizationsService } from "@/api/services/organizations.service"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -80,6 +81,17 @@ import {
   BreadcrumbLink,
   BreadcrumbSeparator
 } from "@/components/ui/breadcrumb"
+import { Toaster } from "@/components/ui/sonner"
+
+function OrganizationBreadcrumbName({ id, fallback }: { id: string, fallback: string }) {
+  const { data } = useQuery({
+    queryKey: ['organizations', id],
+    queryFn: () => organizationsService.getById(id),
+    staleTime: 1000 * 60 * 5, // Keep it fresh for 5 mins
+  })
+  
+  return <>{data?.name || fallback}</>
+}
 
 export function Layout() {
   const location = useLocation()
@@ -110,14 +122,14 @@ export function Layout() {
       } else {
         title = paths[i].charAt(0).toUpperCase() + paths[i].slice(1)
         
-        // If it's a dynamic ID under organizations, try to get the name from the cache
+        // If it's a dynamic ID under organizations
         if (i > 0 && paths[i - 1] === "organizations") {
           const orgId = paths[i]
           const cachedOrg: any = queryClient.getQueryData(['organizations', orgId])
           if (cachedOrg && cachedOrg.name) {
             title = cachedOrg.name
-          } else if (title.length > 20 || /^org_/.test(title) || /^[0-9a-fA-F-]{36}$/.test(title)) {
-            title = "View"
+          } else {
+            title = `DYNAMIC_ORG_${orgId}`
           }
         } 
         // Fallback for other long IDs
@@ -168,27 +180,37 @@ export function Layout() {
         ::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 99px; }
         ::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
       `}</style>
+      
+      <Toaster position="top-right" />
 
       <TooltipProvider>
         <SidebarProvider>
           <AppSidebar />
-          <SidebarInset className="bg-[#f4f6fa] flex flex-col min-h-svh">
+          <SidebarInset className="bg-[#f4f6fa] flex flex-col h-svh overflow-hidden">
 
             {/* ── Header ── */}
-            <header className="h-16 shrink-0 flex items-center px-6 bg-white border-b border-slate-100/80 sticky top-0 z-10">
+            <header className="min-h-16 shrink-0 flex items-center px-4 sm:px-6 py-3 bg-white border-b border-slate-100/80 z-10">
               <Breadcrumb>
                 <BreadcrumbList>
                   {breadcrumbs.map((crumb, index) => (
                     <React.Fragment key={crumb.href}>
                       <BreadcrumbItem>
                         {crumb.isLast ? (
-                          <BreadcrumbPage className="text-slate-800 font-bold text-2xl tracking-tight">
-                            {crumb.title}
+                          <BreadcrumbPage className="text-slate-800 font-semibold text-[15px]">
+                            {crumb.title.startsWith("DYNAMIC_ORG_") ? (
+                              <OrganizationBreadcrumbName id={crumb.title.replace("DYNAMIC_ORG_", "")} fallback="Loading..." />
+                            ) : (
+                              crumb.title
+                            )}
                           </BreadcrumbPage>
                         ) : (
                           <BreadcrumbLink asChild>
                             <Link to={crumb.href} className="text-slate-500 font-medium text-sm hover:text-slate-800">
-                              {crumb.title}
+                              {crumb.title.startsWith("DYNAMIC_ORG_") ? (
+                                <OrganizationBreadcrumbName id={crumb.title.replace("DYNAMIC_ORG_", "")} fallback="Loading..." />
+                              ) : (
+                                crumb.title
+                              )}
                             </Link>
                           </BreadcrumbLink>
                         )}
@@ -201,13 +223,9 @@ export function Layout() {
             </header>
 
             {/* ── Content ── */}
-            {/* ── Content ── */}
-{/* ── Content ── */}
-<main className="flex-1 px-5 pt-4 pb-5 overflow-auto bg-white" style={{ height: "calc(100vh - 96px)" }}>
- 
-    <Outlet />
-
-</main>
+            <main className="flex-1 px-5 pt-4 pb-5 overflow-auto bg-white">
+              <Outlet />
+            </main>
 
             {/* ── Footer ── */}
             <footer className="h-10 shrink-0 border-t border-slate-100 bg-white flex items-center justify-center gap-1.5 text-[11px] text-slate-400 tracking-tight mt-auto">

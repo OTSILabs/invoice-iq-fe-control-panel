@@ -113,7 +113,7 @@ export function OrganizationDetail() {
       </div> */}
 
       <div className="bg-white border border-slate-200 rounded-xl p-8  shrink-0">
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50 text-blue-600 border border-blue-100">
               <Info className="h-5 w-5" />

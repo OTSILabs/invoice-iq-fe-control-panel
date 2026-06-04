@@ -27,6 +27,7 @@ import { PlanForm } from "@/components/plan-form-dialog"
 import { organizationsService } from "@/api/services/organizations.service"
 import { plansService } from "@/api/services/plans.service"
 import { useQueryClient, useQuery } from "@tanstack/react-query"
+import { toast } from "sonner"
 
 export function CreateOrganizationModal({ 
   children,
@@ -95,8 +96,10 @@ export function CreateOrganizationModal({
       setIsOpen(false)
       setActiveStepIndex(0)
       setOrgPayload({ name: existingOrganization?.name || "" })
+      toast.success("Organization created successfully!")
     } catch (error) {
       console.error("Failed to create organization:", error)
+      toast.error("Failed to create organization. Please try again.")
     } finally {
       setIsPending(false)
     }
@@ -163,8 +166,11 @@ export function CreateOrganizationModal({
         }
       })
       setPlanPayload({ plan_id: "" })
-    } catch (error) {
+      
+      toast.success(existingOrganization ? "Tenant added successfully!" : "Organization and Tenant created successfully!")
+    } catch (error: any) {
       console.error("Failed to create organization and tenant:", error)
+      toast.error(error?.message || (existingOrganization ? "Failed to add tenant. Please try again." : "Failed to create organization and tenant. Please try again."))
     } finally {
       setIsPending(false)
     }
