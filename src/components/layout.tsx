@@ -66,21 +66,25 @@
 // }
 
 import React from "react"
-import { Outlet, useLocation, useNavigate } from "react-router-dom"
+import { Outlet, useLocation, useNavigate, Link } from "react-router-dom"
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import { AppSidebar } from "./app-sidebar"
 import { APP_ROUTES } from "@/config/routes"
+import { useQueryClient } from "@tanstack/react-query"
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbList,
   BreadcrumbPage,
+  BreadcrumbLink,
+  BreadcrumbSeparator
 } from "@/components/ui/breadcrumb"
 
 export function Layout() {
   const location = useLocation()
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
 
   React.useEffect(() => {
     const handleLogout = () => {
@@ -91,8 +95,53 @@ export function Layout() {
     return () => window.removeEventListener("auth:logout", handleLogout)
   }, [navigate])
 
-  const currentRoute = APP_ROUTES.find((r) => r.path === location.pathname) || { title: "Page Not Found" }
-  const pageTitle = currentRoute.title === "Manage Teams" ? "Team Members" : currentRoute.title
+  const generateBreadcrumbs = () => {
+    const paths = location.pathname.split("/").filter(Boolean)
+    const breadcrumbs = []
+    let currentPath = ""
+
+    for (let i = 0; i < paths.length; i++) {
+      currentPath += `/${paths[i]}`
+      const routeMatch = APP_ROUTES.find((r) => r.path === currentPath)
+      
+      let title = ""
+      if (routeMatch) {
+        title = routeMatch.title === "Manage Teams" ? "Team Members" : routeMatch.title
+      } else {
+        title = paths[i].charAt(0).toUpperCase() + paths[i].slice(1)
+        
+        // If it's a dynamic ID under organizations, try to get the name from the cache
+        if (i > 0 && paths[i - 1] === "organizations") {
+          const orgId = paths[i]
+          const cachedOrg: any = queryClient.getQueryData(['organizations', orgId])
+          if (cachedOrg && cachedOrg.name) {
+            title = cachedOrg.name
+          } else if (title.length > 20 || /^org_/.test(title) || /^[0-9a-fA-F-]{36}$/.test(title)) {
+            title = "View"
+          }
+        } 
+        // Fallback for other long IDs
+        else if (title.length > 20 || /^[0-9a-fA-F-]{36}$/.test(title)) {
+          title = "View"
+        }
+      }
+
+      breadcrumbs.push({
+        title,
+        href: currentPath,
+        isLast: i === paths.length - 1
+      })
+    }
+    
+    // Fallback if empty (e.g., at "/")
+    if (breadcrumbs.length === 0) {
+      breadcrumbs.push({ title: "Home", href: "/", isLast: true })
+    }
+    
+    return breadcrumbs
+  }
+
+  const breadcrumbs = generateBreadcrumbs()
 
   return (
     <>
@@ -129,17 +178,30 @@ export function Layout() {
             <header className="h-16 shrink-0 flex items-center px-6 bg-white border-b border-slate-100/80 sticky top-0 z-10">
               <Breadcrumb>
                 <BreadcrumbList>
-                  <BreadcrumbItem>
-                    <BreadcrumbPage className="text-slate-800 font-bold text-2xl tracking-tight">
-                      {pageTitle}
-                    </BreadcrumbPage>
-                  </BreadcrumbItem>
+                  {breadcrumbs.map((crumb, index) => (
+                    <React.Fragment key={crumb.href}>
+                      <BreadcrumbItem>
+                        {crumb.isLast ? (
+                          <BreadcrumbPage className="text-slate-800 font-bold text-2xl tracking-tight">
+                            {crumb.title}
+                          </BreadcrumbPage>
+                        ) : (
+                          <BreadcrumbLink asChild>
+                            <Link to={crumb.href} className="text-slate-500 font-medium text-sm hover:text-slate-800">
+                              {crumb.title}
+                            </Link>
+                          </BreadcrumbLink>
+                        )}
+                      </BreadcrumbItem>
+                      {!crumb.isLast && <BreadcrumbSeparator />}
+                    </React.Fragment>
+                  ))}
                 </BreadcrumbList>
               </Breadcrumb>
             </header>
 
             {/* ── Content ── */}
-           {/* ── Content ── */}
+            {/* ── Content ── */}
 {/* ── Content ── */}
 <main className="flex-1 px-5 pt-4 pb-5 overflow-auto bg-white" style={{ height: "calc(100vh - 96px)" }}>
  

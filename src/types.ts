@@ -21,12 +21,20 @@ export interface Plan {
 }
 
 export interface Organization {
-id: string;
-name: string;
-slug: string;
-tenant_role: string;
-plan_id?: string;
-tenant_count?: number;
-status?: string;
-created_at?: string;
+  id: string;
+  name: string;
+  slug: string;
+  tenant_role: string;
+  plan_id?: string;
+  tenant_count?: number;
+  status?: string;
+  created_at?: string;
+}
+
+export interface Tenant {
+  id: string;
+  tenant_admin_full_name: string;
+  tenant_role: string;
+  access_status: string;
+  created_at: string;
 }

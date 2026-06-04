@@ -226,7 +226,7 @@ export function Plans() {
         </div>
       </div>
 
-      <Card className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border border-slate-200 bg-white p-0 dark:border-slate-800 dark:bg-slate-900/50">
+      <Card className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border border-slate-200 bg-white p-0 dark:border-slate-800 dark:bg-slate-900/50 shadow-none ring-0">
         <CardContent className="flex min-h-0 flex-1 flex-col p-0">
           <div className="flex flex-col gap-3 border-b bg-card p-3 lg:flex-row lg:items-center lg:justify-between">
             <Tabs
@@ -301,6 +301,7 @@ export function Plans() {
             enablePagination={false}
             stickyHeader
             fillAvailableHeight
+            tableContainerClassName="border-0 rounded-none bg-transparent"
             emptyState={
               <div className="flex flex-col items-center justify-center py-12 px-4 text-center animate-in fade-in slide-in-from-bottom-2 duration-300">
                 <div className="mx-auto max-w-md space-y-6">

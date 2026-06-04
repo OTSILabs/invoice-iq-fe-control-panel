@@ -1,5 +1,5 @@
 import api from '../axios';
-import type { Organization } from '../../types';
+import type { Organization, Tenant } from '../../types';
 
 export const organizationsService = {
   getAll: async (): Promise<Organization[]> => {
@@ -19,6 +19,11 @@ export const organizationsService = {
 
   createTenant: async (orgId: string, payload: any): Promise<any> => {
     const response = await api.post<any>(`/organisations/${orgId}/tenants`, payload);
+    return response.data;
+  },
+
+  getTenants: async (orgId: string): Promise<Tenant[]> => {
+    const response = await api.get<Tenant[]>(`/organisations/${orgId}/tenants`);
     return response.data;
   }
 };
