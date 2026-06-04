@@ -1,8 +1,9 @@
 import { useMemo, useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
-import { Loader2, Info, Users, Plus, MoreHorizontal, MoreVertical, Eye, Edit, Trash2, Ban } from "lucide-react"
+import { Loader2, Info, Users, Plus, MoreHorizontal, MoreVertical, Eye, Edit, Trash2, Ban, CheckCircle2, Lock, Unlock, Clock } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { organizationsService } from "@/api/services/organizations.service"
 import { DataTable } from "@/components/ui/data-table"
@@ -37,6 +38,11 @@ export function OrganizationDetail() {
   
   const [tenantToDelete, setTenantToDelete] = useState<Tenant | null>(null)
   const [tenantToDeactivate, setTenantToDeactivate] = useState<Tenant | null>(null)
+  const [tenantToActivate, setTenantToActivate] = useState<Tenant | null>(null)
+  const [tenantToBlock, setTenantToBlock] = useState<Tenant | null>(null)
+  const [tenantToUnblock, setTenantToUnblock] = useState<Tenant | null>(null)
+  const [tenantToExpire, setTenantToExpire] = useState<Tenant | null>(null)
+  const [governanceReason, setGovernanceReason] = useState("")
   const [isDeactivateChecked, setIsDeactivateChecked] = useState(false)
 
   const deleteMutation = useMutation({
@@ -62,6 +68,59 @@ export function OrganizationDetail() {
     onError: (error: any) => {
       toast.error(error?.response?.data?.message || "Failed to deactivate tenant")
       console.error("Deactivate tenant failed:", error)
+    }
+  })
+
+  const activateMutation = useMutation({
+    mutationFn: (tenantId: string) => organizationsService.activateTenant(tenantId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['organizations', id, 'tenants'] })
+      toast.success("Tenant activated successfully")
+    },
+    onError: (error: any) => {
+      toast.error(error?.response?.data?.message || "Failed to activate tenant")
+      console.error("Activate tenant failed:", error)
+    }
+  })
+
+  const blockMutation = useMutation({
+    mutationFn: (data: { tenantId: string, outcome: string }) => organizationsService.blockTenant(data.tenantId, data.outcome),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['organizations', id, 'tenants'] })
+      toast.success("Tenant blocked successfully")
+      setTenantToBlock(null)
+      setGovernanceReason("")
+    },
+    onError: (error: any) => {
+      toast.error(error?.response?.data?.message || "Failed to block tenant")
+      console.error("Block tenant failed:", error)
+    }
+  })
+
+  const unblockMutation = useMutation({
+    mutationFn: (data: { tenantId: string, outcome: string }) => organizationsService.unblockTenant(data.tenantId, data.outcome),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['organizations', id, 'tenants'] })
+      toast.success("Tenant unblocked successfully")
+      setTenantToUnblock(null)
+      setGovernanceReason("")
+    },
+    onError: (error: any) => {
+      toast.error(error?.response?.data?.message || "Failed to unblock tenant")
+      console.error("Unblock tenant failed:", error)
+    }
+  })
+
+  const expireMutation = useMutation({
+    mutationFn: (tenantId: string) => organizationsService.expireTenant(tenantId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['organizations', id, 'tenants'] })
+      toast.success("Tenant expired successfully")
+      setTenantToExpire(null)
+    },
+    onError: (error: any) => {
+      toast.error(error?.response?.data?.message || "Failed to expire tenant")
+      console.error("Expire tenant failed:", error)
     }
   })
 
@@ -167,7 +226,7 @@ export function OrganizationDetail() {
               <Eye className="mr-2 h-4 w-4 text-blue-600" />
               <span>View Details</span>
             </DropdownMenuItem>
-            {String(row.original.access_status || "").toLowerCase() !== 'deactivated' && (
+            {String(row.original.access_status || "").toLowerCase() !== 'deactivated' ? (
               <DropdownMenuItem 
                 onClick={() => {
                   setTenantToDeactivate(row.original)
@@ -177,7 +236,53 @@ export function OrganizationDetail() {
                 <Ban className="mr-2 h-4 w-4" />
                 <span>Deactivate</span>
               </DropdownMenuItem>
+            ) : (
+              <DropdownMenuItem 
+                onClick={() => {
+                  setTenantToActivate(row.original)
+                }}
+                className="text-emerald-600 focus:text-emerald-600 focus:bg-emerald-50 cursor-pointer"
+              >
+                <CheckCircle2 className="mr-2 h-4 w-4" />
+                <span>Activate</span>
+              </DropdownMenuItem>
             )}
+            {String(row.original.access_status || "").toLowerCase() !== 'blocked' ? (
+              <DropdownMenuItem 
+                onClick={() => {
+                  setTenantToBlock(row.original)
+                  setGovernanceReason("")
+                }}
+                className="text-red-600 focus:text-red-600 focus:bg-red-50 cursor-pointer"
+              >
+                <Lock className="mr-2 h-4 w-4" />
+                <span>Block</span>
+              </DropdownMenuItem>
+            ) : (
+              <DropdownMenuItem 
+                onClick={() => {
+                  setTenantToUnblock(row.original)
+                  setGovernanceReason("")
+                }}
+                className="text-emerald-600 focus:text-emerald-600 focus:bg-emerald-50 cursor-pointer"
+              >
+                <Unlock className="mr-2 h-4 w-4" />
+                <span>Unblock</span>
+              </DropdownMenuItem>
+            )}
+            
+            {String(row.original.access_status || "").toLowerCase() !== 'expired' && (
+              <DropdownMenuItem 
+                onClick={() => {
+                  setTenantToExpire(row.original)
+                }}
+                className="text-orange-600 focus:text-orange-600 focus:bg-orange-50 cursor-pointer"
+              >
+                <Clock className="mr-2 h-4 w-4" />
+                <span>Expire</span>
+              </DropdownMenuItem>
+            )}
+
             <DropdownMenuSeparator />
             <DropdownMenuItem 
               onClick={() => {
@@ -193,7 +298,7 @@ export function OrganizationDetail() {
         </DropdownMenu>
       ),
     },
-  ], [id, navigate, deleteMutation.mutate, deactivateMutation.mutate])
+  ], [id, navigate, deleteMutation.mutate, deactivateMutation.mutate, activateMutation.mutate, blockMutation.mutate, unblockMutation.mutate, expireMutation.mutate])
 
   if (isOrgLoading) {
     return (
@@ -355,6 +460,184 @@ export function OrganizationDetail() {
             >
               {deactivateMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Deactivate
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!tenantToActivate} onOpenChange={(open) => {
+        if (!open) setTenantToActivate(null);
+      }}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Activate Tenant</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to activate the tenant <strong>{tenantToActivate?.tenant_admin_full_name || tenantToActivate?.id}</strong>?
+            </DialogDescription>
+          </DialogHeader>
+          <div className="py-4">
+            <p className="text-sm text-slate-600">
+              Activating this tenant will restore their access to the system immediately.
+            </p>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setTenantToActivate(null)} disabled={activateMutation.isPending}>
+              Cancel
+            </Button>
+            <Button 
+              className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm"
+              onClick={() => {
+                if (tenantToActivate) {
+                  activateMutation.mutate(tenantToActivate.id, {
+                    onSuccess: () => setTenantToActivate(null)
+                  })
+                }
+              }}
+              disabled={activateMutation.isPending}
+            >
+              {activateMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Activate
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!tenantToBlock} onOpenChange={(open) => {
+        if (!open) {
+          setTenantToBlock(null);
+          setGovernanceReason("");
+        }
+      }}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Block Tenant</DialogTitle>
+            <DialogDescription>
+              You are about to block the tenant <strong>{tenantToBlock?.tenant_admin_full_name || tenantToBlock?.id}</strong>.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="py-4 space-y-4">
+            <p className="text-sm text-slate-600">
+              Blocking this tenant will strictly prevent them from interacting with the platform. You must provide a reason for this governance action.
+            </p>
+            <div className="space-y-2">
+              <Label htmlFor="block-reason">Reason for blocking <span className="text-red-500">*</span></Label>
+              <Input 
+                id="block-reason"
+                placeholder="Enter outcome/reason" 
+                value={governanceReason}
+                onChange={(e) => setGovernanceReason(e.target.value)}
+                autoFocus
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => {
+              setTenantToBlock(null);
+              setGovernanceReason("");
+            }} disabled={blockMutation.isPending}>
+              Cancel
+            </Button>
+            <Button 
+              variant="destructive"
+              className="bg-red-600 hover:bg-red-700"
+              onClick={() => {
+                if (tenantToBlock && governanceReason.trim()) {
+                  blockMutation.mutate({ tenantId: tenantToBlock.id, outcome: governanceReason.trim() })
+                }
+              }}
+              disabled={blockMutation.isPending || !governanceReason.trim()}
+            >
+              {blockMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Block Tenant
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!tenantToUnblock} onOpenChange={(open) => {
+        if (!open) {
+          setTenantToUnblock(null);
+          setGovernanceReason("");
+        }
+      }}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Unblock Tenant</DialogTitle>
+            <DialogDescription>
+              You are about to unblock the tenant <strong>{tenantToUnblock?.tenant_admin_full_name || tenantToUnblock?.id}</strong>.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="py-4 space-y-4">
+            <p className="text-sm text-slate-600">
+              Unblocking this tenant will restore their ability to interact with the platform. You must provide a reason for this governance action.
+            </p>
+            <div className="space-y-2">
+              <Label htmlFor="unblock-reason">Reason for unblocking <span className="text-red-500">*</span></Label>
+              <Input 
+                id="unblock-reason"
+                placeholder="Enter outcome/reason" 
+                value={governanceReason}
+                onChange={(e) => setGovernanceReason(e.target.value)}
+                autoFocus
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => {
+              setTenantToUnblock(null);
+              setGovernanceReason("");
+            }} disabled={unblockMutation.isPending}>
+              Cancel
+            </Button>
+            <Button 
+              className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm"
+              onClick={() => {
+                if (tenantToUnblock && governanceReason.trim()) {
+                  unblockMutation.mutate({ tenantId: tenantToUnblock.id, outcome: governanceReason.trim() })
+                }
+              }}
+              disabled={unblockMutation.isPending || !governanceReason.trim()}
+            >
+              {unblockMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Unblock Tenant
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!tenantToExpire} onOpenChange={(open) => {
+        if (!open) setTenantToExpire(null);
+      }}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Expire Tenant</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to expire the tenant <strong>{tenantToExpire?.tenant_admin_full_name || tenantToExpire?.id}</strong>?
+            </DialogDescription>
+          </DialogHeader>
+          <div className="py-4">
+            <p className="text-sm text-slate-600">
+              Expiring this tenant will immediately mark their plan or subscription as expired, terminating their active usage rights.
+            </p>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setTenantToExpire(null)} disabled={expireMutation.isPending}>
+              Cancel
+            </Button>
+            <Button 
+              variant="destructive"
+              className="bg-orange-600 hover:bg-orange-700 focus:ring-orange-600"
+              onClick={() => {
+                if (tenantToExpire) {
+                  expireMutation.mutate(tenantToExpire.id, {
+                    onSuccess: () => setTenantToExpire(null)
+                  })
+                }
+              }}
+              disabled={expireMutation.isPending}
+            >
+              {expireMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Expire Tenant
             </Button>
           </DialogFooter>
         </DialogContent>

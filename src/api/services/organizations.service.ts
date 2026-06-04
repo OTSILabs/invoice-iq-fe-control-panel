@@ -53,5 +53,26 @@ export const organizationsService = {
 
   deactivateTenant: async (tenantId: string): Promise<void> => {
     await api.post(`/tenants/${tenantId}/deactivate`, '');
+  },
+
+  activateTenant: async (tenantId: string): Promise<void> => {
+    await api.post(`/tenants/${tenantId}/activate`, '');
+  },
+
+  getTenantEvents: async (tenantId: string): Promise<any[]> => {
+    const response = await api.get<any[]>(`/tenants/${tenantId}/events`);
+    return response.data;
+  },
+
+  blockTenant: async (tenantId: string, outcome: string): Promise<void> => {
+    await api.post(`/tenants/${tenantId}/governance/block`, { outcome });
+  },
+
+  unblockTenant: async (tenantId: string, outcome: string): Promise<void> => {
+    await api.post(`/tenants/${tenantId}/governance/unblock`, { outcome });
+  },
+
+  expireTenant: async (tenantId: string): Promise<void> => {
+    await api.post(`/tenants/${tenantId}/expire`, '');
   }
 };

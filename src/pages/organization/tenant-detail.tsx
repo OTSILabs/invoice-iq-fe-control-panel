@@ -4,7 +4,9 @@ import { Loader2, Users, ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { ConfigurationsTable } from "@/components/configurations-table"
+import { TenantEventsTable } from "@/components/tenant-events-table"
 import { organizationsService } from "@/api/services/organizations.service"
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 
 export function TenantDetail() {
   const { orgId, tenantId } = useParams<{ orgId: string; tenantId: string }>()
@@ -99,7 +101,20 @@ export function TenantDetail() {
         </div>
       </div>
 
-      <ConfigurationsTable entityId={tenant.id} entityType="tenant" />
+      <Tabs defaultValue="configuration" className="w-full mt-2">
+        <TabsList className="mb-6 grid w-full max-w-[400px] grid-cols-2">
+          <TabsTrigger value="configuration">Configuration</TabsTrigger>
+          <TabsTrigger value="events">Events</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="configuration" className="m-0 animate-in fade-in-50 duration-300">
+          <ConfigurationsTable entityId={tenant.id} entityType="tenant" />
+        </TabsContent>
+
+        <TabsContent value="events" className="m-0 animate-in fade-in-50 duration-300">
+          <TenantEventsTable tenantId={tenant.id} />
+        </TabsContent>
+      </Tabs>
     </div>
   )
 }
