@@ -192,7 +192,7 @@ export function Layout() {
             <header className="min-h-16 shrink-0 flex items-center px-4 sm:px-6 py-3 bg-white border-b border-slate-100/80 z-10">
               <Breadcrumb>
                 <BreadcrumbList>
-                  {breadcrumbs.map((crumb, index) => (
+                  {breadcrumbs.map((crumb) => (
                     <React.Fragment key={crumb.href}>
                       <BreadcrumbItem>
                         {crumb.isLast ? (

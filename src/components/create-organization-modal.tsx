@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Plus, Save, Loader2, CheckCircle2 } from "lucide-react"
+import { Plus, Loader2 } from "lucide-react"
 import {
   Dialog,
   DialogContent,
@@ -8,10 +8,9 @@ import {
   DialogTitle,
   DialogTrigger,
   DialogFooter,
-  DialogClose,
+  DialogFooter,
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { Field, FieldLabel } from "@/components/ui/field"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { cn } from "@/lib/utils"
@@ -40,8 +39,7 @@ export function CreateOrganizationModal({
   const [isOpen, setIsOpen] = useState(false)
   const [isPending, setIsPending] = useState(false)
   const [isCreatingPlan, setIsCreatingPlan] = useState(false)
-  const [createdOrgId, setCreatedOrgId] = useState<string | null>(null)
-  const queryClient = useQueryClient()
+    const queryClient = useQueryClient()
   
   const { data: plans, isLoading: isPlansLoading } = useQuery({
     queryKey: ['plans'],

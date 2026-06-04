@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query"
-import { Loader2, Activity } from "lucide-react"
+import { Activity } from "lucide-react"
 import { DataTable } from "@/components/ui/data-table"
 import type { CustomColumnDef } from "@/components/ui/data-table"
 import { organizationsService } from "@/api/services/organizations.service"
