@@ -1,5 +1,5 @@
 import api from '../axios';
-import type { Organization, Tenant } from '../../types';
+import type { Organization, Tenant, Configuration } from '../../types';
 
 export const organizationsService = {
   getAll: async (): Promise<Organization[]> => {
@@ -25,5 +25,33 @@ export const organizationsService = {
   getTenants: async (orgId: string): Promise<Tenant[]> => {
     const response = await api.get<Tenant[]>(`/organisations/${orgId}/tenants`);
     return response.data;
+  },
+
+  getConfigurations: async (orgId: string): Promise<Configuration[]> => {
+    const response = await api.get<Configuration[]>(`/organisations/${orgId}/configurations`);
+    return response.data;
+  },
+
+  updateConfigurations: async (orgId: string, payload: { values: Record<string, string> }): Promise<Configuration[]> => {
+    const response = await api.post<Configuration[]>(`/organisations/${orgId}/configurations`, payload);
+    return response.data;
+  },
+
+  getTenantConfigurations: async (tenantId: string): Promise<Configuration[]> => {
+    const response = await api.get<Configuration[]>(`/tenants/${tenantId}/configurations`);
+    return response.data;
+  },
+
+  updateTenantConfigurations: async (tenantId: string, payload: { values: Record<string, string> }): Promise<Configuration[]> => {
+    const response = await api.post<Configuration[]>(`/tenants/${tenantId}/configurations`, payload);
+    return response.data;
+  },
+
+  deleteTenant: async (tenantId: string): Promise<void> => {
+    await api.delete(`/tenants/${tenantId}`);
+  },
+
+  deactivateTenant: async (tenantId: string): Promise<void> => {
+    await api.post(`/tenants/${tenantId}/deactivate`, '');
   }
 };

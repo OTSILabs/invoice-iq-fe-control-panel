@@ -79,6 +79,13 @@ export interface CreateErpSettingPayload {
   erp_type: string;
   settings: Record<string, unknown>;
 }
+export interface Configuration {
+  key: string;
+  value: string;
+  is_active: boolean;
+  is_editable_by_tenant: boolean;
+}
+
 
 
 

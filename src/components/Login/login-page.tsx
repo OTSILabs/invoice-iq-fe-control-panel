@@ -1,4 +1,5 @@
 import { LoginForm } from "../login-form";
+import { FileCheck2 } from "lucide-react";
 
 export function LoginPage() {
   return (
@@ -7,7 +8,7 @@ export function LoginPage() {
         {/* Simple Enterprise Header */}
         <div className="flex flex-col items-center mb-8 text-center">
           <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-600 mb-6 shadow-sm">
-            <span className="text-white font-bold text-lg tracking-tighter">IQ</span>
+            <FileCheck2 className="text-white h-6 w-6" />
           </div>
           <h1 className="text-2xl font-semibold tracking-tight text-slate-900 mb-2">Welcome back</h1>
           <p className="text-slate-500 text-sm">Sign in to your Control Panel</p>
