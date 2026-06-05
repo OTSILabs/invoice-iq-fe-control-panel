@@ -14,7 +14,7 @@ export function CreatePlan() {
 
   return (
     <div className="flex min-h-[calc(100vh-8rem)] w-full animate-in items-center justify-center px-4 py-8 duration-300 fade-in">
-      <Card className="w-full max-w-md rounded-xl border border-slate-200 bg-white dark:border-slate-800">
+      <Card className="w-full max-w-md rounded-xl border border-border bg-card dark:border-slate-800">
         <CardHeader className="border-b border-slate-100 pb-4 dark:border-slate-800/80">
           <CardTitle className="flex items-center gap-2 text-lg font-bold">
             <CreditCard className="h-5 w-5 text-primary" />

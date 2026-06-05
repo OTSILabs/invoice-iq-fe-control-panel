@@ -157,55 +157,31 @@ export function Layout() {
 
   return (
     <>
-      {/* Google Font — loaded once here, applies everywhere */}
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
-
-        *, *::before, *::after {
-          font-family: 'Plus Jakarta Sans', sans-serif !important;
-        }
-
-        @keyframes fadeUp {
-          from { opacity: 0; transform: translateY(5px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-
-        .outlet-card {
-          animation: fadeUp 0.2s ease both;
-        }
-
-        /* Subtle scrollbar */
-        ::-webkit-scrollbar { width: 5px; height: 5px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 99px; }
-        ::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
-      `}</style>
-      
       <Toaster position="top-right" />
 
       <TooltipProvider>
         <SidebarProvider>
           <AppSidebar />
-          <SidebarInset className="bg-[#f4f6fa] flex flex-col h-svh overflow-hidden">
+          <SidebarInset className="bg-background flex flex-col h-svh overflow-hidden">
 
             {/* ── Header ── */}
-            <header className="min-h-16 shrink-0 flex items-center px-4 sm:px-6 py-3 bg-white border-b border-slate-100/80 z-10">
+            <header className="min-h-16 shrink-0 flex items-center px-4 sm:px-6 py-3 bg-background border-b border-border z-10">
               <Breadcrumb>
                 <BreadcrumbList>
                   {breadcrumbs.map((crumb) => (
                     <React.Fragment key={crumb.href}>
                       <BreadcrumbItem>
                         {crumb.isLast ? (
-                          <BreadcrumbPage className="text-slate-800 font-semibold text-[15px]">
+                          <BreadcrumbPage className="text-foreground font-semibold text-[15px]">
                             {crumb.title.startsWith("DYNAMIC_ORG_") ? (
-                              <OrganizationBreadcrumbName id={crumb.title.replace("DYNAMIC_ORG_", "")} fallback="Loading..." />
+                               <OrganizationBreadcrumbName id={crumb.title.replace("DYNAMIC_ORG_", "")} fallback="Loading..." />
                             ) : (
                               crumb.title
                             )}
                           </BreadcrumbPage>
                         ) : (
                           <BreadcrumbLink asChild>
-                            <Link to={crumb.href} className="text-slate-500 font-medium text-sm hover:text-slate-800">
+                            <Link to={crumb.href} className="text-muted-foreground font-medium text-sm hover:text-foreground">
                               {crumb.title.startsWith("DYNAMIC_ORG_") ? (
                                 <OrganizationBreadcrumbName id={crumb.title.replace("DYNAMIC_ORG_", "")} fallback="Loading..." />
                               ) : (
@@ -223,15 +199,15 @@ export function Layout() {
             </header>
 
             {/* ── Content ── */}
-            <main className="flex-1 px-5 pt-4 pb-5 overflow-auto bg-white">
+            <main className="flex-1 px-5 pt-4 pb-5 overflow-auto bg-background">
               <Outlet />
             </main>
 
             {/* ── Footer ── */}
-            <footer className="h-10 shrink-0 border-t border-slate-100 bg-white flex items-center justify-center gap-1.5 text-[11px] text-slate-400 tracking-tight mt-auto">
+            <footer className="h-10 shrink-0 border-t border-border bg-background flex items-center justify-center gap-1.5 text-[11px] text-muted-foreground tracking-tight mt-auto">
               Powered by{" "}
-              <strong className="text-blue-600 font-bold text-[11px]">OTSI</strong>
-              <span className="text-slate-200 mx-0.5">|</span>
+              <strong className="text-primary font-bold text-[11px]">OTSI</strong>
+              <span className="text-border mx-0.5">|</span>
               Copyright © 2026 Object Technology Solutions, Inc. All rights reserved.
             </footer>
 

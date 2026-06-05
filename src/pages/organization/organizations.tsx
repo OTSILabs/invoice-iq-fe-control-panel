@@ -17,11 +17,11 @@ export function Organizations() {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 shrink-0">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-slate-900">Organizations</h1>
-          <p className="text-slate-500 mt-1 text-sm">Manage and create organizations within your control panel.</p>
+          <h1 className="text-xl font-bold tracking-tight text-foreground">Organizations</h1>
+          <p className="text-muted-foreground mt-1 text-sm">Manage and create organizations within your control panel.</p>
         </div>
         <CreateOrganizationModal>
-          <Button className="bg-blue-600 hover:bg-blue-700 text-white shadow-sm rounded-md px-5 font-semibold tracking-wide">
+          <Button className="bg-primary hover:bg-primary/90 text-white shadow-sm rounded-md px-5 font-semibold tracking-wide">
             <Plus className="mr-2 h-4 w-4" />
             Create Organization
           </Button>
@@ -31,41 +31,41 @@ export function Organizations() {
       {/* Main Content Area */}
       {isLoading ? (
         <div className="flex-1 flex items-center justify-center">
-          <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
+          <Loader2 className="h-6 w-6 animate-spin text-primary" />
         </div>
       ) : organizations && organizations.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {organizations.map((org) => (
-            <div key={org.id} onClick={() => navigate(`/organizations/${org.id}`)} className="bg-white border border-slate-200 p-5 rounded-xl hover:border-blue-300 transition-all cursor-pointer group">
+            <div key={org.id} onClick={() => navigate(`/organizations/${org.id}`)} className="bg-card border border-border p-5 rounded-xl hover:border-primary/50 transition-all cursor-pointer group">
               <div className="flex items-center gap-3 mb-4">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50 text-blue-600 border border-blue-100">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/20">
                   <Building2 className="h-5 w-5" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-slate-900 group-hover:text-blue-700 transition-colors">{org.name}</h3>
-                  <p className="text-[12px] text-slate-500 font-mono">{org.slug}</p>
+                  <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors">{org.name}</h3>
+                  <p className="text-[12px] text-muted-foreground font-mono">{org.slug}</p>
                 </div>
               </div>
-              <div className="flex justify-between items-center text-[13px] text-slate-500">
+              <div className="flex justify-between items-center text-[13px] text-muted-foreground">
                 <span>Tenants: {org.tenant_count || 0}</span>
-                <ExternalLink className="h-3.5 w-3.5 opacity-0 group-hover:opacity-100 transition-opacity text-blue-600" />
+                <ExternalLink className="h-3.5 w-3.5 opacity-0 group-hover:opacity-100 transition-opacity text-primary" />
               </div>
             </div>
           ))}
         </div>
       ) : (
         <div className="flex-1 flex flex-col items-center justify-center -mt-16">
-          <div className="flex flex-col items-center justify-center py-12 px-8 text-center border-[1.5px] border-dashed border-slate-300/80 rounded-2xl bg-white w-[90%] sm:w-[400px]">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-50 mb-4 text-blue-600 border border-blue-100">
+          <div className="flex flex-col items-center justify-center py-12 px-8 text-center border-[1.5px] border-dashed border-border rounded-2xl bg-card w-[90%] sm:w-[400px]">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 mb-4 text-primary border border-primary/20">
               <Building2 className="h-5 w-5" />
             </div>
-            <h3 className="text-base font-bold text-slate-900 mb-1.5 tracking-tight">No organizations found</h3>
-            <p className="text-slate-500 text-[13px] mb-6 leading-relaxed max-w-[280px]">
+            <h3 className="text-base font-bold text-foreground mb-1.5 tracking-tight">No organizations found</h3>
+            <p className="text-muted-foreground text-[13px] mb-6 leading-relaxed max-w-[280px]">
               You haven't created any organizations yet. Get started by creating your first one.
             </p>
             <CreateOrganizationModal>
-              <Button variant="outline" className="border-slate-200 text-slate-700 hover:bg-slate-50 rounded-md px-5 h-9 shadow-sm font-semibold bg-white text-[13px] transition-all hover:border-slate-300">
-                <Plus className="mr-1.5 h-3.5 w-3.5 text-slate-500" />
+              <Button variant="outline" className="border-border text-foreground hover:bg-muted rounded-md px-5 h-9 shadow-sm font-semibold bg-card text-[13px] transition-all hover:border-border">
+                <Plus className="mr-1.5 h-3.5 w-3.5 text-muted-foreground" />
                 Create Organization
               </Button>
             </CreateOrganizationModal>

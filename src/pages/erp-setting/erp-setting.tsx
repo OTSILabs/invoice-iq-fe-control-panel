@@ -196,10 +196,10 @@ export function ErpSettings() {
     <div className="flex w-full animate-in flex-col gap-6 pb-12 duration-300 fade-in">
       <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
+          <h1 className="text-xl font-bold tracking-tight text-foreground dark:text-white">
             ERP Settings
           </h1>
-          <p className="mt-0.5 text-sm text-slate-500 dark:text-slate-400">
+          <p className="mt-0.5 text-sm text-muted-foreground dark:text-muted-foreground">
             Configure and maintain enterprise ERP integrations.
           </p>
         </div>
@@ -274,7 +274,7 @@ export function ErpSettings() {
           </div>
           <div>
             <h2 className="text-xl font-bold">Failed to load ERP settings</h2>
-            <p className="mt-1 text-slate-500 dark:text-slate-400">
+            <p className="mt-1 text-muted-foreground dark:text-muted-foreground">
               There was a connection issue. Please check your network and API
               config.
             </p>
@@ -325,7 +325,7 @@ function ErpSettingsCards({ records }: { records: ErpSetting[] }) {
             <CardHeader className="border-b bg-muted/10 p-5 pb-4">
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <CardTitle className="truncate text-base font-bold text-slate-800 dark:text-slate-100">
+                  <CardTitle className="truncate text-base font-bold text-foreground dark:text-slate-100">
                     {displayName}
                   </CardTitle>
                   <CardDescription className="mt-1 text-xs font-semibold tracking-wider text-primary uppercase">

@@ -196,7 +196,7 @@ export function ErpSettingFormDialog({
 
             {/* Is Enabled */}
             <div className="flex items-center justify-between rounded-md border p-2.5 h-10 bg-background md:min-w-40">
-              <Label htmlFor="is_enabled" className="font-semibold text-slate-700 dark:text-slate-300">
+              <Label htmlFor="is_enabled" className="font-semibold text-foreground dark:text-slate-300">
                 Enabled
               </Label>
               <Controller

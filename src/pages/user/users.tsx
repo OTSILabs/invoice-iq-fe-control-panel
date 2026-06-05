@@ -185,7 +185,7 @@ export function Users() {
       case "standard user":
         return {
           variant: "secondary" as const,
-          className: "bg-slate-100 text-slate-700 hover:bg-slate-200 font-semibold",
+          className: "bg-slate-100 text-foreground hover:bg-slate-200 font-semibold",
         }
       default:
         return { variant: "outline" as const, className: "font-semibold" }
@@ -276,7 +276,7 @@ export function Users() {
               className={cn(
                 "font-semibold text-xs py-0.5 px-2.5 rounded-full border",
                 statusVal === "ACTIVE" && "bg-green-50 border-green-200 text-green-700 dark:bg-emerald-950/20 dark:text-emerald-400",
-                statusVal === "INACTIVE" && "bg-slate-100 border-slate-200 text-slate-700 dark:bg-slate-800 dark:text-slate-400",
+                statusVal === "INACTIVE" && "bg-slate-100 border-border text-foreground dark:bg-slate-800 dark:text-muted-foreground",
               )}
             >
               {statusVal}
@@ -349,8 +349,8 @@ export function Users() {
   if (isLoadingUsers || isLoadingRoles) {
     return (
       <div className="flex min-h-[50vh] flex-col items-center justify-center gap-3">
-        <Loader2 className="h-10 w-10 animate-spin text-blue-600 dark:text-blue-400" />
-        <p className="font-medium text-slate-500 dark:text-slate-400">
+        <Loader2 className="h-10 w-10 animate-spin text-primary dark:text-blue-400" />
+        <p className="font-medium text-muted-foreground dark:text-muted-foreground">
           Loading platform users...
         </p>
       </div>
@@ -365,7 +365,7 @@ export function Users() {
         </div>
         <div>
           <h2 className="text-xl font-bold">Failed to load platform data</h2>
-          <p className="mt-1 text-slate-500 dark:text-slate-400">
+          <p className="mt-1 text-muted-foreground dark:text-muted-foreground">
             There was a connection issue. Please check your network and API config.
           </p>
         </div>
@@ -380,10 +380,10 @@ export function Users() {
     <div className="flex w-full animate-in flex-col gap-6 pb-12 duration-300 fade-in">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-4">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
+          <h1 className="text-xl font-bold tracking-tight text-foreground dark:text-white">
             Users
           </h1>
-          <p className="mt-0.5 text-sm text-slate-500 dark:text-slate-400">
+          <p className="mt-0.5 text-sm text-muted-foreground dark:text-muted-foreground">
             Manage system access accounts and user permissions.
           </p>
         </div>
@@ -523,12 +523,12 @@ export function Users() {
                 <button
                   type="button"
                   onClick={() => setShowPassword((prev) => !prev)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none cursor-pointer z-10"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-slate-600 focus:outline-none cursor-pointer z-10"
                 >
                   {showPassword ? (
-                    <EyeOff className="h-4 w-4 text-slate-500" />
+                    <EyeOff className="h-4 w-4 text-muted-foreground" />
                   ) : (
-                    <Eye className="h-4 w-4 text-slate-500" />
+                    <Eye className="h-4 w-4 text-muted-foreground" />
                   )}
                 </button>
               </div>

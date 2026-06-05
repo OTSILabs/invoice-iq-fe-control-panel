@@ -54,7 +54,7 @@ export function OrganizationDetail() {
       header: "Admin Name",
       width: 250,
       cell: ({ row }) => (
-        <span className="font-semibold text-slate-800 dark:text-slate-200">
+        <span className="font-semibold text-foreground dark:text-slate-200">
           {row.original.tenant_admin_full_name || "N/A"}
         </span>
       ),
@@ -64,7 +64,7 @@ export function OrganizationDetail() {
       header: "Role",
       width: 150,
       cell: ({ row }) => (
-        <span className="text-slate-500 dark:text-slate-400 capitalize">
+        <span className="text-muted-foreground dark:text-muted-foreground capitalize">
           {String(row.original.tenant_role || "").replace('_', ' ') || "N/A"}
         </span>
       ),
@@ -81,7 +81,7 @@ export function OrganizationDetail() {
             className={
               isActive
                 ? "border-emerald-200 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/20 dark:text-emerald-400"
-                : "text-slate-400"
+                : "text-muted-foreground"
             }
           >
             {row.original.access_status || "Inactive"}
@@ -94,7 +94,7 @@ export function OrganizationDetail() {
       header: "Created At",
       width: 150,
       cell: ({ row }) => (
-        <span className="text-xs text-slate-400">
+        <span className="text-xs text-muted-foreground">
           {row.original.created_at
             ? new Date(row.original.created_at).toLocaleDateString()
             : "N/A"}
@@ -108,14 +108,14 @@ export function OrganizationDetail() {
       cell: ({ row }) => (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0 hover:bg-slate-100">
+            <Button variant="ghost" className="h-8 w-8 p-0 hover:bg-muted">
               <span className="sr-only">Open menu</span>
-              <MoreVertical className="h-4 w-4 text-slate-500" />
+              <MoreVertical className="h-4 w-4 text-muted-foreground" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-[160px]">
             <DropdownMenuItem onClick={() => navigate(`/organizations/${id}/tenants/${row.original.id}`)}>
-              <Eye className="mr-2 h-4 w-4 text-blue-600" />
+              <Eye className="mr-2 h-4 w-4 text-primary" />
               <span>View Details</span>
             </DropdownMenuItem>
             {String(row.original.access_status || "").toLowerCase() !== 'deactivated' ? (
@@ -192,7 +192,7 @@ export function OrganizationDetail() {
   if (isOrgLoading) {
     return (
       <div className="flex h-full items-center justify-center">
-        <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
+        <Loader2 className="h-6 w-6 animate-spin text-primary" />
       </div>
     )
   }
@@ -200,7 +200,7 @@ export function OrganizationDetail() {
   if (isOrgError || !organization) {
     return (
       <div className="flex h-full flex-col items-center justify-center gap-4">
-        <p className="text-sm text-slate-500">Failed to load organization data.</p>
+        <p className="text-sm text-muted-foreground">Failed to load organization data.</p>
         <Button variant="outline" onClick={() => navigate('/organizations')}>
           Back to Organizations
         </Button>
@@ -211,48 +211,48 @@ export function OrganizationDetail() {
   return (
      <div className="flex w-full animate-in flex-col gap-6 pb-12 duration-300 fade-in">
       {/* <div className="flex items-center gap-4 pb-2 shrink-0">
-        <Button variant="ghost" size="icon" onClick={() => navigate('/organizations')} className="h-8 w-8 rounded-full border border-slate-200 shadow-sm bg-white hover:bg-slate-50">
+        <Button variant="ghost" size="icon" onClick={() => navigate('/organizations')} className="h-8 w-8 rounded-full border border-border shadow-sm bg-card hover:bg-muted">
           <ArrowLeft className="h-4 w-4 text-slate-600" />
         </Button>
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900">{organization.name}</h1>
-          <p className="text-slate-500 mt-1 text-sm">Tenant: {organization.slug} | Plan: {organization.plan_id || 'None'}</p>
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">{organization.name}</h1>
+          <p className="text-muted-foreground mt-1 text-sm">Tenant: {organization.slug} | Plan: {organization.plan_id || 'None'}</p>
         </div>
       </div> */}
 
-      <div className="bg-white border border-slate-200 rounded-xl p-8 shrink-0">
+      <div className="bg-card border border-border rounded-xl p-8 shrink-0">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50 text-blue-600 border border-blue-100">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/20">
               <Info className="h-5 w-5" />
             </div>
             <div>
-              <h3 className="font-semibold text-slate-900">Organization Facts</h3>
-              <p className="text-[13px] text-slate-500">Key details and configuration for this organization.</p>
+              <h3 className="font-semibold text-foreground">Organization Facts</h3>
+              <p className="text-[13px] text-muted-foreground">Key details and configuration for this organization.</p>
             </div>
           </div>
         </div>
         
         <div className="flex flex-wrap items-center gap-x-10 gap-y-6 pt-2">
           <span className="text-sm flex items-center gap-2">
-            <span className="font-medium text-slate-500">Organization ID:</span>
-            <span className="font-semibold text-slate-900">{organization.id}</span>
+            <span className="font-medium text-muted-foreground">Organization ID:</span>
+            <span className="font-semibold text-foreground">{organization.id}</span>
           </span>
           <span className="text-sm flex items-center gap-2">
-            <span className="font-medium text-slate-500">Name:</span>
-            <span className="font-semibold text-slate-900">{organization.name}</span>
+            <span className="font-medium text-muted-foreground">Name:</span>
+            <span className="font-semibold text-foreground">{organization.name}</span>
           </span>
           <span className="text-sm flex items-center gap-2">
-            <span className="font-medium text-slate-500">Tenant Count:</span>
-            <span className="font-semibold text-slate-900">{organization.tenant_count?.toString() || '0'}</span>
+            <span className="font-medium text-muted-foreground">Tenant Count:</span>
+            <span className="font-semibold text-foreground">{organization.tenant_count?.toString() || '0'}</span>
           </span>
           <span className="text-sm flex items-center gap-2">
-            <span className="font-medium text-slate-500">Status:</span>
-            <span className="font-semibold text-slate-900">{organization.status || 'Active'}</span>
+            <span className="font-medium text-muted-foreground">Status:</span>
+            <span className="font-semibold text-foreground">{organization.status || 'Active'}</span>
           </span>
           <span className="text-sm flex items-center gap-2">
-            <span className="font-medium text-slate-500">Created At:</span>
-            <span className="font-semibold text-slate-900">
+            <span className="font-medium text-muted-foreground">Created At:</span>
+            <span className="font-semibold text-foreground">
               {organization.created_at ? new Date(organization.created_at).toLocaleDateString() : 'N/A'}
             </span>
           </span>
@@ -270,20 +270,20 @@ export function OrganizationDetail() {
         </TabsContent>
 
         <TabsContent value="tenants" className="m-0 animate-in fade-in-50 duration-300">
-          <div className="flex flex-col bg-white border border-slate-200 rounded-xl overflow-hidden">
+          <div className="flex flex-col bg-card border border-border rounded-xl overflow-hidden">
             <div className="flex items-center justify-between p-6 pb-4 border-b border-slate-100">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 border border-indigo-100">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/20">
                   <Users className="h-5 w-5" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-slate-900">Attached Tenants</h3>
-                  <p className="text-[13px] text-slate-500">List of tenants associated with this organization.</p>
+                  <h3 className="font-semibold text-foreground">Attached Tenants</h3>
+                  <p className="text-[13px] text-muted-foreground">List of tenants associated with this organization.</p>
                 </div>
               </div>
 
               <CreateOrganizationModal existingOrganization={{ id: organization.id, name: organization.name }}>
-                <Button className="gap-1.5 rounded-xl font-semibold shadow-sm bg-blue-600 hover:bg-blue-700 text-white">
+                <Button className="gap-1.5 rounded-xl font-semibold shadow-sm bg-primary hover:bg-primary/90 text-white">
                   <Plus className="h-4 w-4" /> Add Tenant
                 </Button>
               </CreateOrganizationModal>
@@ -302,10 +302,10 @@ export function OrganizationDetail() {
                 emptyState={
                   <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
                     <div className="mx-auto max-w-md space-y-4">
-                      <h3 className="text-lg font-bold tracking-tight text-slate-900">
+                      <h3 className="text-lg font-bold tracking-tight text-foreground">
                         No Tenants Found
                       </h3>
-                      <p className="text-sm text-slate-500">
+                      <p className="text-sm text-muted-foreground">
                         There are no tenants currently attached to this organization.
                       </p>
                     </div>
