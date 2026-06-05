@@ -20,7 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { InputField } from "../ui/input-field"
+import { InputField } from "../../../components/ui/input-field"
 import { PlanForm } from "@/pages/plans/plan-form-dialog"
 import { organizationsService } from "@/api/services/organizations.service"
 import { plansService } from "@/api/services/plans.service"

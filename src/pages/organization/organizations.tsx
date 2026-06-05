@@ -1,6 +1,6 @@
 import { Building2, Plus, Loader2, ExternalLink } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { CreateOrganizationModal } from "@/components/modals/create-organization-modal"
+import { CreateOrganizationModal } from "@/pages/organization/modals/create-organization-modal"
 import { useQuery } from "@tanstack/react-query"
 import { organizationsService } from "@/api/services/organizations.service"
 import { useNavigate } from "react-router-dom"
@@ -33,41 +33,26 @@ export function Organizations() {
         <div className="flex-1 flex items-center justify-center">
           <Loader2 className="h-6 w-6 animate-spin text-primary" />
         </div>
-      ) : organizations && organizations.length > 0 ? (
+      ) : organizations && organizations.length > 0  ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {organizations.map((org) => (
             <div key={org.id} onClick={() => navigate(`/organizations/${org.id}`)} className="bg-card border border-border p-5 rounded-xl hover:border-primary/50 transition-all cursor-pointer group">
               <div className="flex items-center gap-3 mb-4">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/20">
-                  <Building2 className="h-5 w-5" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors">{org.name}</h3>
-                  <p className="text-[12px] text-muted-foreground font-mono">{org.slug}</p>
-                </div>
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/20"><Building2 className="h-5 w-5" /></div>
+                <div><h3 className="font-semibold text-foreground group-hover:text-primary transition-colors">{org.name}</h3><p className="text-[12px] text-muted-foreground font-mono">{org.slug}</p></div>
               </div>
-              <div className="flex justify-between items-center text-[13px] text-muted-foreground">
-                <span>Tenants: {org.tenant_count || 0}</span>
-                <ExternalLink className="h-3.5 w-3.5 opacity-0 group-hover:opacity-100 transition-opacity text-primary" />
-              </div>
+              <div className="flex justify-between items-center text-[13px] text-muted-foreground"><span>Tenants: {org.tenant_count || 0}</span><ExternalLink className="h-3.5 w-3.5 opacity-0 group-hover:opacity-100 transition-opacity text-primary" /></div>
             </div>
           ))}
         </div>
       ) : (
-        <div className="flex-1 flex flex-col items-center justify-center -mt-16">
+        <div className="flex-1 flex flex-col items-center justify-center py-12 mt-8">
           <div className="flex flex-col items-center justify-center py-12 px-8 text-center border-[1.5px] border-dashed border-border rounded-2xl bg-card w-[90%] sm:w-[400px]">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 mb-4 text-primary border border-primary/20">
-              <Building2 className="h-5 w-5" />
-            </div>
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 mb-4 text-primary border border-primary/20"><Building2 className="h-5 w-5" /></div>
             <h3 className="text-base font-bold text-foreground mb-1.5 tracking-tight">No organizations found</h3>
-            <p className="text-muted-foreground text-[13px] mb-6 leading-relaxed max-w-[280px]">
-              You haven't created any organizations yet. Get started by creating your first one.
-            </p>
+            <p className="text-muted-foreground text-[13px] mb-6 leading-relaxed max-w-[280px]">You haven't created any organizations yet. Get started by creating your first one.</p>
             <CreateOrganizationModal>
-              <Button variant="outline" className="border-border text-foreground hover:bg-muted rounded-md px-5 h-9 font-semibold bg-card text-[13px] transition-all hover:border-border">
-                <Plus className="mr-1.5 h-3.5 w-3.5 text-muted-foreground" />
-                Create Organization
-              </Button>
+              <Button variant="outline" className="border-border text-foreground hover:bg-muted rounded-md px-5 h-9 font-semibold bg-card text-[13px] transition-all hover:border-border"><Plus className="mr-1.5 h-3.5 w-3.5 text-muted-foreground" />Create Organization</Button>
             </CreateOrganizationModal>
           </div>
         </div>
