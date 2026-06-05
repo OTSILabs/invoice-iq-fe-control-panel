@@ -1,75 +1,7 @@
-// import React from "react"
-// import { Outlet, useLocation, useNavigate } from "react-router-dom"
-// import { useEffect } from "react"
-// import { SidebarProvider, SidebarTrigger, SidebarInset } from "@/components/ui/sidebar"
-// import { TooltipProvider } from "@/components/ui/tooltip"
-// import { AppSidebar } from "./app-sidebar"
-// import { APP_ROUTES } from "@/config/routes"
-// import {
-//   Breadcrumb,
-//   BreadcrumbItem,
-//   BreadcrumbList,
-//   BreadcrumbPage,
-// } from "@/components/ui/breadcrumb"
-// import { Separator } from "@/components/ui/separator"
-
-// export function Layout() {
-//   const location = useLocation()
-//   const navigate = useNavigate()
-  
-//   React.useEffect(() => {
-//     const handleLogout = () => {
-//       sessionStorage.clear(); // Ensure it's cleared globally on any logout event
-//       navigate('/login', { replace: true });
-//     };
-//     window.addEventListener('auth:logout', handleLogout);
-//     return () => window.removeEventListener('auth:logout', handleLogout);
-//   }, [navigate]);
-  
-//   // Find the current route to display the correct breadcrumb
-//   const currentRoute = APP_ROUTES.find(route => route.path === location.pathname) || { title: "Page Not Found" }
-
-//   return (
-//     <TooltipProvider>
-//       <SidebarProvider>
-//         <AppSidebar />
-//         <SidebarInset className="bg-slate-50 min-h-screen flex flex-col">
-//           <header className="flex h-14 shrink-0 items-center gap-2 border-b border-slate-200 px-6 bg-white z-10 sticky top-0">
-//             <SidebarTrigger className="-ml-2 md:hidden" />
-//             <Separator orientation="vertical" className="mr-2 h-4 md:hidden" />
-//             <Breadcrumb>
-//               <BreadcrumbList>
-//                 <BreadcrumbItem>
-//                   <span className="text-slate-500 font-medium text-sm">Home</span>
-//                 </BreadcrumbItem>
-//                 <span className="text-slate-300 mx-1.5 text-sm">{'>'}</span>
-//                 <BreadcrumbItem>
-//                   <BreadcrumbPage className="font-semibold text-slate-800 text-sm">
-//                     {currentRoute.title === "Manage Teams" ? "Team Members" : currentRoute.title}
-//                   </BreadcrumbPage>
-//                 </BreadcrumbItem>
-//               </BreadcrumbList>
-//             </Breadcrumb>
-//           </header>
-          
-//           <div className="flex-1 p-6 overflow-hidden flex flex-col h-[calc(100vh-100px)]">
-//             <Outlet />
-//           </div>
-
-//           <footer className="py-3 border-t border-slate-200 text-center text-[11px] text-slate-500 bg-white flex items-center justify-center gap-1.5 shrink-0 mt-auto">
-//             Powered by <strong className="text-blue-700 tracking-tight font-bold text-[12px]">OTSI</strong> <span className="text-slate-300">|</span> Copyright © 2026 Object Technology Solutions, Inc. All rights reserved.
-//           </footer>
-//         </SidebarInset>
-//       </SidebarProvider>
-//     </TooltipProvider>
-//   )
-// }
-
 import React from "react"
 import { Outlet, useLocation, useNavigate, Link } from "react-router-dom"
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
 import { TooltipProvider } from "@/components/ui/tooltip"
-import { AppSidebar } from "./app-sidebar"
 import { APP_ROUTES } from "@/config/routes"
 import { useQueryClient, useQuery } from "@tanstack/react-query"
 import { organizationsService } from "@/api/services/organizations.service"
@@ -82,6 +14,7 @@ import {
   BreadcrumbSeparator
 } from "@/components/ui/breadcrumb"
 import { Toaster } from "@/components/ui/sonner"
+import { AppSidebar } from "./app-sidebar"
 
 function OrganizationBreadcrumbName({ id, fallback }: { id: string, fallback: string }) {
   const { data } = useQuery({

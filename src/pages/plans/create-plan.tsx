@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { PlanForm } from "@/components/plan-form-dialog"
+import { PlanForm } from "@/pages/plans/plan-form-dialog"
 
 export function CreatePlan() {
   const navigate = useNavigate()

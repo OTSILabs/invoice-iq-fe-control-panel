@@ -8,7 +8,7 @@ import { organizationsService } from "@/api/services/organizations.service"
 import { DataTable } from "@/components/ui/data-table"
 import type { CustomColumnDef } from "@/components/ui/data-table"
 import type { Tenant } from "@/types"
-import { CreateOrganizationModal } from "@/components/create-organization-modal"
+import { CreateOrganizationModal } from "@/components/modals/create-organization-modal"
 
 import { ActivateTenantDialog } from "@/components/tenant-actions/activate-tenant-dialog"
 import { DeactivateTenantDialog } from "@/components/tenant-actions/deactivate-tenant-dialog"

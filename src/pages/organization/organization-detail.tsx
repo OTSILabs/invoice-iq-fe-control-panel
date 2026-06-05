@@ -4,7 +4,7 @@ import { Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { organizationsService } from "@/api/services/organizations.service"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
-import { ConfigurationsTable } from "@/components/configurations-table"
+import { ConfigurationsTable } from "@/pages/organization/configurations-table"
 import { OrganizationFacts } from "./organization-facts"
 import { OrganizationTenantsTab } from "./organization-tenants-tab"
 

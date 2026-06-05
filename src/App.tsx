@@ -1,11 +1,12 @@
 
 import { BrowserRouter, Routes, Route, Navigate, useParams } from "react-router-dom"
-import { Layout } from "./components/layout"
-import { LoginPage } from "./components/Login/login-page"
+
+import { LoginPage } from "./pages/Login/login-page"
 import { APP_ROUTES } from "./config/routes"
-import { ProtectedRoute, PublicRoute } from "./components/auth-guards"
+import { ProtectedRoute, PublicRoute } from "./lib/route-protector/auth-guards"
 import { OrganizationDetail } from "./pages/organization/organization-detail"
-import { TenantDetail } from "./pages/organization/tenant-detail"
+import { TenantDetail } from "./pages/tenants/tenant-detail"
+import { Layout } from "./components/Layout/layout"
 
 function OrgRedirect() {
   const { id } = useParams()

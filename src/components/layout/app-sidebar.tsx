@@ -1,8 +1,6 @@
 import * as React from "react"
 import { Link, useLocation } from "react-router-dom"
 import { FileCheck2, ChevronUp, User2, LogOut } from "lucide-react"
-
-import { TeamSwitcher } from "@/components/team-switcher"
 import { decodeJWT } from "@/lib/utils"
 import { APP_ROUTES } from "@/config/routes"
 import {
@@ -21,6 +19,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { TeamSwitcher } from "../nav-actions/team-switcher"
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const location = useLocation();
