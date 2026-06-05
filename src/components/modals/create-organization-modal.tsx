@@ -356,8 +356,6 @@ export function CreateOrganizationModal({
                           showFooter={false}
                           onCancel={() => setIsCreatingPlan(false)} 
                           onSuccess={(newPlan) => {
-                            // When the plan is successfully created via the PlanForm submission,
-                            // immediately trigger the final organization+tenant submission!
                             setPlanPayload({ plan_id: newPlan?.id || "" });
                             handleFinalSubmit(newPlan?.id || "");
                           }} 
