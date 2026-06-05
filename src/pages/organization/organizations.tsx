@@ -1,5 +1,6 @@
 import { Building2, Plus, Loader2, ExternalLink } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
 import { CreateOrganizationModal } from "@/pages/organization/modals/create-organization-modal"
 import { useQuery } from "@tanstack/react-query"
 import { organizationsService } from "@/api/services/organizations.service"
@@ -17,7 +18,7 @@ export function Organizations() {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 shrink-0">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-foreground">Organizations</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">Your Organizations</h1>
           <p className="text-muted-foreground mt-1 text-sm">Manage and create organizations within your control panel.</p>
         </div>
         <CreateOrganizationModal>
@@ -36,15 +37,30 @@ export function Organizations() {
       ) : organizations && organizations.length > 0  ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {organizations.map((org) => (
-            <div key={org.id} onClick={() => navigate(`/organizations/${org.id}`)} className="bg-card border border-border p-5 rounded-xl hover:border-primary/50 transition-all cursor-pointer group">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/20"><Building2 className="h-5 w-5" /></div>
-                <div><h3 className="font-semibold text-foreground group-hover:text-primary transition-colors">{org.name}</h3><p className="text-[12px] text-muted-foreground font-mono">{org.slug}</p></div>
-              </div>
-              <div className="flex justify-between items-center text-[13px] text-muted-foreground"><span>Tenants: {org.tenant_count || 0}</span><ExternalLink className="h-3.5 w-3.5 opacity-0 group-hover:opacity-100 transition-opacity text-primary" /></div>
-            </div>
-          ))}
-        </div>
+            <Card 
+              key={org.id} 
+              className="cursor-pointer transition-all hover:border-primary/50 flex flex-col group"
+              onClick={() => navigate(`/organizations/${org.id}`)}
+            >
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="truncate text-base font-semibold group-hover:text-primary transition-colors">
+                    {org.name}
+                  </CardTitle>
+                  <ExternalLink className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground" />
+                </div>
+                <CardDescription className="truncate text-[12px] font-mono mt-1">
+                  {org.slug}
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="mt-auto pb-6">
+                <div className="flex items-center text-sm text-muted-foreground">
+                  <span className="font-medium text-foreground mr-1.5">{org.tenant_count || 0}</span>
+                  <span>Tenants</span>
+                </div>
+              </CardContent>
+            </Card>
+          ))}</div>
       ) : (
         <div className="flex-1 flex flex-col items-center justify-center py-12 mt-8">
           <div className="flex flex-col items-center justify-center py-12 px-8 text-center border-[1.5px] border-dashed border-border rounded-2xl bg-card w-[90%] sm:w-[400px]">
@@ -60,3 +76,4 @@ export function Organizations() {
     </div>
   )
 }
+

@@ -106,7 +106,7 @@ useEffect(() => {
                     <Fragment key={crumb.href}>
                       <BreadcrumbItem>
                         {crumb.isLast ? (
-                          <BreadcrumbPage className="text-foreground font-semibold text-[15px]">
+                          <BreadcrumbPage>
                             {crumb.title.startsWith("DYNAMIC_ORG_") ? (
                                <OrganizationBreadcrumbName id={crumb.title.replace("DYNAMIC_ORG_", "")} fallback="Loading..." />
                             ) : (
@@ -115,7 +115,7 @@ useEffect(() => {
                           </BreadcrumbPage>
                         ) : (
                           <BreadcrumbLink asChild>
-                            <Link to={crumb.href} className="text-muted-foreground font-medium text-sm hover:text-foreground">
+                            <Link to={crumb.href}>
                               {crumb.title.startsWith("DYNAMIC_ORG_") ? (
                                 <OrganizationBreadcrumbName id={crumb.title.replace("DYNAMIC_ORG_", "")} fallback="Loading..." />
                               ) : (
@@ -133,7 +133,7 @@ useEffect(() => {
             </header>
 
             {/* ── Content ── */}
-            <main className="flex-1 p-6 sm:p-8 lg:p-10 overflow-auto bg-background">
+            <main className="flex-1 p-2 sm:p-4 lg:p-8 overflow-auto bg-background">
               <Outlet />
             </main>
 
