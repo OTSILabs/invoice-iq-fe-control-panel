@@ -24,9 +24,9 @@ export function Organizations() {
           </p>
         </div>
         <CreateOrganizationModal>
-          <Button size="sm" className="gap-1.5 shrink-0">
-            <Plus className="h-3.5 w-3.5" />
-            Create organization
+          <Button size="lg" className="gap-2 bg-primary text-primary-foreground shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all font-semibold rounded-full px-6 w-auto h-11">
+            <Plus className="h-4 w-4" />
+            Create Organization
           </Button>
         </CreateOrganizationModal>
       </div>
@@ -42,27 +42,25 @@ export function Organizations() {
           {organizations.map((org) => (
             <div
               key={org.id}
-              className="group relative border border-border rounded-xl p-5 bg-card hover:border-border/80 transition-colors"
+              className="group relative border border-border rounded-xl p-5 bg-card hover:border-primary/40 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col"
             >
               {/* Card content */}
-              <div className="truncate font-medium text-sm">{org.name}</div>
-              <div>
-                 
-                  <span className="text-xs text-muted-foreground ">Tenants -</span>
-                   <span className="text-xs text-muted-foreground ml-1.5 font-semibold">{org.tenant_count ?? 0}</span>
+              <div className="flex flex-col gap-1 flex-1">
+                <div className="truncate font-medium text-sm text-foreground group-hover:text-primary transition-colors">{org.name}</div>
+                <div className="truncate font-mono text-[11px] text-muted-foreground">{org.slug}</div>
+              </div>
+
+              <div className="flex items-center justify-between mt-5 pt-3 border-t border-border">
+                <div className="flex items-center">
+                  <span className="text-xs text-muted-foreground">Tenants:</span>
+                  <span className="text-xs text-foreground ml-1.5 font-semibold">{org.tenant_count ?? 0}</span>
                 </div>
-              <div className="truncate font-mono text-xs text-muted-foreground mt-0.5">{org.slug}</div>
-              <div className="flex items-center justify-between mt-4 pt-3 border-t border-border">
-                
-                  <Button variant="outline" size="sm" className="h-7 text-xs gap-1" asChild>
+                <Button variant="outline" size="sm" className="h-7 text-xs gap-1 group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary hover:bg-primary/90! hover:text-primary-foreground! transition-all duration-300" asChild>
                   <Link to={`/organizations/${org.id}`}>
                     Details <ArrowRight className="h-3 w-3" />
                   </Link>
                 </Button>
               </div>
-              
-
-              
             </div>
           ))}
         </div>
