@@ -11,11 +11,6 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 export function TenantDetail() {
   const { orgId, tenantId } = useParams<{ orgId: string; tenantId: string }>()
   const navigate = useNavigate()
-
- 
-
-  // In a real app, you might have a getTenantById endpoint.
-  // For now, we'll fetch all tenants and find the one that matches.
   const { data: tenants = [], isLoading, isError } = useQuery({
     queryKey: ['organizations', orgId, 'tenants'],
     queryFn: () => organizationsService.getTenants(orgId!),

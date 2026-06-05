@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Plus, Loader2 } from "lucide-react"
+import { Plus, Loader2, Minus } from "lucide-react"
 import {
   Dialog,
   DialogContent,
@@ -247,10 +247,10 @@ export function CreateOrganizationModal({
               <div className="p-6 md:p-8">
                 {activeStepIndex === 0 && (
                   <form id="org-form" onSubmit={(e) => { e.preventDefault(); if(canProceedToNext()) handleNextStep(); }} className="space-y-4 animate-in fade-in slide-in-from-right-4 duration-300">
-                    <div>
+                    {/* <div>
                       <h3 className="text-lg font-semibold text-slate-900 mb-1">Organization Info</h3>
                       <p className="text-sm text-slate-500 mb-6">Enter the primary details for the new organization.</p>
-                    </div>
+                    </div> */}
                     <InputField
                       id="orgName" 
                       label={<>Organization Name <span className="text-red-500">*</span></>}
@@ -264,10 +264,10 @@ export function CreateOrganizationModal({
 
                 {activeStepIndex === 1 && (
                   <form id="tenant-form" onSubmit={(e) => { e.preventDefault(); if(canProceedToNext()) handleNextStep(); }} className="space-y-4 animate-in fade-in slide-in-from-right-4 duration-300">
-                    <div>
+                    {/* <div>
                       <h3 className="text-lg font-semibold text-slate-900 mb-1">Tenant Configuration</h3>
                       <p className="text-sm text-slate-500 mb-6">Configure the technical and administrative settings.</p>
-                    </div>
+                    </div> */}
                     <div className="grid gap-5 sm:grid-cols-2">
                       <InputField id="slug" label="Tenant Slug" placeholder="acme-corp" value={tenantPayload.slug} onChange={(e: any) => setTenantPayload({...tenantPayload, slug: e.target.value})} />
                       <InputField id="role" label="Tenant Role" placeholder="admin" value={tenantPayload.tenant_role} onChange={(e: any) => setTenantPayload({...tenantPayload, tenant_role: e.target.value})} />
@@ -287,10 +287,10 @@ export function CreateOrganizationModal({
                 {activeStepIndex === 2 && (
                   <>
                     <form id="plan-form" onSubmit={(e) => { e.preventDefault(); if(isFormReadyToSubmit && !isCreatingPlan) handleFinalSubmit(); }} className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
-                      <div>
+                      {/* <div>
                         <h3 className="text-lg font-semibold text-slate-900 mb-1">Plan Selection</h3>
                         <p className="text-sm text-slate-500 mb-6">Choose a billing tier for this organization.</p>
-                      </div>
+                      </div> */}
                       <Field>
                         <div className="flex items-center justify-between mb-2">
                           <FieldLabel htmlFor="planSelect" className="mb-0">Select Plan <span className="text-red-500">*</span></FieldLabel>
@@ -317,9 +317,14 @@ export function CreateOrganizationModal({
 
                     {isCreatingPlan && (
                       <div className="mt-8 pt-6 border-t border-slate-100 animate-in fade-in slide-in-from-bottom-4 duration-300">
-                        <div className="mb-4">
-                          <h4 className="text-sm font-bold text-slate-900 mb-1">Create New Plan</h4>
-                          <p className="text-xs text-slate-500">Add a new plan to the system. It will be automatically available to select once created.</p>
+                        <div className="mb-4 flex items-start justify-between">
+                          <div>
+                            <h4 className="text-sm font-bold text-slate-900 mb-1">Create New Plan</h4>
+                            <p className="text-xs text-slate-500">Add a new plan to the system. It will be automatically available to select once created.</p>
+                          </div>
+                          <Button type="button" variant="ghost" size="icon" className="h-8 w-8 rounded-full text-muted-foreground hover:bg-red-50 hover:text-red-600" onClick={() => setIsCreatingPlan(false)}>
+                            <Minus className="h-4 w-4" />
+                          </Button>
                         </div>
                         <PlanForm 
                           formId="inline-plan-form"
