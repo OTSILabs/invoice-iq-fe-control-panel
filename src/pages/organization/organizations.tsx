@@ -21,7 +21,7 @@ export function Organizations() {
           <p className="text-muted-foreground mt-1 text-sm">Manage and create organizations within your control panel.</p>
         </div>
         <CreateOrganizationModal>
-          <Button className="bg-primary hover:bg-primary/90 text-white shadow-sm rounded-md px-5 font-semibold tracking-wide">
+          <Button className="bg-primary hover:bg-primary/90 text-white rounded-md px-5 font-semibold tracking-wide">
             <Plus className="mr-2 h-4 w-4" />
             Create Organization
           </Button>
@@ -64,7 +64,7 @@ export function Organizations() {
               You haven't created any organizations yet. Get started by creating your first one.
             </p>
             <CreateOrganizationModal>
-              <Button variant="outline" className="border-border text-foreground hover:bg-muted rounded-md px-5 h-9 shadow-sm font-semibold bg-card text-[13px] transition-all hover:border-border">
+              <Button variant="outline" className="border-border text-foreground hover:bg-muted rounded-md px-5 h-9 font-semibold bg-card text-[13px] transition-all hover:border-border">
                 <Plus className="mr-1.5 h-3.5 w-3.5 text-muted-foreground" />
                 Create Organization
               </Button>

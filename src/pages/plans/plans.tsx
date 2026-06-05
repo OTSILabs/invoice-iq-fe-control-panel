@@ -219,14 +219,14 @@ export function Plans() {
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
           <Button
             onClick={() => navigate("/plan/create")}
-            className="gap-1.5 rounded-xl font-semibold shadow-sm"
+            className="gap-1.5 rounded-xl font-semibold"
           >
             <Plus className="h-4 w-4" /> Create Plan
           </Button>
         </div>
       </div>
 
-      <Card className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border border-border bg-card p-0 dark:border-slate-800 dark:bg-slate-900/50 shadow-none ring-0">
+      <Card className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border border-border bg-card p-0 dark:border-slate-800 dark:bg-slate-900/50 ring-0">
         <CardContent className="flex min-h-0 flex-1 flex-col p-0">
           <div className="flex flex-col gap-3 border-b bg-card p-3 lg:flex-row lg:items-center lg:justify-between">
             <Tabs
@@ -318,7 +318,7 @@ export function Plans() {
                   {plans.length === 0 && (
                     <Button
                       onClick={() => navigate("/plan/create")}
-                      className="h-auto gap-2 rounded-xl px-6 py-5 text-base font-semibold shadow-md"
+                      className="h-auto gap-2 rounded-xl px-6 py-5 text-base font-semibold"
                     >
                       Create Plan
                     </Button>

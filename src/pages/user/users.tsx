@@ -439,7 +439,7 @@ export function Users() {
 
           <Button
             onClick={() => setIsCreateOpen(true)}
-            className="gap-1.5 rounded-xl font-semibold shadow-sm shrink-0"
+            className="gap-1.5 rounded-xl font-semibold shrink-0"
           >
             <Plus className="h-4 w-4" /> Add User
           </Button>

@@ -211,7 +211,7 @@ export function OrganizationDetail() {
   return (
      <div className="flex w-full animate-in flex-col gap-6 pb-12 duration-300 fade-in">
       {/* <div className="flex items-center gap-4 pb-2 shrink-0">
-        <Button variant="ghost" size="icon" onClick={() => navigate('/organizations')} className="h-8 w-8 rounded-full border border-border shadow-sm bg-card hover:bg-muted">
+        <Button variant="ghost" size="icon" onClick={() => navigate('/organizations')} className="h-8 w-8 rounded-full border border-border bg-card hover:bg-muted">
           <ArrowLeft className="h-4 w-4 text-slate-600" />
         </Button>
         <div>
@@ -283,7 +283,7 @@ export function OrganizationDetail() {
               </div>
 
               <CreateOrganizationModal existingOrganization={{ id: organization.id, name: organization.name }}>
-                <Button className="gap-1.5 rounded-xl font-semibold shadow-sm bg-primary hover:bg-primary/90 text-white">
+                <Button className="gap-1.5 rounded-xl font-semibold bg-primary hover:bg-primary/90 text-white">
                   <Plus className="h-4 w-4" /> Add Tenant
                 </Button>
               </CreateOrganizationModal>

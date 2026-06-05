@@ -56,7 +56,7 @@ export function TenantDetail() {
               <p className="text-[13px] text-muted-foreground">Key details for this tenant.</p>
             </div>
           </div>
-          <Button variant="outline" onClick={() => navigate(`/organizations/${orgId}`)} className="text-sm shadow-sm">
+          <Button variant="outline" onClick={() => navigate(`/organizations/${orgId}`)} className="text-sm">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Organization
           </Button>

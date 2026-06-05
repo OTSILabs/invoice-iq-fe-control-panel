@@ -253,7 +253,7 @@ export function ErpSettings() {
           {!isAllUsed && (
             <Button
               onClick={() => setIsCreateOpen(true)}
-              className="shrink-0 gap-1.5 rounded-xl font-semibold shadow-sm"
+              className="shrink-0 gap-1.5 rounded-xl font-semibold"
             >
               <Plus className="h-4 w-4" /> Add ERP Setting
             </Button>
@@ -299,7 +299,7 @@ export function ErpSettings() {
 function ErpSettingsCards({ records }: { records: ErpSetting[] }) {
   if (!records.length) {
     return (
-      <Card className="w-full border border-border p-6 text-center shadow-sm">
+      <Card className="w-full border border-border p-6 text-center">
         <CardHeader>
           <CardTitle>No ERP settings found</CardTitle>
           <CardDescription>
@@ -320,7 +320,7 @@ function ErpSettingsCards({ records }: { records: ErpSetting[] }) {
         return (
           <Card
             key={record.erp_id}
-            className="flex h-full flex-col overflow-hidden border-border/80 shadow-sm"
+            className="flex h-full flex-col overflow-hidden border-border/80"
           >
             <CardHeader className="border-b bg-muted/10 p-5 pb-4">
               <div className="flex items-start justify-between gap-3">
