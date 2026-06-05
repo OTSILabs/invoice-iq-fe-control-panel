@@ -1,4 +1,4 @@
-import React from "react"
+
 import { Outlet, useLocation, useNavigate, Link } from "react-router-dom"
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
 import { TooltipProvider } from "@/components/ui/tooltip"
@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/breadcrumb"
 import { Toaster } from "@/components/ui/sonner"
 import { AppSidebar } from "./app-sidebar"
+import { Fragment, useEffect } from "react"
 
 function OrganizationBreadcrumbName({ id, fallback }: { id: string, fallback: string }) {
   const { data } = useQuery({
@@ -31,7 +32,7 @@ export function Layout() {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
 
-  React.useEffect(() => {
+useEffect(() => {
     const handleLogout = () => {
       sessionStorage.clear()
       navigate("/login", { replace: true })
@@ -98,11 +99,11 @@ export function Layout() {
           <SidebarInset className="bg-background flex flex-col h-svh overflow-hidden">
 
             {/* ── Header ── */}
-            <header className="min-h-16 shrink-0 flex items-center px-4 sm:px-6 py-3 bg-background border-b border-border z-10">
+            <header className="min-h-16 shrink-0 flex items-center px-4 sm:px-6 py-3 bg-header text-header-foreground border-b border-border z-10">
               <Breadcrumb>
                 <BreadcrumbList>
                   {breadcrumbs.map((crumb) => (
-                    <React.Fragment key={crumb.href}>
+                    <Fragment key={crumb.href}>
                       <BreadcrumbItem>
                         {crumb.isLast ? (
                           <BreadcrumbPage className="text-foreground font-semibold text-[15px]">
@@ -125,19 +126,19 @@ export function Layout() {
                         )}
                       </BreadcrumbItem>
                       {!crumb.isLast && <BreadcrumbSeparator />}
-                    </React.Fragment>
+                    </Fragment>
                   ))}
                 </BreadcrumbList>
               </Breadcrumb>
             </header>
 
             {/* ── Content ── */}
-            <main className="flex-1 px-5 pt-4 pb-5 overflow-auto bg-background">
+            <main className="flex-1 p-6 sm:p-8 lg:p-10 overflow-auto bg-background">
               <Outlet />
             </main>
 
             {/* ── Footer ── */}
-            <footer className="h-10 shrink-0 border-t border-border bg-background flex items-center justify-center gap-1.5 text-[11px] text-muted-foreground tracking-tight mt-auto">
+            <footer className="h-10 shrink-0 border-t border-border bg-footer text-footer-foreground flex items-center justify-center gap-1.5 text-[11px] tracking-tight mt-auto">
               Powered by{" "}
               <strong className="text-primary font-bold text-[11px]">OTSI</strong>
               <span className="text-border mx-0.5">|</span>
