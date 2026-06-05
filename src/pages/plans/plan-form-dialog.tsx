@@ -38,7 +38,7 @@ const planSchema = z.object({
 type FormValues = z.infer<typeof planSchema>
 
 interface PlanFormProps {
-  onSuccess?: (data?: any) => void
+  onSuccess?: (data?: Plan) => void
   onCancel?: () => void
   mode?: "create" | "edit"
   plan?: Plan | null
