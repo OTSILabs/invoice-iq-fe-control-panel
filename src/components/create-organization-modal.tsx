@@ -85,6 +85,28 @@ export function CreateOrganizationModal({
     setActiveStepIndex(index)
   }
 
+  const handleOpenChange = (open: boolean) => {
+    setIsOpen(open)
+    if (!open) {
+      // Reset state when closed after animation
+      setTimeout(() => {
+        setActiveStepIndex(0)
+        setIsCreatingPlan(false)
+        setOrgPayload({ name: existingOrganization?.name || "" })
+        setTenantPayload({
+          slug: "",
+          tenant_role: "",
+          admin_user: {
+            email: "",
+            password: "",
+            full_name: ""
+          }
+        })
+        setPlanPayload({ plan_id: "" })
+      }, 300)
+    }
+  }
+
   const handleCreateOrganizationOnly = async () => {
     setIsPending(true)
     try {
@@ -189,7 +211,7 @@ export function CreateOrganizationModal({
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       {children ? <DialogTrigger asChild>{children}</DialogTrigger> : null}
       <DialogContent
         className="grid max-h-[86vh] grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden p-0 sm:max-w-4xl gap-0 !rounded-md !shadow-none"
@@ -295,7 +317,10 @@ export function CreateOrganizationModal({
                         <div className="flex items-center justify-between mb-2">
                           <FieldLabel htmlFor="planSelect" className="mb-0">Select Plan <span className="text-red-500">*</span></FieldLabel>
                           {!isCreatingPlan && (
-                            <Button type="button" variant="ghost" size="sm" className="h-8 text-blue-600 hover:text-blue-700 hover:bg-blue-50 px-2" onClick={() => setIsCreatingPlan(true)}>
+                            <Button type="button" variant="ghost" size="sm" className="h-8 text-blue-600 hover:text-blue-700 hover:bg-blue-50 px-2" onClick={() => {
+                              setPlanPayload({ plan_id: "" });
+                              setIsCreatingPlan(true);
+                            }}>
                               <Plus className="h-4 w-4 mr-1" /> Add Plan
                             </Button>
                           )}
