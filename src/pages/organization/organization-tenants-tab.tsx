@@ -10,12 +10,12 @@ import type { CustomColumnDef } from "@/components/ui/data-table"
 import type { Tenant } from "@/types"
 import { CreateOrganizationModal } from "@/components/modals/create-organization-modal"
 
-import { ActivateTenantDialog } from "@/components/tenant-actions/activate-tenant-dialog"
-import { DeactivateTenantDialog } from "@/components/tenant-actions/deactivate-tenant-dialog"
-import { BlockTenantDialog } from "@/components/tenant-actions/block-tenant-dialog"
-import { UnblockTenantDialog } from "@/components/tenant-actions/unblock-tenant-dialog"
-import { ExpireTenantDialog } from "@/components/tenant-actions/expire-tenant-dialog"
-import { DeleteTenantDialog } from "@/components/tenant-actions/delete-tenant-dialog"
+import { ActivateTenantDialog } from "@/pages/tenants/tenant-actions/activate-tenant-dialog"
+import { DeactivateTenantDialog } from "@/pages/tenants/tenant-actions/deactivate-tenant-dialog"
+import { BlockTenantDialog } from "@/pages/tenants/tenant-actions/block-tenant-dialog"
+import { UnblockTenantDialog } from "@/pages/tenants/tenant-actions/unblock-tenant-dialog"
+import { ExpireTenantDialog } from "@/pages/tenants/tenant-actions/expire-tenant-dialog"
+import { DeleteTenantDialog } from "@/pages/tenants/tenant-actions/delete-tenant-dialog"
 import {
   DropdownMenu,
   DropdownMenuContent,
