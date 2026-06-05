@@ -196,7 +196,7 @@ export function ErpSettingFormDialog({
 
             {/* Is Enabled */}
             <div className="flex items-center justify-between rounded-md border p-2.5 h-10 bg-background md:min-w-40">
-              <Label htmlFor="is_enabled" className="font-semibold text-foreground dark:text-slate-300">
+              <Label htmlFor="is_enabled" className="font-semibold text-foreground">
                 Enabled
               </Label>
               <Controller
@@ -257,7 +257,7 @@ export function ErpSettingFormDialog({
           </div>
 
           {/* Footer Actions */}
-          <DialogFooter className="gap-2 sm:gap-0 border-t border-slate-100 pt-4 dark:border-slate-800">
+          <DialogFooter className="gap-2 sm:gap-0 border-t border-slate-100 pt-4">
             <Button
               type="button"
               variant="outline"

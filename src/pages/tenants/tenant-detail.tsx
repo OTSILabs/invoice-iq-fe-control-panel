@@ -76,7 +76,7 @@ export function TenantDetail() {
               variant={tenant.access_status?.toLowerCase() === 'active' ? "secondary" : "outline"}
               className={
                 tenant.access_status?.toLowerCase() === 'active'
-                  ? "border-emerald-200 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/20 dark:text-emerald-400"
+                  ? "border-emerald-200 bg-emerald-50 text-emerald-700 "
                   : "text-muted-foreground"
               }
             >

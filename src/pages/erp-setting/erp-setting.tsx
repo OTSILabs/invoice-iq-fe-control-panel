@@ -196,10 +196,10 @@ export function ErpSettings() {
     <div className="flex w-full animate-in flex-col gap-6 pb-12 duration-300 fade-in">
       <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-foreground dark:text-white">
+          <h1 className="text-xl font-bold tracking-tight text-foreground">
             ERP Settings
           </h1>
-          <p className="mt-0.5 text-sm text-muted-foreground dark:text-muted-foreground">
+          <p className="mt-0.5 text-sm text-muted-foreground">
             Configure and maintain enterprise ERP integrations.
           </p>
         </div>
@@ -269,12 +269,12 @@ export function ErpSettings() {
         </div>
       ) : isError ? (
         <div className="mx-auto flex min-h-[40vh] max-w-md flex-col items-center justify-center gap-4 text-center">
-          <div className="rounded-full bg-red-100 p-3 dark:bg-red-950/40">
-            <AlertCircle className="h-8 w-8 text-red-600 dark:text-red-400" />
+          <div className="rounded-full bg-red-100 p-3">
+            <AlertCircle className="h-8 w-8 text-red-600" />
           </div>
           <div>
             <h2 className="text-xl font-bold">Failed to load ERP settings</h2>
-            <p className="mt-1 text-muted-foreground dark:text-muted-foreground">
+            <p className="mt-1 text-muted-foreground">
               There was a connection issue. Please check your network and API
               config.
             </p>
@@ -325,7 +325,7 @@ function ErpSettingsCards({ records }: { records: ErpSetting[] }) {
             <CardHeader className="border-b bg-muted/10 p-5 pb-4">
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <CardTitle className="truncate text-base font-bold text-foreground dark:text-slate-100">
+                  <CardTitle className="truncate text-base font-bold text-foreground">
                     {displayName}
                   </CardTitle>
                   <CardDescription className="mt-1 text-xs font-semibold tracking-wider text-primary uppercase">
@@ -339,7 +339,7 @@ function ErpSettingsCards({ records }: { records: ErpSetting[] }) {
                   <Switch checked={isEnabled} disabled className="opacity-75" />
                 </div>
               </div>
-              <div className="mt-3 flex items-start justify-between gap-4 border-t border-slate-100 pt-2 dark:border-slate-800">
+              <div className="mt-3 flex items-start justify-between gap-4 border-t border-slate-100 pt-2">
                 <MetaDateItem label="Created" value={record.created_at} />
                 <MetaDateItem
                   label="Updated"

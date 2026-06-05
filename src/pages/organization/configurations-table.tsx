@@ -26,9 +26,9 @@ export function ConfigurationsTable({ entityId, entityType }: ConfigurationsTabl
   })
 
   const columns = useMemo<CustomColumnDef<Configuration>[]>(() => [
-    { accessorKey: "key", header: "Key", width: 250, cell: ({ row }) => <span className="font-semibold text-slate-800 dark:text-slate-200 font-mono text-sm">{row.original.key}</span> },
-    { accessorKey: "value", header: "Value", width: 300, cell: ({ row }) => <span className="text-slate-600 dark:text-slate-300">{row.original.value}</span> },
-    { accessorKey: "is_active", header: "Status", width: 120, cell: ({ row }) => <Badge variant={row.original.is_active ? "secondary" : "outline"} className={row.original.is_active ? "border-emerald-200 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/20 dark:text-emerald-400" : "text-slate-400"}>{row.original.is_active ? "Active" : "Inactive"}</Badge> },
+    { accessorKey: "key", header: "Key", width: 250, cell: ({ row }) => <span className="font-semibold text-slate-800  font-mono text-sm">{row.original.key}</span> },
+    { accessorKey: "value", header: "Value", width: 300, cell: ({ row }) => <span className="text-slate-600 ">{row.original.value}</span> },
+    { accessorKey: "is_active", header: "Status", width: 120, cell: ({ row }) => <Badge variant={row.original.is_active ? "secondary" : "outline"} className={row.original.is_active ? "border-emerald-200 bg-emerald-50 text-emerald-700 " : "text-slate-400"}>{row.original.is_active ? "Active" : "Inactive"}</Badge> },
     { accessorKey: "is_editable_by_tenant", header: "Tenant Editable", width: 150, cell: ({ row }) => <Badge variant={row.original.is_editable_by_tenant ? "secondary" : "outline"} className={row.original.is_editable_by_tenant ? "border-blue-200 bg-blue-50 text-blue-700" : "text-slate-400"}>{row.original.is_editable_by_tenant ? "Yes" : "No"}</Badge> },
   ], [])
 

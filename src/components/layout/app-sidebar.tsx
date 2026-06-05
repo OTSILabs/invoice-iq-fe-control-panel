@@ -93,7 +93,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     {userInitials}
                   </div>
                   <div className="flex flex-col items-start text-sm group-data-[collapsible=icon]:hidden overflow-hidden flex-1 text-left ml-1">
-                    <span className="font-semibold text-slate-700 dark:text-slate-200 truncate w-full">{userName}</span>
+                    <span className="font-semibold text-slate-700 truncate w-full">{userName}</span>
                     <span className="text-xs text-slate-500 truncate w-full">{userRole}</span>
                   </div>
                   <ChevronUp className="h-4 w-4 ml-auto shrink-0 group-data-[collapsible=icon]:hidden opacity-50" />

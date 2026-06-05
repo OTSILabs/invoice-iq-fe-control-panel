@@ -27,7 +27,7 @@ export function TeamSwitcher({
             <activeTeam.logo className="size-5" />
           </div>
           <div className="grid flex-1 text-left text-sm leading-tight ml-2 group-data-[collapsible=icon]:hidden">
-            <span className="truncate font-bold text-lg tracking-tight text-slate-800 dark:text-slate-100">{activeTeam.name}</span>
+            <span className="truncate font-bold text-lg tracking-tight text-slate-800 ">{activeTeam.name}</span>
           </div>
         </SidebarMenuButton>
       </SidebarMenuItem>

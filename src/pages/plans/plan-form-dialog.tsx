@@ -107,7 +107,7 @@ export function PlanForm({
       <div className="space-y-1.5">
         <Label
           htmlFor="description"
-          className="font-semibold text-slate-700 dark:text-slate-300"
+          className="font-semibold text-slate-700"
         >
           Description
         </Label>
@@ -129,7 +129,7 @@ export function PlanForm({
       <div className="space-y-1.5">
         <Label
           htmlFor="plan_type"
-          className="font-semibold text-slate-700 dark:text-slate-300"
+          className="font-semibold text-slate-700"
         >
           Plan Type
         </Label>
@@ -152,7 +152,7 @@ export function PlanForm({
       <div className="space-y-1.5">
         <Label
           htmlFor="plan_interval"
-          className="font-semibold text-slate-700 dark:text-slate-300"
+          className="font-semibold text-slate-700"
         >
           Plan Interval
         </Label>
@@ -175,7 +175,7 @@ export function PlanForm({
       <div className="space-y-1.5">
         <Label
           htmlFor="price_per_invoice_amount"
-          className="font-semibold text-slate-700 dark:text-slate-300"
+          className="font-semibold text-slate-700"
         >
           Price Per Invoice Amount
         </Label>
@@ -198,7 +198,7 @@ export function PlanForm({
       <div className="space-y-1.5">
         <Label
           htmlFor="price_per_invoice_currency"
-          className="font-semibold text-slate-700 dark:text-slate-300"
+          className="font-semibold text-slate-700"
         >
           Price Per Invoice Currency
         </Label>
@@ -218,10 +218,10 @@ export function PlanForm({
       </div>
 
       {/* Is Active Toggle */}
-      <div className="mt-2 flex items-center justify-between border-t border-slate-100 py-2 dark:border-slate-800/80">
+      <div className="mt-2 flex items-center justify-between border-t border-slate-100 py-2">
         <Label
           htmlFor="is_active"
-          className="font-semibold text-slate-700 dark:text-slate-300"
+          className="font-semibold text-slate-700"
         >
           Is Active
         </Label>
@@ -241,7 +241,7 @@ export function PlanForm({
 
       {/* Footer Actions */}
       {showFooter && (
-        <div className="flex gap-3 border-t border-slate-100 pt-4 dark:border-slate-800/80">
+        <div className="flex gap-3 border-t border-slate-100 pt-4">
           <Button
             type="button"
             variant="outline"

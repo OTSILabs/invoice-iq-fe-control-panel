@@ -41,7 +41,7 @@ export function Plans() {
         header: "Plan Type",
         width: 140,
         cell: ({ row }) => (
-          <span className="font-semibold text-foreground dark:text-slate-200">
+          <span className="font-semibold text-foreground ">
             {row.original.plan_type}
           </span>
         ),
@@ -51,7 +51,7 @@ export function Plans() {
         header: "Price",
         width: 140,
         cell: ({ row }) => (
-          <span className="font-medium text-slate-600 dark:text-slate-300">
+          <span className="font-medium text-slate-600 ">
             {row.original.price_per_invoice_currency}{" "}
             {row.original.price_per_invoice_amount}
           </span>
@@ -62,7 +62,7 @@ export function Plans() {
         header: "Interval",
         width: 120,
         cell: ({ row }) => (
-          <span className="text-muted-foreground dark:text-muted-foreground">
+          <span className="text-muted-foreground ">
             {row.original.plan_interval}
           </span>
         ),
@@ -76,7 +76,7 @@ export function Plans() {
             variant={row.original.is_active ? "secondary" : "outline"}
             className={
               row.original.is_active
-                ? "border-emerald-200 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/20 dark:text-emerald-400"
+                ? "border-emerald-200 bg-emerald-50 text-emerald-700 "
                 : "text-muted-foreground"
             }
           >
@@ -89,7 +89,7 @@ export function Plans() {
         header: "Description",
         width: 120,
         cell: ({ row }) => (
-          <span className="block truncate text-muted-foreground dark:text-muted-foreground">
+          <span className="block truncate text-muted-foreground">
             {row.original.description}
           </span>
         ),
@@ -173,8 +173,8 @@ export function Plans() {
   if (isLoading) {
     return (
       <div className="flex min-h-[50vh] flex-col items-center justify-center gap-3">
-        <Loader2 className="h-10 w-10 animate-spin text-primary dark:text-blue-400" />
-        <p className="font-medium text-muted-foreground dark:text-muted-foreground">
+        <Loader2 className="h-10 w-10 animate-spin text-primary " />
+        <p className="font-medium text-muted-foreground ">
           Fetching subscription plans...
         </p>
       </div>
@@ -185,12 +185,12 @@ export function Plans() {
   if (isError) {
     return (
       <div className="mx-auto flex min-h-[50vh] max-w-md flex-col items-center justify-center gap-4 text-center">
-        <div className="rounded-full bg-red-100 p-3 dark:bg-red-950/40">
-          <AlertCircle className="h-8 w-8 text-red-600 dark:text-red-400" />
+        <div className="rounded-full bg-red-100 p-3 ">
+          <AlertCircle className="h-8 w-8 text-red-600 " />
         </div>
         <div>
           <h2 className="text-xl font-bold">Failed to load plans</h2>
-          <p className="mt-1 text-muted-foreground dark:text-muted-foreground">
+          <p className="mt-1 text-muted-foreground ">
             There was a connection issue. Please check your network and API
             config.
           </p>
@@ -208,10 +208,10 @@ export function Plans() {
     <div className="flex w-full animate-in flex-col gap-6 pb-12 duration-300 fade-in">
       <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-foreground dark:text-white">
+          <h1 className="text-xl font-bold tracking-tight text-foreground ">
             Plans & Pricing
           </h1>
-          <p className="mt-0.5 text-sm text-muted-foreground dark:text-muted-foreground">
+          <p className="mt-0.5 text-sm text-muted-foreground ">
             Manage your subscription configurations.
           </p>
         </div>
@@ -226,7 +226,7 @@ export function Plans() {
         </div>
       </div>
 
-      <Card className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border border-border bg-card p-0 dark:border-slate-800 dark:bg-slate-900/50 ring-0">
+      <Card className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border border-border bg-card p-0 ">
         <CardContent className="flex min-h-0 flex-1 flex-col p-0">
           <div className="flex flex-col gap-3 border-b bg-card p-3 lg:flex-row lg:items-center lg:justify-between">
             <Tabs
@@ -306,10 +306,10 @@ export function Plans() {
               <div className="flex flex-col items-center justify-center py-12 px-4 text-center animate-in fade-in slide-in-from-bottom-2 duration-300">
                 <div className="mx-auto max-w-md space-y-6">
                   <div className="space-y-2">
-                    <h1 className="text-3xl font-extrabold tracking-tight text-foreground dark:text-white">
+                    <h1 className="text-3xl font-extrabold tracking-tight text-foreground ">
                       No Plans Found
                     </h1>
-                    <p className="mx-auto max-w-sm text-base text-muted-foreground dark:text-muted-foreground">
+                    <p className="mx-auto max-w-sm text-base text-muted-foreground ">
                       {searchText || status !== "all" || planTypeFilter !== "all"
                         ? "We couldn't find any plans matching your search or filters."
                         : "Create your first plan to get started."}

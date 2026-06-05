@@ -23,7 +23,7 @@ export function TenantEventsTable({ tenantId }: TenantEventsTableProps) {
       header: "Event Type",
       width: 200,
       cell: ({ row }) => (
-        <span className="font-semibold text-slate-800 dark:text-slate-200">
+        <span className="font-semibold text-slate-800 ">
           {row.original.event_type || row.original.type || "Unknown"}
         </span>
       ),
@@ -33,7 +33,7 @@ export function TenantEventsTable({ tenantId }: TenantEventsTableProps) {
       header: "Message",
       width: 350,
       cell: ({ row }) => (
-        <span className="text-slate-600 dark:text-slate-300">
+        <span className="text-slate-600 ">
           {row.original.message || row.original.detail || "-"}
         </span>
       ),

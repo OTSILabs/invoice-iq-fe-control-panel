@@ -225,7 +225,7 @@ export function CreateUserDialog({ open, onOpenChange, roles }: CreateUserDialog
           </div>
 
           {/* Is Active Toggle */}
-          <div className="flex items-center justify-between border-t border-slate-100 pt-4 dark:border-slate-800/80">
+          <div className="flex items-center justify-between border-t border-slate-100 pt-4 ">
             <Label htmlFor="is_active" className="text-foreground font-semibold">
               Is Active
             </Label>
@@ -244,7 +244,7 @@ export function CreateUserDialog({ open, onOpenChange, roles }: CreateUserDialog
           </div>
 
           {/* Dialog Footer Actions */}
-          <DialogFooter className="gap-2 sm:gap-0 border-t border-slate-100 pt-4 dark:border-slate-800/80">
+          <DialogFooter className="gap-2 sm:gap-0 border-t border-slate-100 pt-4 ">
             <Button
               type="button"
               variant="ghost"

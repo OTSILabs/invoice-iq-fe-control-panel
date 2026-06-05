@@ -195,8 +195,8 @@ export function Users() {
               variant="outline"
               className={cn(
                 "font-semibold text-xs py-0.5 px-2.5 rounded-full border",
-                statusVal === "ACTIVE" && "bg-green-50 border-green-200 text-green-700 dark:bg-emerald-950/20 dark:text-emerald-400",
-                statusVal === "INACTIVE" && "bg-slate-100 border-border text-foreground dark:bg-slate-800 dark:text-muted-foreground",
+                statusVal === "ACTIVE" && "bg-green-50 border-green-200 text-green-700 ",
+                statusVal === "INACTIVE" && "bg-slate-100 border-border text-foreground ",
               )}
             >
               {statusVal}
@@ -269,8 +269,8 @@ export function Users() {
   if (isLoadingUsers || isLoadingRoles) {
     return (
       <div className="flex min-h-[50vh] flex-col items-center justify-center gap-3">
-        <Loader2 className="h-10 w-10 animate-spin text-primary dark:text-blue-400" />
-        <p className="font-medium text-muted-foreground dark:text-muted-foreground">
+        <Loader2 className="h-10 w-10 animate-spin text-primary " />
+        <p className="font-medium text-muted-foreground ">
           Loading platform users...
         </p>
       </div>
@@ -280,12 +280,12 @@ export function Users() {
   if (isErrorUsers || isErrorRoles) {
     return (
       <div className="mx-auto flex min-h-[50vh] max-w-md flex-col items-center justify-center gap-4 text-center">
-        <div className="rounded-full bg-red-100 p-3 dark:bg-red-950/40">
-          <AlertCircle className="h-8 w-8 text-red-600 dark:text-red-400" />
+        <div className="rounded-full bg-red-100 p-3 ">
+          <AlertCircle className="h-8 w-8 text-red-600 " />
         </div>
         <div>
           <h2 className="text-xl font-bold">Failed to load platform data</h2>
-          <p className="mt-1 text-muted-foreground dark:text-muted-foreground">
+          <p className="mt-1 text-muted-foreground ">
             There was a connection issue. Please check your network and API config.
           </p>
         </div>
@@ -300,10 +300,10 @@ export function Users() {
     <div className="flex w-full animate-in flex-col gap-6 pb-12 duration-300 fade-in">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-4">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-foreground dark:text-white">
+          <h1 className="text-xl font-bold tracking-tight text-foreground ">
             Users
           </h1>
-          <p className="mt-0.5 text-sm text-muted-foreground dark:text-muted-foreground">
+          <p className="mt-0.5 text-sm text-muted-foreground ">
             Manage system access accounts and user permissions.
           </p>
         </div>
@@ -510,7 +510,7 @@ function EditUserDialog({ user, open, onOpenChange }: EditUserDialogProps) {
           </div>
 
           {/* Dialog Footer Actions */}
-          <DialogFooter className="gap-2 sm:gap-0 border-t border-slate-100 pt-4 dark:border-slate-800/80">
+          <DialogFooter className="gap-2 sm:gap-0 border-t border-slate-100 pt-4 ">
             <Button
               type="button"
               variant="ghost"

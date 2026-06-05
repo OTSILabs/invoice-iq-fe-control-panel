@@ -35,11 +35,11 @@ export function OrganizationTenantsTab({ orgId, organizationName }: Organization
   })
 
   const columns = useMemo<CustomColumnDef<Tenant>[]>(() => [
-    { accessorKey: "tenant_admin_full_name", header: "Admin Name", width: 250, cell: ({ row }) => <span className="font-semibold text-foreground dark:text-slate-200">{row.original.tenant_admin_full_name || "N/A"}</span> },
+    { accessorKey: "tenant_admin_full_name", header: "Admin Name", width: 250, cell: ({ row }) => <span className="font-semibold text-foreground ">{row.original.tenant_admin_full_name || "N/A"}</span> },
     { accessorKey: "tenant_role", header: "Role", width: 150, cell: ({ row }) => <span className="text-muted-foreground capitalize">{String(row.original.tenant_role || "").replace('_', ' ') || "N/A"}</span> },
     { accessorKey: "access_status", header: "Status", width: 120, cell: ({ row }) => {
         const active = String(row.original.access_status || "").toLowerCase() === 'active';
-        return <Badge variant={active ? "secondary" : "outline"} className={active ? "border-emerald-200 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/20 dark:text-emerald-400" : "text-muted-foreground"}>{row.original.access_status || "Inactive"}</Badge>
+        return <Badge variant={active ? "secondary" : "outline"} className={active ? "border-emerald-200 bg-emerald-50 text-emerald-700 " : "text-muted-foreground"}>{row.original.access_status || "Inactive"}</Badge>
       }
     },
     { accessorKey: "created_at", header: "Created At", width: 150, cell: ({ row }) => <span className="text-xs text-muted-foreground">{row.original.created_at ? new Date(row.original.created_at).toLocaleDateString() : "N/A"}</span> },
