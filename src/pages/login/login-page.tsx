@@ -1,5 +1,6 @@
-import { LoginForm } from "../login-form";
+
 import { FileCheck2 } from "lucide-react";
+import { LoginForm } from "./login-form";
 
 export function LoginPage() {
   return (

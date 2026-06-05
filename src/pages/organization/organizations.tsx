@@ -1,6 +1,6 @@
 import { Building2, Plus, Loader2, ExternalLink } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { CreateOrganizationModal } from "@/components/create-organization-modal"
+import { CreateOrganizationModal } from "@/components/modals/create-organization-modal"
 import { useQuery } from "@tanstack/react-query"
 import { organizationsService } from "@/api/services/organizations.service"
 import { useNavigate } from "react-router-dom"

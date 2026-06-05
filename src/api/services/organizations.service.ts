@@ -1,4 +1,4 @@
-import api from '../axios';
+import api from '../../lib/axios';
 import type { Organization, Tenant, Configuration } from '../../types';
 
 export const organizationsService = {

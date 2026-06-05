@@ -1,4 +1,4 @@
-import api from '../axios';
+import api from '../../lib/axios';
 
 export const plansService = {
   getAll: async (): Promise<any[]> => {
