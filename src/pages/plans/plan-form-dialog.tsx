@@ -9,7 +9,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Switch } from "@/components/ui/switch"
-import { Input } from "@/components/ui/input"
+import { InputField } from "@/components/ui/input-field"
+import { Field, FieldLabel } from "@/components/ui/field"
 import { Label } from "@/components/ui/label"
 import { toast } from "sonner"
 import { useCreatePlanMutation } from "@/api/hooks/usePlans"
@@ -104,124 +105,97 @@ export function PlanForm({
   return (
     <form id={formId} onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       {/* Description */}
-      <div className="space-y-1.5">
-        <Label
-          htmlFor="description"
-          className="font-semibold text-slate-700"
-        >
-          Description
-        </Label>
-        <Input
+      <div className="space-y-1">
+        <InputField
           id="description"
+          label={<>Description <span className="text-destructive">*</span></>}
           type="text"
           placeholder="e.g. Starter tier for basic users"
           {...register("description")}
-          className="rounded-xl border-slate-200 bg-slate-50/50"
         />
         {errors.description && (
-          <span className="text-xs font-medium text-red-500">
+          <span className="text-[11px] font-medium text-destructive px-1">
             {errors.description.message}
           </span>
         )}
       </div>
 
       {/* Plan Type */}
-      <div className="space-y-1.5">
-        <Label
-          htmlFor="plan_type"
-          className="font-semibold text-slate-700"
-        >
-          Plan Type
-        </Label>
-        <select
+      <div className="space-y-1">
+        <InputField
           id="plan_type"
+          label={<>Plan Type <span className="text-destructive">*</span></>}
+          type="select"
           {...register("plan_type")}
-          className="flex h-10 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3 py-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-blue-500/20"
         >
           <option value="Basic">Basic</option>
           <option value="Free Trial">Free Trial</option>
-        </select>
+        </InputField>
         {errors.plan_type && (
-          <span className="text-xs font-medium text-red-500">
+          <span className="text-[11px] font-medium text-destructive px-1">
             {errors.plan_type.message}
           </span>
         )}
       </div>
 
       {/* Plan Interval */}
-      <div className="space-y-1.5">
-        <Label
-          htmlFor="plan_interval"
-          className="font-semibold text-slate-700"
-        >
-          Plan Interval
-        </Label>
-        <select
+      <div className="space-y-1">
+        <InputField
           id="plan_interval"
+          label={<>Plan Interval <span className="text-destructive">*</span></>}
+          type="select"
           {...register("plan_interval")}
-          className="flex h-10 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3 py-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-blue-500/20"
         >
           <option value="Monthly">Monthly</option>
           <option value="Yearly">Yearly</option>
-        </select>
+        </InputField>
         {errors.plan_interval && (
-          <span className="text-xs font-medium text-red-500">
+          <span className="text-[11px] font-medium text-destructive px-1">
             {errors.plan_interval.message}
           </span>
         )}
       </div>
 
       {/* Price Per Invoice Amount */}
-      <div className="space-y-1.5">
-        <Label
-          htmlFor="price_per_invoice_amount"
-          className="font-semibold text-slate-700"
-        >
-          Price Per Invoice Amount
-        </Label>
-        <Input
+      <div className="space-y-1">
+        <InputField
           id="price_per_invoice_amount"
+          label={<>Price Per Invoice Amount <span className="text-destructive">*</span></>}
           type="number"
           step="0.01"
           min="0"
           {...register("price_per_invoice_amount")}
-          className="rounded-xl border-slate-200 bg-slate-50/50"
         />
         {errors.price_per_invoice_amount && (
-          <span className="text-xs font-medium text-red-500">
+          <span className="text-[11px] font-medium text-destructive px-1">
             {errors.price_per_invoice_amount.message}
           </span>
         )}
       </div>
 
       {/* Price Per Invoice Currency */}
-      <div className="space-y-1.5">
-        <Label
-          htmlFor="price_per_invoice_currency"
-          className="font-semibold text-slate-700"
-        >
-          Price Per Invoice Currency
-        </Label>
-        <select
+      <div className="space-y-1">
+        <InputField
           id="price_per_invoice_currency"
+          label={<>Price Per Invoice Currency <span className="text-destructive">*</span></>}
+          type="select"
           {...register("price_per_invoice_currency")}
-          className="flex h-10 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3 py-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-blue-500/20"
         >
           <option value="INR">INR</option>
           <option value="USD">USD</option>
-        </select>
+        </InputField>
         {errors.price_per_invoice_currency && (
-          <span className="text-xs font-medium text-red-500">
+          <span className="text-[11px] font-medium text-destructive px-1">
             {errors.price_per_invoice_currency.message}
           </span>
         )}
       </div>
 
       {/* Is Active Toggle */}
-      <div className="mt-2 flex items-center justify-between border-t border-slate-100 py-2">
+      <div className="mt-2 flex items-center justify-between border-t border-border py-2">
         <Label
           htmlFor="is_active"
-          className="font-semibold text-slate-700"
+          className="font-medium text-foreground"
         >
           Is Active
         </Label>
@@ -241,7 +215,7 @@ export function PlanForm({
 
       {/* Footer Actions */}
       {showFooter && (
-        <div className="flex gap-3 border-t border-slate-100 pt-4">
+        <div className="flex gap-3 border-t border-border pt-4">
           <Button
             type="button"
             variant="outline"
@@ -253,7 +227,7 @@ export function PlanForm({
           </Button>
           <Button
             type="submit"
-            className="w-1/2 rounded-md font-semibold"
+            className="w-1/2 rounded-md font-medium"
             disabled={createPlanMutation.isPending}
           >
             {createPlanMutation.isPending ? (

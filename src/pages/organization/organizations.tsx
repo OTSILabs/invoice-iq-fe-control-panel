@@ -24,11 +24,12 @@ export function Organizations() {
           </p>
         </div>
         <CreateOrganizationModal>
-          <Button size="lg" className="gap-2 bg-primary text-primary-foreground shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all font-semibold rounded-full px-6 w-auto h-11">
-            <Plus className="h-4 w-4" />
-            Create Organization
+          <Button size="sm" className="w-full sm:w-auto font-medium px-3 shadow-none">
+            <Plus className="h-4 w-4 mr-2" />
+            Start Onboarding
           </Button>
         </CreateOrganizationModal>
+
       </div>
 
    
