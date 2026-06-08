@@ -84,7 +84,7 @@ function OrgCard({ org, index }: { org: any; index: number }) {
       <div className="flex flex-col gap-3 p-4 relative z-10">
 
         {/* active dot */}
-        <span className="absolute top-4 right-4 h-1.5 w-1.5 rounded-full bg-emerald-500" />
+
 
         {/* avatar + name */}
         <div className="flex items-center gap-2.5">
@@ -171,7 +171,7 @@ export function Organizations() {
 
       {/* ── Stats ── */}
       {!isLoading && organizations && organizations.length > 0 && (
-        <div className="grid grid-cols-3 gap-2.5">
+        <div className="grid grid-cols-3 gap-4">
           {[
             { label: "Total organizations", value: organizations.length },
             { label: "Total tenants",        value: totalTenants },
@@ -182,7 +182,16 @@ export function Organizations() {
                 : 0,
             },
           ].map((s) => (
-            <div key={s.label} className="bg-muted/50 rounded-lg px-4 py-3">
+            <div key={s.label}  className={cn(
+        "group relative overflow-hidden cursor-pointer",
+        "rounded-lg border border-border bg-card",
+        "flex flex-col gap-4 p-4",
+        // entry animation
+        "animate-in fade-in slide-in-from-bottom-2 duration-300",
+        // hover — use primary colour from your theme
+        "transition-colors duration-200",
+        "hover:border-primary/40 hover:bg-primary/[0.03]",
+      )}>
               <p className="text-xs text-muted-foreground mb-1">{s.label}</p>
               <p className="text-xl font-medium">{s.value}</p>
             </div>
@@ -201,7 +210,7 @@ export function Organizations() {
           <p className="text-[11px] font-medium uppercase tracking-widest text-muted-foreground -mb-3">
             All organizations
           </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {organizations.map((org, i) => (
               <OrgCard key={org.id} org={org} index={i} />
             ))}
