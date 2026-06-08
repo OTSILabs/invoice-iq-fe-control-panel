@@ -56,7 +56,7 @@ export function CreateOrganizationModal({
     reset,
     watch,
     setValue,
-    trigger,
+    // trigger,
     formState: { errors, isValid }
   } = useForm<FormValues>({
     resolver: zodResolver(onboardingSchema),
@@ -90,24 +90,24 @@ export function CreateOrganizationModal({
     }
   }
 
-  const handleCreateOrganizationOnly = async () => {
-    const isValidOrg = await trigger("orgName");
-    if (!isValidOrg) return;
+  // const handleCreateOrganizationOnly = async () => {
+  //   const isValidOrg = await trigger("orgName");
+  //   if (!isValidOrg) return;
     
-    const orgName = watch("orgName");
-    setIsPending(true)
-    try {
-      await organizationsService.create({ name: orgName })
-      queryClient.invalidateQueries({ queryKey: ['organizations'] })
-      setIsOpen(false)
-      toast.success("Organization created successfully!")
-    } catch (error) {
-      console.error("Failed to create organization:", error)
-      toast.error("Failed to create organization. Please try again.")
-    } finally {
-      setIsPending(false)
-    }
-  }
+  //   const orgName = watch("orgName");
+  //   setIsPending(true)
+  //   try {
+  //     await organizationsService.create({ name: orgName })
+  //     queryClient.invalidateQueries({ queryKey: ['organizations'] })
+  //     setIsOpen(false)
+  //     toast.success("Organization created successfully!")
+  //   } catch (error) {
+  //     console.error("Failed to create organization:", error)
+  //     toast.error("Failed to create organization. Please try again.")
+  //   } finally {
+  //     setIsPending(false)
+  //   }
+  // }
 
   const onSubmit = async (data: FormValues, planIdOverride?: string) => {
     setIsPending(true)
