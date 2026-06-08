@@ -37,25 +37,17 @@ export function OrganizationDetail() {
     )
   }
 
-
   return (
-    <div className="grid w-full animate-in grid-cols-1 lg:grid-cols-[320px_1fr] xl:grid-cols-[380px_1fr] gap-6 pb-12 items-start duration-300 fade-in font-sans">
-     {/* ── Sidebar ── */}
+    <div className="grid w-full animate-in grid-cols-1 lg:grid-cols-[300px_1fr] xl:grid-cols-[340px_1fr] gap-6 pb-12 items-start duration-300 fade-in font-sans">
+
       <aside className="flex flex-col gap-3">
-
-        {/* Org header card */}
-       
-
-        {/* Facts card — replace rows with your actual OrganizationFacts content */}
-        <div className="rounded-xl border border-border/50 bg-card overflow-hidden">
+        <div className="rounded-xl border border-border bg-card overflow-hidden">
           <OrganizationFacts organization={organization} />
         </div>
-
-        {/* Back button */}
         <Button
           variant="outline"
           size="sm"
-          className="w-full justify-start text-muted-foreground"
+          className="w-full justify-start text-xs text-muted-foreground shadow-none"
           onClick={() => navigate('/organizations')}
         >
           <ArrowLeft className="mr-2 h-3.5 w-3.5" />
@@ -63,21 +55,17 @@ export function OrganizationDetail() {
         </Button>
       </aside>
 
-
       <div className="w-full min-w-0">
-        <Tabs defaultValue="configuration" className="w-full">
+        <Tabs defaultValue="tenants" className="w-full">
           <TabsList variant="line" className="mb-6 justify-start gap-6 [&>button]:flex-none">
-             <TabsTrigger value="tenants">Tenants</TabsTrigger>
+            <TabsTrigger value="tenants">Tenants</TabsTrigger>
             <TabsTrigger value="configuration">Configuration</TabsTrigger>
-           
           </TabsList>
-
-          <TabsContent value="configuration" className="m-0 animate-in fade-in-50 duration-300">
-            <ConfigurationsTable entityId={organization.id} entityType="organization" />
-          </TabsContent>
-
           <TabsContent value="tenants" className="m-0 animate-in fade-in-50 duration-300">
             <OrganizationTenantsTab orgId={organization.id} organizationName={organization.name} />
+          </TabsContent>
+          <TabsContent value="configuration" className="m-0 animate-in fade-in-50 duration-300">
+            <ConfigurationsTable entityId={organization.id} entityType="organization" />
           </TabsContent>
         </Tabs>
       </div>

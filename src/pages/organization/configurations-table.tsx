@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
-import { Info, Plus, Save, X, Eye, EyeOff } from "lucide-react"
+import { Info, Plus, Save, X, Eye, EyeOff, Copy, Check } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -16,16 +16,24 @@ interface ConfigurationsTableProps {
 
 function MaskedValue({ value }: { value: string }) {
   const [show, setShow] = useState(false)
+  const [copied, setCopied] = useState(false)
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(value)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
+
   return (
     <div className="flex items-center gap-2 max-w-[200px]">
-      <span className="font-mono text-sm text-muted-foreground truncate">
+      <span className="font-mono text-xs text-muted-foreground truncate">
         {show ? value : "••••••••"}
       </span>
-      <button
-        onClick={() => setShow(v => !v)}
-        className="flex-shrink-0 text-muted-foreground hover:text-foreground transition-colors"
-      >
+      <button onClick={() => setShow(v => !v)} className="flex-shrink-0 text-muted-foreground hover:text-foreground transition-colors">
         {show ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+      </button>
+      <button onClick={handleCopy} className="flex-shrink-0 text-muted-foreground hover:text-foreground transition-colors">
+        {copied ? <Check className="h-3.5 w-3.5 text-emerald-500" /> : <Copy className="h-3.5 w-3.5" />}
       </button>
     </div>
   )
@@ -79,7 +87,7 @@ export function ConfigurationsTable({ entityId, entityType }: ConfigurationsTabl
       header: "Key",
       width: 150,
       cell: ({ row }) => (
-        <span className="font-mono text-sm font-medium text-foreground">
+        <span className="font-mono text-xs font-medium text-foreground">
           {row.original.key}
         </span>
       )
@@ -108,8 +116,7 @@ export function ConfigurationsTable({ entityId, entityType }: ConfigurationsTabl
   ], [])
 
   return (
-    <div className="flex flex-col bg-card border border-border/50 rounded-xl overflow-hidden min-h-[300px]">
-      {/* Header */}
+    <div className="flex flex-col bg-card border border-border rounded-xl overflow-hidden min-h-[300px]">
       <div className="flex items-center justify-between p-5 pb-4 border-b border-border/50">
         <div className="flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/20">
@@ -121,18 +128,12 @@ export function ConfigurationsTable({ entityId, entityType }: ConfigurationsTabl
           </div>
         </div>
         {!isAdding && (
-          <Button
-            variant="outline"
-            size="sm"
-            className="text-xs shadow-none"
-            onClick={() => setIsAdding(true)}
-          >
+          <Button variant="outline" size="sm" className="text-xs shadow-none" onClick={() => setIsAdding(true)}>
             <Plus className="size-3.5 mr-1.5" /> Add Configuration
           </Button>
         )}
       </div>
 
-      {/* Inline add row */}
       {isAdding && (
         <div className="flex items-center gap-3 px-4 py-3 border-b border-border/50 bg-muted/30">
           <Input
@@ -147,21 +148,11 @@ export function ConfigurationsTable({ entityId, entityType }: ConfigurationsTabl
             onChange={e => setNewValue(e.target.value)}
             className="h-8 text-xs w-[180px]"
           />
-          <Button
-            size="sm"
-            className="h-8 text-xs shadow-none"
-            onClick={handleSave}
-            disabled={isSaving || !newKey.trim() || !newValue.trim()}
-          >
+          <Button size="sm" className="h-8 text-xs shadow-none" onClick={handleSave} disabled={isSaving || !newKey.trim() || !newValue.trim()}>
             <Save className="size-3.5 mr-1.5" />
             {isSaving ? "Saving..." : "Save"}
           </Button>
-          <Button
-            size="sm"
-            variant="ghost"
-            className="h-8 text-xs"
-            onClick={handleCancel}
-          >
+          <Button size="sm" variant="ghost" className="h-8 text-xs" onClick={handleCancel}>
             <X className="size-3.5 mr-1" /> Cancel
           </Button>
         </div>

@@ -176,7 +176,7 @@ export function CreateOrganizationModal({
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       {children ? <DialogTrigger asChild>{children}</DialogTrigger> : null}
       <DialogContent
-        className="grid max-h-[86vh] grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden p-0 sm:max-w-3xl gap-0 border-border bg-background shadow-lg sm:rounded-xl font-sans"
+        className="grid max-h-[86vh] grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden p-0 sm:max-w-3xl gap-0 border-border bg-background shadow-lg sm:rounded-xl"
       >
         <DialogHeader className="border-b border-border px-8 py-6 bg-background">
           <div className="max-w-2xl">

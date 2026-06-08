@@ -48,7 +48,7 @@ export function Organizations() {
               {/* Card content */}
               <div className="flex flex-col gap-1 flex-1">
                 <div className="truncate font-medium text-sm text-foreground group-hover:text-primary transition-colors">{org.name}</div>
-                <div className="truncate font-mono text-[11px] text-muted-foreground">{org.slug}</div>
+                <div className="truncate font-mono text-xs text-muted-foreground">{org.slug}</div>
               </div>
 
               <div className="flex items-center justify-between mt-5 pt-3 border-t border-border">

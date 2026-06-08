@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom"
 import { useQuery } from "@tanstack/react-query"
-import { Loader2, Users, ArrowLeft } from "lucide-react"
+import { Loader2, ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { ConfigurationsTable } from "@/pages/organization/configurations-table"
@@ -38,61 +38,69 @@ export function TenantDetail() {
     )
   }
 
+  const initials = (tenant.id || "TN")
+    .slice(0, 2)
+    .toUpperCase()
+
+  const facts = [
+    { label: "Tenant ID", value: tenant.id },
+    { label: "Admin Name", value: tenant.tenant_admin_full_name },
+    { label: "Role", value: tenant.tenant_role?.replace('_', ' ') },
+    { label: "Created At", value: tenant.created_at ? new Date(tenant.created_at).toLocaleDateString() : 'N/A' },
+  ]
+
   return (
-    <div className="flex w-full animate-in flex-col gap-6 pb-12 duration-300 fade-in font-sans">
-      <div className="bg-card border border-border rounded-xl p-8 shrink-0 shadow-sm">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/20">
-              <Users className="h-5 w-5" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-foreground">Tenant Facts</h3>
-              <p className="text-[13px] text-muted-foreground">Key details for this tenant.</p>
-            </div>
+    <div className="grid w-full animate-in grid-cols-1 lg:grid-cols-[320px_1fr] xl:grid-cols-[380px_1fr] gap-6 pb-12 items-start duration-300 fade-in">
+      {/* ── Sidebar ── */}
+   <aside className="flex flex-col gap-3">
+  <div className="rounded-xl border border-border bg-card overflow-hidden">
+    <div className="bg-card rounded-xl p-5 shrink-0 font-sans">
+
+      {/* Header — matches OrganizationFacts */}
+      <div className="flex items-start justify-between gap-4 mb-5 pb-5 border-b border-border">
+        <div className="flex items-start gap-3">
+          <div className="flex-shrink-0 h-10 w-10 flex items-center justify-center rounded-lg bg-primary/10 text-primary font-medium text-sm">
+            {initials}
           </div>
-          <Button variant="outline" onClick={() => navigate(`/organizations/${orgId}`)} className="text-sm">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Organization
-          </Button>
+          <div className="flex flex-col gap-0.5">
+            <p className="text-sm font-medium text-foreground">{tenant.tenant_admin_full_name || tenant.id}</p>
+            <p className="font-mono text-[10px] text-muted-foreground">{tenant.id}</p>
+          </div>
         </div>
-        
-        <div className="flex flex-wrap items-center gap-x-10 gap-y-6 pt-2">
-          <span className="text-sm flex items-center gap-2">
-            <span className="font-medium text-muted-foreground">Tenant ID:</span>
-            <span className="font-semibold text-foreground">{tenant.id}</span>
-          </span>
-          <span className="text-sm flex items-center gap-2">
-            <span className="font-medium text-muted-foreground">Admin Name:</span>
-            <span className="font-semibold text-foreground">{tenant.tenant_admin_full_name}</span>
-          </span>
-          <span className="text-sm flex items-center gap-2">
-            <span className="font-medium text-muted-foreground">Role:</span>
-            <span className="font-semibold text-foreground capitalize">{tenant.tenant_role?.replace('_', ' ')}</span>
-          </span>
-          <span className="text-sm flex items-center gap-2">
-            <span className="font-medium text-muted-foreground">Status:</span>
-            <Badge
-              variant={tenant.access_status?.toLowerCase() === 'active' ? "secondary" : "outline"}
-              className={
-                tenant.access_status?.toLowerCase() === 'active'
-                  ? "border-emerald-200 bg-emerald-50 text-emerald-700 "
-                  : "text-muted-foreground"
-              }
-            >
-              {tenant.access_status || "Inactive"}
-            </Badge>
-          </span>
-          <span className="text-sm flex items-center gap-2">
-            <span className="font-medium text-muted-foreground">Created At:</span>
-            <span className="font-semibold text-foreground">
-              {tenant.created_at ? new Date(tenant.created_at).toLocaleDateString() : 'N/A'}
-            </span>
-          </span>
-        </div>
+        <Badge variant="outline" className="w-fit text-[10px] px-2 py-0.5 text-emerald-600 border-emerald-200 bg-emerald-50 dark:border-emerald-900 dark:bg-emerald-950 dark:text-emerald-400">
+          <span className="mr-1 inline-block h-1.5 w-1.5 rounded-full bg-emerald-500" />
+          {tenant.access_status || "Active"}
+        </Badge>
       </div>
 
-      <Tabs defaultValue="configuration" className="w-full mt-2">
+      {/* Facts */}
+      <div className="flex flex-col gap-y-4">
+        {facts.map((fact, i) => (
+          <div key={i} className="flex flex-col gap-0.5">
+            <span className="text-[10px] font-medium text-muted-foreground tracking-widest uppercase">{fact.label}</span>
+            <span className={`text-xs font-semibold text-foreground capitalize truncate`} title={fact.value}>
+              {fact.value || "N/A"}
+            </span>
+          </div>
+        ))}
+      </div>
+
+    </div>
+  </div>
+
+  <Button
+    variant="outline"
+    size="sm"
+    className="w-full justify-start text-xs text-muted-foreground shadow-none"
+    onClick={() => navigate(`/organizations/${orgId}`)}
+  >
+    <ArrowLeft className="mr-2 h-3.5 w-3.5" />
+    Back to Organization
+  </Button>
+</aside>
+
+      <div className="w-full min-w-0">
+        <Tabs defaultValue="configuration" className="w-full">
         <TabsList variant="line" className="mb-6 justify-start gap-6 [&>button]:flex-none">
           <TabsTrigger value="configuration">Configuration</TabsTrigger>
           <TabsTrigger value="events">Events</TabsTrigger>
@@ -106,6 +114,7 @@ export function TenantDetail() {
           <TenantEventsTable tenantId={tenant.id} />
         </TabsContent>
       </Tabs>
+      </div>
     </div>
   )
 }

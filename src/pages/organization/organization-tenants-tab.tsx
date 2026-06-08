@@ -9,7 +9,6 @@ import type { CustomColumnDef } from "@/components/ui/data-table"
 import type { Tenant } from "@/types"
 import { CreateOrganizationModal } from "@/pages/organization/modals/create-organization-modal"
 import { TenantActionsDropdown } from "./tenant-actions-dropdown"
-
 import { ActivateTenantDialog } from "@/pages/tenants/tenant-actions/activate-tenant-dialog"
 import { DeactivateTenantDialog } from "@/pages/tenants/tenant-actions/deactivate-tenant-dialog"
 import { BlockTenantDialog } from "@/pages/tenants/tenant-actions/block-tenant-dialog"
@@ -23,8 +22,6 @@ interface OrganizationTenantsTabProps {
 }
 
 export function OrganizationTenantsTab({ orgId, organizationName }: OrganizationTenantsTabProps) {
-  // const navigate = useNavigate()
-  
   const [tenantAction, setTenantAction] = useState<{ type: "deactivate" | "activate" | "block" | "unblock" | "expire" | "delete", tenant: Tenant } | null>(null)
 
   const { data: tenants = [], isLoading: isTenantsLoading } = useQuery({
@@ -33,82 +30,72 @@ export function OrganizationTenantsTab({ orgId, organizationName }: Organization
     enabled: !!orgId
   })
 
-  // const columns = useMemo<CustomColumnDef<Tenant>[]>(() => [
-  //   { accessorKey: "tenant_admin_full_name", header: "Admin Name", width: 250, cell: ({ row }) => <span className="font-semibold text-foreground ">{row.original.tenant_admin_full_name || "N/A"}</span> },
-  //   { accessorKey: "tenant_role", header: "Role", width: 150, cell: ({ row }) => <span className="text-muted-foreground capitalize">{String(row.original.tenant_role || "").replace('_', ' ') || "N/A"}</span> },
-  //   { accessorKey: "access_status", header: "Status", width: 120, cell: ({ row }) => {
-  //       const active = String(row.original.access_status || "").toLowerCase() === 'active';
-  //       return <Badge variant={active ? "secondary" : "outline"} className={active ? "border-emerald-200 bg-emerald-50 text-emerald-700 " : "text-muted-foreground"}>{row.original.access_status || "Inactive"}</Badge>
-  //     }
-  //   },
-  //   { accessorKey: "created_at", header: "Created At", width: 150, cell: ({ row }) => <span className="text-xs text-muted-foreground">{row.original.created_at ? new Date(row.original.created_at).toLocaleDateString() : "N/A"}</span> },
-  //   { id: "actions", header: "Actions", width: 80, cell: ({ row }) => <TenantActionsDropdown tenant={row.original} orgId={orgId} setTenantAction={setTenantAction} /> }
-  // ], [orgId, navigate])
   const columns = useMemo<CustomColumnDef<Tenant>[]>(() => [
-  { 
-    accessorKey: "tenant_admin_full_name", 
-    header: "Admin Name", 
-    width: 180, 
-    cell: ({ row }) => (
-      <span className="font-semibold text-foreground">
-        {row.original.tenant_admin_full_name || "N/A"}
-      </span>
-    ) 
-  },
-  { 
-    accessorKey: "tenant_role", 
-    header: "Role", 
-    width: 120, 
-    cell: ({ row }) => (
-      <span className="text-muted-foreground capitalize">
-        {String(row.original.tenant_role || "").replace('_', ' ') || "N/A"}
-      </span>
-    ) 
-  },
-  { 
-    accessorKey: "access_status", 
-    header: "Status", 
-    width: 100, 
-    cell: ({ row }) => {
-      const active = String(row.original.access_status || "").toLowerCase() === 'active';
-      return (
-        <Badge variant={active ? "secondary" : "outline"} 
-          className={active ? "border-emerald-200 bg-emerald-50 text-emerald-700" : "text-muted-foreground"}>
-          {row.original.access_status || "Inactive"}
-        </Badge>
+    {
+      accessorKey: "tenant_admin_full_name",
+      header: "Admin Name",
+      width: 180,
+      cell: ({ row }) => (
+        <span className="text-xs font-semibold text-foreground">
+          {row.original.tenant_admin_full_name || "N/A"}
+        </span>
+      )
+    },
+    {
+      accessorKey: "tenant_role",
+      header: "Role",
+      width: 120,
+      cell: ({ row }) => (
+        <span className="text-xs text-muted-foreground capitalize">
+          {String(row.original.tenant_role || "").replace('_', ' ') || "N/A"}
+        </span>
+      )
+    },
+    {
+      accessorKey: "access_status",
+      header: "Status",
+      width: 100,
+      cell: ({ row }) => {
+        const active = String(row.original.access_status || "").toLowerCase() === 'active'
+        return (
+          <Badge
+            variant={active ? "secondary" : "outline"}
+            className={active ? "border-emerald-200 bg-emerald-50 text-emerald-700" : "text-muted-foreground"}
+          >
+            {row.original.access_status || "Inactive"}
+          </Badge>
+        )
+      }
+    },
+    {
+      id: "actions",
+      header: "",
+      width: 50,
+      cell: ({ row }) => (
+        <TenantActionsDropdown tenant={row.original} orgId={orgId} setTenantAction={setTenantAction} />
       )
     }
-  },
-  { 
-    id: "actions", 
-    header: "Actions",
-    width: 50, 
-    cell: ({ row }) => (
-      <TenantActionsDropdown tenant={row.original} orgId={orgId} setTenantAction={setTenantAction} />
-    ) 
-  }
-], [orgId])
+  ], [orgId])
 
   return (
-    <div className="flex flex-col bg-card border border-border rounded-xl overflow-hidden shadow-sm font-sans">
+    <div className="flex flex-col bg-card border border-border rounded-xl overflow-hidden">
       <div className="flex items-center justify-between p-5 pb-4 border-b border-border/50">
-  <div className="flex items-center gap-3">
-    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/20">
-      <Users className="h-4 w-4" />
-    </div>
-    <div>
-      <h3 className="text-sm font-semibold text-foreground">Attached Tenants</h3>
-      <p className="text-[12px] text-muted-foreground">Tenants associated with this organization.</p>
-    </div>
-  </div>
+        <div className="flex items-center gap-3">
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/20">
+            <Users className="h-4 w-4" />
+          </div>
+          <div>
+            <h3 className="text-sm font-semibold text-foreground">Attached Tenants</h3>
+            <p className="text-[12px] text-muted-foreground">Tenants associated with this organization.</p>
+          </div>
+        </div>
+        <CreateOrganizationModal existingOrganization={{ id: orgId, name: organizationName }}>
+          <Button variant="outline" size="sm" className="text-xs shadow-none">
+            <Plus className="size-3.5 mr-1.5" /> Add Tenant
+          </Button>
+        </CreateOrganizationModal>
+      </div>
 
-  <CreateOrganizationModal existingOrganization={{ id: orgId, name: organizationName }}>
-    <Button variant="outline" size="sm" className="font-medium shadow-none text-xs">
-      <Plus className="size-3.5 mr-1.5" /> Add Tenant
-    </Button>
-  </CreateOrganizationModal>
-</div>
-      
       <div className="relative">
         <DataTable
           data={Array.isArray(tenants) ? tenants : []}
@@ -121,14 +108,10 @@ export function OrganizationTenantsTab({ orgId, organizationName }: Organization
           tableContainerClassName="border-0 rounded-none bg-transparent"
           emptyState={
             <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
-              <div className="mx-auto max-w-md space-y-4">
-                <h3 className="text-lg font-bold tracking-tight text-foreground">
-                  No Tenants Found
-                </h3>
-                <p className="text-sm text-muted-foreground">
-                  There are no tenants currently attached to this organization.
-                </p>
-              </div>
+              <h3 className="text-sm font-semibold text-foreground">No Tenants Found</h3>
+              <p className="text-xs text-muted-foreground mt-1">
+                There are no tenants currently attached to this organization.
+              </p>
             </div>
           }
         />
