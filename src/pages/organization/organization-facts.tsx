@@ -1,56 +1,95 @@
 
-import { Badge } from "@/components/ui/badge"
+import { cn } from "@/lib/utils"
 import type { Organization } from "@/types"
+import { Badge } from "@/components/ui/badge"
 
 export function OrganizationFacts({ organization }: { organization: Organization | null }) {
-  if (!organization) return null;
+  if (!organization) return null
 
-  const facts = [
-    { label: "Organization ID", value: organization.id },
-    { label: "Name", value: organization.name },
-    { label: "Tenant Count", value: organization.tenant_count?.toString() || '0' },
-    { label: "Status", value: organization.status || 'Active' },
-    { label: "Created At", value: organization.created_at ? new Date(organization.created_at).toLocaleDateString() : 'N/A' },
-  ];
-    
   const initials = organization.name
-    .split(' ')
+    .split(" ")
     .map((w: string) => w[0])
     .slice(0, 2)
-    .join('')
+    .join("")
     .toUpperCase()
 
+  const tenantCount  = organization.tenant_count ?? 0
 
+  const onboardingStatus = (organization.onboarding_status ?? "complete").toLowerCase()
+  const onboardingCfg: Record<string, { label: string; className: string }> = {
+    complete:    { label: "Complete",    className: "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-400 dark:border-emerald-900" },
+    pending:     { label: "Pending",     className: "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950 dark:text-amber-400 dark:border-amber-900" },
+    in_progress: { label: "In progress", className: "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-400 dark:border-blue-900" },
+  }
+  const onboardingStyle = onboardingCfg[onboardingStatus] ?? onboardingCfg.complete
 
   return (
- <div className="bg-card rounded-xl p-5 shrink-0 font-sans">
+    <div className="bg-card rounded-xl border border-border overflow-hidden">
 
-      <div className="flex items-start justify-between gap-4 mb-5 pb-5 border-b border-border">
-        <div className="flex items-start gap-3">
-          <div className="flex-shrink-0 h-10 w-10 flex items-center justify-center rounded-lg bg-primary/10 text-primary font-medium text-sm">
+      {/* Accent stripe */}
+      <div className="h-[3px] w-full bg-gradient-to-r from-primary to-chart-1" />
+
+      {/* Hero */}
+      <div className="flex flex-col gap-3 px-5 py-4 border-b border-border">
+        <div className="flex items-center gap-3">
+          <div className="h-10 w-10 flex-shrink-0 rounded-lg bg-primary text-primary-foreground flex items-center justify-center text-sm font-semibold">
             {initials}
           </div>
-          <div className="flex flex-col gap-0.5">
-            <p className="text-sm font-medium text-foreground">{organization.name}</p>
-            <p className="font-mono text-[10px] text-muted-foreground">{organization.id}</p>
+          <div className="min-w-0">
+            <p className="text-sm font-medium text-foreground leading-snug">{organization.name}</p>
+            <p className="font-mono text-[10px] text-muted-foreground mt-0.5 truncate">{organization.id}</p>
           </div>
         </div>
-        <Badge variant="outline" className="w-fit text-[10px] px-2 py-0.5 text-emerald-600 border-emerald-200 bg-emerald-50 dark:border-emerald-900 dark:bg-emerald-950 dark:text-emerald-400">
-          <span className="mr-1 inline-block h-1.5 w-1.5 rounded-full bg-emerald-500" />
-          Active
-        </Badge>
+
+   
       </div>
 
-      <div className="flex flex-col gap-y-4">
-        {facts.map((fact, i) => (
-          <div key={i} className="flex flex-col gap-0.5">
-            <span className="text-[10px] font-medium text-muted-foreground tracking-widest uppercase">{fact.label}</span>
-            <span className={`text-xs font-semibold text-foreground truncate`} title={fact.value}>
-              {fact.value}
-            </span>
-          </div>
-        ))}
+      {/* Facts mosaic */}
+      <div className="grid grid-cols-2 divide-x divide-y divide-border">
+
+        <div className="px-3 py-2.5 hover:bg-muted/40 transition-colors">
+          <p className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground mb-1">Onboarding</p>
+          <Badge variant="outline" className={cn("text-[11px] px-2 py-0 font-medium border", onboardingStyle.className)}>
+            {onboardingStyle.label}
+          </Badge>
+        </div>
+
+        <div className="px-3 py-2.5 hover:bg-muted/40 transition-colors">
+          <p className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground mb-1">Tenants</p>
+          <p className="text-sm font-semibold text-foreground">{tenantCount}</p>
+        </div>
+
+        <div className="px-3 py-2.5 hover:bg-muted/40 transition-colors">
+          <p className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground mb-1">Created</p>
+          <p className="text-xs font-medium text-foreground">
+            {organization.created_at
+              ? new Date(organization.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
+              : "N/A"}
+          </p>
+        </div>
+
+        <div className="px-3 py-2.5 hover:bg-muted/40 transition-colors">
+          <p className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground mb-1">Updated</p>
+          <p className="text-xs font-medium text-foreground">
+            {organization.updated_at
+              ? new Date(organization.updated_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
+              : "N/A"}
+          </p>
+        </div>
+
+        {/* Organization ID — full width, compact */}
+        <div className="col-span-2 px-3 py-2.5 hover:bg-muted/40 transition-colors">
+          <p className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground mb-1">Organization ID</p>
+          <p className="font-mono text-[11px] font-medium text-foreground truncate" title={organization.id}>
+            {organization.id}
+          </p>
+        </div>
+
       </div>
+
+      {/* Capacity bar */}
+     
+
     </div>
   )
 }

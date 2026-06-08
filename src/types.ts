@@ -28,7 +28,9 @@ export interface Organization {
   plan_id?: string;
   tenant_count?: number;
   status?: string;
+  onboarding_status?: string;
   created_at?: string;
+  updated_at?: string;
 }
 
 export interface Tenant {
