@@ -1,6 +1,6 @@
 import * as React from "react"
 import { Link, useLocation } from "react-router-dom"
-import { FileCheck2, ChevronUp, User2, LogOut } from "lucide-react"
+import { FileCheck2, ChevronUp, User2, LogOut, PanelLeftClose, PanelLeftOpen } from "lucide-react"
 import { decodeJWT } from "@/lib/utils"
 import { APP_ROUTES } from "@/config/routes"
 import {
@@ -11,7 +11,8 @@ import {
   SidebarRail,
   SidebarMenu,
   SidebarMenuButton,
-  SidebarMenuItem
+  SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar"
 import {
   DropdownMenu,
@@ -19,99 +20,190 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { TeamSwitcher } from "../nav-actions/team-switcher"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
+import { cn } from "@/lib/utils"
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const location = useLocation();
-
-  // Format teams for TeamSwitcher
-  const teams = [
-    {
-      name: "Invoice IQ",
-      logo: FileCheck2,
-      plan: "Enterprise",
-    }
-  ]
-
-  // Get and decode the user's token
-  const tokenData = React.useMemo(() => {
-    try {
-      const stored = sessionStorage.getItem("token");
-      if (stored) {
-        const session = JSON.parse(stored);
-        const actualToken = session.access_token || session.token;
-        if (actualToken) {
-          return decodeJWT(actualToken);
-        }
-      }
-    } catch (e) {
-      console.error(e);
-    }
-    return null;
-  }, []);
-
-  const userName = tokenData?.name || tokenData?.username || tokenData?.email?.split('@')[0] || "User";
-  const userInitials = userName.substring(0, 2).toUpperCase();
-  const userRole = tokenData?.role || tokenData?.app_metadata?.role || "User";
+// ── Logo + collapse trigger ──────────────────────────────────────────────────
+function SidebarLogoHeader() {
+  const { toggleSidebar, open, isMobile } = useSidebar()
+  const [hovered, setHovered] = React.useState(false)
 
   return (
-    <Sidebar collapsible="icon" className="border-r-0" {...props}>
-      <SidebarHeader className="h-16 border-b border-sidebar-border flex items-center justify-center p-0">
-        <TeamSwitcher teams={teams} />
+    <div
+      className="relative flex h-16 w-full items-center border-b border-sidebar-border px-4 cursor-pointer select-none"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onClick={toggleSidebar}
+      role="button"
+      aria-label={open ? "Collapse sidebar" : "Expand sidebar"}
+    >
+      {/* App icon — always visible */}
+      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-600 text-white">
+        <FileCheck2 className="h-4 w-4" />
+      </div>
+
+      {/* App name — visible when expanded */}
+      <span
+        className={cn(
+          "ml-3 text-[15px] font-semibold text-sidebar-foreground tracking-tight transition-all duration-200 overflow-hidden whitespace-nowrap",
+          open && !isMobile ? "opacity-100 max-w-[120px]" : "opacity-0 max-w-0"
+        )}
+      >
+        Invoice IQ
+      </span>
+
+      {/* Collapse/expand icon — appears on hover */}
+      <div
+        className={cn(
+          "absolute right-3 flex items-center justify-center rounded-md p-1 text-sidebar-foreground/50 transition-all duration-150",
+          hovered ? "opacity-100" : "opacity-0",
+          open && !isMobile ? "ml-auto" : ""
+        )}
+      >
+        {open && !isMobile ? (
+          <PanelLeftClose className="h-4 w-4" />
+        ) : (
+          <PanelLeftOpen className="h-4 w-4" />
+        )}
+      </div>
+    </div>
+  )
+}
+
+// ── Main sidebar ─────────────────────────────────────────────────────────────
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const location = useLocation()
+  const { open, isMobile } = useSidebar()
+  const isCollapsed = !open && !isMobile
+
+  const tokenData = React.useMemo(() => {
+    try {
+      const stored = sessionStorage.getItem("token")
+      if (stored) {
+        const session = JSON.parse(stored)
+        const actualToken = session.access_token || session.token
+        if (actualToken) return decodeJWT(actualToken)
+      }
+    } catch (e) {
+      console.error(e)
+    }
+    return null
+  }, [])
+
+  const userName =
+    tokenData?.name ||
+    tokenData?.username ||
+    tokenData?.email?.split("@")[0] ||
+    "User"
+  const userInitials = userName.substring(0, 2).toUpperCase()
+  const userRole = tokenData?.role || tokenData?.app_metadata?.role || "User"
+
+  const visibleRoutes = APP_ROUTES.filter((r) => r.showInSidebar)
+
+  return (
+    <Sidebar collapsible="icon" className="border-r border-sidebar-border" {...props}>
+
+      {/* ── Header with logo + collapse trigger ── */}
+      <SidebarHeader className="p-0">
+        <SidebarLogoHeader />
       </SidebarHeader>
-      
-      <SidebarContent>
-        <SidebarMenu className="mt-4 px-2">
-          {APP_ROUTES.filter((route) => route.showInSidebar).map((route) => {
-            const isActive = location.pathname.startsWith(route.path);
+
+      {/* ── Nav items ── */}
+      <SidebarContent className="py-3">
+        <SidebarMenu className="px-2 gap-0.5">
+          {visibleRoutes.map((route) => {
+            const isActive = location.pathname.startsWith(route.path)
+            const Icon = route.icon
+
+            const button = (
+              <SidebarMenuButton
+                asChild
+                isActive={isActive}
+                className={cn(
+                  "h-9 rounded-lg text-[13.5px] font-medium transition-colors",
+                  isActive
+                    ? "bg-blue-50 text-blue-700 hover:bg-blue-100 hover:text-blue-800"
+                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                )}
+              >
+                <Link to={route.path} className="flex items-center gap-2.5">
+                  {Icon && (
+                    <Icon
+                      className={cn(
+                        "h-[18px] w-[18px] shrink-0",
+                        isActive ? "text-blue-600" : "text-slate-500"
+                      )}
+                    />
+                  )}
+                  <span className="truncate">{route.title}</span>
+                </Link>
+              </SidebarMenuButton>
+            )
+
             return (
               <SidebarMenuItem key={route.title}>
-                <SidebarMenuButton 
-                  asChild 
-                  tooltip={route.title} 
-                  isActive={isActive}
-                  className={isActive ? "!bg-blue-50 !text-blue-700 font-semibold hover:!bg-blue-100 hover:!text-blue-800" : "text-slate-600"}
-                >
-                  <Link to={route.path}>
-                    <route.icon className="h-4 w-4" />
-                    <span>{route.title}</span>
-                  </Link>
-                </SidebarMenuButton>
+                {isCollapsed ? (
+                  <Tooltip delayDuration={0}>
+                    <TooltipTrigger asChild>{button}</TooltipTrigger>
+                    <TooltipContent side="right" className="text-xs font-medium">
+                      {route.title}
+                    </TooltipContent>
+                  </Tooltip>
+                ) : (
+                  button
+                )}
               </SidebarMenuItem>
             )
           })}
         </SidebarMenu>
       </SidebarContent>
 
-      <SidebarFooter>
+      {/* ── Footer: user menu ── */}
+      <SidebarFooter className="border-t border-sidebar-border p-2">
         <SidebarMenu>
           <SidebarMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <SidebarMenuButton size="lg" className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-700 font-semibold text-xs">
+                <SidebarMenuButton
+                  size="lg"
+                  className="h-10 rounded-lg hover:bg-slate-100 data-[state=open]:bg-slate-100"
+                >
+                  {/* Avatar */}
+                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-blue-100 text-blue-700 text-[11px] font-semibold">
                     {userInitials}
                   </div>
-                  <div className="flex flex-col items-start text-sm group-data-[collapsible=icon]:hidden overflow-hidden flex-1 text-left ml-1">
-                    <span className="font-semibold text-slate-700 truncate w-full">{userName}</span>
-                    <span className="text-xs text-slate-500 truncate w-full">{userRole}</span>
+
+                  {/* Name + role — hidden when collapsed */}
+                  <div className="flex flex-col items-start leading-tight overflow-hidden flex-1 ml-1 group-data-[collapsible=icon]:hidden">
+                    <span className="text-[13px] font-medium text-slate-700 truncate w-full">
+                      {userName}
+                    </span>
+                    <span className="text-[11px] text-slate-400 truncate w-full">
+                      {userRole}
+                    </span>
                   </div>
-                  <ChevronUp className="h-4 w-4 ml-auto shrink-0 group-data-[collapsible=icon]:hidden opacity-50" />
+
+                  <ChevronUp className="h-3.5 w-3.5 ml-auto shrink-0 text-slate-400 group-data-[collapsible=icon]:hidden" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
-              <DropdownMenuContent
-                side="top"
-                className="w-[--radix-popper-anchor-width]"
-              >
-                <DropdownMenuItem>
-                  <User2 className="mr-2 h-4 w-4" />
+
+              <DropdownMenuContent side="top" className="w-[--radix-popper-anchor-width] text-[13px]">
+                <DropdownMenuItem className="gap-2 cursor-pointer">
+                  <User2 className="h-3.5 w-3.5 text-slate-500" />
                   <span>Profile</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => {
-                  sessionStorage.clear();
-                  window.dispatchEvent(new Event('auth:logout'));
-                }}>
-                  <LogOut className="mr-2 h-4 w-4" />
+                <DropdownMenuItem
+                  className="gap-2 cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50"
+                  onClick={() => {
+                    sessionStorage.clear()
+                    window.dispatchEvent(new Event("auth:logout"))
+                  }}
+                >
+                  <LogOut className="h-3.5 w-3.5" />
                   <span>Logout</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -119,7 +211,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
-      
+
       <SidebarRail />
     </Sidebar>
   )
