@@ -17,6 +17,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { toast } from "sonner"
 import { useForm, useWatch } from "react-hook-form"
 import { Label } from "@/components/ui/label"
+import { Card, CardContent } from "@/components/ui/card"
 import {
   Dialog,
   DialogContent,
@@ -298,85 +299,98 @@ export function Users() {
 
   return (
     <div className="flex w-full animate-in flex-col gap-6 pb-12 duration-300 fade-in">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-4">
+      <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-foreground ">
+          <h1 className="text-xl font-bold tracking-tight text-foreground">
             Users
           </h1>
-          <p className="mt-0.5 text-sm text-muted-foreground ">
+          <p className="mt-0.5 text-sm text-muted-foreground">
             Manage system access accounts and user permissions.
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-3">
-          <div className="relative w-full sm:w-50 md:w-60">
-            <Search className="pointer-events-none absolute left-2.5 top-1/2 z-10 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              placeholder="Search by name or email"
-              className="pl-8 bg-background h-9"
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
-            />
-          </div>
-
-          <Select value={roleFilter} onValueChange={setRoleFilter}>
-            <SelectTrigger className="w-30 bg-background h-9">
-              <SelectValue placeholder="All Roles" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all" className="cursor-pointer">All Roles</SelectItem>
-              {roles.map((role) => (
-                <SelectItem
-                  key={role.id}
-                  value={role.name.toLowerCase()}
-                  className="cursor-pointer"
-                >
-                  {role.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-          <Select value={status} onValueChange={setStatus}>
-            <SelectTrigger className="w-30 bg-background h-9">
-              <SelectValue placeholder="All Status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all" className="cursor-pointer">All Status</SelectItem>
-              <SelectItem value="active" className="cursor-pointer">Active</SelectItem>
-              <SelectItem value="inactive" className="cursor-pointer">Inactive</SelectItem>
-            </SelectContent>
-          </Select>
-
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={handleRefetch}
-            className="h-9 w-9 cursor-pointer shrink-0"
-          >
-            <RefreshCw className={cn("size-4", isFetchingUsers && "animate-spin")} />
-          </Button>
-
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
           <Button
             onClick={() => setIsCreateOpen(true)}
-            className="gap-1.5 rounded-xl font-semibold shrink-0"
+            className="gap-1.5 rounded-xl font-semibold"
           >
             <Plus className="h-4 w-4" /> Add User
           </Button>
         </div>
       </div>
 
-      {/* Border rounded block matching example card layout */}
-      <div className="border rounded-md bg-card">
-        <DataTable
-          data={filteredUsers}
-          columns={columns}
-          isLoading={isLoadingUsers || isFetchingUsers}
-          enablePagination={false}
-          stickyHeader
-          fillAvailableHeight
-        />
-      </div>
+      <Card className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border border-border bg-card p-0">
+        <CardContent className="flex min-h-0 flex-1 flex-col p-0">
+          <div className="flex flex-col gap-3 border-b bg-card p-3 lg:flex-row lg:items-center lg:justify-end">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center w-full lg:w-auto">
+              <Input
+                value={searchText}
+                onChange={(event) => setSearchText(event.target.value)}
+                placeholder="Search users..."
+                className="h-9 w-full sm:w-72"
+              />
+
+              <Select value={roleFilter} onValueChange={setRoleFilter}>
+                <SelectTrigger className="h-9 w-full sm:w-40 bg-background">
+                  <SelectValue placeholder="All Roles" />
+                </SelectTrigger>
+                <SelectContent align="end">
+                  <SelectItem value="all" className="cursor-pointer">
+                    All Roles
+                  </SelectItem>
+                  {roles.map((role) => (
+                    <SelectItem
+                      key={role.id}
+                      value={role.name.toLowerCase()}
+                      className="cursor-pointer"
+                    >
+                      {role.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <Select value={status} onValueChange={setStatus}>
+                <SelectTrigger className="h-9 w-full sm:w-40 bg-background">
+                  <SelectValue placeholder="All Status" />
+                </SelectTrigger>
+                <SelectContent align="end">
+                  <SelectItem value="all" className="cursor-pointer">
+                    All Status
+                  </SelectItem>
+                  <SelectItem value="active" className="cursor-pointer">
+                    Active
+                  </SelectItem>
+                  <SelectItem value="inactive" className="cursor-pointer">
+                    Inactive
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={handleRefetch}
+                className="h-9 w-9 cursor-pointer shrink-0"
+              >
+                <RefreshCw
+                  className={cn("size-4", isFetchingUsers && "animate-spin")}
+                />
+              </Button>
+            </div>
+          </div>
+
+          <DataTable
+            data={filteredUsers}
+            columns={columns}
+            isLoading={isLoadingUsers || isFetchingUsers}
+            enablePagination={false}
+            stickyHeader
+            fillAvailableHeight
+            tableContainerClassName="border-0 rounded-none bg-transparent"
+          />
+        </CardContent>
+      </Card>
 
       {/* Add User Dialog styled to match */}
       <CreateUserDialog 
