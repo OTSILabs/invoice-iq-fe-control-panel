@@ -39,8 +39,8 @@ export function TenantDetail() {
   }
 
   return (
-    <div className="flex w-full animate-in flex-col gap-6 pb-12 duration-300 fade-in">
-      <div className="bg-card border border-border rounded-xl p-8 shrink-0">
+    <div className="flex w-full animate-in flex-col gap-6 pb-12 duration-300 fade-in font-sans">
+      <div className="bg-card border border-border rounded-xl p-8 shrink-0 shadow-sm">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/20">
@@ -93,7 +93,7 @@ export function TenantDetail() {
       </div>
 
       <Tabs defaultValue="configuration" className="w-full mt-2">
-        <TabsList className="mb-6 grid w-full max-w-[400px] grid-cols-2">
+        <TabsList variant="line" className="mb-6 justify-start gap-6 [&>button]:flex-none">
           <TabsTrigger value="configuration">Configuration</TabsTrigger>
           <TabsTrigger value="events">Events</TabsTrigger>
         </TabsList>
