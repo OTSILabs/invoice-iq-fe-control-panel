@@ -218,8 +218,9 @@ export function Plans() {
 
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
           <Button
+            size="sm"
             onClick={() => navigate("/plan/create")}
-            className="gap-1.5 rounded-xl font-semibold"
+            className="w-full sm:w-auto font-medium px-3 shadow-none gap-1.5"
           >
             <Plus className="h-4 w-4" /> Create Plan
           </Button>

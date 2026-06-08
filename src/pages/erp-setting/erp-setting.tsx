@@ -252,8 +252,9 @@ export function ErpSettings() {
 
           {!isAllUsed && (
             <Button
+              size="sm"
               onClick={() => setIsCreateOpen(true)}
-              className="shrink-0 gap-1.5 rounded-xl font-semibold"
+              className="w-full sm:w-auto font-medium px-3 shadow-none shrink-0 gap-1.5"
             >
               <Plus className="h-4 w-4" /> Add ERP Setting
             </Button>
