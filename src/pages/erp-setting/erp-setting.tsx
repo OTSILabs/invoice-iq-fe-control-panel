@@ -132,10 +132,10 @@ function MetaDateItem({
         align === "right" ? "flex flex-col text-right" : "flex flex-col"
       }
     >
-      <span className="text-[10px] tracking-wide text-muted-foreground uppercase">
+      <span className="text-[10px] font-medium tracking-widest text-muted-foreground uppercase">
         {label}
       </span>
-      <span className="text-[11px] font-medium text-foreground">
+      <span className="text-xs font-semibold text-foreground">
         {getFormattedDate(value)}
       </span>
     </div>
@@ -194,12 +194,10 @@ export function ErpSettings() {
 
   return (
     <div className="flex w-full animate-in flex-col gap-6 pb-12 duration-300 fade-in">
-      <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 ">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-foreground">
-            ERP Settings
-          </h1>
-          <p className="mt-0.5 text-sm text-muted-foreground">
+          <h1 className="text-lg font-semibold tracking-tight">ERP Settings</h1>
+          <p className="text-sm text-muted-foreground mt-0.5">
             Configure and maintain enterprise ERP integrations.
           </p>
         </div>

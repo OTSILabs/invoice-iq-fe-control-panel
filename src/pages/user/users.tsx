@@ -100,16 +100,16 @@ export function Users() {
       case "admin":
         return {
           variant: "outline" as const,
-          className: "border-primary text-primary font-semibold",
+          className: "border-primary text-primary font-semibold text-[10px] px-1.5 py-0.5",
         }
       case "user":
       case "standard user":
         return {
           variant: "secondary" as const,
-          className: "bg-slate-100 text-foreground hover:bg-slate-200 font-semibold",
+          className: "bg-slate-100 text-foreground hover:bg-slate-200 font-semibold text-[10px] px-1.5 py-0.5",
         }
       default:
-        return { variant: "outline" as const, className: "font-semibold" }
+        return { variant: "outline" as const, className: "font-semibold text-[10px] px-1.5 py-0.5" }
     }
   }
 
@@ -139,7 +139,7 @@ export function Users() {
                 </AvatarFallback>
               </Avatar>
               <div className="min-w-0">
-                <p className="truncate text-sm font-medium text-foreground">
+                <p className="truncate text-xs font-medium text-foreground">
                   {row.original.full_name}
                 </p>
               </div>
@@ -153,7 +153,7 @@ export function Users() {
         width: "30%",
         minWidth: "220px",
         cell: ({ row }) => (
-          <span className="block truncate text-sm text-muted-foreground">
+          <span className="block truncate text-xs text-muted-foreground">
             {row.original.email}
           </span>
         ),
@@ -191,14 +191,15 @@ export function Users() {
         rowClassName: "w-40",
         cell: ({ row }) => {
           const statusVal = row.original.status || "ACTIVE"
+          const isActive = statusVal === "ACTIVE"
           return (
             <Badge
-              variant="outline"
-              className={cn(
-                "font-semibold text-xs py-0.5 px-2.5 rounded-full border",
-                statusVal === "ACTIVE" && "bg-green-50 border-green-200 text-green-700 ",
-                statusVal === "INACTIVE" && "bg-slate-100 border-border text-foreground ",
-              )}
+              variant={isActive ? "secondary" : "outline"}
+              className={
+                isActive
+                  ? "border-emerald-200 bg-emerald-50 text-emerald-700"
+                  : "text-muted-foreground"
+              }
             >
               {statusVal}
             </Badge>
@@ -299,12 +300,10 @@ export function Users() {
 
   return (
     <div className="flex w-full animate-in flex-col gap-6 pb-12 duration-300 fade-in">
-      <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-foreground">
-            Users
-          </h1>
-          <p className="mt-0.5 text-sm text-muted-foreground">
+          <h1 className="text-lg font-semibold tracking-tight">Users</h1>
+          <p className="text-sm text-muted-foreground mt-0.5">
             Manage system access accounts and user permissions.
           </p>
         </div>

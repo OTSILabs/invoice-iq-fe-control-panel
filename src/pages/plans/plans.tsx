@@ -41,7 +41,7 @@ export function Plans() {
         header: "Plan Type",
         width: 140,
         cell: ({ row }) => (
-          <span className="font-semibold text-foreground ">
+          <span className="text-xs font-semibold text-foreground">
             {row.original.plan_type}
           </span>
         ),
@@ -51,7 +51,7 @@ export function Plans() {
         header: "Price",
         width: 140,
         cell: ({ row }) => (
-          <span className="font-medium text-slate-600 ">
+          <span className="text-xs font-medium text-foreground">
             {row.original.price_per_invoice_currency}{" "}
             {row.original.price_per_invoice_amount}
           </span>
@@ -62,7 +62,7 @@ export function Plans() {
         header: "Interval",
         width: 120,
         cell: ({ row }) => (
-          <span className="text-muted-foreground ">
+          <span className="text-xs text-muted-foreground">
             {row.original.plan_interval}
           </span>
         ),
@@ -76,7 +76,7 @@ export function Plans() {
             variant={row.original.is_active ? "secondary" : "outline"}
             className={
               row.original.is_active
-                ? "border-emerald-200 bg-emerald-50 text-emerald-700 "
+                ? "border-emerald-200 bg-emerald-50 text-emerald-700"
                 : "text-muted-foreground"
             }
           >
@@ -89,7 +89,7 @@ export function Plans() {
         header: "Description",
         width: 120,
         cell: ({ row }) => (
-          <span className="block truncate text-muted-foreground">
+          <span className="block truncate text-xs text-muted-foreground">
             {row.original.description}
           </span>
         ),
@@ -206,12 +206,10 @@ export function Plans() {
   // LIST STATE: Render list of plans in a clean table overview with filtering
   return (
     <div className="flex w-full animate-in flex-col gap-6 pb-12 duration-300 fade-in">
-      <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 ">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-foreground ">
-            Plans & Pricing
-          </h1>
-          <p className="mt-0.5 text-sm text-muted-foreground ">
+          <h1 className="text-lg font-semibold tracking-tight">Plans & Pricing</h1>
+          <p className="text-sm text-muted-foreground mt-0.5">
             Manage your subscription configurations.
           </p>
         </div>
