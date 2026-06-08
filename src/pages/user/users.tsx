@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from "react"
-import { Plus, Loader2, AlertCircle, RefreshCw, Search, MoreHorizontal, Edit2 } from "lucide-react"
+import { Plus, Loader2, AlertCircle, RefreshCw, MoreHorizontal, Edit2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { DataTable } from "@/components/ui/data-table"
