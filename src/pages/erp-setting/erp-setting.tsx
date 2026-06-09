@@ -8,18 +8,10 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card"
-import { Switch } from "@/components/ui/switch"
 import { Skeleton } from "@/components/ui/skeleton"
 import { toast } from "sonner"
 import { format } from "date-fns"
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import { useErpSettings } from "@/api/hooks/useErp"
 import type { ErpSetting } from "@/types"
 import { ErpSettingFormDialog } from "./erp-setting-form-dialog"
@@ -160,32 +152,12 @@ export function ErpSettings() {
   } = useErpSettings()
 
   const [isCreateOpen, setIsCreateOpen] = useState(false)
-  const [statusFilter, setStatusFilter] = useState("all")
-  const [erpTypeFilter, setErpTypeFilter] = useState("all")
 
   const settings = useMemo(() => data || [], [data])
   const usedErpTypes = useMemo(
     () => settings.map((s) => s.erp_type.toLowerCase()),
     [settings]
   )
-  // const allErpTypes = ["cw", "sap"]
-  // const isAllUsed = allErpTypes.every((type) => usedErpTypes.includes(type))
-
-  const filteredSettings = useMemo(() => {
-    return settings.filter((record) => {
-      const isEnabled = record.is_enabled !== false
-      const statusMatch =
-        statusFilter === "all" ||
-        (statusFilter === "enabled" && isEnabled) ||
-        (statusFilter === "disabled" && !isEnabled)
-
-      const typeMatch =
-        erpTypeFilter === "all" ||
-        record.erp_type.toLowerCase() === erpTypeFilter.toLowerCase()
-
-      return statusMatch && typeMatch
-    })
-  }, [settings, statusFilter, erpTypeFilter])
 
   const handleRefetch = async () => {
     await refetch()
@@ -203,39 +175,6 @@ export function ErpSettings() {
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
-          <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="h-9 w-30 bg-background">
-              <SelectValue placeholder="All Status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all" className="cursor-pointer">
-                All Status
-              </SelectItem>
-              <SelectItem value="enabled" className="cursor-pointer">
-                Enabled
-              </SelectItem>
-              <SelectItem value="disabled" className="cursor-pointer">
-                Disabled
-              </SelectItem>
-            </SelectContent>
-          </Select>
-
-          <Select value={erpTypeFilter} onValueChange={setErpTypeFilter}>
-            <SelectTrigger className="h-9 w-30 bg-background">
-              <SelectValue placeholder="All Types" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all" className="cursor-pointer">
-                All Types
-              </SelectItem>
-              <SelectItem value="cw" className="cursor-pointer">
-                CW
-              </SelectItem>
-              <SelectItem value="sap" className="cursor-pointer">
-                SAP
-              </SelectItem>
-            </SelectContent>
-          </Select>
 
           <Button
             variant="outline"
@@ -283,7 +222,7 @@ export function ErpSettings() {
           </Button>
         </div>
       ) : (
-        <ErpSettingsCards records={filteredSettings} />
+        <ErpSettingsCards records={settings} />
       )}
 
       <ErpSettingFormDialog
@@ -312,7 +251,6 @@ function ErpSettingsCards({ records }: { records: ErpSetting[] }) {
   return (
     <div className="grid animate-in gap-4 duration-200 fade-in md:grid-cols-2 xl:grid-cols-3">
       {records.map((record) => {
-        const isEnabled = record.is_enabled !== false
         const displayName =
           record.display_name || `${record.erp_type.toUpperCase()} Integration`
 
@@ -321,7 +259,7 @@ function ErpSettingsCards({ records }: { records: ErpSetting[] }) {
             key={record.erp_id}
             className="flex h-full flex-col overflow-hidden border-border/80"
           >
-            <CardHeader className="border-b bg-muted/10 p-5 pb-4">
+            <CardHeader className="border-b bg-muted/10  pb-4">
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   <CardTitle className="truncate text-base font-bold text-foreground">
@@ -330,12 +268,6 @@ function ErpSettingsCards({ records }: { records: ErpSetting[] }) {
                   <CardDescription className="mt-1 text-xs font-semibold tracking-wider text-primary uppercase">
                     {record.erp_type}
                   </CardDescription>
-                </div>
-                <div className="flex shrink-0 items-center gap-2">
-                  <span className="text-xs font-medium text-muted-foreground">
-                    {isEnabled ? "Enabled" : "Disabled"}
-                  </span>
-                  <Switch checked={isEnabled} disabled className="opacity-75" />
                 </div>
               </div>
               <div className="mt-3 flex items-start justify-between gap-4 border-t border-slate-100 pt-2">
