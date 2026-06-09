@@ -35,10 +35,33 @@ export interface Organization {
 
 export interface Tenant {
   id: string;
-  tenant_admin_full_name: string;
+  organisation_id: string;
+  slug: string;
   tenant_role: string;
-  access_status: string;
-  created_at: string;
+  configurations?: Record<string, unknown>;
+  profile?: {
+    display_name?: string;
+    domain_name?: string;
+    reporting_currency?: string;
+    timezone?: string;
+  };
+  provisioning_status?: string;
+  access_status?: string;
+  governance_blocked?: boolean;
+  governance_outcome?: string | null;
+  effective_plan_id?: string;
+  effective_plan_valid_from?: string;
+  effective_plan_valid_to?: string;
+  tenant_admin_email?: string;
+  tenant_admin_full_name?: string;
+  db_name?: string;
+  db_host?: string;
+  db_port?: number;
+  db_user?: string;
+  provisioned_at?: string;
+  last_error?: string | null;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface CreatePlatformUserPayload {

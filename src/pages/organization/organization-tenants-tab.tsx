@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react"
 import { useQuery } from "@tanstack/react-query"
+import { useNavigate } from "react-router-dom"
 import { Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -76,6 +77,7 @@ function StatusBadge({ status }: { status: string }) {
 }
 
 export function OrganizationTenantsTab({ orgId, organizationName }: OrganizationTenantsTabProps) {
+  const navigate = useNavigate()
   const [tenantAction, setTenantAction] = useState<{
     type: "deactivate" | "activate" | "block" | "unblock" | "expire" | "delete"
     tenant: Tenant
@@ -132,7 +134,7 @@ export function OrganizationTenantsTab({ orgId, organizationName }: Organization
       header: "",
       width: "auto",
       cell: ({ row }) => (
-        <div className="flex justify-end">
+        <div className="flex justify-end" onClick={(e) => e.stopPropagation()}>
           <TenantActionsDropdown
             tenant={row.original}
             orgId={orgId}
@@ -197,6 +199,7 @@ export function OrganizationTenantsTab({ orgId, organizationName }: Organization
           totalItems={tenantList.length}
           stickyHeader
           tableContainerClassName="border-0 rounded-none bg-transparent"
+          onRowClick={(tenant) => navigate(`/organizations/${orgId}/tenants/${tenant.id}`)}
           emptyState={
             <div className="flex flex-col items-center justify-center py-12 text-center">
               <p className="text-sm font-medium text-foreground mb-1">No tenants yet</p>

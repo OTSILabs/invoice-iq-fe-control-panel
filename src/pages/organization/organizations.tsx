@@ -33,63 +33,62 @@ function getAccentSlot(id: string | number) {
 /* ─── OrgCard ─────────────────────────────────────────────────── */
 
 function OrgCard({ org }: { org: any }) {
-  const initials = org.name ? getInitials(org.name) : "OR"
-  const slot = getAccentSlot(org.id)
+  const initials = org.name ? getInitials(org.name) : "OR"
+  const slot = getAccentSlot(org.id)
 
-  return (
-    <Link
-      to={`/organizations/${org.id}`}
-      className={cn(
-        "group relative flex flex-col justify-between overflow-hidden rounded-xl border border-border bg-card p-4 shadow-sm",
-        "transition-all duration-300 ease-out",
-        "hover:border-primary/40 hover:shadow-md hover:-translate-y-0.5"
-      )}
-    >
-      {/* Top gradient glow line */}
-      <div className="absolute top-0 left-0 right-0 h-[2.5px] bg-gradient-to-r from-primary/30 via-primary to-primary/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+  return (
+    <Link
+      to={`/organizations/${org.id}`}
+      className={cn(
+        "group relative flex flex-col justify-between overflow-hidden rounded-xl border border-border bg-card p-4 shadow-sm",
+        "transition-all duration-300 ease-out",
+        "hover:border-primary/40 hover:shadow-md hover:-translate-y-0.5"
+      )}
+    >
+      {/* Top gradient glow line */}
+      <div className="absolute top-0 left-0 right-0 h-[2.5px] bg-gradient-to-r from-primary/30 via-primary to-primary/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-      <div>
-        {/* Top Row: initials & status */}
-        <div className="flex items-start justify-between gap-3">
-          <div className={cn(
-            "h-8 w-8 rounded-lg flex items-center justify-center text-[11px] font-bold uppercase select-none border shrink-0",
-            slot.bg
-          )}>
-            {initials}
-          </div>
+      <div>
+        {/* Top Row: initials & status */}
+        <div className="flex items-start justify-between gap-3">
+          <div className={cn(
+            "h-8 w-8 rounded-lg flex items-center justify-center text-[11px] font-bold uppercase select-none border shrink-0",
+            slot.bg
+          )}>
+            {initials}
+          </div>
 
-          <div className="flex items-center gap-1 rounded-full bg-emerald-50 dark:bg-emerald-950/30 px-1.5 py-0.5 text-[9px] font-medium text-emerald-600 dark:text-emerald-400 border border-emerald-200/40 dark:border-emerald-800/20 shadow-none select-none">
-            <span className="h-1 w-1 rounded-full bg-emerald-500 animate-pulse" />
-            Active
-          </div>
-        </div>
+          <div className="flex items-center gap-1 rounded-full bg-emerald-50 dark:bg-emerald-950/30 px-1.5 py-0.5 text-[9px] font-medium text-emerald-600 dark:text-emerald-400 border border-emerald-200/40 dark:border-emerald-800/20 shadow-none select-none">
+            <span className="h-1 w-1 rounded-full bg-emerald-500 animate-pulse" />
+            Active
+          </div>
+        </div>
 
-        {/* Title */}
-        <div className="mt-3 min-w-0">
-          <h3 className="text-xs font-semibold text-foreground tracking-tight group-hover:text-primary transition-colors duration-200 truncate" title={org.name}>
-            {org.name}
-          </h3>
-          <p className="text-[10px] text-muted-foreground font-mono mt-0.5 truncate" title={org.slug}>
-            {org.slug || "no-slug-registered"}
-          </p>
-        </div>
+        {/* Title & Tenant Count */}
+        <div className="mt-3 min-w-0">
+          <h3 className="text-xs font-semibold text-foreground tracking-tight group-hover:text-primary transition-colors duration-200 truncate" title={org.name}>
+            {org.name}
+          </h3>
+          <p className="text-[10px] text-muted-foreground mt-1 flex items-center gap-1 select-none">
+            <Users className="h-3 w-3 text-muted-foreground/70" />
+            <span>{org.tenant_count ?? 0} {org.tenant_count === 1 ? "tenant" : "tenants"}</span>
+          </p>
+        </div>
+      </div>
 
-      
-      </div>
+      {/* CTA detail link */}
+      <div className="flex items-center justify-between mt-4 pt-3 border-t border-border/50">
+        <span className="text-[9px] font-medium text-muted-foreground font-mono uppercase">
+          ID: {String(org.id).slice(0, 8)}...
+        </span>
 
-      {/* CTA detail link */}
-      <div className="flex items-center justify-between mt-4 pt-3 border-t border-border/50">
-        <span className="text-[9px] font-medium text-muted-foreground font-mono uppercase">
-          ID: {String(org.id).slice(0, 8)}...
-        </span>
-
-        <div className="inline-flex items-center gap-1 text-[11px] font-semibold text-muted-foreground group-hover:text-primary transition-colors duration-200">
-          <span>Details</span>
-          <ArrowRight className="h-3 w-3 transition-transform duration-200 ease-out group-hover:translate-x-0.5" />
-        </div>
-      </div>
-    </Link>
-  )
+        <div className="inline-flex items-center gap-1 text-[11px] font-semibold text-muted-foreground group-hover:text-primary transition-colors duration-200">
+          <span>Details</span>
+          <ArrowRight className="h-3 w-3 transition-transform duration-200 ease-out group-hover:translate-x-0.5" />
+        </div>
+      </div>
+    </Link>
+  )
 }
 
 /* ─── Organizations page ──────────────────────────────────────── */
