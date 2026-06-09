@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
-import { Loader2, ArrowLeft, Building2, User, Info, FileText, Eye, EyeOff, Copy, Check, RefreshCw, ArrowUpRight, ShieldAlert, Trash2 } from "lucide-react"
+import { Loader2, ArrowLeft, Building2, User, Info, FileText, Eye, EyeOff, Copy, Check, RefreshCw, ArrowUpRight, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { toast } from "sonner"
@@ -187,7 +187,7 @@ export function TenantDetail() {
     <div className="flex w-full flex-col gap-6 pb-12 animate-in fade-in duration-300">
       
       {/* ── Action Header ── */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="space-y-1">
           <h1 className="text-xl font-bold tracking-tight text-foreground">Tenant Details</h1>
           <p className="text-sm text-muted-foreground">
@@ -195,10 +195,85 @@ export function TenantDetail() {
           </p>
         </div>
         
-        <Button variant="outline" size="sm" className="font-medium gap-1.5 border-border shadow-sm cursor-pointer" onClick={() => navigate(`/organizations/${orgId}`)}>
-          <ArrowLeft className="h-4 w-4" />
-          Back
-        </Button>
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Retry Provisioning (Conditional: if provisioning is Failed or there is a last_error) */}
+          {(tenant.provisioning_status?.toLowerCase() === "failed" || tenant.last_error) && (
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => retryMutation.mutate()}
+              disabled={retryMutation.isPending}
+              className="text-xs font-semibold gap-1.5 border-amber-200 bg-amber-50/50 hover:bg-amber-100 text-amber-800 dark:border-amber-900/30 dark:bg-amber-950/20 dark:text-amber-400 cursor-pointer"
+            >
+              {retryMutation.isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <RefreshCw className="h-3.5 w-3.5" />}
+              Retry Provisioning
+            </Button>
+          )}
+
+          {/* Migrate Database Schema */}
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={() => migrateMutation.mutate()}
+            disabled={migrateMutation.isPending}
+            className="text-xs font-semibold gap-1.5 cursor-pointer"
+          >
+            {migrateMutation.isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <ArrowUpRight className="h-3.5 w-3.5" />}
+            Migrate Schema
+          </Button>
+
+          {/* Activate / Deactivate */}
+          {tenant.access_status?.toLowerCase() === "active" ? (
+            <>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => setTenantAction({ type: "deactivate", tenant })}
+                className="text-xs font-semibold text-amber-600 hover:text-amber-700 hover:bg-amber-50 dark:hover:bg-amber-950/20 border-amber-200/50 dark:border-amber-900/30 cursor-pointer"
+              >
+                Deactivate
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => setTenantAction({ type: "expire", tenant })}
+                className="text-xs font-semibold text-rose-600 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/20 border-rose-200/50 dark:border-rose-900/30 cursor-pointer"
+              >
+                Expire
+              </Button>
+            </>
+          ) : (
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => setTenantAction({ type: "activate", tenant })}
+              className="text-xs font-semibold text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-950/20 border-emerald-200/50 dark:border-emerald-900/30 cursor-pointer"
+            >
+              Activate
+            </Button>
+          )}
+
+          {/* Delete Tenant */}
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={() => setTenantAction({ type: "delete", tenant })}
+            className="text-xs font-semibold text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950/20 border-red-200/50 dark:border-red-900/30 cursor-pointer"
+          >
+            <Trash2 className="size-3.5 mr-1" />
+            Delete
+          </Button>
+
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="font-medium gap-1.5 border-border shadow-sm cursor-pointer ml-1" 
+            onClick={() => navigate(`/organizations/${orgId}`)}
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back
+          </Button>
+        </div>
       </div>
 
       {/* ── Details Card (Summary Card styled like organization facts card) ── */}
@@ -302,10 +377,10 @@ export function TenantDetail() {
 
         {/* PROFILE TAB */}
         <TabsContent value="profile" className="m-0 animate-in fade-in duration-300 space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             
             {/* Card 1: Profile Details */}
-            <div className="bg-card border border-border rounded-xl p-5 shadow-sm flex flex-col justify-between min-h-[260px]">
+            <div className="bg-card border border-border rounded-xl p-5 shadow-sm flex flex-col justify-between min-h-[240px]">
               <div className="space-y-4">
                 <div className="flex items-center gap-2 border-b border-border pb-3">
                   <User className="h-4 w-4 text-primary" />
@@ -341,7 +416,7 @@ export function TenantDetail() {
             </div>
 
             {/* Card 2: Subscription Plan */}
-            <div className="bg-card border border-border rounded-xl p-5 shadow-sm flex flex-col justify-between min-h-[260px]">
+            <div className="bg-card border border-border rounded-xl p-5 shadow-sm flex flex-col justify-between min-h-[240px]">
               <div className="space-y-4">
                 <div className="flex items-center gap-2 border-b border-border pb-3">
                   <FileText className="h-4 w-4 text-primary" />
@@ -375,7 +450,7 @@ export function TenantDetail() {
             </div>
 
             {/* Card 3: Governance & Compliance */}
-            <div className="bg-card border border-border rounded-xl p-5 shadow-sm flex flex-col justify-between min-h-[260px]">
+            <div className="bg-card border border-border rounded-xl p-5 shadow-sm flex flex-col justify-between min-h-[240px]">
               <div className="space-y-4">
                 <div className="flex items-center gap-2 border-b border-border pb-3">
                   <Building2 className="h-4 w-4 text-primary" />
@@ -420,96 +495,6 @@ export function TenantDetail() {
               </div>
             </div>
 
-            {/* Card 4: Lifecycle & Operations */}
-            <div className="bg-card border border-border rounded-xl p-5 shadow-sm flex flex-col justify-between min-h-[260px]">
-              <div className="space-y-4">
-                <div className="flex items-center gap-2 border-b border-border pb-3">
-                  <ShieldAlert className="h-4 w-4 text-primary" />
-                  <h3 className="text-sm font-bold text-foreground">Lifecycle & Operations</h3>
-                </div>
-                <div className="space-y-2 flex flex-col">
-                  {/* Retry Provisioning (Conditional: if provisioning is Failed or there is a last_error) */}
-                  {tenant.provisioning_status?.toLowerCase() === "failed" || tenant.last_error ? (
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      onClick={() => retryMutation.mutate()}
-                      disabled={retryMutation.isPending}
-                      className="w-full text-xs font-semibold justify-start gap-2 border-amber-200 bg-amber-50/50 hover:bg-amber-100 text-amber-800 cursor-pointer"
-                    >
-                      {retryMutation.isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <RefreshCw className="h-3.5 w-3.5" />}
-                      Retry Provisioning
-                    </Button>
-                  ) : (
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      onClick={() => retryMutation.mutate()}
-                      disabled={retryMutation.isPending}
-                      className="w-full text-xs font-semibold justify-start gap-2 text-muted-foreground cursor-pointer"
-                    >
-                      {retryMutation.isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <RefreshCw className="h-3.5 w-3.5" />}
-                      Force Provisioning Retry
-                    </Button>
-                  )}
-
-                  {/* Migrate Tenant */}
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    onClick={() => migrateMutation.mutate()}
-                    disabled={migrateMutation.isPending}
-                    className="w-full text-xs font-semibold justify-start gap-2 text-foreground cursor-pointer"
-                  >
-                    {migrateMutation.isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <ArrowUpRight className="h-3.5 w-3.5" />}
-                    Migrate Database Schema
-                  </Button>
-
-                  {/* Activate / Deactivate / Expire Toggle */}
-                  {tenant.access_status?.toLowerCase() === "active" ? (
-                    <div className="flex gap-2">
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        onClick={() => setTenantAction({ type: "deactivate", tenant })}
-                        className="flex-1 text-xs font-semibold text-amber-600 hover:text-amber-700 hover:bg-amber-50 cursor-pointer"
-                      >
-                        Deactivate
-                      </Button>
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        onClick={() => setTenantAction({ type: "expire", tenant })}
-                        className="flex-1 text-xs font-semibold text-rose-600 hover:text-rose-700 hover:bg-rose-50 cursor-pointer"
-                      >
-                        Expire
-                      </Button>
-                    </div>
-                  ) : (
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      onClick={() => setTenantAction({ type: "activate", tenant })}
-                      className="w-full text-xs font-semibold gap-2 border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 cursor-pointer"
-                    >
-                      Activate Tenant
-                    </Button>
-                  )}
-                </div>
-              </div>
-              
-              <div className="pt-4 border-t border-border mt-auto">
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={() => setTenantAction({ type: "delete", tenant })}
-                  className="w-full text-xs font-medium border-red-200 bg-red-50 hover:bg-red-100 text-red-600 cursor-pointer"
-                >
-                  <Trash2 className="size-3.5 mr-1" /> Delete Tenant Account
-                </Button>
-              </div>
-            </div>
-
           </div>
 
           {tenant.last_error && (
@@ -536,7 +521,7 @@ export function TenantDetail() {
               <p className="text-xs text-muted-foreground">View primary connection settings and database credentials for this tenant.</p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2 pb-6 border-b border-border/60">
               <div className="space-y-4">
                 <div className="flex justify-between border-b border-border/50 pb-2">
                   <span className="text-xs font-semibold text-muted-foreground">Database Engine</span>
@@ -556,6 +541,47 @@ export function TenantDetail() {
                   <span className="text-xs font-semibold text-muted-foreground">SSL Mode</span>
                   <span className="text-xs font-bold text-foreground">Require</span>
                 </div>
+              </div>
+            </div>
+
+            {/* Database Actions */}
+            <div className="pt-2">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3">Database Maintenance Operations</h4>
+              <div className="flex flex-wrap gap-3">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => migrateMutation.mutate()}
+                  disabled={migrateMutation.isPending}
+                  className="text-xs font-semibold gap-1.5 cursor-pointer"
+                >
+                  {migrateMutation.isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <ArrowUpRight className="h-3.5 w-3.5" />}
+                  Migrate Database Schema
+                </Button>
+
+                {tenant.provisioning_status?.toLowerCase() === "failed" || tenant.last_error ? (
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => retryMutation.mutate()}
+                    disabled={retryMutation.isPending}
+                    className="text-xs font-semibold gap-1.5 border-amber-200 bg-amber-50/50 hover:bg-amber-100 text-amber-800 cursor-pointer"
+                  >
+                    {retryMutation.isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <RefreshCw className="h-3.5 w-3.5" />}
+                    Retry Provisioning Setup
+                  </Button>
+                ) : (
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => retryMutation.mutate()}
+                    disabled={retryMutation.isPending}
+                    className="text-xs font-semibold gap-1.5 text-muted-foreground cursor-pointer"
+                  >
+                    {retryMutation.isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <RefreshCw className="h-3.5 w-3.5" />}
+                    Force Provisioning Retry
+                  </Button>
+                )}
               </div>
             </div>
           </div>
