@@ -8,12 +8,8 @@ import type { CustomColumnDef } from "@/components/ui/data-table"
 import type { Tenant } from "@/types"
 import { CreateOrganizationModal } from "@/pages/organization/modals/create-organization-modal"
 import { TenantActionsDropdown } from "../tenant-actions-dropdown"
-import { ActivateTenantDialog } from "@/pages/tenants/tenant-actions/activate-tenant-dialog"
-import { DeactivateTenantDialog } from "@/pages/tenants/tenant-actions/deactivate-tenant-dialog"
-import { BlockTenantDialog } from "@/pages/tenants/tenant-actions/block-tenant-dialog"
-import { UnblockTenantDialog } from "@/pages/tenants/tenant-actions/unblock-tenant-dialog"
-import { ExpireTenantDialog } from "@/pages/tenants/tenant-actions/expire-tenant-dialog"
-import { DeleteTenantDialog } from "@/pages/tenants/tenant-actions/delete-tenant-dialog"
+import { TenantActionDialog } from "@/pages/tenants/tenant-actions/tenant-action-dialog"
+import type { TenantActionType } from "@/pages/tenants/tenant-actions/tenant-action-dialog"
 import { useOrganizationTenants } from "@/api/hooks/useOrganizations"
 import { getInitials } from "@/lib/utils"
 
@@ -42,7 +38,7 @@ interface OrganizationTenantsTabProps {
   organizationName: string
 }
 
-type TenantActionType = "deactivate" | "activate" | "block" | "unblock" | "expire" | "delete"
+
 
 export function OrganizationTenantsTab({ orgId, organizationName }: OrganizationTenantsTabProps) {
   const navigate = useNavigate()
@@ -110,11 +106,7 @@ export function OrganizationTenantsTab({ orgId, organizationName }: Organization
     },
   ], [orgId])
 
-  const dialogProps = (type: TenantActionType) => ({
-    tenant: tenantAction?.type === type ? tenantAction.tenant : null,
-    onClose: () => setTenantAction(null),
-    orgId
-  })
+
 
   return (
     <>
@@ -162,12 +154,7 @@ export function OrganizationTenantsTab({ orgId, organizationName }: Organization
         />
       </div>
 
-      <ActivateTenantDialog {...dialogProps("activate")} />
-      <DeactivateTenantDialog {...dialogProps("deactivate")} />
-      <BlockTenantDialog {...dialogProps("block")} />
-      <UnblockTenantDialog {...dialogProps("unblock")} />
-      <ExpireTenantDialog {...dialogProps("expire")} />
-      <DeleteTenantDialog {...dialogProps("delete")} />
+      <TenantActionDialog action={tenantAction} onClose={() => setTenantAction(null)} orgId={orgId} />
     </>
   )
 }

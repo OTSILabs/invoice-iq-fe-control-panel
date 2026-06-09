@@ -11,12 +11,8 @@ import { TenantEventsTable } from "@/pages/tenants/tenant-events-table"
 import { organizationsService } from "@/api/services/organizations.service"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 
-import { ActivateTenantDialog } from "@/pages/tenants/tenant-actions/activate-tenant-dialog"
-import { DeactivateTenantDialog } from "@/pages/tenants/tenant-actions/deactivate-tenant-dialog"
-import { BlockTenantDialog } from "@/pages/tenants/tenant-actions/block-tenant-dialog"
-import { UnblockTenantDialog } from "@/pages/tenants/tenant-actions/unblock-tenant-dialog"
-import { ExpireTenantDialog } from "@/pages/tenants/tenant-actions/expire-tenant-dialog"
-import { DeleteTenantDialog } from "@/pages/tenants/tenant-actions/delete-tenant-dialog"
+import { TenantActionDialog } from "@/pages/tenants/tenant-actions/tenant-action-dialog"
+
 import { AssignPlanDialog } from "@/pages/tenants/tenant-actions/assign-plan-dialog"
 import type { Tenant } from "@/types"
 
@@ -570,16 +566,15 @@ export function TenantDetail() {
           <TenantEventsTable tenantId={tenant.id} />
         </TabsContent>
       </Tabs>
-      <ActivateTenantDialog   tenant={tenantAction?.type === "activate"   ? tenantAction.tenant : null} onClose={() => setTenantAction(null)} orgId={orgId} />
-      <DeactivateTenantDialog tenant={tenantAction?.type === "deactivate" ? tenantAction.tenant : null} onClose={() => setTenantAction(null)} orgId={orgId} />
-      <BlockTenantDialog      tenant={tenantAction?.type === "block"      ? tenantAction.tenant : null} onClose={() => setTenantAction(null)} orgId={orgId} />
-      <UnblockTenantDialog    tenant={tenantAction?.type === "unblock"    ? tenantAction.tenant : null} onClose={() => setTenantAction(null)} orgId={orgId} />
-      <ExpireTenantDialog     tenant={tenantAction?.type === "expire"     ? tenantAction.tenant : null} onClose={() => setTenantAction(null)} orgId={orgId} />
-      <DeleteTenantDialog     
-        tenant={tenantAction?.type === "delete"     ? tenantAction.tenant : null} 
+      <TenantActionDialog 
+        action={tenantAction && tenantAction.type !== "assignPlan" ? (tenantAction as any) : null} 
         onClose={() => setTenantAction(null)} 
-        onSuccess={() => navigate(`/organizations/${orgId}`)}
         orgId={orgId} 
+        onSuccess={() => {
+          if (tenantAction?.type === "delete") {
+            navigate(`/organizations/${orgId}`)
+          }
+        }} 
       />
       <AssignPlanDialog       tenant={tenantAction?.type === "assignPlan" ? tenantAction.tenant : null} onClose={() => setTenantAction(null)} orgId={orgId} />
 
