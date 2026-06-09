@@ -27,12 +27,12 @@ export function OrganizationFacts({ organization }: { organization: Organization
     <div className="bg-card rounded-xl border border-border overflow-hidden">
 
       {/* Accent stripe */}
-      <div className="h-[3px] w-full bg-linear-to-r from-primary to-chart-1" />
+      <div className="h-[3px] w-full bg-gradient-to-r from-primary to-chart-1" />
 
       {/* Hero */}
       <div className="flex flex-col gap-3 px-5 py-4 border-b border-border">
         <div className="flex items-center gap-3">
-          <div className="h-10 w-10 shrink-0 rounded-lg bg-primary text-primary-foreground flex items-center justify-center text-sm font-semibold">
+          <div className="h-10 w-10 flex-shrink-0 rounded-lg bg-primary text-primary-foreground flex items-center justify-center text-sm font-semibold">
             {initials}
           </div>
           <div className="min-w-0">
