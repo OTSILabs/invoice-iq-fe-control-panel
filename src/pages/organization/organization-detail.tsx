@@ -1,9 +1,8 @@
 import { useParams, useNavigate } from "react-router-dom"
 import { useQuery } from "@tanstack/react-query"
-import { ArrowLeft, Loader2, Edit2 } from "lucide-react"
+import { ArrowLeft, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { toast } from "sonner"
 import { cn } from "@/lib/utils"
 import { organizationsService } from "@/api/services/organizations.service"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
@@ -30,11 +29,7 @@ export function OrganizationDetail() {
     enabled: !!id,
   })
 
-  const { data: configurations = [] } = useQuery({
-    queryKey: ["organizations", id, "configurations"],
-    queryFn: () => organizationsService.getConfigurations(id!),
-    enabled: !!id,
-  })
+ 
 
   const getInitials = (name: string): string => {
     return name
@@ -98,29 +93,18 @@ export function OrganizationDetail() {
   return (
     <div className="flex w-full flex-col gap-6 pb-12 animate-in fade-in duration-300">
       
-      {/* ── Breadcrumb Back Link & Action Header ── */}
+      {/* ── Action Header ── */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
-          <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8 text-xs text-muted-foreground hover:text-foreground shadow-none -ml-2"
-              onClick={() => navigate("/organizations")}
-            >
-              <ArrowLeft className="mr-1.5 h-3.5 w-3.5" />
-              Back to organizations
-            </Button>
-          </div>
           <h1 className="text-xl font-bold tracking-tight text-foreground">Organization Details</h1>
           <p className="text-sm text-muted-foreground">
             View and manage organization, tenants and configurations
           </p>
         </div>
         
-        <Button variant="outline" size="sm" className="font-medium gap-1.5 border-border shadow-sm cursor-pointer" onClick={() => toast.info("Edit Organization functionality is coming soon.")}>
-          <Edit2 className="h-4 w-4" />
-          Edit Organization
+        <Button variant="outline" size="sm" className="font-medium gap-1.5 border-border shadow-sm cursor-pointer" onClick={() => navigate("/organizations")}>
+          <ArrowLeft className="h-4 w-4" />
+          Back
         </Button>
       </div>
 
@@ -191,10 +175,10 @@ export function OrganizationDetail() {
       <Tabs defaultValue="tenants" className="w-full">
         <TabsList variant="line" className="mb-4 h-9 justify-start gap-6 [&>button]:flex-none border-b border-border w-full">
           <TabsTrigger value="tenants" className="cursor-pointer">
-            Tenants ({tenants.length})
+            Tenants 
           </TabsTrigger>
           <TabsTrigger value="configuration" className="cursor-pointer">
-            Configurations ({configurations.length})
+            Configurations 
           </TabsTrigger>
         </TabsList>
 

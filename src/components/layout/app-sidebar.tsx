@@ -31,10 +31,14 @@ import { cn } from "@/lib/utils"
 function SidebarLogoHeader() {
   const { toggleSidebar, open, isMobile } = useSidebar()
   const [hovered, setHovered] = React.useState(false)
+  const isCollapsed = !open && !isMobile
 
   return (
     <div
-      className="relative flex h-16 w-full items-center border-b border-sidebar-border px-4 cursor-pointer select-none"
+      className={cn(
+        "relative flex h-16 w-full items-center border-b border-sidebar-border cursor-pointer select-none transition-all duration-200",
+        isCollapsed ? "justify-center" : "px-4"
+      )}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       onClick={toggleSidebar}

@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { useNavigate } from "react-router-dom"
-import { Plus } from "lucide-react"
+import { Plus, Users } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { organizationsService } from "@/api/services/organizations.service"
@@ -90,23 +90,21 @@ export function OrganizationTenantsTab({ orgId, organizationName }: Organization
   })
 
   const tenantList   = Array.isArray(tenants) ? tenants : []
-  const activeCount  = tenantList.filter(t => String(t.access_status).toLowerCase() === "active").length
-  const blockedCount = tenantList.filter(t => String(t.access_status).toLowerCase() === "blocked").length
-  const expiredCount = tenantList.filter(t => String(t.access_status).toLowerCase() === "expired").length
+  
 
   const columns = useMemo<CustomColumnDef<Tenant>[]>(() => [
     {
-      accessorKey: "tenant_admin_full_name",
-      header: "Admin",
-      width: 300,
+      accessorKey: "slug",
+      header: "Slug",
+      width: "20%",
       cell: ({ row }) => {
-        const name = row.original.tenant_admin_full_name || "Unknown"
+        const slug = row.original.slug || "—"
         return (
           <div className="flex items-center gap-2.5 py-0.5">
             <div className="h-6 w-6 rounded-md bg-primary/10 text-primary border border-primary/20 flex items-center justify-center text-[10px] leading-none font-semibold flex-shrink-0">
-              {getInitials(name)}
+              {getInitials(slug)}
             </div>
-            <span className="text-xs font-medium text-foreground truncate">{name}</span>
+            <span className="text-xs font-semibold text-foreground truncate">{slug}</span>
           </div>
         )
       },
@@ -114,7 +112,7 @@ export function OrganizationTenantsTab({ orgId, organizationName }: Organization
     {
       accessorKey: "tenant_role",
       header: "Role",
-      width: 150,
+      width: "15%",
       cell: ({ row }) => (
         <span className="text-xs text-muted-foreground capitalize">
           {String(row.original.tenant_role || "").replace(/_/g, " ") || "—"}
@@ -122,9 +120,29 @@ export function OrganizationTenantsTab({ orgId, organizationName }: Organization
       ),
     },
     {
+      accessorKey: "tenant_admin_full_name",
+      header: "Admin",
+      width: "20%",
+      cell: ({ row }) => (
+        <span className="text-xs font-medium text-foreground truncate">
+          {row.original.tenant_admin_full_name || "—"}
+        </span>
+      ),
+    },
+    {
+      accessorKey: "tenant_admin_email",
+      header: "Email",
+      width: "25%",
+      cell: ({ row }) => (
+        <span className="text-xs text-muted-foreground truncate">
+          {row.original.tenant_admin_email || "—"}
+        </span>
+      ),
+    },
+    {
       accessorKey: "access_status",
       header: "Status",
-      width: 150,
+      width: "15%",
       cell: ({ row }) => (
         <StatusBadge status={String(row.original.access_status || "inactive")} />
       ),
@@ -132,7 +150,7 @@ export function OrganizationTenantsTab({ orgId, organizationName }: Organization
     {
       id: "actions",
       header: "",
-      width: "auto",
+      width: 60,
       cell: ({ row }) => (
         <div className="flex justify-end" onClick={(e) => e.stopPropagation()}>
           <TenantActionsDropdown
@@ -150,41 +168,24 @@ export function OrganizationTenantsTab({ orgId, organizationName }: Organization
       <div className="flex flex-col border border-border rounded-xl overflow-hidden bg-card">
 
         {/* ── Header ── */}
-        <div className="flex items-center justify-between px-4 py-2.5 border-b border-border">
-          <div className="flex items-center gap-2">
-            <p className="text-sm font-semibold text-foreground">Tenants</p>
-
-            {!isTenantsLoading && tenantList.length > 0 && (
+        <div className="flex items-center justify-between p-5 pb-4 border-b border-border/50">
+          <div className="flex items-center gap-3">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/20">
+              <Users className="h-4 w-4" />
+            </div>
+            <div>
               <div className="flex items-center gap-2">
-                {/* total */}
-                <span className="text-[11px] font-medium bg-muted text-muted-foreground px-2 py-0.5 rounded-full border border-border">
-                  {tenantList.length} total
-                </span>
-                {/* active */}
-                {activeCount > 0 && (
-                  <span className="text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-300 dark:bg-emerald-950 dark:text-emerald-400 dark:border-emerald-800 px-2 py-0.5 rounded-full">
-                    {activeCount} active
-                  </span>
-                )}
-                {/* blocked */}
-                {blockedCount > 0 && (
-                  <span className="text-[11px] font-medium bg-red-50 text-red-700 border border-red-300 dark:bg-red-950 dark:text-red-400 dark:border-red-800 px-2 py-0.5 rounded-full">
-                    {blockedCount} blocked
-                  </span>
-                )}
-                {/* expired */}
-                {expiredCount > 0 && (
-                  <span className="text-[11px] font-medium bg-amber-50 text-amber-700 border border-amber-300 dark:bg-amber-950 dark:text-amber-400 dark:border-amber-800 px-2 py-0.5 rounded-full">
-                    {expiredCount} expired
-                  </span>
-                )}
+                <h3 className="text-sm font-semibold text-foreground">Tenants</h3>
+
+              
               </div>
-            )}
+              <p className="text-[12px] text-muted-foreground">Manage tenants for this organization.</p>
+            </div>
           </div>
 
           <CreateOrganizationModal existingOrganization={{ id: orgId, name: organizationName }}>
-            <Button variant="outline" size="sm" className="h-7 text-xs shadow-none gap-1 font-medium">
-              <Plus className="h-3.5 w-3.5" /> Add tenant
+            <Button variant="outline" size="sm" className="text-xs shadow-none">
+              <Plus className="size-3.5 mr-1.5" /> Add Tenant
             </Button>
           </CreateOrganizationModal>
         </div>

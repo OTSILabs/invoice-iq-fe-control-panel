@@ -74,5 +74,20 @@ export const organizationsService = {
 
   expireTenant: async (tenantId: string): Promise<void> => {
     await api.post(`/tenants/${tenantId}/expire`, '');
+  },
+
+  retryProvisioning: async (tenantId: string): Promise<Tenant> => {
+    const response = await api.post<Tenant>(`/tenants/${tenantId}/retry-provisioning`, '');
+    return response.data;
+  },
+
+  migrateTenant: async (tenantId: string): Promise<any> => {
+    const response = await api.post<any>(`/tenants/${tenantId}/migrate`, '');
+    return response.data;
+  },
+
+  assignPlan: async (tenantId: string, payload: { plan_id: string; valid_from?: string; valid_to?: string }): Promise<any> => {
+    const response = await api.post<any>(`/tenants/${tenantId}/plan-assignments`, payload);
+    return response.data;
   }
 };

@@ -41,15 +41,21 @@ type PaginationLinkProps = {
 function PaginationLink({
   className,
   isActive,
-  size = "icon",
+  size = "icon-sm",
   ...props
 }: PaginationLinkProps) {
   return (
     <Button
       asChild
-      variant={isActive ? "outline" : "ghost"}
+      variant={isActive ? "default" : "outline"}
       size={size}
-      className={cn(className)}
+      className={cn(
+        "h-8 text-xs font-semibold rounded-md transition-all shadow-none shrink-0",
+        (size === "icon-sm" || size === "icon") && "w-8",
+        isActive && "bg-primary text-primary-foreground border-primary pointer-events-none",
+        !isActive && "border-border/60 hover:bg-muted/50 text-muted-foreground hover:text-foreground",
+        className
+      )}
     >
       <a
         aria-current={isActive ? "page" : undefined}
@@ -69,11 +75,11 @@ function PaginationPrevious({
   return (
     <PaginationLink
       aria-label="Go to previous page"
-      size="default"
-      className={cn("pl-2!", className)}
+      size="sm"
+      className={cn("h-8 px-3 text-xs gap-1.5 shadow-none border-border/60 hover:bg-muted/50 text-muted-foreground hover:text-foreground", className)}
       {...props}
     >
-      <ChevronLeftIcon data-icon="inline-start" />
+      <ChevronLeftIcon className="h-3.5 w-3.5" />
       <span className="hidden sm:block">{text}</span>
     </PaginationLink>
   )
@@ -87,12 +93,12 @@ function PaginationNext({
   return (
     <PaginationLink
       aria-label="Go to next page"
-      size="default"
-      className={cn("pr-2!", className)}
+      size="sm"
+      className={cn("h-8 px-3 text-xs gap-1.5 shadow-none border-border/60 hover:bg-muted/50 text-muted-foreground hover:text-foreground", className)}
       {...props}
     >
       <span className="hidden sm:block">{text}</span>
-      <ChevronRightIcon data-icon="inline-end" />
+      <ChevronRightIcon className="h-3.5 w-3.5" />
     </PaginationLink>
   )
 }

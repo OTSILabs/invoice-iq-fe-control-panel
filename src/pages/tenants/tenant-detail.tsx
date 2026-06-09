@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
-import { useQuery } from "@tanstack/react-query"
-import { Loader2, ArrowLeft, Edit2, Building2, User, Info, FileText, Eye, EyeOff, Copy, Check } from "lucide-react"
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
+import { Loader2, ArrowLeft, Building2, User, Info, FileText, Eye, EyeOff, Copy, Check, RefreshCw, ArrowUpRight, ShieldAlert, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { toast } from "sonner"
@@ -10,6 +10,15 @@ import { ConfigurationsTable } from "@/pages/organization/configurations-table"
 import { TenantEventsTable } from "@/pages/tenants/tenant-events-table"
 import { organizationsService } from "@/api/services/organizations.service"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
+
+import { ActivateTenantDialog } from "@/pages/tenants/tenant-actions/activate-tenant-dialog"
+import { DeactivateTenantDialog } from "@/pages/tenants/tenant-actions/deactivate-tenant-dialog"
+import { BlockTenantDialog } from "@/pages/tenants/tenant-actions/block-tenant-dialog"
+import { UnblockTenantDialog } from "@/pages/tenants/tenant-actions/unblock-tenant-dialog"
+import { ExpireTenantDialog } from "@/pages/tenants/tenant-actions/expire-tenant-dialog"
+import { DeleteTenantDialog } from "@/pages/tenants/tenant-actions/delete-tenant-dialog"
+import { AssignPlanDialog } from "@/pages/tenants/tenant-actions/assign-plan-dialog"
+import type { Tenant } from "@/types"
 
 function CopyButton({ value, label }: { value: string; label: string }) {
   const [copied, setCopied] = useState(false)
@@ -86,6 +95,13 @@ function CopyableField({ value, label, isSensitive = false }: { value: string; l
 export function TenantDetail() {
   const { orgId, tenantId } = useParams<{ orgId: string; tenantId: string }>()
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
+
+  const [tenantAction, setTenantAction] = useState<{
+    type: "activate" | "deactivate" | "block" | "unblock" | "expire" | "delete" | "assignPlan"
+    tenant: Tenant
+  } | null>(null)
+
   const { data: tenants = [], isLoading, isError } = useQuery({
     queryKey: ['organizations', orgId, 'tenants'],
     queryFn: () => organizationsService.getTenants(orgId!),
@@ -93,6 +109,28 @@ export function TenantDetail() {
   })
 
   const tenant = tenants.find((t) => t.id === tenantId)
+
+  const retryMutation = useMutation({
+    mutationFn: () => organizationsService.retryProvisioning(tenantId!),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['organizations', orgId, 'tenants'] });
+      toast.success("Provisioning retry initiated successfully");
+    },
+    onError: (error: any) => {
+      toast.error(error?.response?.data?.message || "Failed to retry provisioning");
+    }
+  });
+
+  const migrateMutation = useMutation({
+    mutationFn: () => organizationsService.migrateTenant(tenantId!),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['organizations', orgId, 'tenants'] });
+      toast.success("Tenant migration initiated successfully");
+    },
+    onError: (error: any) => {
+      toast.error(error?.response?.data?.message || "Failed to initiate migration");
+    }
+  });
 
   const getInitials = (name: string): string => {
     return name
@@ -152,29 +190,18 @@ export function TenantDetail() {
   return (
     <div className="flex w-full flex-col gap-6 pb-12 animate-in fade-in duration-300">
       
-      {/* ── Breadcrumb Back Link & Action Header ── */}
+      {/* ── Action Header ── */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
-          <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8 text-xs text-muted-foreground hover:text-foreground shadow-none -ml-2"
-              onClick={() => navigate(`/organizations/${orgId}`)}
-            >
-              <ArrowLeft className="mr-1.5 h-3.5 w-3.5" />
-              Back to Tenants
-            </Button>
-          </div>
           <h1 className="text-xl font-bold tracking-tight text-foreground">Tenant Details</h1>
           <p className="text-sm text-muted-foreground">
             View and manage tenant parameters, profile and events log
           </p>
         </div>
         
-        <Button variant="outline" size="sm" className="font-medium gap-1.5 border-border shadow-sm cursor-pointer" onClick={() => toast.info("Edit Tenant functionality is coming soon.")}>
-          <Edit2 className="h-4 w-4" />
-          Edit Tenant
+        <Button variant="outline" size="sm" className="font-medium gap-1.5 border-border shadow-sm cursor-pointer" onClick={() => navigate(`/organizations/${orgId}`)}>
+          <ArrowLeft className="h-4 w-4" />
+          Back
         </Button>
       </div>
 
@@ -279,7 +306,7 @@ export function TenantDetail() {
 
         {/* PROFILE TAB */}
         <TabsContent value="profile" className="m-0 animate-in fade-in duration-300 space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
             
             {/* Card 1: Profile Details */}
             <div className="bg-card border border-border rounded-xl p-5 shadow-sm flex flex-col justify-between min-h-[260px]">
@@ -343,8 +370,8 @@ export function TenantDetail() {
                 <Button 
                   variant="outline" 
                   size="sm" 
-                  disabled
-                  className="w-full text-xs font-medium cursor-not-allowed opacity-60"
+                  onClick={() => setTenantAction({ type: "assignPlan", tenant })}
+                  className="w-full text-xs font-medium cursor-pointer"
                 >
                   Manage Subscription
                 </Button>
@@ -389,10 +416,100 @@ export function TenantDetail() {
                 <Button 
                   variant="outline" 
                   size="sm" 
-                  disabled
-                  className="w-full text-xs font-medium cursor-not-allowed opacity-60"
+                  onClick={() => setTenantAction({ type: tenant.governance_blocked ? "unblock" : "block", tenant })}
+                  className="w-full text-xs font-medium cursor-pointer"
                 >
-                  Manage Governance
+                  {tenant.governance_blocked ? "Unblock Governance" : "Block Governance"}
+                </Button>
+              </div>
+            </div>
+
+            {/* Card 4: Lifecycle & Operations */}
+            <div className="bg-card border border-border rounded-xl p-5 shadow-sm flex flex-col justify-between min-h-[260px]">
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 border-b border-border pb-3">
+                  <ShieldAlert className="h-4 w-4 text-primary" />
+                  <h3 className="text-sm font-bold text-foreground">Lifecycle & Operations</h3>
+                </div>
+                <div className="space-y-2 flex flex-col">
+                  {/* Retry Provisioning (Conditional: if provisioning is Failed or there is a last_error) */}
+                  {tenant.provisioning_status?.toLowerCase() === "failed" || tenant.last_error ? (
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={() => retryMutation.mutate()}
+                      disabled={retryMutation.isPending}
+                      className="w-full text-xs font-semibold justify-start gap-2 border-amber-200 bg-amber-50/50 hover:bg-amber-100 text-amber-800 cursor-pointer"
+                    >
+                      {retryMutation.isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <RefreshCw className="h-3.5 w-3.5" />}
+                      Retry Provisioning
+                    </Button>
+                  ) : (
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={() => retryMutation.mutate()}
+                      disabled={retryMutation.isPending}
+                      className="w-full text-xs font-semibold justify-start gap-2 text-muted-foreground cursor-pointer"
+                    >
+                      {retryMutation.isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <RefreshCw className="h-3.5 w-3.5" />}
+                      Force Provisioning Retry
+                    </Button>
+                  )}
+
+                  {/* Migrate Tenant */}
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => migrateMutation.mutate()}
+                    disabled={migrateMutation.isPending}
+                    className="w-full text-xs font-semibold justify-start gap-2 text-foreground cursor-pointer"
+                  >
+                    {migrateMutation.isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <ArrowUpRight className="h-3.5 w-3.5" />}
+                    Migrate Database Schema
+                  </Button>
+
+                  {/* Activate / Deactivate / Expire Toggle */}
+                  {tenant.access_status?.toLowerCase() === "active" ? (
+                    <div className="flex gap-2">
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        onClick={() => setTenantAction({ type: "deactivate", tenant })}
+                        className="flex-1 text-xs font-semibold text-amber-600 hover:text-amber-700 hover:bg-amber-50 cursor-pointer"
+                      >
+                        Deactivate
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        onClick={() => setTenantAction({ type: "expire", tenant })}
+                        className="flex-1 text-xs font-semibold text-rose-600 hover:text-rose-700 hover:bg-rose-50 cursor-pointer"
+                      >
+                        Expire
+                      </Button>
+                    </div>
+                  ) : (
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={() => setTenantAction({ type: "activate", tenant })}
+                      className="w-full text-xs font-semibold gap-2 border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 cursor-pointer"
+                    >
+                      Activate Tenant
+                    </Button>
+                  )}
+                </div>
+              </div>
+              
+              <div className="pt-4 border-t border-border mt-auto">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => setTenantAction({ type: "delete", tenant })}
+                  className="w-full text-xs font-medium border-red-200 bg-red-50 hover:bg-red-100 text-red-600 cursor-pointer"
+                >
+                  <Trash2 className="size-3.5 mr-1" /> Delete Tenant Account
                 </Button>
               </div>
             </div>
@@ -453,6 +570,18 @@ export function TenantDetail() {
           <TenantEventsTable tenantId={tenant.id} />
         </TabsContent>
       </Tabs>
+      <ActivateTenantDialog   tenant={tenantAction?.type === "activate"   ? tenantAction.tenant : null} onClose={() => setTenantAction(null)} orgId={orgId} />
+      <DeactivateTenantDialog tenant={tenantAction?.type === "deactivate" ? tenantAction.tenant : null} onClose={() => setTenantAction(null)} orgId={orgId} />
+      <BlockTenantDialog      tenant={tenantAction?.type === "block"      ? tenantAction.tenant : null} onClose={() => setTenantAction(null)} orgId={orgId} />
+      <UnblockTenantDialog    tenant={tenantAction?.type === "unblock"    ? tenantAction.tenant : null} onClose={() => setTenantAction(null)} orgId={orgId} />
+      <ExpireTenantDialog     tenant={tenantAction?.type === "expire"     ? tenantAction.tenant : null} onClose={() => setTenantAction(null)} orgId={orgId} />
+      <DeleteTenantDialog     
+        tenant={tenantAction?.type === "delete"     ? tenantAction.tenant : null} 
+        onClose={() => setTenantAction(null)} 
+        onSuccess={() => navigate(`/organizations/${orgId}`)}
+        orgId={orgId} 
+      />
+      <AssignPlanDialog       tenant={tenantAction?.type === "assignPlan" ? tenantAction.tenant : null} onClose={() => setTenantAction(null)} orgId={orgId} />
 
     </div>
   )
