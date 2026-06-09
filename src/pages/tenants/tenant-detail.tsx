@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { useQuery } from "@tanstack/react-query"
-import { Loader2, ArrowLeft, Edit2, Building2, Users, CheckCircle2, Calendar, Clock, Database, User, Info, FileText, Eye, EyeOff, Copy, Check } from "lucide-react"
+import { Loader2, ArrowLeft, Edit2, Building2, User, Info, FileText, Eye, EyeOff, Copy, Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { toast } from "sonner"

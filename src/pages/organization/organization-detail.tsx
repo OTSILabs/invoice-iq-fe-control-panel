@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom"
 import { useQuery } from "@tanstack/react-query"
-import { ArrowLeft, Loader2, Edit2, Building2, Users, CheckCircle2, Calendar, Clock } from "lucide-react"
+import { ArrowLeft, Loader2, Edit2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { toast } from "sonner"
