@@ -125,7 +125,7 @@ export function OrganizationDetail() {
                 <p className="text-sm font-medium text-foreground leading-snug truncate" title={organization.name}>
                   {organization.name}
                 </p>
-                <p className="font-mono text-[10px] text-muted-foreground mt-0.5 truncate">{organization.id}</p>
+                <p className="font-mono text-xs text-muted-foreground mt-0.5 truncate">{organization.id}</p>
               </div>
             </div>
           </div>
@@ -133,37 +133,37 @@ export function OrganizationDetail() {
           {/* Facts mosaic (Grid of details using border trick) */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-border/20 dark:bg-border/10 overflow-hidden">
             <div className="bg-card px-4 py-3.5 hover:bg-muted/10 transition-colors flex flex-col justify-center">
-              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">Onboarding</p>
-              <Badge variant="outline" className={cn("text-[11px] px-2 py-0.5 font-medium border w-fit", onboardingStyle.className)}>
+              <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1">Onboarding</p>
+              <Badge variant="outline" className={cn("text-xxs px-2 py-0.5 font-medium border w-fit", onboardingStyle.className)}>
                 {onboardingStyle.label}
               </Badge>
             </div>
 
             <div className="bg-card px-4 py-3.5 hover:bg-muted/10 transition-colors flex flex-col justify-center">
-              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">Tenants</p>
+              <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1">Tenants</p>
               <p className="text-sm font-semibold text-foreground">{organization.tenant_count ?? tenants.length}</p>
             </div>
 
             <div className="bg-card px-4 py-3.5 hover:bg-muted/10 transition-colors flex flex-col justify-center">
-              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">Slug / Domain</p>
+              <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1">Slug / Domain</p>
               <p className="text-xs font-bold text-foreground truncate" title={organization.slug}>
                 {organization.slug || "—"}
               </p>
             </div>
 
             <div className="bg-card px-4 py-3.5 hover:bg-muted/10 transition-colors flex flex-col justify-center">
-              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">Created At</p>
+              <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1">Created At</p>
               <p className="text-xs font-semibold text-foreground">{formatDate(organization.created_at)}</p>
             </div>
 
             <div className="bg-card px-4 py-3.5 hover:bg-muted/10 transition-colors flex flex-col justify-center">
-              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">Updated At</p>
+              <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1">Updated At</p>
               <p className="text-xs font-semibold text-foreground">{formatDate(organization.updated_at)}</p>
             </div>
 
             <div className="bg-card px-4 py-3.5 hover:bg-muted/10 transition-colors flex flex-col justify-center">
-              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">Organization ID</p>
-              <p className="font-mono text-[11px] font-medium text-foreground truncate" title={organization.id}>
+              <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1">Organization ID</p>
+              <p className="font-mono text-xs font-medium text-foreground truncate" title={organization.id}>
                 {organization.id}
               </p>
             </div>

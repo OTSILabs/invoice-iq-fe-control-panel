@@ -37,7 +37,7 @@ export function OrganizationFacts({ organization }: { organization: Organization
           </div>
           <div className="min-w-0">
             <p className="text-sm font-medium text-foreground leading-snug">{organization.name}</p>
-            <p className="font-mono text-[10px] text-muted-foreground mt-0.5 truncate">{organization.id}</p>
+            <p className="font-mono text-xs text-muted-foreground mt-0.5 truncate">{organization.id}</p>
           </div>
         </div>
 
@@ -48,19 +48,19 @@ export function OrganizationFacts({ organization }: { organization: Organization
       <div className="grid grid-cols-2 divide-x divide-y divide-border">
 
         <div className="px-3 py-2.5 hover:bg-muted/40 transition-colors">
-          <p className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground mb-1">Onboarding</p>
-          <Badge variant="outline" className={cn("text-[11px] px-2 py-0 font-medium border", onboardingStyle.className)}>
+          <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-1">Onboarding</p>
+          <Badge variant="outline" className={cn("text-xxs px-2 py-0 font-medium border", onboardingStyle.className)}>
             {onboardingStyle.label}
           </Badge>
         </div>
 
         <div className="px-3 py-2.5 hover:bg-muted/40 transition-colors">
-          <p className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground mb-1">Tenants</p>
+          <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-1">Tenants</p>
           <p className="text-sm font-semibold text-foreground">{tenantCount}</p>
         </div>
 
         <div className="px-3 py-2.5 hover:bg-muted/40 transition-colors">
-          <p className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground mb-1">Created</p>
+          <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-1">Created</p>
           <p className="text-xs font-medium text-foreground">
             {organization.created_at
               ? new Date(organization.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
@@ -69,7 +69,7 @@ export function OrganizationFacts({ organization }: { organization: Organization
         </div>
 
         <div className="px-3 py-2.5 hover:bg-muted/40 transition-colors">
-          <p className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground mb-1">Updated</p>
+          <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-1">Updated</p>
           <p className="text-xs font-medium text-foreground">
             {organization.updated_at
               ? new Date(organization.updated_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
@@ -79,8 +79,8 @@ export function OrganizationFacts({ organization }: { organization: Organization
 
         {/* Organization ID — full width, compact */}
         <div className="col-span-2 px-3 py-2.5 hover:bg-muted/40 transition-colors">
-          <p className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground mb-1">Organization ID</p>
-          <p className="font-mono text-[11px] font-medium text-foreground truncate" title={organization.id}>
+          <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-1">Organization ID</p>
+          <p className="font-mono text-xs font-medium text-foreground truncate" title={organization.id}>
             {organization.id}
           </p>
         </div>
