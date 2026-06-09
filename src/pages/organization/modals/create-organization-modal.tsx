@@ -26,6 +26,7 @@ import { useOnboardOrganizationAndTenant, useReplicateMasterData, useOrganizatio
 import { useSearchParams, useNavigate } from "react-router-dom"
 import { toast } from "@/lib/toast"
 import { InputField } from "../../../components/ui/input-field"
+import { FieldLabel } from "../../../components/ui/field"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -55,9 +56,9 @@ type CreatedTenantState = {
   slug: string
 }
 const replicationOptions = [
-  { key: "extraction_fileds", label: "Extraction Fields" },
+  { key: "extraction_fields", label: "Extraction Fields" },
   { key: "extraction_templates", label: "Extraction Templates" },
-  { key: "tenant_confogurations", label: "Tenant Configurations" },
+  { key: "tenant_configurations", label: "Tenant Configurations" },
   { key: "organisation_configurations", label: "Organisation Configurations" },
   { key: "tenant_profiles", label: "Tenant Profiles" },
   { key: "organisation_profiles", label: "Organisation Profiles" },
@@ -69,9 +70,9 @@ type ReplicationOptionKey = (typeof replicationOptions)[number]["key"]
 type ReplicationSettings = Record<ReplicationOptionKey, boolean>
 
 const defaultReplicationSettings: ReplicationSettings = {
-  extraction_fileds: true,
+  extraction_fields: true,
   extraction_templates: true,
-  tenant_confogurations: true,
+  tenant_configurations: true,
   organisation_configurations: true,
   tenant_profiles: true,
   organisation_profiles: true,
@@ -429,9 +430,8 @@ export function CreateOrganizationModal({
 
       {/* Input field */}
       <div className="space-y-1">
-        <label
+        <FieldLabel
           htmlFor={isCreatingOrg ? "orgName" : "existingOrgSelect"}
-          className="text-[11px] font-medium uppercase tracking-widest text-muted-foreground"
         >
           {existingOrganization
             ? "Organization"
@@ -439,7 +439,7 @@ export function CreateOrganizationModal({
             ? "Organization name"
             : "Organization"}{" "}
           <span className="text-destructive">*</span>
-        </label>
+        </FieldLabel>
 
         {!isCreatingOrg ? (
           <InputField
