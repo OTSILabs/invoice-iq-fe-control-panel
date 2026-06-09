@@ -18,11 +18,11 @@ import {
   ArrowRight
 } from "lucide-react"
 import { useState } from "react"
-import { organizationsService } from "@/api/services/organizations.service"
 import { plansService } from "@/api/services/plans.service"
 import { PlanForm } from "@/pages/plans/plan-form-dialog"
-import { useQuery, useQueryClient } from "@tanstack/react-query"
-import { toast } from "sonner"
+import { useQuery } from "@tanstack/react-query"
+import { useOnboardOrganizationAndTenant, useReplicateMasterData } from "@/api/hooks/useOrganizations"
+import { toast } from "@/lib/toast"
 import { InputField } from "../../../components/ui/input-field"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -75,45 +75,6 @@ const defaultReplicationSettings: ReplicationSettings = {
   organisation_profiles: true,
 }
 
-const isRecord = (value: unknown): value is Record<string, unknown> => {
-  return typeof value === "object" && value !== null
-}
-
-const getString = (value: unknown): string | undefined => {
-  return typeof value === "string" ? value : undefined
-}
-
-const getTenantIdFromResponse = (response: unknown): string | undefined => {
-  if (!isRecord(response)) return undefined
-
-  const tenant = response.tenant
-  const data = response.data
-
-  return (
-    getString(response.id) ||
-    getString(response.tenant_id) ||
-    (isRecord(tenant) ? getString(tenant.id) : undefined) ||
-    (isRecord(data)
-      ? getString(data.id) || getString(data.tenant_id)
-      : undefined)
-  )
-}
-
-const getErrorMessage = (error: unknown, fallback: string) => {
-  if (!isRecord(error)) return fallback
-
-  const response = error.response
-  const data = isRecord(response) ? response.data : undefined
-  const detail = isRecord(data) ? data.detail : undefined
-
-  return (
-    (isRecord(data) ? getString(data.message) : undefined) ||
-    getString(detail) ||
-    getString(error.message) ||
-    fallback
-  )
-}
-
 export function CreateOrganizationModal({
   children,
   existingOrganization,
@@ -122,20 +83,20 @@ export function CreateOrganizationModal({
   existingOrganization?: { id: string; name: string }
 }) {
   const [isOpen, setIsOpen] = useState(false)
-  const [isPending, setIsPending] = useState(false)
-  const [isReplicating, setIsReplicating] = useState(false)
   const [isCreatingPlan, setIsCreatingPlan] = useState(false)
   const [createdTenant, setCreatedTenant] = useState<CreatedTenantState | null>(
     null
   )
   const [replicationSettings, setReplicationSettings] =
     useState<ReplicationSettings>(defaultReplicationSettings)
-  const queryClient = useQueryClient()
 
   const { data: plans, isLoading: isPlansLoading } = useQuery({
     queryKey: ["plans"],
     queryFn: plansService.getAll,
   })
+
+  const { mutate: onboardTenant, isPending } = useOnboardOrganizationAndTenant()
+  const { mutate: replicateMasterData, isPending: isReplicating } = useReplicateMasterData()
 
   const {
     register,
@@ -143,7 +104,6 @@ export function CreateOrganizationModal({
     reset,
     watch,
     setValue,
-    // trigger,
     formState: { errors, isValid },
   } = useForm<FormValues>({
     resolver: zodResolver(onboardingSchema),
@@ -165,7 +125,6 @@ export function CreateOrganizationModal({
       setTimeout(() => {
         setIsCreatingPlan(false)
         setCreatedTenant(null)
-        setIsReplicating(false)
         setReplicationSettings({ ...defaultReplicationSettings })
         reset({
           orgName: existingOrganization?.name || "",
@@ -180,103 +139,39 @@ export function CreateOrganizationModal({
     }
   }
 
-  // const handleCreateOrganizationOnly = async () => {
-  //   const isValidOrg = await trigger("orgName");
-  //   if (!isValidOrg) return;
-
-  //   const orgName = watch("orgName");
-  //   setIsPending(true)
-  //   try {
-  //     await organizationsService.create({ name: orgName })
-  //     queryClient.invalidateQueries({ queryKey: ['organizations'] })
-  //     setIsOpen(false)
-  //     toast.success("Organization created successfully!")
-  //   } catch (error) {
-  //     console.error("Failed to create organization:", error)
-  //     toast.error("Failed to create organization. Please try again.")
-  //   } finally {
-  //     setIsPending(false)
-  //   }
-  // }
-
-  const onSubmit = async (data: FormValues, planIdOverride?: string) => {
-    setIsPending(true)
-    try {
-      let orgId = existingOrganization?.id
-      if (!orgId) {
-        const createdOrg = await organizationsService.create({
-          name: data.orgName,
-        })
-        orgId = createdOrg.id
-      }
-
-      const finalPlanId = planIdOverride || data.plan_id
-      if (!finalPlanId) {
-        throw new Error("Plan ID is required to create a tenant.")
-      }
-
-      const tenantPayloadData = {
-        organization_id: orgId,
-        slug: data.slug.replace(/-/g, ""),
-        tenant_role: data.tenant_role,
-        configurations: {
-          display_name: data.slug.replace(/-/g, " "),
-          max_number_of_invoices: "96000",
-          reporting_currency: "INR",
-          timezone: "IST",
-        },
-        profile: {
-          display_name: data.admin_full_name,
-          domain_name:
-            data.slug.toLowerCase().replace(/[^a-z0-9]/g, "") + ".com",
-          reporting_currency: "INR",
-          timezone: "IST",
-        },
-        plan_id: finalPlanId,
-        plan_valid_from: new Date().toISOString(),
-        admin_user: {
-          email: data.admin_email,
-          password: data.admin_password,
-          full_name: data.admin_full_name,
-        },
-        requested_by: data.admin_email || "system",
-      }
-
-      const tenant = await organizationsService.createTenant(
-        orgId,
-        tenantPayloadData
-      )
-      const tenantId = getTenantIdFromResponse(tenant)
-
-      if (!tenantId) {
-        throw new Error(
-          "Tenant was created, but the tenant ID was not returned for replication."
-        )
-      }
-
-      queryClient.invalidateQueries({ queryKey: ["organizations"] })
-      queryClient.invalidateQueries({
-        queryKey: ["organizations", orgId, "tenants"],
-      })
-
-      setCreatedTenant({
-        id: tenantId,
-        orgId,
-        slug: data.slug,
-      })
-    } catch (error: unknown) {
-      console.error("Failed to create organization and tenant:", error)
-      toast.error(
-        getErrorMessage(
-          error,
-          existingOrganization
-            ? "Failed to add tenant. Please try again."
-            : "Failed to create organization and tenant. Please try again."
-        )
-      )
-    } finally {
-      setIsPending(false)
+  const onSubmit = (data: FormValues, planIdOverride?: string) => {
+    const finalPlanId = planIdOverride || data.plan_id
+    if (!finalPlanId) {
+      toast.error("Plan ID is required", "Plan ID is required to create a tenant.")
+      return
     }
+
+    onboardTenant(
+      {
+        orgName: data.orgName,
+        slug: data.slug,
+        tenant_role: data.tenant_role,
+        admin_full_name: data.admin_full_name,
+        admin_email: data.admin_email,
+        admin_password: data.admin_password,
+        plan_id: finalPlanId,
+        existingOrgId: existingOrganization?.id,
+      },
+      {
+        onSuccess: (tenant) => {
+          setCreatedTenant(tenant)
+          toast.success("Tenant created successfully!")
+        },
+        onError: (error) => {
+          toast.error(
+            error,
+            existingOrganization
+              ? "Failed to add tenant. Please try again."
+              : "Failed to create organization and tenant. Please try again."
+          )
+        },
+      }
+    )
   }
 
   const handleInlinePlanSuccess = (newPlan?: { id?: string } | null) => {
@@ -285,34 +180,24 @@ export function CreateOrganizationModal({
     onSubmit(values, newPlan?.id || "")
   }
 
-  const handleReplicateMasterData = async () => {
+  const handleReplicateMasterData = () => {
     if (!createdTenant) return
 
-    setIsReplicating(true)
-    try {
-      await organizationsService.replicateMasterData(
-        createdTenant.id,
-        replicationSettings
-      )
-      queryClient.invalidateQueries({ queryKey: ["organizations"] })
-      queryClient.invalidateQueries({
-        queryKey: ["organizations", createdTenant.orgId, "tenants"],
-      })
-      handleOpenChange(false)
-      toast.success("Success", {
-        description: "Tenant Onboarded Successfully",
-      })
-    } catch (error: unknown) {
-      console.error("Failed to replicate master data:", error)
-      toast.error(
-        getErrorMessage(
-          error,
-          "Failed to replicate master data. Please try again."
-        )
-      )
-    } finally {
-      setIsReplicating(false)
-    }
+    replicateMasterData(
+      { tenantId: createdTenant.id, settings: replicationSettings },
+      {
+        onSuccess: () => {
+          handleOpenChange(false)
+          toast.success("Success", "Tenant Onboarded Successfully")
+        },
+        onError: (error) => {
+          toast.error(
+            error,
+            "Failed to replicate master data. Please try again."
+          )
+        },
+      }
+    )
   }
 
   const isFormReadyToSubmit = isValid && (!!watch("plan_id") || isCreatingPlan)
@@ -391,9 +276,7 @@ export function CreateOrganizationModal({
                 disabled={isReplicating}
                 onClick={() => {
                   handleOpenChange(false)
-                  toast.info("Onboarding completed", {
-                    description: "You can replicate master data later."
-                  })
+                  toast.info("Onboarding completed", "You can replicate master data later.")
                 }}
               >
                 Skip for Now
@@ -438,14 +321,14 @@ export function CreateOrganizationModal({
             </DialogHeader>
 
             <ScrollArea className="min-h-0 min-w-0 flex-1 bg-muted/10">
-              <div className="p-6 md:p-8">
+              <div className="p-6 md:p-8 space-y-8">
                 <form
                   id="create-all-form"
                   onSubmit={(e) => {
                     e.preventDefault()
-                    if (!isCreatingPlan) handleSubmit((d) => onSubmit(d))()
+                    handleSubmit((d) => onSubmit(d))()
                   }}
-                  className="space-y-10"
+                  className="space-y-8"
                 >
                   {/* Organization Section */}
                   <div className="space-y-4">
@@ -619,39 +502,39 @@ export function CreateOrganizationModal({
                         ))}
                       </InputField>
                     </div>
-
-                    {isCreatingPlan && (
-                      <div className="mt-8 animate-in border-t border-border pt-6 duration-300 fade-in slide-in-from-bottom-4">
-                        <div className="mb-4 flex items-start justify-between">
-                          <div>
-                            <h4 className="mb-1 text-sm font-bold text-foreground">
-                              Create New Plan
-                            </h4>
-                            <p className="text-xs text-muted-foreground">
-                              Add a new plan to the system. It will be
-                              automatically available to select once created.
-                            </p>
-                          </div>
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8 rounded-full text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
-                            onClick={() => setIsCreatingPlan(false)}
-                          >
-                            <Minus className="h-4 w-4" />
-                          </Button>
-                        </div>
-                        <PlanForm
-                          formId="inline-plan-form"
-                          showFooter={false}
-                          onCancel={() => setIsCreatingPlan(false)}
-                          onSuccess={handleInlinePlanSuccess}
-                        />
-                      </div>
-                    )}
                   </div>
                 </form>
+
+                {isCreatingPlan && (
+                  <div className="mt-4 animate-in border-t border-border pt-6 duration-300 fade-in slide-in-from-bottom-4">
+                    <div className="mb-4 flex items-start justify-between">
+                      <div>
+                        <h4 className="mb-1 text-sm font-bold text-foreground">
+                          Create New Plan
+                        </h4>
+                        <p className="text-xs text-muted-foreground">
+                          Add a new plan to the system. It will be
+                          automatically available to select once created.
+                        </p>
+                      </div>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 rounded-full text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+                        onClick={() => setIsCreatingPlan(false)}
+                      >
+                        <Minus className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    <PlanForm
+                      formId="inline-plan-form"
+                      showFooter={false}
+                      onCancel={() => setIsCreatingPlan(false)}
+                      onSuccess={handleInlinePlanSuccess}
+                    />
+                  </div>
+                )}
               </div>
             </ScrollArea>
             <DialogFooter className="flex flex-col-reverse gap-3 border-t border-border bg-popover px-8 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-0">

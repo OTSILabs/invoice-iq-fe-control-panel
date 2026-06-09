@@ -178,3 +178,12 @@
     --footer: oklch(0.205 0 0);
     --footer-foreground: oklch(0.985 0 0);
 }
+
+@keyframes top-loader {
+  0% { width: 0%; }
+  100% { width: 95%; }
+}
+
+.animate-top-loader {
+  animation: top-loader 3s cubic-bezier(0.1, 0.8, 0.1, 1) forwards;
+}
