@@ -15,13 +15,15 @@ import {
   Minus,
   Plus,
   RefreshCw,
-  ArrowRight
+  ArrowRight,
+  ArrowLeft,
 } from "lucide-react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { plansService } from "@/api/services/plans.service"
 import { PlanForm } from "@/pages/plans/plan-form-dialog"
 import { useQuery } from "@tanstack/react-query"
-import { useOnboardOrganizationAndTenant, useReplicateMasterData } from "@/api/hooks/useOrganizations"
+import { useOnboardOrganizationAndTenant, useReplicateMasterData, useOrganizations } from "@/api/hooks/useOrganizations"
+import { useSearchParams, useNavigate } from "react-router-dom"
 import { toast } from "@/lib/toast"
 import { InputField } from "../../../components/ui/input-field"
 import { useForm } from "react-hook-form"
@@ -90,6 +92,13 @@ export function CreateOrganizationModal({
   const [replicationSettings, setReplicationSettings] =
     useState<ReplicationSettings>(defaultReplicationSettings)
 
+  const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [isCreatingOrg, setIsCreatingOrg] = useState<boolean>(false)
+  const [selectedOrgId, setSelectedOrgId] = useState<string>("")
+
+  const { data: organizations = [], isLoading: isOrgsLoading } = useOrganizations()
+
   const { data: plans, isLoading: isPlansLoading } = useQuery({
     queryKey: ["plans"],
     queryFn: plansService.getAll,
@@ -119,11 +128,31 @@ export function CreateOrganizationModal({
     },
   })
 
+  useEffect(() => {
+    if (isOpen && !isOrgsLoading) {
+      if (!isCreatingOrg) {
+        if (existingOrganization) {
+          setSelectedOrgId(existingOrganization.id)
+          setValue("orgName", existingOrganization.name, { shouldValidate: true })
+        } else {
+          setSelectedOrgId("")
+          setValue("orgName", "", { shouldValidate: true })
+          const params = new URLSearchParams(searchParams)
+          params.delete("org_id")
+          setSearchParams(params)
+        }
+      }
+    } else if (isOpen && !isOrgsLoading && !existingOrganization && organizations.length === 0) {
+      setIsCreatingOrg(true)
+    }
+  }, [isOpen, isOrgsLoading, organizations, existingOrganization])
+
   const handleOpenChange = (open: boolean) => {
     setIsOpen(open)
     if (!open) {
       setTimeout(() => {
         setIsCreatingPlan(false)
+        setIsCreatingOrg(false)
         setCreatedTenant(null)
         setReplicationSettings({ ...defaultReplicationSettings })
         reset({
@@ -135,8 +164,52 @@ export function CreateOrganizationModal({
           admin_password: "",
           plan_id: "",
         })
+        const params = new URLSearchParams(searchParams)
+        params.delete("org_id")
+        setSearchParams(params)
       }, 300)
     }
+  }
+
+  const handleToggleCreatingOrg = (create: boolean) => {
+    setIsCreatingOrg(create)
+    if (!create) {
+      if (organizations.length > 0) {
+        const currentId = selectedOrgId || ""
+        setSelectedOrgId(currentId)
+        const org = organizations.find((o) => o.id === currentId)
+        if (org) {
+          setValue("orgName", org.name, { shouldValidate: true })
+          const params = new URLSearchParams(searchParams)
+          params.set("org_id", currentId)
+          setSearchParams(params)
+        } else {
+          setValue("orgName", "", { shouldValidate: true })
+          const params = new URLSearchParams(searchParams)
+          params.delete("org_id")
+          setSearchParams(params)
+        }
+      } else {
+        setValue("orgName", "", { shouldValidate: true })
+      }
+    } else {
+      setValue("orgName", "", { shouldValidate: true })
+      const params = new URLSearchParams(searchParams)
+      params.delete("org_id")
+      setSearchParams(params)
+    }
+  }
+
+  const handleOrgChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const id = e.target.value
+    setSelectedOrgId(id)
+    const org = organizations.find((o) => o.id === id)
+    if (org) {
+      setValue("orgName", org.name, { shouldValidate: true })
+    }
+    const params = new URLSearchParams(searchParams)
+    params.set("org_id", id)
+    setSearchParams(params)
   }
 
   const onSubmit = (data: FormValues, planIdOverride?: string) => {
@@ -145,6 +218,8 @@ export function CreateOrganizationModal({
       toast.error("Plan ID is required", "Plan ID is required to create a tenant.")
       return
     }
+
+    const finalOrgId = existingOrganization?.id || (!isCreatingOrg ? selectedOrgId : undefined)
 
     onboardTenant(
       {
@@ -155,7 +230,7 @@ export function CreateOrganizationModal({
         admin_email: data.admin_email,
         admin_password: data.admin_password,
         plan_id: finalPlanId,
-        existingOrgId: existingOrganization?.id,
+        existingOrgId: finalOrgId,
       },
       {
         onSuccess: (tenant) => {
@@ -189,6 +264,7 @@ export function CreateOrganizationModal({
         onSuccess: () => {
           handleOpenChange(false)
           toast.success("Success", "Tenant Onboarded Successfully")
+          navigate(`/organizations/${createdTenant.orgId}`)
         },
         onError: (error) => {
           toast.error(
@@ -277,6 +353,7 @@ export function CreateOrganizationModal({
                 onClick={() => {
                   handleOpenChange(false)
                   toast.info("Onboarding completed", "You can replicate master data later.")
+                  navigate(`/organizations/${createdTenant.orgId}`)
                 }}
               >
                 Skip for Now
@@ -337,28 +414,98 @@ export function CreateOrganizationModal({
                         1. Organization Details
                       </h3>
                       <p className="text-xs text-muted-foreground">
-                        Enter the primary details for the new organization.
+                        {existingOrganization 
+                          ? "Adding tenant to pre-selected organization." 
+                          : "Choose an existing organization or set up a new one."}
                       </p>
                     </div>
-                    <div className="space-y-1">
-                      <InputField
-                        id="orgName"
-                        label={
-                          <>
-                            Organization Name{" "}
-                            <span className="text-destructive">*</span>
-                          </>
-                        }
-                        placeholder="e.g. Acme Corp"
-                        disabled={!!existingOrganization}
-                        {...register("orgName")}
-                      />
-                      {errors.orgName && (
-                        <span className="px-1 text-[11px] font-medium text-destructive">
-                          {errors.orgName.message}
-                        </span>
-                      )}
-                    </div>
+
+     
+     
+
+      {/* Input field */}
+      <div className="space-y-1">
+        <label
+          htmlFor={isCreatingOrg ? "orgName" : "existingOrgSelect"}
+          className="text-[11px] font-medium uppercase tracking-widest text-muted-foreground"
+        >
+          {existingOrganization
+            ? "Organization"
+            : isCreatingOrg
+            ? "Organization name"
+            : "Organization"}{" "}
+          <span className="text-destructive">*</span>
+        </label>
+
+        {existingOrganization ? (
+          <InputField id="orgName" disabled={true} {...register("orgName")} />
+        ) : !isCreatingOrg ? (
+          <InputField
+            id="existingOrgSelect"
+            type="select"
+            value={selectedOrgId}
+            onChange={(e) => {
+              if (e.target.value === "__create__") {
+                handleToggleCreatingOrg(true);
+              } else {
+                handleOrgChange(e as React.ChangeEvent<HTMLSelectElement>);
+              }
+            }}
+          >
+            <option value="" disabled>Select Organization</option>
+
+            {isOrgsLoading ? (
+              <option value="" disabled>
+                Loading organizations…
+              </option>
+            ) : organizations.length === 0 ? (
+              <option value="" disabled>
+                No organizations found
+              </option>
+            ) : (
+              organizations.map((org) => (
+                <option key={org.id} value={org.id}>
+                  {org.name}
+                </option>
+              ))
+            )}
+
+            <option value="__create__">+ Create organization</option>
+          </InputField>
+        ) : (
+          <>
+            <div className="flex items-center gap-2">
+              <InputField
+                id="orgName"
+                placeholder="e.g. Acme Corp"
+                className="flex-1"
+                {...register("orgName")}
+              />
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="h-9 shrink-0 text-xs text-muted-foreground hover:text-foreground"
+                onClick={() => handleToggleCreatingOrg(false)}
+              >
+                Cancel
+              </Button>
+            </div>
+            {errors.orgName && (
+              <span className="px-0.5 text-[11px] font-medium text-destructive">
+                {errors.orgName.message}
+              </span>
+            )}
+          </>
+        )}
+
+        {existingOrganization && (
+          <p className="text-[11px] text-muted-foreground">
+            Adding tenant to pre-selected organization.
+          </p>
+        )}
+      
+    </div>
                   </div>
 
                   {/* Tenant Section */}
@@ -467,22 +614,30 @@ export function CreateOrganizationModal({
                       <div className="flex items-center justify-between">
                         <label
                           htmlFor="planSelect"
-                          className="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                          className="text-xs font-semibold leading-none text-foreground"
                         >
                           Select Plan <span className="text-destructive">*</span>
                         </label>
-                        {!isCreatingPlan && (
+                        {isCreatingPlan ? (
                           <Button
                             type="button"
-                            variant="link"
-                            size="sm"
-                            className="h-8 px-2 text-primary hover:bg-primary/10 hover:text-primary"
+                            size="xs"
+                            className="h-[26px] bg-muted hover:bg-muted/80 text-muted-foreground border-none font-bold text-[10px] px-2.5 rounded-full shadow-none cursor-pointer"
+                            onClick={() => setIsCreatingPlan(false)}
+                          >
+                            <ArrowLeft className="mr-1 h-3 w-3" /> Select Plan
+                          </Button>
+                        ) : (
+                          <Button
+                            type="button"
+                            size="xs"
+                            className="h-[26px] bg-primary/10 hover:bg-primary/20 text-primary border-none font-bold text-[10px] px-2.5 rounded-full shadow-none cursor-pointer"
                             onClick={() => {
                               setValue("plan_id", "")
                               setIsCreatingPlan(true)
                             }}
                           >
-                            <Plus className="mr-1 h-4 w-4" /> Add Plan
+                            <Plus className="mr-1 h-3 w-3" /> Add Plan
                           </Button>
                         )}
                       </div>

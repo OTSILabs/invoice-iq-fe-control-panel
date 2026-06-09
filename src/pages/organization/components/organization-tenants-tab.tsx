@@ -7,11 +7,11 @@ import { DataTable } from "@/components/ui/data-table"
 import type { CustomColumnDef } from "@/components/ui/data-table"
 import type { Tenant } from "@/types"
 import { CreateOrganizationModal } from "@/pages/organization/modals/create-organization-modal"
-import { TenantActionsDropdown } from "../tenant-actions-dropdown"
 import { TenantActionDialog } from "@/pages/tenants/tenant-actions/tenant-action-dialog"
 import type { TenantActionType } from "@/pages/tenants/tenant-actions/tenant-action-dialog"
 import { useOrganizationTenants } from "@/api/hooks/useOrganizations"
 import { getInitials } from "@/lib/utils"
+import { TenantActionsDropdown } from "../modals/tenant-actions-dropdown"
 
 type StatusKey = "active" | "inactive" | "blocked" | "expired" | "pending"
 
