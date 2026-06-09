@@ -18,6 +18,7 @@ import { toast } from "sonner"
 import { useForm, useWatch } from "react-hook-form"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent } from "@/components/ui/card"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
   Dialog,
   DialogContent,
@@ -80,6 +81,21 @@ export function Users() {
   const [status, setStatus] = useState("all")
   const [roleFilter, setRoleFilter] = useState("all")
   const [isCreateOpen, setIsCreateOpen] = useState(false)
+
+  const roleCounts = useMemo(() => {
+    const counts: Record<string, number> = { all: users.length }
+    roles.forEach((role) => {
+      counts[role.name.toLowerCase()] = 0
+    })
+    users.forEach((user) => {
+      const rolesList = getRolesList(user)
+      rolesList.forEach((r) => {
+        const val = r.toLowerCase()
+        counts[val] = (counts[val] || 0) + 1
+      })
+    })
+    return counts
+  }, [users, roles])
 
   const [editingUser, setEditingUser] = useState<PlatformUser | null>(null)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
@@ -321,7 +337,34 @@ export function Users() {
 
       <Card className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border border-border bg-card p-0">
         <CardContent className="flex min-h-0 flex-1 flex-col p-0">
-          <div className="flex flex-col gap-3 border-b bg-card p-3 lg:flex-row lg:items-center lg:justify-end">
+          <div className="flex flex-col gap-3 border-b bg-card p-3 lg:flex-row lg:items-center lg:justify-between">
+            <Tabs
+              value={roleFilter}
+              onValueChange={setRoleFilter}
+              className="gap-0"
+            >
+              <TabsList className="h-9 rounded-md p-0.5">
+                <TabsTrigger
+                  value="all"
+                  className="h-7 cursor-pointer rounded-sm px-2.5 text-xs"
+                >
+                  All ({roleCounts.all})
+                </TabsTrigger>
+                {roles.map((role) => {
+                  const val = role.name.toLowerCase()
+                  return (
+                    <TabsTrigger
+                      key={role.id}
+                      value={val}
+                      className="h-7 cursor-pointer rounded-sm px-2.5 text-xs capitalize"
+                    >
+                      {role.name} ({roleCounts[val] || 0})
+                    </TabsTrigger>
+                  )
+                })}
+              </TabsList>
+            </Tabs>
+
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center w-full lg:w-auto">
               <Input
                 value={searchText}
@@ -329,26 +372,6 @@ export function Users() {
                 placeholder="Search users..."
                 className="h-9 w-full sm:w-72"
               />
-
-              <Select value={roleFilter} onValueChange={setRoleFilter}>
-                <SelectTrigger className="h-9 w-full sm:w-40 bg-background">
-                  <SelectValue placeholder="All Roles" />
-                </SelectTrigger>
-                <SelectContent align="end">
-                  <SelectItem value="all" className="cursor-pointer">
-                    All Roles
-                  </SelectItem>
-                  {roles.map((role) => (
-                    <SelectItem
-                      key={role.id}
-                      value={role.name.toLowerCase()}
-                      className="cursor-pointer"
-                    >
-                      {role.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
 
               <Select value={status} onValueChange={setStatus}>
                 <SelectTrigger className="h-9 w-full sm:w-40 bg-background">
