@@ -85,6 +85,7 @@ export function CreateOrganizationModal({
   existingOrganization?: { id: string; name: string }
 }) {
   const [isOpen, setIsOpen] = useState(false)
+  const [hasInitialized, setHasInitialized] = useState(false)
   const [isCreatingPlan, setIsCreatingPlan] = useState(false)
   const [createdTenant, setCreatedTenant] = useState<CreatedTenantState | null>(
     null
@@ -129,7 +130,8 @@ export function CreateOrganizationModal({
   })
 
   useEffect(() => {
-    if (isOpen && !isOrgsLoading) {
+    if (isOpen && !isOrgsLoading && !hasInitialized) {
+      setHasInitialized(true)
       if (!isCreatingOrg) {
         if (existingOrganization) {
           setSelectedOrgId(existingOrganization.id)
@@ -142,14 +144,16 @@ export function CreateOrganizationModal({
           setSearchParams(params)
         }
       }
-    } else if (isOpen && !isOrgsLoading && !existingOrganization && organizations.length === 0) {
+    } else if (isOpen && !isOrgsLoading && !existingOrganization && organizations.length === 0 && !hasInitialized) {
+      setHasInitialized(true)
       setIsCreatingOrg(true)
     }
-  }, [isOpen, isOrgsLoading, organizations, existingOrganization])
+  }, [isOpen, isOrgsLoading, organizations, existingOrganization, hasInitialized])
 
   const handleOpenChange = (open: boolean) => {
     setIsOpen(open)
     if (!open) {
+      setHasInitialized(false)
       setTimeout(() => {
         setIsCreatingPlan(false)
         setIsCreatingOrg(false)
@@ -219,7 +223,7 @@ export function CreateOrganizationModal({
       return
     }
 
-    const finalOrgId = existingOrganization?.id || (!isCreatingOrg ? selectedOrgId : undefined)
+    const finalOrgId = !isCreatingOrg ? (selectedOrgId || undefined) : undefined
 
     onboardTenant(
       {
@@ -240,7 +244,7 @@ export function CreateOrganizationModal({
         onError: (error) => {
           toast.error(
             error,
-            existingOrganization
+            finalOrgId
               ? "Failed to add tenant. Please try again."
               : "Failed to create organization and tenant. Please try again."
           )
@@ -397,8 +401,8 @@ export function CreateOrganizationModal({
               </div>
             </DialogHeader>
 
-            <ScrollArea className="min-h-0 min-w-0 flex-1 bg-muted/10">
-              <div className="p-6 md:p-8 space-y-8">
+            <ScrollArea className="h-full min-h-0 min-w-0 flex-1 bg-muted/10">
+              <div className="p-6 md:p-8 pb-16 space-y-8">
                 <form
                   id="create-all-form"
                   onSubmit={(e) => {
@@ -437,9 +441,7 @@ export function CreateOrganizationModal({
           <span className="text-destructive">*</span>
         </label>
 
-        {existingOrganization ? (
-          <InputField id="orgName" disabled={true} {...register("orgName")} />
-        ) : !isCreatingOrg ? (
+        {!isCreatingOrg ? (
           <InputField
             id="existingOrgSelect"
             type="select"
@@ -501,7 +503,7 @@ export function CreateOrganizationModal({
 
         {existingOrganization && (
           <p className="text-[11px] text-muted-foreground">
-            Adding tenant to pre-selected organization.
+            Defaults to the pre-selected organization. You can select another if needed.
           </p>
         )}
       
