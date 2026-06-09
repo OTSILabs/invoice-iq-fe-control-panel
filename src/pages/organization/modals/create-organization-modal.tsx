@@ -33,10 +33,10 @@ const onboardingSchema = z.object({
 
 type FormValues = z.infer<typeof onboardingSchema>
 
-export function CreateOrganizationModal({ 
+export function CreateOrganizationModal({
   children,
   existingOrganization
-}: { 
+}: {
   children?: React.ReactNode,
   existingOrganization?: { id: string; name: string }
 }) {
@@ -44,7 +44,7 @@ export function CreateOrganizationModal({
   const [isPending, setIsPending] = useState(false)
   const [isCreatingPlan, setIsCreatingPlan] = useState(false)
   const queryClient = useQueryClient()
-  
+
   const { data: plans, isLoading: isPlansLoading } = useQuery({
     queryKey: ['plans'],
     queryFn: plansService.getAll
@@ -93,7 +93,7 @@ export function CreateOrganizationModal({
   // const handleCreateOrganizationOnly = async () => {
   //   const isValidOrg = await trigger("orgName");
   //   if (!isValidOrg) return;
-    
+
   //   const orgName = watch("orgName");
   //   setIsPending(true)
   //   try {
@@ -117,7 +117,7 @@ export function CreateOrganizationModal({
         const createdOrg = await organizationsService.create({ name: data.orgName })
         orgId = createdOrg.id;
       }
-      
+
       const finalPlanId = planIdOverride || data.plan_id;
       if (!finalPlanId) {
         throw new Error("Plan ID is required to create a tenant.");
@@ -141,7 +141,6 @@ export function CreateOrganizationModal({
         },
         plan_id: finalPlanId,
         plan_valid_from: new Date().toISOString(),
-        plan_valid_to: new Date(new Date().setMonth(new Date().getMonth() + 1)).toISOString(),
         admin_user: {
           email: data.admin_email,
           password: data.admin_password,
@@ -153,7 +152,7 @@ export function CreateOrganizationModal({
       await organizationsService.createTenant(orgId, tenantPayloadData)
 
       queryClient.invalidateQueries({ queryKey: ['organizations'] })
-      
+
       setIsOpen(false)
       toast.success(existingOrganization ? "Tenant added successfully!" : "Organization and Tenant created successfully!")
     } catch (error: any) {
@@ -184,7 +183,7 @@ export function CreateOrganizationModal({
               {existingOrganization ? "Add Tenant to Organization" : "Welcome! Let's get started"}
             </DialogTitle>
             <DialogDescription className="text-sm  text-muted-foreground">
-              {existingOrganization 
+              {existingOrganization
                 ? "Configure tenant details and select a billing plan for this organization."
                 : "Follow this onboarding process to set up your new organization and tenant."}
             </DialogDescription>
@@ -193,8 +192,8 @@ export function CreateOrganizationModal({
 
         <ScrollArea className="flex-1 min-h-0 min-w-0 bg-muted/10">
           <div className="p-6 md:p-8">
-            <form id="create-all-form" onSubmit={(e) => { e.preventDefault(); if(!isCreatingPlan) handleSubmit((d) => onSubmit(d))(); }} className="space-y-10 ">
-              
+            <form id="create-all-form" onSubmit={(e) => { e.preventDefault(); if (!isCreatingPlan) handleSubmit((d) => onSubmit(d))(); }} className="space-y-10 ">
+
               {/* Organization Section */}
               <div className="space-y-4 ">
                 <div>
@@ -203,9 +202,9 @@ export function CreateOrganizationModal({
                 </div>
                 <div className="space-y-1">
                   <InputField
-                    id="orgName" 
+                    id="orgName"
                     label={<>Organization Name <span className="text-destructive">*</span></>}
-                    placeholder="e.g. Acme Corp" 
+                    placeholder="e.g. Acme Corp"
                     disabled={!!existingOrganization}
                     {...register("orgName")}
                   />
@@ -268,7 +267,7 @@ export function CreateOrganizationModal({
                       </Button>
                     )}
                   </div>
-                  <InputField 
+                  <InputField
                     id="planSelect"
                     type="select"
                     disabled={isCreatingPlan}
@@ -296,11 +295,11 @@ export function CreateOrganizationModal({
                         <Minus className="h-4 w-4" />
                       </Button>
                     </div>
-                    <PlanForm 
+                    <PlanForm
                       formId="inline-plan-form"
                       showFooter={false}
-                      onCancel={() => setIsCreatingPlan(false)} 
-                      onSuccess={handleInlinePlanSuccess} 
+                      onCancel={() => setIsCreatingPlan(false)}
+                      onSuccess={handleInlinePlanSuccess}
                     />
                   </div>
                 )}
@@ -312,17 +311,17 @@ export function CreateOrganizationModal({
         <DialogFooter className="border-t border-border bg-background px-8 py-4 flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
           <div className="w-full sm:w-auto mt-2 sm:mt-0">
           </div>
-          <Button 
+          <Button
             type="submit"
-            size={"sm"} 
-            form={isCreatingPlan ? "inline-plan-form" : "create-all-form"} 
+            size={"sm"}
+            form={isCreatingPlan ? "inline-plan-form" : "create-all-form"}
             className="w-full sm:w-auto font-medium px-3 shadow-none"
             disabled={isPending || (!isCreatingPlan && !isFormReadyToSubmit)}
           >
             {isPending ? <Loader2 className="size-4 animate-spin mr-2" /> : <Plus className="size-4 mr-2" />}
             {existingOrganization ? "Create Tenant" : "Create Tenant"}
           </Button>
-           {/* chnage like this  <Button 
+          {/* chnage like this  <Button 
             type="submit" 
             form={isCreatingPlan ? "inline-plan-form" : "create-all-form"} 
             className="w-full sm:w-auto font-medium px-3 shadow-none"
