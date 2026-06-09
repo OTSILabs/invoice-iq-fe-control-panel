@@ -1,8 +1,10 @@
+import { useState, useMemo } from "react"
 import { organizationsService } from "@/api/services/organizations.service"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import { CreateOrganizationModal } from "@/pages/organization/modals/create-organization-modal"
 import { useQuery } from "@tanstack/react-query"
-import { ArrowRight, Loader2, Plus, Building2, Users, BarChart3 } from "lucide-react"
+import { ArrowRight, Loader2, Plus, Building2, Users, BarChart3, Search } from "lucide-react"
 import { Link } from "react-router-dom"
 import { cn } from "@/lib/utils"
 import type { Organization } from "@/types"
@@ -100,6 +102,20 @@ export function Organizations() {
     queryFn: organizationsService.getAll,
   })
 
+  const [searchQuery, setSearchQuery] = useState("")
+
+  const filteredOrganizations = useMemo(() => {
+    if (!organizations) return []
+    const query = searchQuery.toLowerCase().trim()
+    if (!query) return organizations
+    return organizations.filter(
+      (org) =>
+        org.name.toLowerCase().includes(query) ||
+        (org.slug && org.slug.toLowerCase().includes(query)) ||
+        String(org.id).toLowerCase().includes(query)
+    )
+  }, [organizations, searchQuery])
+
   const totalTenants = organizations?.reduce((sum, org) => sum + (org.tenant_count ?? 0), 0) ?? 0
 
   return (
@@ -113,12 +129,22 @@ export function Organizations() {
             Manage and onboard organizations within your control panel.
           </p>
         </div>
-        <CreateOrganizationModal>
-          <Button size="sm" className="w-full sm:w-auto font-medium shadow-sm gap-1.5">
-            <Plus className="h-4 w-4" />
-            Start onboarding
-          </Button>
-        </CreateOrganizationModal>
+        <div className="flex flex-col sm:flex-row items-center gap-2.5 w-full sm:w-auto">
+          {organizations && organizations.length > 0 && (
+            <Input
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search organizations..."
+              className="h-9 w-full sm:w-64"
+            />
+          )}
+          <CreateOrganizationModal>
+            <Button size="sm" className="w-full sm:w-auto font-medium shadow-sm gap-1.5 shrink-0">
+              <Plus className="h-4 w-4" />
+              Start onboarding
+            </Button>
+          </CreateOrganizationModal>
+        </div>
       </div>
 
       {/* Stats Dashboard Grid */}
@@ -169,16 +195,26 @@ export function Organizations() {
           <Loader2 className="h-6 w-6 animate-spin text-muted-foreground/70" />
         </div>
       ) : organizations && organizations.length > 0 ? (
-        <div className="flex flex-col gap-4">
-          <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            All organizations
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3.5">
-            {organizations.map((org) => (
-              <OrgCard key={org.id} org={org} />
-            ))}
+        filteredOrganizations.length > 0 ? (
+          <div className="flex flex-col gap-4">
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              All organizations
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3.5">
+              {filteredOrganizations.map((org) => (
+                <OrgCard key={org.id} org={org} />
+              ))}
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="flex flex-col items-center justify-center py-20 border border-dashed border-border rounded-xl bg-card/50">
+            <Search className="h-8 w-8 text-muted-foreground/60 mb-3" />
+            <h3 className="font-medium text-sm text-foreground mb-1">No organizations found</h3>
+            <p className="text-xs text-muted-foreground max-w-sm text-center">
+              No organizations match "{searchQuery}". Try a different search term.
+            </p>
+          </div>
+        )
       ) : (
         <div className="flex flex-col items-center justify-center py-20 border border-dashed border-border rounded-xl bg-card/50">
           <Building2 className="h-8 w-8 text-muted-foreground/60 mb-3" />
