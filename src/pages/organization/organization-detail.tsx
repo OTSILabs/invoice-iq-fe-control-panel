@@ -96,8 +96,8 @@ export function OrganizationDetail() {
       {/* ── Action Header ── */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
-          <h1 className="text-xl font-bold tracking-tight text-foreground">Organization Details</h1>
-          <p className="text-sm text-muted-foreground">
+          <h1 className="text-lg font-semibold tracking-tight text-foreground">Organization Details</h1>
+          <p className="text-xs text-muted-foreground">
             View and manage organization, tenants and configurations
           </p>
         </div>
