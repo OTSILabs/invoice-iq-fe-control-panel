@@ -128,9 +128,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 asChild
                 isActive={isActive}
                 className={cn(
-                  "h-9 rounded-lg text-[13.5px] font-medium transition-all duration-200",
+                  "h-9 rounded-lg text-[13.5px] font-medium transition-all duration-200 data-active:bg-blue-50! data-active:text-blue-700!",
                   isActive
-                    ? "bg-blue-50 text-blue-700 hover:bg-blue-100 hover:text-blue-800 border-l-2 border-blue-600 rounded-r-lg rounded-l-none pl-2.5"
+                    ? "hover:bg-blue-100 hover:text-blue-800 border-l-2 border-blue-600 rounded-r-lg rounded-l-none pl-2.5"
                     : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 rounded-lg"
                 )}
               >
