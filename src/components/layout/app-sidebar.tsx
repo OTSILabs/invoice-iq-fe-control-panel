@@ -53,7 +53,7 @@ function SidebarLogoHeader() {
       {/* App name — visible when expanded */}
       <span
         className={cn(
-          "ml-3 text-[15px] font-semibold text-sidebar-foreground tracking-tight transition-all duration-200 overflow-hidden whitespace-nowrap",
+          "ml-3 text-sm font-semibold text-sidebar-foreground tracking-tight transition-all duration-200 overflow-hidden whitespace-nowrap",
           open && !isMobile ? "opacity-100 max-w-[120px]" : "opacity-0 max-w-0"
         )}
       >
@@ -128,10 +128,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 asChild
                 isActive={isActive}
                 className={cn(
-                  "h-9 rounded-lg text-[13.5px] font-medium transition-colors",
+                  "h-9 rounded-lg text-[13.5px] font-medium transition-all duration-200 data-active:bg-blue-50! data-active:text-blue-700!",
                   isActive
-                    ? "bg-blue-50 text-blue-700 hover:bg-blue-100 hover:text-blue-800"
-                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                    ? "hover:bg-blue-100 hover:text-blue-800 border-l-2 border-blue-600 rounded-r-lg rounded-l-none pl-2.5"
+                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 rounded-lg"
                 )}
               >
                 <Link to={route.path} className="flex items-center gap-2.5">
@@ -183,7 +183,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
                   {/* Name + role — hidden when collapsed */}
                   <div className="flex flex-col items-start leading-tight overflow-hidden flex-1 ml-1 group-data-[collapsible=icon]:hidden">
-                    <span className="text-[13px] font-medium text-slate-700 truncate w-full">
+                    <span className="text-sm font-medium text-slate-700 truncate w-full">
                       {userName}
                     </span>
                     <span className="text-[11px] text-slate-400 truncate w-full">
@@ -195,7 +195,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
 
-              <DropdownMenuContent side="top" className="w-[--radix-popper-anchor-width] text-[13px]">
+              <DropdownMenuContent side="top" className="w-[--radix-popper-anchor-width] text-xs-fine">
                 <DropdownMenuItem className="gap-2 cursor-pointer">
                   <User2 className="h-3.5 w-3.5 text-slate-500" />
                   <span>Profile</span>

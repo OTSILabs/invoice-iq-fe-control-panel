@@ -99,7 +99,7 @@ useEffect(() => {
           <SidebarInset className="bg-background flex flex-col h-svh overflow-hidden">
 
             {/* ── Header ── */}
-            <header className="min-h-16 shrink-0 flex items-center px-4 sm:px-6 py-3 bg-header text-header-foreground border-b border-border z-10">
+            <header className="min-h-16 shrink-0 flex items-center px-4 sm:px-6 py-3 bg-header/80 backdrop-blur-md text-header-foreground border-b border-border z-10 sticky top-0">
               <Breadcrumb>
                 <BreadcrumbList>
                   {breadcrumbs.map((crumb) => (
