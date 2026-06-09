@@ -5,34 +5,35 @@ import { useQuery } from "@tanstack/react-query"
 import { ArrowRight, Loader2, Plus, Building2, Users, BarChart3 } from "lucide-react"
 import { Link } from "react-router-dom"
 import { cn } from "@/lib/utils"
+import type { Organization } from "@/types"
 
 /* ─── helpers ─────────────────────────────────────────────────── */
 
 function getInitials(name: string): string {
-  return name
-    .split(" ")
-    .map((w) => w[0])
-    .slice(0, 2)
-    .join("")
-    .toUpperCase()
+  return name
+    .split(" ")
+    .map((w) => w[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase()
 }
 
 const ACCENT_SLOTS = [
-  { bg: "bg-blue-500/10 text-blue-600 border-blue-200/20", dot: "bg-blue-500" },
-  { bg: "bg-emerald-500/10 text-emerald-600 border-emerald-200/20", dot: "bg-emerald-500" },
-  { bg: "bg-violet-500/10 text-violet-600 border-violet-200/20", dot: "bg-violet-500" },
-  { bg: "bg-amber-500/10 text-amber-600 border-amber-200/20", dot: "bg-amber-500" },
-  { bg: "bg-rose-500/10 text-rose-600 border-rose-200/20", dot: "bg-rose-500" },
+  { bg: "bg-blue-500/10 text-blue-600 border-blue-200/20", dot: "bg-blue-500" },
+  { bg: "bg-emerald-500/10 text-emerald-600 border-emerald-200/20", dot: "bg-emerald-500" },
+  { bg: "bg-violet-500/10 text-violet-600 border-violet-200/20", dot: "bg-violet-500" },
+  { bg: "bg-amber-500/10 text-amber-600 border-amber-200/20", dot: "bg-amber-500" },
+  { bg: "bg-rose-500/10 text-rose-600 border-rose-200/20", dot: "bg-rose-500" },
 ] as const
 
 function getAccentSlot(id: string | number) {
-  const hash = String(id).split("").reduce((acc, char) => acc + char.charCodeAt(0), 0)
-  return ACCENT_SLOTS[hash % ACCENT_SLOTS.length]
+  const hash = String(id).split("").reduce((acc, char) => acc + char.charCodeAt(0), 0)
+  return ACCENT_SLOTS[hash % ACCENT_SLOTS.length]
 }
 
 /* ─── OrgCard ─────────────────────────────────────────────────── */
 
-function OrgCard({ org }: { org: any }) {
+function OrgCard({ org }: { org: Organization }) {
   const initials = org.name ? getInitials(org.name) : "OR"
   const slot = getAccentSlot(org.id)
 
@@ -46,7 +47,7 @@ function OrgCard({ org }: { org: any }) {
       )}
     >
       {/* Top gradient glow line */}
-      <div className="absolute top-0 left-0 right-0 h-[2.5px] bg-gradient-to-r from-primary/30 via-primary to-primary/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      <div className="absolute top-0 left-0 right-0 h-[2.5px] bg-linear-to-r from-primary/30 via-primary to-primary/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
       <div>
         {/* Top Row: initials & status */}
@@ -94,106 +95,106 @@ function OrgCard({ org }: { org: any }) {
 /* ─── Organizations page ──────────────────────────────────────── */
 
 export function Organizations() {
-  const { data: organizations, isLoading } = useQuery({
-    queryKey: ["organizations"],
-    queryFn: organizationsService.getAll,
-  })
+  const { data: organizations, isLoading } = useQuery({
+    queryKey: ["organizations"],
+    queryFn: organizationsService.getAll,
+  })
 
-  const totalTenants = organizations?.reduce((sum, org) => sum + (org.tenant_count ?? 0), 0) ?? 0
+  const totalTenants = organizations?.reduce((sum, org) => sum + (org.tenant_count ?? 0), 0) ?? 0
 
-  return (
-    <div className="flex w-full animate-in flex-col gap-6 pb-12 duration-200 fade-in">
+  return (
+    <div className="flex w-full animate-in flex-col gap-6 pb-12 duration-200 fade-in">
 
-      {/* Header Section */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
-        <div>
-          <h1 className="text-xl font-semibold tracking-tight text-foreground">Organizations</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Manage and onboard organizations within your control panel.
-          </p>
-        </div>
-        <CreateOrganizationModal>
-          <Button size="sm" className="w-full sm:w-auto font-medium shadow-sm gap-1.5">
-            <Plus className="h-4 w-4" />
-            Start onboarding
-          </Button>
-        </CreateOrganizationModal>
-      </div>
+      {/* Header Section */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
+        <div>
+          <h1 className="text-xl font-semibold tracking-tight text-foreground">Organizations</h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            Manage and onboard organizations within your control panel.
+          </p>
+        </div>
+        <CreateOrganizationModal>
+          <Button size="sm" className="w-full sm:w-auto font-medium shadow-sm gap-1.5">
+            <Plus className="h-4 w-4" />
+            Start onboarding
+          </Button>
+        </CreateOrganizationModal>
+      </div>
 
-      {/* Stats Dashboard Grid */}
-      {!isLoading && organizations && organizations.length > 0 && (
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
-          {[
-            {
-              label: "Total organizations",
-              value: organizations.length,
-              icon: Building2,
-              color: "bg-blue-500/10 text-blue-600 border-blue-200/20"
-            },
-            {
-              label: "Total tenants",
-              value: totalTenants,
-              icon: Users,
-              color: "bg-emerald-500/10 text-emerald-600 border-emerald-200/20"
-            },
-            {
-              label: "Avg tenants / org",
-              value: organizations.length > 0 ? Math.round(totalTenants / organizations.length) : 0,
-              icon: BarChart3,
-              color: "bg-violet-500/10 text-violet-600 border-violet-200/20"
-            },
-          ].map((s) => {
-            const Icon = s.icon
-            return (
-              <div
-                key={s.label}
-                className="relative overflow-hidden bg-card border border-border rounded-xl p-4 shadow-sm flex items-center justify-between gap-4"
-              >
-                <div>
-                  <p className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">{s.label}</p>
-                  <p className="text-xl font-bold tracking-tight text-foreground mt-1.5 font-mono">{s.value}</p>
-                </div>
-                <div className={cn("h-8 w-8 rounded-lg flex items-center justify-center border shrink-0", s.color)}>
-                  <Icon className="h-4 w-4" />
-                </div>
-              </div>
-            )
-          })}
-        </div>
-      )}
+      {/* Stats Dashboard Grid */}
+      {!isLoading && organizations && organizations.length > 0 && (
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+          {[
+            {
+              label: "Total organizations",
+              value: organizations.length,
+              icon: Building2,
+              color: "bg-blue-500/10 text-blue-600 border-blue-200/20"
+            },
+            {
+              label: "Total tenants",
+              value: totalTenants,
+              icon: Users,
+              color: "bg-emerald-500/10 text-emerald-600 border-emerald-200/20"
+            },
+            {
+              label: "Avg tenants / org",
+              value: organizations.length > 0 ? Math.round(totalTenants / organizations.length) : 0,
+              icon: BarChart3,
+              color: "bg-violet-500/10 text-violet-600 border-violet-200/20"
+            },
+          ].map((s) => {
+            const Icon = s.icon
+            return (
+              <div
+                key={s.label}
+                className="relative overflow-hidden bg-card border border-border rounded-xl p-4 shadow-sm flex items-center justify-between gap-4"
+              >
+                <div>
+                  <p className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">{s.label}</p>
+                  <p className="text-xl font-bold tracking-tight text-foreground mt-1.5 font-mono">{s.value}</p>
+                </div>
+                <div className={cn("h-8 w-8 rounded-lg flex items-center justify-center border shrink-0", s.color)}>
+                  <Icon className="h-4 w-4" />
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      )}
 
-      {/* Main Content Display Area */}
-      {isLoading ? (
-        <div className="flex items-center justify-center py-24">
-          <Loader2 className="h-6 w-6 animate-spin text-muted-foreground/70" />
-        </div>
-      ) : organizations && organizations.length > 0 ? (
-        <div className="flex flex-col gap-4">
-          <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            All organizations
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3.5">
-            {organizations.map((org) => (
-              <OrgCard key={org.id} org={org} />
-            ))}
-          </div>
-        </div>
-      ) : (
-        <div className="flex flex-col items-center justify-center py-20 border border-dashed border-border rounded-xl bg-card/50">
-          <Building2 className="h-8 w-8 text-muted-foreground/60 mb-3" />
-          <h3 className="font-medium text-sm text-foreground mb-1">No organizations yet</h3>
-          <p className="text-xs text-muted-foreground max-w-sm text-center mb-5">
-            Get started by onboarding your first organization into the platform control panel.
-          </p>
-          <CreateOrganizationModal>
-            <Button variant="outline" size="sm" className="gap-1.5">
-              <Plus className="h-3.5 w-3.5" />
-              Onboard Organization
-            </Button>
-          </CreateOrganizationModal>
-        </div>
-      )}
+      {/* Main Content Display Area */}
+      {isLoading ? (
+        <div className="flex items-center justify-center py-24">
+          <Loader2 className="h-6 w-6 animate-spin text-muted-foreground/70" />
+        </div>
+      ) : organizations && organizations.length > 0 ? (
+        <div className="flex flex-col gap-4">
+          <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            All organizations
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3.5">
+            {organizations.map((org) => (
+              <OrgCard key={org.id} org={org} />
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div className="flex flex-col items-center justify-center py-20 border border-dashed border-border rounded-xl bg-card/50">
+          <Building2 className="h-8 w-8 text-muted-foreground/60 mb-3" />
+          <h3 className="font-medium text-sm text-foreground mb-1">No organizations yet</h3>
+          <p className="text-xs text-muted-foreground max-w-sm text-center mb-5">
+            Get started by onboarding your first organization into the platform control panel.
+          </p>
+          <CreateOrganizationModal>
+            <Button variant="outline" size="sm" className="gap-1.5">
+              <Plus className="h-3.5 w-3.5" />
+              Onboard Organization
+            </Button>
+          </CreateOrganizationModal>
+        </div>
+      )}
 
-    </div>
-  )
+    </div>
+  )
 }
