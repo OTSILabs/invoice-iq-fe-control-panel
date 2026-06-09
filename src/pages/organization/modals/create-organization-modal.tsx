@@ -322,24 +322,10 @@ export function CreateOrganizationModal({
       {children ? <DialogTrigger asChild>{children}</DialogTrigger> : null}
       <DialogContent
         showCloseButton={!isReplicating}
-        onPointerDownOutside={(e) => {
-          if (!isReplicating) {
-            handleOpenChange(false)
-          } else {
-            e.preventDefault()
-          }
-        }}
-        onInteractOutside={(e) => {
-          if (!isReplicating) {
-            handleOpenChange(false)
-          } else {
-            e.preventDefault()
-          }
-        }}
         className={
           createdTenant
-            ? "flex flex-col gap-6 overflow-hidden border-border bg-background p-6 shadow-lg sm:max-w-md sm:rounded-xl"
-            : "grid max-h-[86vh] grid-rows-[auto_minmax(0,1fr)_auto] gap-0 overflow-hidden border-border bg-background p-0 shadow-lg sm:max-w-3xl sm:rounded-xl"
+            ? "flex flex-col gap-6 overflow-hidden border-border bg-popover p-6 shadow-lg sm:max-w-md sm:rounded-xl"
+            : "grid max-h-[86vh] grid-rows-[auto_minmax(0,1fr)_auto] gap-0 overflow-hidden border-border bg-popover p-0 shadow-lg sm:max-w-3xl sm:rounded-xl"
         }
       >
         {createdTenant ? (
@@ -416,7 +402,7 @@ export function CreateOrganizationModal({
               <Button
                 type="button"
                 size="sm"
-                className="w-full font-medium bg-primary hover:bg-primary/90 text-primary-foreground flex items-center justify-center gap-1.5"
+                className="w-full font-medium bg-primary hover:bg-primary/90 text-white flex items-center justify-center gap-1.5"
                 disabled={isReplicating}
                 onClick={handleReplicateMasterData}
               >
@@ -436,7 +422,7 @@ export function CreateOrganizationModal({
           </>
         ) : (
           <>
-            <DialogHeader className="border-b border-border bg-background px-8 py-6">
+            <DialogHeader className="border-b border-border bg-popover px-8 py-6">
               <div className="max-w-2xl">
                 <DialogTitle className="text-xl font-bold tracking-tight text-foreground">
                   {existingOrganization
@@ -520,9 +506,13 @@ export function CreateOrganizationModal({
                         <InputField
                           id="role"
                           label="Tenant Role"
-                          placeholder="admin"
+                          type="select"
                           {...register("tenant_role")}
-                        />
+                        >
+                          <option value="" disabled>Select Tenant Role</option>
+                          <option value="sandbox">sandbox</option>
+                          <option value="prod">prod</option>
+                        </InputField>
                         {errors.tenant_role && (
                           <span className="px-1 text-[11px] font-medium text-destructive">
                             {errors.tenant_role.message}
@@ -664,14 +654,13 @@ export function CreateOrganizationModal({
                 </form>
               </div>
             </ScrollArea>
-
-            <DialogFooter className="flex flex-col-reverse gap-3 border-t border-border bg-background px-8 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
+            <DialogFooter className="flex flex-col-reverse gap-3 border-t border-border bg-popover px-8 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
               <div className="mt-2 w-full sm:mt-0 sm:w-auto"></div>
               <Button
                 type="submit"
                 size={"sm"}
                 form={isCreatingPlan ? "inline-plan-form" : "create-all-form"}
-                className="w-full px-3 font-medium shadow-none sm:w-auto"
+                className="w-full px-3 font-medium bg-primary hover:bg-primary/90 text-white shadow-none sm:w-auto"
                 disabled={isPending || (!isCreatingPlan && !isFormReadyToSubmit)}
               >
                 {isPending ? (
