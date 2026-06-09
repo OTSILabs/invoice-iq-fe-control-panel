@@ -70,7 +70,7 @@ function StatusBadge({ status }: { status: string }) {
       variant="outline"
       className={cn("text-[11px] px-2 py-0.5 font-medium border inline-flex items-center gap-1.5", cfg.badge)}
     >
-      <span className={cn("h-1.5 w-1.5 rounded-full flex-shrink-0", cfg.dot)} />
+      <span className={cn("h-1.5 w-1.5 rounded-full shrink-0", cfg.dot)} />
       {cfg.label}
     </Badge>
   )
@@ -101,7 +101,7 @@ export function OrganizationTenantsTab({ orgId, organizationName }: Organization
         const slug = row.original.slug || "—"
         return (
           <div className="flex items-center gap-2.5 py-0.5">
-            <div className="h-6 w-6 rounded-md bg-primary/10 text-primary border border-primary/20 flex items-center justify-center text-[10px] leading-none font-semibold flex-shrink-0">
+            <div className="h-6 w-6 rounded-md bg-primary/10 text-primary border border-primary/20 flex items-center justify-center text-[10px] leading-none font-semibold shrink-0">
               {getInitials(slug)}
             </div>
             <span className="text-xs font-semibold text-foreground truncate">{slug}</span>

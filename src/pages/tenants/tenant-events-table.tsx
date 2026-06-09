@@ -70,7 +70,7 @@ const columns = useMemo<CustomColumnDef<any>[]>(() => [
 ], [])
 
   return (
-    <div className="flex flex-col bg-card border border-border rounded-xl overflow-hidden min-h-[300px]">
+    <div className="flex flex-col bg-card border border-border rounded-xl overflow-hidden min-h-93.75">
       <div className="flex items-center gap-3 p-5 pb-4 border-b border-border/50">
         <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/20">
           <Activity className="h-4 w-4" />

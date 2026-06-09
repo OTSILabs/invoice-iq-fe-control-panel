@@ -209,12 +209,12 @@ export function TenantDetail() {
       <div className="w-full">
         <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm flex flex-col justify-between">
           {/* Accent stripe */}
-          <div className="h-[3px] w-full bg-gradient-to-r from-primary to-chart-1" />
+          <div className="h-[3px] w-full bg-linear-to-r from-primary to-chart-1" />
 
           {/* Hero */}
           <div className="flex flex-col gap-3 px-5 py-4 border-b border-border">
             <div className="flex items-center gap-3">
-              <div className="h-10 w-10 flex-shrink-0 rounded-lg bg-primary text-primary-foreground flex items-center justify-center text-sm font-semibold uppercase">
+              <div className="h-10 w-10 shrink-0 rounded-lg bg-primary text-primary-foreground flex items-center justify-center text-sm font-semibold uppercase">
                 {initials}
               </div>
               <div className="min-w-0">
@@ -518,7 +518,7 @@ export function TenantDetail() {
 
           {tenant.last_error && (
             <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-xl text-destructive flex items-start gap-2.5">
-              <Info className="h-4.5 w-4.5 mt-0.5 flex-shrink-0" />
+              <Info className="h-4.5 w-4.5 mt-0.5 shrink-0" />
               <div className="space-y-1">
                 <span className="text-[10px] font-bold uppercase tracking-wider block">Last Provisioning Error Logged</span>
                 <p className="text-xs font-mono break-all">{tenant.last_error}</p>
