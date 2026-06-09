@@ -168,8 +168,8 @@ export function ErpSettings() {
     () => settings.map((s) => s.erp_type.toLowerCase()),
     [settings]
   )
-  const allErpTypes = ["cw", "sap"]
-  const isAllUsed = allErpTypes.every((type) => usedErpTypes.includes(type))
+  // const allErpTypes = ["cw", "sap"]
+  // const isAllUsed = allErpTypes.every((type) => usedErpTypes.includes(type))
 
   const filteredSettings = useMemo(() => {
     return settings.filter((record) => {
@@ -248,7 +248,7 @@ export function ErpSettings() {
             />
           </Button>
 
-          {!isAllUsed && (
+     
             <Button
               size="sm"
               onClick={() => setIsCreateOpen(true)}
@@ -256,7 +256,7 @@ export function ErpSettings() {
             >
               <Plus className="h-4 w-4" /> Add ERP Setting
             </Button>
-          )}
+         
         </div>
       </div>
 
