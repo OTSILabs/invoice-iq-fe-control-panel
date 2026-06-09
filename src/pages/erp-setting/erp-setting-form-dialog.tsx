@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import { useForm, Controller, useWatch } from "react-hook-form"
+import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Loader2 } from "lucide-react"
 import { z } from "zod"
@@ -16,14 +16,6 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
 import { useCreateErpSettingMutation } from "@/api/hooks/useErp"
 
@@ -44,11 +36,7 @@ const hasValidSettingsValue = (value: unknown): boolean => {
 };
 
 const erpSettingSchema = z.object({
-  erp_type: z.enum(["cw", "sap"], {
-    message: "Please select an ERP type.",
-  }),
-  display_name: z.string().trim().min(2, "Display name must be at least 2 characters."),
-  is_enabled: z.boolean(),
+  erp_type: z.string().trim().min(1, "ERP type is required."),
   settingsInput: z
     .string()
     .min(2, "Settings JSON is required.")
@@ -89,51 +77,31 @@ interface ErpSettingFormDialogProps {
 export function ErpSettingFormDialog({
   open,
   onOpenChange,
-  usedErpTypes = [],
 }: ErpSettingFormDialogProps) {
   const { mutate: createErpSetting, isPending } = useCreateErpSettingMutation()
 
   const {
     register,
     handleSubmit,
-    control,
-    setValue,
     reset,
     formState: { errors },
   } = useForm<ErpSettingFormValues>({
     resolver: zodResolver(erpSettingSchema),
     defaultValues: {
-      erp_type: "cw",
-      display_name: "",
-      is_enabled: true,
+      erp_type: "",
       settingsInput: "{\n  \n}",
     },
   })
 
-  const watchErpType = useWatch({ control, name: "erp_type" })
-
   // Clean form state when closing/opening modal
   useEffect(() => {
     if (open) {
-      const allTypes = ["cw", "sap"]
-      const availableTypes = allTypes.filter((type) => !usedErpTypes.includes(type))
-      const defaultType = (availableTypes.length > 0 ? availableTypes[0] : "cw") as "cw" | "sap"
-      
       reset({
-        erp_type: defaultType,
-        display_name: "",
-        is_enabled: true,
+        erp_type: "",
         settingsInput: "{\n  \n}",
       })
     }
-  }, [open, reset, usedErpTypes])
-
-  // Automatically update display name placeholder/default when type changes
-  useEffect(() => {
-    if (watchErpType) {
-      setValue("display_name", `${watchErpType.toUpperCase()} Integration`)
-    }
-  }, [watchErpType, setValue])
+  }, [open, reset])
 
   const onSubmit = (values: ErpSettingFormValues) => {
     const parsedSettings = JSON.parse(values.settingsInput);
@@ -167,68 +135,19 @@ export function ErpSettingFormDialog({
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-          <div className="grid gap-4 md:grid-cols-[1fr_auto] md:items-end">
-            {/* ERP Type */}
-            <div className="space-y-1.5 flex-1">
-              <Label className="text-foreground font-semibold">ERP Type</Label>
-              <Select
-                value={watchErpType}
-                onValueChange={(val) => setValue("erp_type", val as "cw" | "sap", { shouldValidate: true })}
-              >
-                <SelectTrigger className="w-full bg-background h-10">
-                  <SelectValue placeholder="Select ERP type" />
-                </SelectTrigger>
-                <SelectContent>
-                  {!usedErpTypes.includes("cw") && (
-                    <SelectItem value="cw" className="cursor-pointer">CW</SelectItem>
-                  )}
-                  {!usedErpTypes.includes("sap") && (
-                    <SelectItem value="sap" className="cursor-pointer">SAP</SelectItem>
-                  )}
-                </SelectContent>
-              </Select>
-              {errors.erp_type && (
-                <span className="text-xs font-medium text-red-500 block mt-1">
-                  {errors.erp_type.message}
-                </span>
-              )}
-            </div>
-
-            {/* Is Enabled */}
-            <div className="flex items-center justify-between rounded-md border p-2.5 h-10 bg-background md:min-w-40">
-              <Label htmlFor="is_enabled" className="font-semibold text-foreground">
-                Enabled
-              </Label>
-              <Controller
-                name="is_enabled"
-                control={control}
-                render={({ field }) => (
-                  <Switch
-                    id="is_enabled"
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                    className="data-[state=checked]:bg-primary"
-                  />
-                )}
-              />
-            </div>
-          </div>
-
-          {/* Display Name */}
+          {/* ERP Type */}
           <div className="space-y-1.5">
-            <Label htmlFor="display_name" className="text-foreground font-semibold">
-              Display Name
-            </Label>
+            <Label htmlFor="erp_type" className="text-foreground font-semibold">ERP Type</Label>
             <Input
-              id="display_name"
+              id="erp_type"
               type="text"
-              placeholder="e.g. SAP Production Tenant"
-              {...register("display_name")}
-              className="bg-background"
+              placeholder="e.g. sap, cw, oracle"
+              {...register("erp_type")}
+              className="bg-background h-10"
             />
-            {errors.display_name && (
-              <span className="text-xs font-medium text-red-500">
-                {errors.display_name.message}
+            {errors.erp_type && (
+              <span className="text-xs font-medium text-red-500 block mt-1">
+                {errors.erp_type.message}
               </span>
             )}
           </div>
