@@ -271,7 +271,7 @@ export function CreateOrganizationModal({
     }
   }
 
-  const handleInlinePlanSuccess = (newPlan: { id?: string } | null) => {
+  const handleInlinePlanSuccess = (newPlan?: { id?: string } | null) => {
     setValue("plan_id", newPlan?.id || "")
     const values = watch()
     onSubmit(values, newPlan?.id || "")
