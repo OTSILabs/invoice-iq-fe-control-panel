@@ -407,7 +407,9 @@ export function Users() {
             data={filteredUsers}
             columns={columns}
             isLoading={isLoadingUsers || isFetchingUsers}
-            enablePagination={false}
+            enablePagination={true}
+            pageSize={10}
+            totalItems={filteredUsers.length}
             stickyHeader
             fillAvailableHeight
             tableContainerClassName="border-0 rounded-none bg-transparent"

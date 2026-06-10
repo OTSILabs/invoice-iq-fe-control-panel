@@ -297,7 +297,9 @@ export function Plans() {
             data={filteredPlans}
             columns={columns}
             isLoading={isLoading || isFetching}
-            enablePagination={false}
+            enablePagination={true}
+            pageSize={10}
+            totalItems={filteredPlans.length}
             stickyHeader
             fillAvailableHeight
             tableContainerClassName="border-0 rounded-none bg-transparent"
