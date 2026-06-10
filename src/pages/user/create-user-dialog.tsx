@@ -1,21 +1,14 @@
 import { useState, useEffect } from "react"
-import { useForm, Controller, useWatch } from "react-hook-form"
+import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Loader2, Eye, EyeOff } from "lucide-react"
-import { z } from "zod"
+import { Loader2, Eye, EyeOff, UserPlus } from "lucide-react"
 import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { InputField } from "@/components/ui/input-field"
 import { Label } from "@/components/ui/label"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
+import { ScrollArea } from "@/components/ui/scroll-area"
 import {
   Dialog,
   DialogContent,
@@ -26,24 +19,11 @@ import {
 } from "@/components/ui/dialog"
 import { useCreatePlatformUserMutation } from "@/api/hooks/useUsers"
 import type { PlatformRole, CreatePlatformUserPayload } from "@/types"
-
-// Zod Validation Schema for creating a user
-const createUserSchema = z.object({
-  full_name: z.string().min(1, "Full name is required").max(100, "Name is too long"),
-  email: z.string().min(1, "Email is required").email("Please enter a valid email address"),
-  password: z
-    .string()
-    .min(8, "Password must be at least 8 characters")
-    .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
-    .regex(/[a-z]/, "Password must contain at least one lowercase letter")
-    .regex(/[0-9]/, "Password must contain at least one number")
-    .regex(/[^A-Za-z0-9]/, "Password must contain at least one special character")
-    .regex(/^\S*$/, "Password must not contain spaces"),
-  role_name: z.string().min(1, "Access role is required"),
-  is_active: z.boolean(),
-})
-
-type CreateUserFormValues = z.infer<typeof createUserSchema>
+import {
+  createUserSchema,
+  type CreateUserFormValues,
+  DEFAULT_CREATE_USER_VALUES,
+} from "@/schemas/user-schema"
 
 interface CreateUserDialogProps {
   open: boolean
@@ -66,32 +46,17 @@ export function CreateUserDialog({ open, onOpenChange, roles }: CreateUserDialog
     register,
     handleSubmit,
     control,
-    setValue,
     reset,
     formState: { errors },
   } = useForm<CreateUserFormValues>({
     resolver: zodResolver(createUserSchema),
-    defaultValues: {
-      full_name: "",
-      email: "",
-      password: "",
-      role_name: "",
-      is_active: true,
-    },
+    defaultValues: DEFAULT_CREATE_USER_VALUES,
   })
-
-  const watchRoleName = useWatch({ control, name: "role_name" })
 
   // Reset form when dialog closes
   useEffect(() => {
     if (!open) {
-      reset({
-        full_name: "",
-        email: "",
-        password: "",
-        role_name: "",
-        is_active: true,
-      })
+      reset(DEFAULT_CREATE_USER_VALUES)
     }
   }, [open, reset])
 
@@ -120,134 +85,114 @@ export function CreateUserDialog({ open, onOpenChange, roles }: CreateUserDialog
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-125">
-        <DialogHeader>
-          <DialogTitle>Add User</DialogTitle>
+      <DialogContent className="max-h-[85vh] gap-0 overflow-hidden p-0 sm:max-w-lg">
+       
+
+        <DialogHeader className="border-b border-border px-6 py-5">
+          <DialogTitle className="flex items-center gap-2 text-lg font-bold">
+            <UserPlus className="size-5 text-primary" />
+            Add User
+          </DialogTitle>
           <DialogDescription>
             Create a new user account and assign system access role.
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(onCreateUserSubmit)} className="space-y-6">
-          {/* Full Name */}
-          <div className="space-y-1.5">
-            <Label htmlFor="full_name" className="text-foreground">
-              Full Name <span className="text-destructive">*</span>
-            </Label>
-            <Input
-              id="full_name"
-              type="text"
-              placeholder="e.g. John Doe"
-              {...register("full_name")}
-              className="bg-background"
-            />
-            {errors.full_name && (
-              <span className="text-xs font-medium text-red-500">
-                {errors.full_name.message}
-              </span>
-            )}
-          </div>
-
-          {/* Email Address */}
-          <div className="space-y-1.5">
-            <Label htmlFor="email" className="text-foreground">
-              Email <span className="text-destructive">*</span>
-            </Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="e.g. john@invoice-iq.com"
-              {...register("email")}
-              className="bg-background"
-            />
-            {errors.email && (
-              <span className="text-xs font-medium text-red-500">
-                {errors.email.message}
-              </span>
-            )}
-          </div>
-
-          {/* Password */}
-          <div className="space-y-1.5">
-            <Label htmlFor="password" className="text-foreground">
-              Password <span className="text-destructive">*</span>
-            </Label>
-            <div className="relative">
-              <Input
-                id="password"
-                type={showPassword ? "text" : "password"}
-                placeholder="Minimum 8 characters"
-                {...register("password")}
-                className="bg-background pr-10"
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword((prev) => !prev)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-slate-600 focus:outline-none cursor-pointer z-10"
-              >
-                {showPassword ? (
-                  <EyeOff className="h-4 w-4 text-muted-foreground" />
-                ) : (
-                  <Eye className="h-4 w-4 text-muted-foreground" />
-                )}
-              </button>
-            </div>
-            {errors.password && (
-              <span className="text-xs font-medium text-red-500">
-                {errors.password.message}
-              </span>
-            )}
-          </div>
-
-          {/* User Role (Select dropdown) */}
-          <div className="space-y-1.5">
-            <Label className="text-foreground">Role Type <span className="text-destructive">*</span></Label>
-            <Select
-              value={watchRoleName}
-              onValueChange={(val) => setValue("role_name", val, { shouldValidate: true })}
-            >
-              <SelectTrigger className="bg-background h-10 w-full">
-                <SelectValue placeholder="Select a role" />
-              </SelectTrigger>
-              <SelectContent>
-                {roles.map((role) => (
-                  <SelectItem key={role.id} value={role.name} className="cursor-pointer">
-                    {role.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            {errors.role_name && (
-              <span className="text-xs font-medium text-red-500 block mt-1">
-                {errors.role_name.message}
-              </span>
-            )}
-          </div>
-
-          {/* Is Active Toggle */}
-          <div className="flex items-center justify-between border-t border-slate-100 pt-4 ">
-            <Label htmlFor="is_active" className="text-foreground font-semibold">
-              Is Active
-            </Label>
-            <Controller
-              name="is_active"
-              control={control}
-              render={({ field }) => (
-                <Switch
-                  id="is_active"
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                  className="data-[state=checked]:bg-primary"
+        <form onSubmit={handleSubmit(onCreateUserSubmit)} className="flex flex-col max-h-[calc(85vh-5.5rem)]" noValidate>
+          <ScrollArea className="flex-1 min-h-0">
+            <div className="px-6 py-5 space-y-4">
+              {/* Full Name & Email — side by side */}
+              <div className="grid grid-cols-2 gap-4">
+                <InputField
+                  id="full_name"
+                  label="Full Name"
+                  required
+                  error={errors.full_name?.message}
+                  placeholder="e.g. John Doe"
+                  {...register("full_name")}
                 />
-              )}
-            />
-          </div>
+
+                <InputField
+                  id="email"
+                  label="Email"
+                  type="email"
+                  required
+                  error={errors.email?.message}
+                  placeholder="e.g. john@invoice-iq.com"
+                  {...register("email")}
+                />
+              </div>
+
+              {/* Password */}
+              <div className="relative">
+                <InputField
+                  id="password"
+                  label="Password"
+                  type={showPassword ? "text" : "password"}
+                  required
+                  error={errors.password?.message}
+                  placeholder="Minimum 8 characters"
+                  className="pr-10"
+                  {...register("password")}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute right-3 top-[32px] text-muted-foreground hover:text-slate-600 focus:outline-none cursor-pointer z-10"
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
+                </button>
+              </div>
+
+              {/* User Role (Select dropdown) */}
+              <InputField
+                id="role_name"
+                label="Role Type"
+                type="select"
+                required
+                error={errors.role_name?.message}
+                {...register("role_name")}
+              >
+                <option value="" disabled>Select a role</option>
+                {roles.map((role) => (
+                  <option key={role.id} value={role.name}>
+                    {role.name}
+                  </option>
+                ))}
+              </InputField>
+
+              {/* Is Active Toggle */}
+              <div className="flex items-center justify-between rounded-lg border border-border bg-muted/30 px-4 py-3">
+                <div>
+                  <Label htmlFor="is_active" className="font-medium text-foreground">Is Active</Label>
+                  <p className="text-xs text-muted-foreground mt-0.5">Toggle user account status</p>
+                </div>
+                <Controller
+                  name="is_active"
+                  control={control}
+                  render={({ field }) => (
+                    <Switch
+                      id="is_active"
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                      className="data-[state=checked]:bg-primary"
+                    />
+                  )}
+                />
+              </div>
+            </div>
+          </ScrollArea>
 
           {/* Dialog Footer Actions */}
-          <DialogFooter className="gap-2 sm:gap-0 border-t border-slate-100 pt-4 ">
+          <DialogFooter className="gap-3 border-t border-border bg-popover px-6 py-4 sm:flex-row sm:items-center sm:justify-end">
             <Button
               type="button"
-              variant="ghost"
+              variant="outline"
+              className="transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px cursor-pointer"
               onClick={() => {
                 onOpenChange(false)
                 reset()
@@ -255,7 +200,11 @@ export function CreateUserDialog({ open, onOpenChange, roles }: CreateUserDialog
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={isCreating}>
+            <Button
+              type="submit"
+              disabled={isCreating}
+              className="transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px cursor-pointer"
+            >
               {isCreating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Save Changes
             </Button>

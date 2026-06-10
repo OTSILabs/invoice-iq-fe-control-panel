@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react"
+import { useState, useMemo } from "react"
 import { Plus, Loader2, AlertCircle, RefreshCw, MoreHorizontal, Edit2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -12,52 +12,31 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { cn } from "@/lib/utils"
+import { cn, getInitials } from "@/lib/utils"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { toast } from "sonner"
-import { useForm, useWatch } from "react-hook-form"
-import { Label } from "@/components/ui/label"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
 import {
   usePlatformUsers,
   usePlatformRoles,
-  useUpdatePlatformUserMutation,
 } from "@/api/hooks/useUsers"
 import type { PlatformUser } from "@/types"
 import { CreateUserDialog } from "./create-user-dialog"
+import { EditUserDialog } from "./edit-user-dialog"
 
 const getRolesList = (user: PlatformUser | null | undefined): string[] => {
   if (!user) return []
-  if (Array.isArray(user.roles)) {
-    return user.roles.map((r: unknown) => (typeof r === "string" ? r : (r as { name?: string })?.name || "")).filter(Boolean)
-  }
-  if (Array.isArray(user.role_names)) {
-    return user.role_names.map((r: unknown) => (typeof r === "string" ? r : (r as { name?: string })?.name || "")).filter(Boolean)
-  }
-  if (typeof user.role === "string" && user.role) {
-    return [user.role]
-  }
-  if (typeof user.role_name === "string" && user.role_name) {
-    return [user.role_name]
-  }
-  return []
+  const raw = Array.isArray(user.roles) ? user.roles 
+            : Array.isArray(user.role_names) ? user.role_names 
+            : [user.role, user.role_name].filter(Boolean)
+  return raw.map((r: any) => typeof r === "string" ? r : r?.name || "").filter(Boolean)
 }
 
 
@@ -112,21 +91,10 @@ export function Users() {
   }
 
   const getRoleBadgeVariant = (role: string) => {
-    switch (role?.toLowerCase()) {
-      case "admin":
-        return {
-          variant: "outline" as const,
-          className: "border-primary text-primary font-semibold text-[10px] px-1.5 py-0.5",
-        }
-      case "user":
-      case "standard user":
-        return {
-          variant: "secondary" as const,
-          className: "bg-slate-100 text-foreground hover:bg-slate-200 font-semibold text-[10px] px-1.5 py-0.5",
-        }
-      default:
-        return { variant: "outline" as const, className: "font-semibold text-[10px] px-1.5 py-0.5" }
-    }
+    const r = role?.toLowerCase()
+    if (r === "admin") return { variant: "outline" as const, className: "border-primary text-primary font-semibold text-[10px] px-1.5 py-0.5" }
+    if (r === "user" || r === "standard user") return { variant: "secondary" as const, className: "bg-slate-100 text-foreground hover:bg-slate-200 font-semibold text-[10px] px-1.5 py-0.5" }
+    return { variant: "outline" as const, className: "font-semibold text-[10px] px-1.5 py-0.5" }
   }
 
   // Column definitions for the Users table
@@ -138,14 +106,7 @@ export function Users() {
         width: "28%",
         minWidth: "220px",
         cell: ({ row }) => {
-          const initials = row.original.full_name
-            ? row.original.full_name
-                .split(" ")
-                .map((n) => n[0])
-                .join("")
-                .slice(0, 2)
-                .toUpperCase()
-            : "U"
+          const initials = getInitials(row.original.full_name) || "U"
 
           return (
             <div className="flex items-center gap-3">
@@ -255,34 +216,23 @@ export function Users() {
     []
   )
 
-  // Status and search filtering
-  const statusAndSearchFilteredUsers = useMemo(() => {
-    const normalizedSearch = searchText.trim().toLowerCase()
-
+  // Status, Search, and Role combined single-pass filtering
+  const filteredUsers = useMemo(() => {
+    const q = searchText.trim().toLowerCase()
     return users.filter((user) => {
       const isActive = user.status === "ACTIVE"
-
       if (status === "active" && !isActive) return false
       if (status === "inactive" && isActive) return false
 
-      if (!normalizedSearch) return true
-
       const rolesList = getRolesList(user)
-      const roleName = rolesList.join(", ")
-      return [user.full_name, user.email, roleName]
+      if (roleFilter !== "all" && !rolesList.some((r) => r.toLowerCase() === roleFilter.toLowerCase())) return false
+
+      if (!q) return true
+      return [user.full_name, user.email, rolesList.join(", ")]
         .filter(Boolean)
-        .some((value) => String(value).toLowerCase().includes(normalizedSearch))
+        .some((v) => String(v).toLowerCase().includes(q))
     })
-  }, [users, searchText, status])
-
-  // Final role filtering based on dropdown roleFilter
-  const filteredUsers = useMemo(() => {
-    return statusAndSearchFilteredUsers.filter((user) => {
-      if (roleFilter === "all") return true
-      const rolesList = getRolesList(user)
-      return rolesList.some((r) => r.toLowerCase() === roleFilter.toLowerCase())
-    })
-  }, [roleFilter, statusAndSearchFilteredUsers])
+  }, [users, searchText, status, roleFilter])
 
   if (isLoadingUsers || isLoadingRoles) {
     return (
@@ -315,27 +265,28 @@ export function Users() {
   }
 
   return (
-    <div className="flex w-full animate-in flex-col gap-6 pb-12 duration-300 fade-in">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5">
+  
+        <div className="flex w-full animate-in flex-col gap-6 pb-12 duration-200 fade-in">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
         <div>
-          <h1 className="text-lg font-semibold tracking-tight">Users</h1>
-          <p className="text-sm text-muted-foreground mt-0.5">
-            Manage system access accounts and user permissions.
-          </p>
+          <h1 className="text-lg font-semibold tracking-tight text-foreground">Users</h1>
+          <p className="text-xs text-muted-foreground mt-1">Manage system access accounts and user permissions.</p>
         </div>
 
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
           <Button
             size="sm"
             onClick={() => setIsCreateOpen(true)}
-            className="w-full sm:w-auto font-medium px-3 shadow-none gap-1.5"
+            className="w-full sm:w-auto font-medium px-3 shadow-none gap-1.5 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px cursor-pointer"
           >
             <Plus className="h-4 w-4" /> Add User
           </Button>
         </div>
       </div>
 
-      <Card className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border border-border bg-card p-0">
+    
+      <Card className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border-border p-0">
         <CardContent className="flex min-h-0 flex-1 flex-col p-0">
           <div className="flex flex-col gap-3 border-b bg-card p-3 lg:flex-row lg:items-center lg:justify-between">
             <Tabs
@@ -394,7 +345,7 @@ export function Users() {
                 variant="outline"
                 size="icon"
                 onClick={handleRefetch}
-                className="h-9 w-9 cursor-pointer shrink-0"
+                className="h-9 w-9 cursor-pointer shrink-0 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px"
               >
                 <RefreshCw
                   className={cn("size-4", isFetchingUsers && "animate-spin")}
@@ -424,149 +375,12 @@ export function Users() {
         roles={roles} 
       />
 
+      {/* Edit User Dialog styled to match */}
       <EditUserDialog
         user={editingUser}
         open={isEditDialogOpen}
         onOpenChange={setIsEditDialogOpen}
       />
     </div>
-  )
-}
-
-// Zod Schema for Edit User Form
-const editUserSchema = z.object({
-  role_name: z.string().min(1, "Access role is required"),
-})
-
-type EditUserFormValues = z.infer<typeof editUserSchema>
-
-interface EditUserDialogProps {
-  user: PlatformUser | null
-  open: boolean
-  onOpenChange: (open: boolean) => void
-}
-
-function EditUserDialog({ user, open, onOpenChange }: EditUserDialogProps) {
-  const { mutate: updateUser, isPending } = useUpdatePlatformUserMutation()
-  const { data: roles = [] } = usePlatformRoles()
-
-  const {
-    handleSubmit,
-    control,
-    setValue,
-    reset,
-    formState: { errors },
-  } = useForm<EditUserFormValues>({
-    resolver: zodResolver(editUserSchema),
-    defaultValues: {
-      role_name: "",
-    },
-  })
-
-  const watchRoleName = useWatch({ control, name: "role_name" })
-
-  // Prepopulate form values on open, reset on close (e.g. via cross button or click outside)
-  useEffect(() => {
-    if (open && user) {
-      const rolesList = getRolesList(user)
-      const currentRole = rolesList[0] || ""
-      reset({
-        role_name: currentRole,
-      })
-    } else if (!open) {
-      reset({
-        role_name: "",
-      })
-    }
-  }, [user, open, reset])
-
-  const onSubmit = (data: EditUserFormValues) => {
-    if (!user) return
-    updateUser(
-      {
-        id: user.id,
-        role_names: [data.role_name],
-      },
-      {
-        onSuccess: () => {
-          toast.success("User role updated successfully!")
-          onOpenChange(false)
-          reset()
-        },
-        onError: (err: unknown) => {
-          const error = err as { response?: { data?: { detail?: string } } }
-          const detail = error?.response?.data?.detail || "Failed to update user role"
-          toast.error(detail)
-        },
-      }
-    )
-  }
-
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-125">
-        <DialogHeader>
-          <DialogTitle>Edit Role for: {user?.full_name}</DialogTitle>
-          <DialogDescription>
-            Select a role type. Assign the user the appropriate access level.
-          </DialogDescription>
-        </DialogHeader>
-
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          {/* Email (Disabled) */}
-          <div className="space-y-1.5">
-            <Label className="text-foreground">Email</Label>
-            <Input
-              value={user?.email || ""}
-              disabled
-              className="bg-muted text-muted-foreground opacity-100 cursor-not-allowed"
-            />
-          </div>
-
-          {/* User Role (Select dropdown) */}
-          <div className="space-y-1.5">
-            <Label className="text-foreground">Role Type <span className="text-destructive">*</span></Label>
-            <Select
-              value={watchRoleName}
-              onValueChange={(val) => setValue("role_name", val, { shouldValidate: true })}
-            >
-              <SelectTrigger className="bg-background h-10 w-full">
-                <SelectValue placeholder="Select a role" />
-              </SelectTrigger>
-              <SelectContent>
-                {roles.map((role) => (
-                  <SelectItem key={role.id} value={role.name} className="cursor-pointer">
-                    {role.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            {errors.role_name && (
-              <span className="text-xs font-medium text-red-500 block mt-1">
-                {errors.role_name.message}
-              </span>
-            )}
-          </div>
-
-          {/* Dialog Footer Actions */}
-          <DialogFooter className="gap-2 sm:gap-0 border-t border-slate-100 pt-4 ">
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={() => {
-                onOpenChange(false)
-                reset()
-              }}
-            >
-              Cancel
-            </Button>
-            <Button type="submit" disabled={isPending}>
-              {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Save Changes
-            </Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
   )
 }
