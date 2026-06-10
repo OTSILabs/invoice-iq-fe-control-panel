@@ -105,58 +105,116 @@ export function PlanForm({
 
   return (
     <form id={formId} onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+
+      {/* Description — full width */}
       <div className="space-y-1">
-        <InputField id="description" label={<RequiredLabel>Description</RequiredLabel>} placeholder="e.g. Starter tier for basic users" {...register("description")} />
+        <InputField
+          id="description"
+          label={<RequiredLabel>Description</RequiredLabel>}
+          placeholder="e.g. Starter tier for basic users"
+          {...register("description")}
+        />
         <FieldError message={errors.description?.message} />
       </div>
 
-      <div className="space-y-1">
-        <InputField id="plan_type" label={<RequiredLabel>Plan Type</RequiredLabel>} type="select" {...register("plan_type")}>
-          <option value="Basic">Basic</option>
-          <option value="Free Trial">Free Trial</option>
-        </InputField>
-        <FieldError message={errors.plan_type?.message} />
+      {/* Plan Type + Plan Interval — side by side */}
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-1">
+          <InputField
+            id="plan_type"
+            label={<RequiredLabel>Plan Type</RequiredLabel>}
+            type="select"
+            {...register("plan_type")}
+          >
+            <option value="Basic">Basic</option>
+            <option value="Free Trial">Free Trial</option>
+          </InputField>
+          <FieldError message={errors.plan_type?.message} />
+        </div>
+
+        <div className="space-y-1">
+          <InputField
+            id="plan_interval"
+            label={<RequiredLabel>Plan Interval</RequiredLabel>}
+            type="select"
+            {...register("plan_interval")}
+          >
+            <option value="Monthly">Monthly</option>
+            <option value="Yearly">Yearly</option>
+          </InputField>
+          <FieldError message={errors.plan_interval?.message} />
+        </div>
       </div>
 
-      <div className="space-y-1">
-        <InputField id="plan_interval" label={<RequiredLabel>Plan Interval</RequiredLabel>} type="select" {...register("plan_interval")}>
-          <option value="Monthly">Monthly</option>
-          <option value="Yearly">Yearly</option>
-        </InputField>
-        <FieldError message={errors.plan_interval?.message} />
+      {/* Price + Currency — side by side */}
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-1">
+          <InputField
+            id="price_per_invoice_amount"
+            label={<RequiredLabel>Price Per Invoice</RequiredLabel>}
+            type="number"
+            step="0.01"
+            min="0"
+            {...register("price_per_invoice_amount")}
+          />
+          <FieldError message={errors.price_per_invoice_amount?.message} />
+        </div>
+
+        <div className="space-y-1">
+          <InputField
+            id="price_per_invoice_currency"
+            label={<RequiredLabel>Currency</RequiredLabel>}
+            type="select"
+            {...register("price_per_invoice_currency")}
+          >
+            <option value="INR">INR</option>
+            <option value="USD">USD</option>
+          </InputField>
+          <FieldError message={errors.price_per_invoice_currency?.message} />
+        </div>
       </div>
 
-      <div className="space-y-1">
-        <InputField id="price_per_invoice_amount" label={<RequiredLabel>Price Per Invoice</RequiredLabel>} type="number" step="0.01" min="0" {...register("price_per_invoice_amount")} />
-        <FieldError message={errors.price_per_invoice_amount?.message} />
-      </div>
-
-      <div className="space-y-1">
-        <InputField id="price_per_invoice_currency" label={<RequiredLabel>Currency</RequiredLabel>} type="select" {...register("price_per_invoice_currency")}>
-          <option value="INR">INR</option>
-          <option value="USD">USD</option>
-        </InputField>
-        <FieldError message={errors.price_per_invoice_currency?.message} />
-      </div>
-
-      <div className="flex items-center justify-between border-t border-border py-2">
-        <Label htmlFor="is_active" className="font-medium text-foreground">Active</Label>
+      {/* Active toggle */}
+      <div className="flex items-center justify-between rounded-lg border border-border bg-muted/30 px-4 py-3">
+        <div>
+          <Label htmlFor="is_active" className="font-medium text-foreground">Active</Label>
+          <p className="text-xs text-muted-foreground mt-0.5">Plan is immediately available after saving</p>
+        </div>
         <Controller
           name="is_active"
           control={control}
           render={({ field }) => (
-            <Switch id="is_active" checked={field.value} onCheckedChange={field.onChange} className="data-[state=checked]:bg-primary" />
+            <Switch
+              id="is_active"
+              checked={field.value}
+              onCheckedChange={field.onChange}
+              className="data-[state=checked]:bg-primary"
+            />
           )}
         />
       </div>
 
+      {/* Footer buttons */}
       {showFooter && (
         <div className="flex gap-3 border-t border-border pt-4">
-          <Button type="button" variant="outline" className="w-1/2" onClick={onCancel} disabled={createPlan.isPending}>
+          <Button
+            type="button"
+            variant="outline"
+            className="w-1/2"
+            onClick={onCancel}
+            disabled={createPlan.isPending}
+          >
             Cancel
           </Button>
-          <Button type="submit" className="w-1/2 font-medium" disabled={createPlan.isPending}>
-            {createPlan.isPending ? <><Loader2 className="mr-2 size-4 animate-spin" />Saving...</> : "Save"}
+          <Button
+            type="submit"
+            className="w-1/2 font-medium"
+            disabled={createPlan.isPending}
+          >
+            {createPlan.isPending
+              ? <><Loader2 className="mr-2 size-4 animate-spin" />Saving...</>
+              : "Save Plan"
+            }
           </Button>
         </div>
       )}
@@ -171,7 +229,7 @@ export function PlanFormDialog({ open, onOpenChange, mode = "create", plan = nul
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[85vh] gap-0 overflow-hidden p-0 sm:max-w-md">
+      <DialogContent className="max-h-[85vh] gap-0 overflow-hidden p-0 sm:max-w-lg">
         <DialogHeader className="border-b border-border px-6 py-5">
           <DialogTitle className="flex items-center gap-2 text-lg font-bold">
             <CreditCard className="size-5 text-primary" />
