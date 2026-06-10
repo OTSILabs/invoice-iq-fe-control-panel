@@ -1,6 +1,5 @@
 import { useForm, Controller } from "react-hook-form"
 import { CreditCard, Loader2 } from "lucide-react"
-import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { toast } from "sonner"
 
@@ -11,22 +10,11 @@ import { InputField } from "@/components/ui/input-field"
 import { Label } from "@/components/ui/label"
 import { useCreatePlanMutation } from "@/api/hooks/usePlans"
 import type { Plan } from "@/types"
-
-// ─── Schema ───────────────────────────────────────────────────────────────────
-
-const planSchema = z.object({
-  description:                z.string().min(1, "Description is required").max(255, "Description is too long"),
-  plan_type:                  z.string().min(1, "Plan type is required"),
-  plan_interval:              z.string().min(1, "Plan interval is required"),
-  price_per_invoice_amount:   z.string().min(1, "Price is required").refine(
-                                (val) => !isNaN(Number(val)) && Number(val) > 0,
-                                { message: "Price must be a valid non-negative number" }
-                              ),
-  price_per_invoice_currency: z.string().min(1, "Currency is required"),
-  is_active:                  z.boolean(),
-})
-
-type FormValues = z.infer<typeof planSchema>
+import {
+  planSchema,
+  type PlanFormValues as FormValues,
+  DEFAULT_PLAN_VALUES,
+} from "@/schemas/plan-schema"
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -46,15 +34,6 @@ interface PlanFormDialogProps {
   plan?: Plan | null
 }
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-const RequiredLabel = ({ children }: { children: React.ReactNode }) => (
-  <>{children} <span className="text-destructive">*</span></>
-)
-
-const FieldError = ({ message }: { message?: string }) =>
-  message ? <span className="px-1 text-[11px] font-medium text-destructive">{message}</span> : null
-
 // ─── PlanForm ─────────────────────────────────────────────────────────────────
 
 export function PlanForm({
@@ -69,14 +48,7 @@ export function PlanForm({
 
   const { register, handleSubmit, control, reset, formState: { errors } } = useForm<FormValues>({
     resolver: zodResolver(planSchema),
-    defaultValues: {
-      description:                plan?.description ?? "",
-      plan_type:                  plan?.plan_type ?? "Basic",
-      plan_interval:              plan?.plan_interval ?? "Monthly",
-      price_per_invoice_amount:   plan?.price_per_invoice_amount ? String(plan.price_per_invoice_amount) : "0",
-      price_per_invoice_currency: plan?.price_per_invoice_currency ?? "USD",
-      is_active:                  plan?.is_active ?? true,
-    },
+    defaultValues: DEFAULT_PLAN_VALUES(plan),
   })
 
   const onSubmit = async (data: FormValues) => {
@@ -104,17 +76,18 @@ export function PlanForm({
   }
 
   return (
-    <form id={formId} onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form id={formId} onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
 
       {/* Description — full width */}
       <div className="space-y-1">
         <InputField
           id="description"
-          label={<RequiredLabel>Description</RequiredLabel>}
+          label="Description"
+          required
+          error={errors.description?.message}
           placeholder="e.g. Starter tier for basic users"
           {...register("description")}
         />
-        <FieldError message={errors.description?.message} />
       </div>
 
       {/* Plan Type + Plan Interval — side by side */}
@@ -122,27 +95,29 @@ export function PlanForm({
         <div className="space-y-1">
           <InputField
             id="plan_type"
-            label={<RequiredLabel>Plan Type</RequiredLabel>}
+            label="Plan Type"
             type="select"
+            required
+            error={errors.plan_type?.message}
             {...register("plan_type")}
           >
             <option value="Basic">Basic</option>
             <option value="Free Trial">Free Trial</option>
           </InputField>
-          <FieldError message={errors.plan_type?.message} />
         </div>
 
         <div className="space-y-1">
           <InputField
             id="plan_interval"
-            label={<RequiredLabel>Plan Interval</RequiredLabel>}
+            label="Plan Interval"
             type="select"
+            required
+            error={errors.plan_interval?.message}
             {...register("plan_interval")}
           >
             <option value="Monthly">Monthly</option>
             <option value="Yearly">Yearly</option>
           </InputField>
-          <FieldError message={errors.plan_interval?.message} />
         </div>
       </div>
 
@@ -151,26 +126,28 @@ export function PlanForm({
         <div className="space-y-1">
           <InputField
             id="price_per_invoice_amount"
-            label={<RequiredLabel>Price Per Invoice</RequiredLabel>}
+            label="Price Per Invoice"
             type="number"
             step="0.01"
             min="0"
+            required
+            error={errors.price_per_invoice_amount?.message}
             {...register("price_per_invoice_amount")}
           />
-          <FieldError message={errors.price_per_invoice_amount?.message} />
         </div>
 
         <div className="space-y-1">
           <InputField
             id="price_per_invoice_currency"
-            label={<RequiredLabel>Currency</RequiredLabel>}
+            label="Currency"
             type="select"
+            required
+            error={errors.price_per_invoice_currency?.message}
             {...register("price_per_invoice_currency")}
           >
             <option value="INR">INR</option>
             <option value="USD">USD</option>
           </InputField>
-          <FieldError message={errors.price_per_invoice_currency?.message} />
         </div>
       </div>
 

@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom"
 import { CreditCard } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { PlanForm } from "./plan-form-dailog"
+import { PlanForm } from "./modals/plan-form-dailog"
 
 export function CreatePlan() {
   const navigate = useNavigate()

@@ -2,11 +2,10 @@ import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog"
 import { InputField } from "../../../components/ui/input-field"
-import { FieldLabel } from "../../../components/ui/field"
 import { Plus, Minus, ArrowLeft, Loader2 } from "lucide-react"
 import { useFormContext } from "react-hook-form"
 import type { Organization, Plan } from "@/types"
-import { PlanForm } from "@/pages/plans/plan-form-dailog"
+import { PlanForm } from "@/pages/plans/modals/plan-form-dailog"
 
 interface OnboardingFormStepProps {
   existingOrganization?: { id: string; name: string }
@@ -68,6 +67,7 @@ export function OnboardingFormStep({
             id="create-all-form"
             onSubmit={onSubmitForm}
             className="space-y-8"
+            noValidate
           >
             {/* Organization Section */}
             <div className="space-y-4">
@@ -83,74 +83,59 @@ export function OnboardingFormStep({
               </div>
 
               <div className="space-y-1">
-                <FieldLabel
-                  htmlFor={isCreatingOrg ? "orgName" : "existingOrgSelect"}
-                >
-                  {existingOrganization
-                    ? "Organization"
-                    : isCreatingOrg
-                    ? "Organization name"
-                    : "Organization"}{" "}
-                  <span className="text-destructive">*</span>
-                </FieldLabel>
-
                 {!isCreatingOrg ? (
                   <>
-                  <InputField
-                    id="existingOrgSelect"
-                    type="select"
-                    value={selectedOrgId}
-                    onChange={(e) => {
-                      if (e.target.value === "__create__") {
-                        handleToggleCreatingOrg(true);
-                      } else {
-                        handleOrgChange(e as React.ChangeEvent<HTMLSelectElement>);
-                      }
-                    }}
-                  >
-                    <option value="" disabled>Select Organization</option>
+                    <InputField
+                      id="existingOrgSelect"
+                      label="Organization"
+                      required
+                      type="select"
+                      value={selectedOrgId}
+                      onChange={(e) => {
+                        if (e.target.value === "__create__") {
+                          handleToggleCreatingOrg(true);
+                        } else {
+                          handleOrgChange(e as React.ChangeEvent<HTMLSelectElement>);
+                        }
+                      }}
+                    >
+                      <option value="" disabled>Select Organization</option>
 
-                    {isOrgsLoading ? (
-                      <option value="" disabled>
-                        Loading organizations…
-                      </option>
-                    ) : organizations.length === 0 ? (
-                      <option value="" disabled>
-                        No organizations found
-                      </option>
-                    ) : (
-                      organizations.map((org) => (
-                        <option key={org.id} value={org.id}>
-                          {org.name}
+                      {isOrgsLoading ? (
+                        <option value="" disabled>
+                          Loading organizations…
                         </option>
-                      ))
-                    )}
-
-                     {/* <option
-        value="__create__"
-        className="text-primary font-medium border-t border-border center"
-      >
-        + Create organization
-      </option> */}
-                  </InputField>
-                   <Button
-      // type="button"
-     variant="text"
+                      ) : organizations.length === 0 ? (
+                        <option value="" disabled>
+                          No organizations found
+                        </option>
+                      ) : (
+                        organizations.map((org) => (
+                          <option key={org.id} value={org.id}>
+                            {org.name}
+                          </option>
+                        ))
+                      )}
+                    </InputField>
+                    <Button
+                      // type="button"
+                      variant="text"
                       size="xs"
-                      className= "text-primary hover:text-primary/80"
-          onClick={() => handleToggleCreatingOrg(true)}
-     
-    >
-      <Plus className="size-3" />
-      Create organization
-    </Button>
+                      className="text-primary hover:text-primary/80 mt-1"
+                      onClick={() => handleToggleCreatingOrg(true)}
+                    >
+                      <Plus className="size-3" />
+                      Create organization
+                    </Button>
                   </>
-                  
                 ) : (
                   <>
                     <div className="flex items-center gap-2">
                       <InputField
                         id="orgName"
+                        label="Organization name"
+                        required
+                        error={errors.orgName?.message ? String(errors.orgName.message) : undefined}
                         placeholder="e.g. Acme Corp"
                         className="flex-1"
                         {...register("orgName")}
@@ -159,17 +144,12 @@ export function OnboardingFormStep({
                         type="button"
                         variant="ghost"
                         size="sm"
-                        className="h-9 shrink-0 text-xs text-muted-foreground hover:text-foreground cursor-pointer"
+                        className="h-9 shrink-0 text-xs text-muted-foreground hover:text-foreground cursor-pointer self-end"
                         onClick={() => handleToggleCreatingOrg(false)}
                       >
                         Cancel
                       </Button>
                     </div>
-                    {errors.orgName && (
-                      <span className="px-0.5 text-[11px] font-medium text-destructive">
-                        {String(errors.orgName.message)}
-                      </span>
-                    )}
                   </>
                 )}
 
@@ -196,31 +176,25 @@ export function OnboardingFormStep({
                   <InputField
                     id="slug"
                     label="Tenant Slug"
+                    required
+                    error={errors.slug?.message ? String(errors.slug.message) : undefined}
                     placeholder="acme-corp"
                     {...register("slug")}
                   />
-                  {errors.slug && (
-                    <span className="px-1 text-[11px] font-medium text-destructive">
-                      {String(errors.slug.message)}
-                    </span>
-                  )}
                 </div>
                 <div className="space-y-1">
                   <InputField
                     id="role"
                     label="Tenant Role"
                     type="select"
+                    required
+                    error={errors.tenant_role?.message ? String(errors.tenant_role.message) : undefined}
                     {...register("tenant_role")}
                   >
                     <option value="" disabled>Select Tenant Role</option>
                     <option value="sandbox">sandbox</option>
                     <option value="prod">prod</option>
                   </InputField>
-                  {errors.tenant_role && (
-                    <span className="px-1 text-[11px] font-medium text-destructive">
-                      {String(errors.tenant_role.message)}
-                    </span>
-                  )}
                 </div>
               </div>
               <div className="pt-4">
@@ -232,42 +206,33 @@ export function OnboardingFormStep({
                     <InputField
                       id="adminName"
                       label="Full Name"
+                      required
+                      error={errors.admin_full_name?.message ? String(errors.admin_full_name.message) : undefined}
                       placeholder="e.g. John Doe"
                       {...register("admin_full_name")}
                     />
-                    {errors.admin_full_name && (
-                      <span className="px-1 text-[11px] font-medium text-destructive">
-                        {String(errors.admin_full_name.message)}
-                      </span>
-                    )}
                   </div>
                   <div className="space-y-1">
                     <InputField
                       id="adminEmail"
                       label="Email Address"
                       type="email"
+                      required
+                      error={errors.admin_email?.message ? String(errors.admin_email.message) : undefined}
                       placeholder="john@example.com"
                       {...register("admin_email")}
                     />
-                    {errors.admin_email && (
-                      <span className="px-1 text-[11px] font-medium text-destructive">
-                        {String(errors.admin_email.message)}
-                      </span>
-                    )}
                   </div>
                   <div className="space-y-1 sm:col-span-2">
                     <InputField
                       id="adminPass"
                       label="Temporary Password"
                       type="password"
+                      required
+                      error={errors.admin_password?.message ? String(errors.admin_password.message) : undefined}
                       placeholder="Enter a secure password"
                       {...register("admin_password")}
                     />
-                    {errors.admin_password && (
-                      <span className="px-1 text-[11px] font-medium text-destructive">
-                        {String(errors.admin_password.message)}
-                      </span>
-                    )}
                   </div>
                 </div>
               </div>
@@ -284,41 +249,40 @@ export function OnboardingFormStep({
                 </p>
               </div>
               <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <label
-                    htmlFor="planSelect"
-                    className="text-xs font-semibold leading-none text-foreground"
-                  >
-                    Select Plan <span className="text-destructive">*</span>
-                  </label>
-                  {isCreatingPlan ? (
-                    <Button
-                     variant="text"
-                      size="xs"
-                     className= "text-primary hover:text-primary/80"
-                      onClick={() => setIsCreatingPlan(false)}
-                    >
-                      <ArrowLeft className="mr-1 h-3 w-3" /> Select Plan
-                    </Button>
-                  ) : (
-                    <Button
-                      // type="button"
-                      variant="text"
-                      size="xs"
-                      className= "text-primary hover:text-primary/80"
-                      onClick={() => {
-                        setValue("plan_id", "")
-                        setIsCreatingPlan(true)
-                      }}
-                    >
-                      <Plus className="mr-1 h-3 w-3" /> Add Plan
-                    </Button>
-                  )}
-                </div>
                 <InputField
                   id="planSelect"
                   type="select"
                   disabled={isCreatingPlan}
+                  label={
+                    <div className="flex items-center justify-between w-full">
+                      <span>Select Plan</span>
+                      {isCreatingPlan ? (
+                        <Button
+                          type="button"
+                          variant="text"
+                          size="xs"
+                          className="text-primary hover:text-primary/80"
+                          onClick={() => setIsCreatingPlan(false)}
+                        >
+                          <ArrowLeft className="mr-1 h-3 w-3" /> Select Plan
+                        </Button>
+                      ) : (
+                        <Button
+                          type="button"
+                          variant="text"
+                          size="xs"
+                          className="text-primary hover:text-primary/80"
+                          onClick={() => {
+                            setValue("plan_id", "")
+                            setIsCreatingPlan(true)
+                          }}
+                        >
+                          <Plus className="mr-1 h-3 w-3" /> Add Plan
+                        </Button>
+                      )}
+                    </div>
+                  }
+                  required
                   {...register("plan_id")}
                 >
                   <option value="" disabled>

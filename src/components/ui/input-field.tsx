@@ -8,15 +8,17 @@ export interface InputFieldProps extends React.InputHTMLAttributes<HTMLInputElem
   description?: React.ReactNode
   containerClassName?: string
   options?: { label: string; value: string | number }[]
+  error?: string
 }
 
 export const InputField = React.forwardRef<HTMLInputElement | HTMLSelectElement, InputFieldProps>(
-  ({ label, description, id, containerClassName, type, options, children, className, ...props }, ref) => {
+  ({ label, description, id, containerClassName, type, options, children, className, required, error, ...props }, ref) => {
     return (
       <Field className={containerClassName}>
         {label && (
           <FieldLabel htmlFor={id} className="text-sm font-medium text-foreground">
             {label}
+            {required && <span className="text-destructive ml-0.5">*</span>}
           </FieldLabel>
         )}
 
@@ -63,6 +65,12 @@ export const InputField = React.forwardRef<HTMLInputElement | HTMLSelectElement,
           <FieldDescription className="text-xs text-muted-foreground">
             {description}
           </FieldDescription>
+        )}
+
+        {error && (
+          <span className="px-1 text-[11px] font-medium text-destructive">
+            {error}
+          </span>
         )}
       </Field>
     )
