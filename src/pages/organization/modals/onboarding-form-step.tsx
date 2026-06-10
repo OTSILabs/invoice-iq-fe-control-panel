@@ -4,9 +4,9 @@ import { DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/co
 import { InputField } from "../../../components/ui/input-field"
 import { FieldLabel } from "../../../components/ui/field"
 import { Plus, Minus, ArrowLeft, Loader2 } from "lucide-react"
-import { PlanForm } from "@/pages/plans/plan-form-dailog"
 import { useFormContext } from "react-hook-form"
 import type { Organization, Plan } from "@/types"
+import { PlanForm } from "@/pages/plans/plan-form-dailog"
 
 interface OnboardingFormStepProps {
   existingOrganization?: { id: string; name: string }
@@ -63,7 +63,7 @@ export function OnboardingFormStep({
       </DialogHeader>
 
       <ScrollArea className="h-full min-h-0 min-w-0 flex-1 bg-muted/10">
-        <div className="p-6 md:p-8 pb-16 space-y-8">
+        <div className="p-6 md:p-8 pb-16 space-y-8 bg-popover">
           <form
             id="create-all-form"
             onSubmit={onSubmitForm}
