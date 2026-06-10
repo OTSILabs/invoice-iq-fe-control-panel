@@ -18,7 +18,7 @@ export const InputField = React.forwardRef<HTMLInputElement | HTMLSelectElement,
         {label && (
           <FieldLabel htmlFor={id} className="text-sm font-medium text-foreground">
             {label}
-            {required && <span className="text-destructive ml-0.5">*</span>}
+            {required && <span className="text-destructive ml-0.1">*</span>}
           </FieldLabel>
         )}
 
