@@ -9,6 +9,7 @@ import { AppSidebar } from "./app-sidebar"
 import { AppBreadcrumb } from "./AppBreadcrumb"
 import { TopLoader } from "./TopLoader"
 import { resolveBreadcrumbs } from "@/lib/utils"
+import { PoweredByFooter } from "@/components/poweredby"
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Root layout — wraps every authenticated page.
@@ -78,12 +79,7 @@ export function Layout() {
             </main>
 
             {/* ── Footer ── */}
-            <footer className="h-10 shrink-0 mt-auto flex items-center justify-center gap-1.5 border-t border-border bg-footer text-footer-foreground text-[11px] tracking-tight">
-              Powered by{" "}
-              <strong className="text-primary font-bold text-[11px]">OTSI</strong>
-              <span className="text-border mx-0.5">|</span>
-              Copyright © 2026 Object Technology Solutions, Inc. All rights reserved.
-            </footer>
+            <PoweredByFooter className="h-10 border-t border-border bg-footer text-footer-foreground" />
 
           </SidebarInset>
         </SidebarProvider>
