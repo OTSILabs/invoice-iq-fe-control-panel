@@ -2,6 +2,8 @@ import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog"
 import { InputField } from "../../../components/ui/input-field"
+import { Input } from "@/components/ui/input"
+import { Field, FieldLabel } from "@/components/ui/field"
 import { Plus, Minus, ArrowLeft, Loader2 } from "lucide-react"
 import { useFormContext } from "react-hook-form"
 import type { Organization, Plan } from "@/types"
@@ -129,28 +131,34 @@ export function OnboardingFormStep({
                     </Button>
                   </>
                 ) : (
-                  <>
+                  <Field>
+                    <FieldLabel htmlFor="orgName" className="text-sm font-medium text-foreground">
+                      Organization name
+                      <span className="text-destructive ml-0.5">*</span>
+                    </FieldLabel>
                     <div className="flex items-center gap-2">
-                      <InputField
+                      <Input
                         id="orgName"
-                        label="Organization name"
-                        required
-                        error={errors.orgName?.message ? String(errors.orgName.message) : undefined}
                         placeholder="e.g. Acme Corp"
-                        className="flex-1"
+                        className="h-9 flex-1 rounded-lg border border-input bg-inherit px-3 text-sm text-foreground placeholder:text-muted-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:border-primary disabled:cursor-not-allowed disabled:opacity-50"
                         {...register("orgName")}
                       />
                       <Button
                         type="button"
                         variant="ghost"
                         size="sm"
-                        className="h-9 shrink-0 text-xs text-muted-foreground hover:text-foreground cursor-pointer self-end"
+                        className="h-9 shrink-0 text-xs text-muted-foreground hover:text-foreground cursor-pointer"
                         onClick={() => handleToggleCreatingOrg(false)}
                       >
                         Cancel
                       </Button>
                     </div>
-                  </>
+                    {errors.orgName?.message && (
+                      <span className="px-1 text-[11px] font-medium text-destructive">
+                        {String(errors.orgName.message)}
+                      </span>
+                    )}
+                  </Field>
                 )}
 
                 {existingOrganization && (
@@ -255,7 +263,10 @@ export function OnboardingFormStep({
                   disabled={isCreatingPlan}
                   label={
                     <div className="flex items-center justify-between w-full">
-                      <span>Select Plan</span>
+                      <span>
+                        Select Plan
+                        <span className="text-destructive ml-0.5">*</span>
+                      </span>
                       {isCreatingPlan ? (
                         <Button
                           type="button"
@@ -282,7 +293,6 @@ export function OnboardingFormStep({
                       )}
                     </div>
                   }
-                  required
                   {...register("plan_id")}
                 >
                   <option value="" disabled>
