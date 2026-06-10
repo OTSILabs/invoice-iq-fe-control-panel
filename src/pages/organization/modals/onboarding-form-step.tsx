@@ -348,7 +348,7 @@ export function OnboardingFormStep({
           size={"sm"}
           form={isCreatingPlan ? "inline-plan-form" : "create-all-form"}
           className="w-full px-3 font-medium bg-primary hover:bg-primary/90 text-white shadow-none sm:w-auto cursor-pointer"
-          disabled={isPending || (!isCreatingPlan && !isFormReadyToSubmit)}
+          disabled={isPending || !isFormReadyToSubmit}
         >
           {isPending ? (
             <Loader2 className="mr-2 size-4 animate-spin" />
