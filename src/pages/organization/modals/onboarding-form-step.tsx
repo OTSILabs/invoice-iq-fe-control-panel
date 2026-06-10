@@ -4,7 +4,7 @@ import { DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/co
 import { InputField } from "../../../components/ui/input-field"
 import { FieldLabel } from "../../../components/ui/field"
 import { Plus, Minus, ArrowLeft, Loader2 } from "lucide-react"
-import { PlanForm } from "@/pages/plans/plan-form-dialog"
+import { PlanForm } from "@/pages/plans/plan-form-dailog"
 import { useFormContext } from "react-hook-form"
 import type { Organization, Plan } from "@/types"
 

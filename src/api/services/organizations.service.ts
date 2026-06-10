@@ -12,6 +12,11 @@ export const organizationsService = {
     return response.data
   },
 
+  getConfigurationKeys: async (): Promise<any[]> => {
+    const response = await api.get<any[]>("/api/configuration-keys")
+    return response.data
+  },
+
   create: async (payload: any): Promise<Organization> => {
     const response = await api.post<Organization>("/organisations", payload)
     return response.data

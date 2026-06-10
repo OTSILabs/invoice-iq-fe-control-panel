@@ -3,9 +3,9 @@ import {  Building2, CreditCard, Database, Users as UsersIcon } from "lucide-rea
 import type { LucideIcon } from "lucide-react"
 import { Organizations } from "@/pages/organization/organizations"
 import { Plans } from "@/pages/plans/plans"
-import { CreatePlan } from "@/pages/plans/create-plan"
 import { Users } from "@/pages/user/users"
 import { ErpSettings } from "@/pages/erp-setting/erp-setting"
+import { CreatePlan } from "@/pages/plans/create-plan"
 
 export type AppRoute = {
   path: string;

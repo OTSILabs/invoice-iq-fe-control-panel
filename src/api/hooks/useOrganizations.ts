@@ -162,6 +162,14 @@ export const useEntityConfigurations = (entityId: string, entityType: 'organizat
   })
 }
 
+export const useConfigurationKeys = (enabled = true) => {
+  return useQuery({
+    queryKey: ["configuration-keys"],
+    queryFn: () => organizationsService.getConfigurationKeys(),
+    enabled
+  })
+}
+
 export const useUpdateEntityConfigurations = (entityId: string, entityType: 'organization' | 'tenant') => {
   const queryClient = useQueryClient()
   const queryKeyType = entityType === 'organization' ? 'organizations' : 'tenants'

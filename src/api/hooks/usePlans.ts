@@ -8,7 +8,7 @@ export const usePlans = () => {
   });
 };
 
-export const useCreatePlanMutation = () => {
+export const useCreatePlan = () => {
   const queryClient = useQueryClient();
   
   return useMutation({
@@ -18,3 +18,6 @@ export const useCreatePlanMutation = () => {
     },
   });
 };
+
+// Backwards compatibility alias
+export const useCreatePlanMutation = useCreatePlan;
