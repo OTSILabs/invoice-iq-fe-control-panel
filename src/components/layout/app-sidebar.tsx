@@ -1,7 +1,7 @@
 import * as React from "react"
 import { Link, useLocation } from "react-router-dom"
 import { FileCheck2, ChevronUp, User2, LogOut, PanelLeftClose, PanelLeftOpen } from "lucide-react"
-import { decodeJWT } from "@/lib/utils"
+import { getDecodedToken } from "@/lib/utils"
 import { APP_ROUTES } from "@/config/routes"
 import {
   Sidebar,
@@ -63,7 +63,7 @@ function SidebarLogoHeader() {
       {/* Collapse/expand icon — appears on hover */}
       <div
         className={cn(
-          "absolute right-3 flex items-center justify-center rounded-md p-1 text-sidebar-foreground/50 transition-all duration-150",
+          "absolute flex items-center justify-center rounded-md p-1 text-sidebar-foreground/50 transition-all duration-150",
           hovered ? "opacity-100" : "opacity-0",
           open && !isMobile ? "ml-auto" : ""
         )}
@@ -84,19 +84,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { open, isMobile } = useSidebar()
   const isCollapsed = !open && !isMobile
 
-  const tokenData = React.useMemo(() => {
-    try {
-      const stored = sessionStorage.getItem("token")
-      if (stored) {
-        const session = JSON.parse(stored)
-        const actualToken = session.access_token || session.token
-        if (actualToken) return decodeJWT(actualToken)
-      }
-    } catch (e) {
-      console.error(e)
-    }
-    return null
-  }, [])
+  const tokenData = React.useMemo(() => getDecodedToken(), [])
 
   const userName =
     tokenData?.name ||
@@ -128,13 +116,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 asChild
                 isActive={isActive}
                 className={cn(
-                  "h-9 rounded-lg text-[13.5px] font-medium transition-all duration-200 data-active:bg-blue-50! data-active:text-blue-700!",
+                  "h-9 rounded-lg text-sm font-medium transition-all duration-200 data-active:bg-blue-50! data-active:text-blue-700!",
                   isActive
                     ? "hover:bg-blue-100 hover:text-blue-800 border-l-2 border-blue-600 rounded-r-lg rounded-l-none pl-2.5"
                     : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 rounded-lg"
                 )}
               >
-                <Link to={route.path} className="flex items-center gap-2.5">
+                <Link to={route.path} className="flex items-center gap-2">
                   {Icon && (
                     <Icon
                       className={cn(
@@ -196,9 +184,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               </DropdownMenuTrigger>
 
               <DropdownMenuContent side="top" className="w-[--radix-popper-anchor-width] text-xs-fine">
-                <DropdownMenuItem className="gap-2 cursor-pointer">
-                  <User2 className="h-3.5 w-3.5 text-slate-500" />
-                  <span>Profile</span>
+                <DropdownMenuItem asChild className="gap-2 cursor-pointer">
+                  <Link to="/profile" className="flex w-full items-center gap-2">
+                    <User2 className="h-3.5 w-3.5 text-slate-500" />
+                    <span>Profile</span>
+                  </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   className="gap-2 cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50"

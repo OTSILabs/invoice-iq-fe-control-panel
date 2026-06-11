@@ -6,6 +6,7 @@ import { Plans } from "@/pages/plans/plans"
 import { Users } from "@/pages/user/users"
 import { ErpSettings } from "@/pages/erp-setting/erp-setting"
 import { CreatePlan } from "@/pages/plans/create-plan"
+import { Profile } from "@/pages/profile/profile"
 
 export type AppRoute = {
   path: string;
@@ -50,6 +51,13 @@ export const APP_ROUTES: AppRoute[] = [
     title: "Create Plan",
     icon: CreditCard,
     component: CreatePlan,
+    showInSidebar: false,
+  },
+  {
+    path: "/profile",
+    title: "My Profile",
+    icon: UsersIcon,
+    component: Profile,
     showInSidebar: false,
   }
 ]

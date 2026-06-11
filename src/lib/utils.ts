@@ -25,6 +25,20 @@ export function decodeJWT(token: string) {
   }
 }
 
+export function getDecodedToken(): any {
+  try {
+    const stored = sessionStorage.getItem("token")
+    if (stored) {
+      const session = JSON.parse(stored)
+      const actualToken = session.access_token || session.token
+      if (actualToken) return decodeJWT(actualToken)
+    }
+  } catch (e) {
+    console.error(e)
+  }
+  return null
+}
+
 export function getInitials(name: string): string {
   if (!name) return ""
   return name
@@ -33,6 +47,40 @@ export function getInitials(name: string): string {
     .slice(0, 2)
     .join("")
     .toUpperCase()
+}
+
+export function formatRole(role?: string | string[]): string {
+  if (!role) return "User"
+  const roleStr = Array.isArray(role) ? role[0] : role
+  if (!roleStr) return "User"
+  return roleStr
+    .split(/[_-]/)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ")
+}
+
+export function formatDate(dateInput?: string | number) {
+  if (!dateInput) return "N/A"
+  try {
+    const date = new Date(dateInput)
+    if (isNaN(date.getTime())) return String(dateInput)
+    
+    const day = date.getDate().toString().padStart(2, '0')
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    const month = months[date.getMonth()]
+    const year = date.getFullYear()
+    
+    let hours = date.getHours()
+    const minutes = date.getMinutes().toString().padStart(2, '0')
+    const ampm = hours >= 12 ? 'PM' : 'AM'
+    hours = hours % 12
+    hours = hours ? hours : 12 // the hour '0' should be '12'
+    const strTime = hours.toString().padStart(2, '0') + ':' + minutes + ' ' + ampm
+    
+    return `${day} ${month} ${year}, ${strTime}`
+  } catch {
+    return String(dateInput)
+  }
 }
 
 
