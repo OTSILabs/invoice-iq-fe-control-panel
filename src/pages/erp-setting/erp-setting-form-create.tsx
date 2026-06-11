@@ -19,65 +19,42 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { useCreateErpSettingMutation } from "@/api/hooks/useErp"
 
-const hasValidSettingsValue = (value: unknown): boolean => {
-  if (value === null || value === undefined) return false;
-  if (typeof value === "string") return value.trim().length > 0;
-  if (Array.isArray(value)) return value.length > 0 && value.every(hasValidSettingsValue);
-
-  if (typeof value === "object") {
-    const entries = Object.entries(value as Record<string, unknown>);
-    return (
-      entries.length > 0 &&
-      entries.every(([key, nestedValue]) => key.trim().length > 0 && hasValidSettingsValue(nestedValue))
-    );
+const isValid = (v: unknown): boolean => {
+  if (v === null || v === undefined) return false
+  if (typeof v === "string") return !!v.trim()
+  if (Array.isArray(v)) return v.length > 0 && v.every(isValid)
+  if (typeof v === "object") {
+    const ent = Object.entries(v as Record<string, unknown>)
+    return ent.length > 0 && ent.every(([k, nv]) => !!k.trim() && isValid(nv))
   }
-
-  return true;
-};
+  return true
+}
 
 const erpSettingSchema = z.object({
   erp_type: z.string().trim().min(1, "ERP type is required."),
-  settingsInput: z
-    .string()
-    .min(2, "Settings JSON is required.")
-    .superRefine((value, ctx) => {
-      try {
-        const parsed = JSON.parse(value);
-        if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
-          ctx.addIssue({
-            code: "custom",
-            message: "Settings must be a JSON object.",
-          });
-          return;
-        }
-
-        if (!hasValidSettingsValue(parsed)) {
-          ctx.addIssue({
-            code: "custom",
-            message: "Settings must include at least one valid key-value pair.",
-          });
-        }
-      } catch {
-        ctx.addIssue({
-          code: "custom",
-          message: "Settings must be valid JSON.",
-        });
+  settingsInput: z.string().min(2, "Settings JSON is required.").superRefine((val, ctx) => {
+    try {
+      const parsed = JSON.parse(val)
+      if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+        return ctx.addIssue({ code: "custom", message: "Settings must be a JSON object." })
       }
-    }),
-});
+      if (!isValid(parsed)) {
+        ctx.addIssue({ code: "custom", message: "Settings must include at least one valid key-value pair." })
+      }
+    } catch {
+      ctx.addIssue({ code: "custom", message: "Settings must be valid JSON." })
+    }
+  }),
+})
 
 type ErpSettingFormValues = z.infer<typeof erpSettingSchema>
 
 interface ErpSettingFormDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  usedErpTypes: string[]
 }
 
-export function ErpSettingFormDialog({
-  open,
-  onOpenChange,
-}: ErpSettingFormDialogProps) {
+export function ErpSettingFormDialog({ open, onOpenChange }: ErpSettingFormDialogProps) {
   const { mutate: createErpSetting, isPending } = useCreateErpSettingMutation()
 
   const {
@@ -87,41 +64,27 @@ export function ErpSettingFormDialog({
     formState: { errors },
   } = useForm<ErpSettingFormValues>({
     resolver: zodResolver(erpSettingSchema),
-    defaultValues: {
-      erp_type: "",
-      settingsInput: "{\n  \n}",
-    },
+    defaultValues: { erp_type: "", settingsInput: "{\n  \n}" },
   })
 
-  // Clean form state when closing/opening modal
   useEffect(() => {
-    if (open) {
-      reset({
-        erp_type: "",
-        settingsInput: "{\n  \n}",
-      })
-    }
+    if (open) reset({ erp_type: "", settingsInput: "{\n  \n}" })
   }, [open, reset])
 
-  const onSubmit = (values: ErpSettingFormValues) => {
-    const parsedSettings = JSON.parse(values.settingsInput);
-
-    const payload = {
-      erp_type: values.erp_type,
-      settings: parsedSettings,
-    }
-
-    createErpSetting(payload, {
-      onSuccess: () => {
-        toast.success("ERP setting created successfully!")
-        onOpenChange(false)
-      },
-      onError: (err: unknown) => {
-        const error = err as { response?: { data?: { detail?: string } } }
-        const detail = error?.response?.data?.detail || "Failed to create ERP setting"
-        toast.error(detail)
-      },
-    })
+  const onSubmit = (vals: ErpSettingFormValues) => {
+    createErpSetting(
+      { erp_type: vals.erp_type, settings: JSON.parse(vals.settingsInput) },
+      {
+        onSuccess: () => {
+          toast.success("ERP setting created successfully!")
+          onOpenChange(false)
+        },
+        onError: (err: unknown) => {
+          const msg = (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail
+          toast.error(msg || "Failed to create ERP setting")
+        },
+      }
+    )
   }
 
   return (
@@ -135,27 +98,24 @@ export function ErpSettingFormDialog({
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-          {/* ERP Type */}
           <div className="space-y-1.5">
-            <Label htmlFor="erp_type" className="text-foreground/90 font-medium">ERP Type</Label>
+            <Label htmlFor="erp_type" className="text-foreground/90 font-medium">
+              ERP Type <span className="text-destructive ml-0.5">*</span>
+            </Label>
             <Input
               id="erp_type"
-              type="text"
               placeholder="e.g. sap, cw, oracle"
               {...register("erp_type")}
               className="bg-background h-10"
             />
             {errors.erp_type && (
-              <span className="text-xs font-medium text-red-500 block mt-1">
-                {errors.erp_type.message}
-              </span>
+              <span className="text-xs font-medium text-red-500 block mt-1">{errors.erp_type.message}</span>
             )}
           </div>
 
-          {/* Settings JSON */}
           <div className="space-y-1.5">
             <Label htmlFor="settingsInput" className="text-foreground/90 font-medium">
-              Settings (JSON)
+              Settings (JSON) <span className="text-destructive ml-0.5">*</span>
             </Label>
             <Textarea
               id="settingsInput"
@@ -165,9 +125,7 @@ export function ErpSettingFormDialog({
               className="font-mono text-xs bg-background border border-input rounded-md h-48 resize-none"
             />
             {errors.settingsInput ? (
-              <span className="text-xs font-medium text-red-500">
-                {errors.settingsInput.message}
-              </span>
+              <span className="text-xs font-medium text-red-500 block mt-1">{errors.settingsInput.message}</span>
             ) : (
               <span className="text-[10px] text-muted-foreground block">
                 Provide integration parameters as a valid JSON object.
@@ -175,14 +133,8 @@ export function ErpSettingFormDialog({
             )}
           </div>
 
-          {/* Footer Actions */}
           <DialogFooter className="gap-2 sm:gap-0 border-t border-slate-100 pt-4">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => onOpenChange(false)}
-              disabled={isPending}
-            >
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={isPending}>
               Cancel
             </Button>
             <Button type="submit" disabled={isPending}>
