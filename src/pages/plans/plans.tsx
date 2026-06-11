@@ -1,7 +1,6 @@
 import { useState, useMemo } from "react"
 import { useNavigate } from "react-router-dom"
-import { Plus, Loader2, AlertCircle, RefreshCw } from "lucide-react"
-
+import { Loader2, AlertCircle, RefreshCw } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -12,15 +11,12 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { usePlans } from "@/api/hooks/usePlans"
 import { cn } from "@/lib/utils"
 import type { Plan } from "@/types"
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+import { PlansHeader } from "./plans-header"
 
 const normalizePlanType = (type: string) => {
   const lower = String(type).toLowerCase()
   return lower === "free trail" ? "free trial" : lower
 }
-
-// ─── Columns ──────────────────────────────────────────────────────────────────
 
 const columns: CustomColumnDef<Plan>[] = [
   {
@@ -49,14 +45,17 @@ const columns: CustomColumnDef<Plan>[] = [
     accessorKey: "is_active",
     header: "Status",
     width: 100,
-    cell: ({ row }) => (
-      <Badge
-        variant={row.original.is_active ? "secondary" : "outline"}
-        className={row.original.is_active ? "border-emerald-200 bg-emerald-50 text-emerald-700" : "text-muted-foreground"}
-      >
-        {row.original.is_active ? "Active" : "Inactive"}
-      </Badge>
-    ),
+    cell: ({ row }) => {
+      const active = row.original.is_active
+      return (
+        <Badge
+          variant={active ? "secondary" : "outline"}
+          className={active ? "border-emerald-200 bg-emerald-50 text-emerald-700" : "text-muted-foreground"}
+        >
+          {active ? "Active" : "Inactive"}
+        </Badge>
+      )
+    },
   },
   {
     accessorKey: "description",
@@ -76,35 +75,30 @@ const columns: CustomColumnDef<Plan>[] = [
   },
 ]
 
-// ─── Component ────────────────────────────────────────────────────────────────
-
 export function Plans() {
   const { data: plans = [], isLoading, isError, refetch, isFetching } = usePlans()
   const navigate = useNavigate()
-
-  const [searchText, setSearchText]       = useState("")
-  const [status, setStatus]               = useState("all")
+  const [searchText, setSearchText] = useState("")
+  const [status, setStatus] = useState("all")
   const [planTypeFilter, setPlanTypeFilter] = useState("all")
 
   const statusFiltered = useMemo(() => {
     const q = searchText.trim().toLowerCase()
-    return plans.filter((plan) => {
-      const active = plan.is_active !== false
+    return plans.filter((p) => {
+      const active = p.is_active !== false
       if (status === "active" && !active) return false
       if (status === "inactive" && active) return false
-      if (!q) return true
-      return [plan.plan_type, plan.plan_interval, plan.price_per_invoice_currency, String(plan.price_per_invoice_amount), plan.description]
-        .filter(Boolean)
-        .some((v) => String(v).toLowerCase().includes(q))
+      return !q || [p.plan_type, p.plan_interval, p.price_per_invoice_currency, p.price_per_invoice_amount, p.description]
+        .some((v) => v && String(v).toLowerCase().includes(q))
     })
   }, [plans, searchText, status])
 
   const typeCounts = useMemo(() =>
-    statusFiltered.reduce((acc, plan) => {
-      acc.all += 1
-      const t = normalizePlanType(plan.plan_type)
-      if (t === "basic") acc.basic += 1
-      else if (t === "free trial") acc.freeTrial += 1
+    statusFiltered.reduce((acc, p) => {
+      acc.all++
+      const t = normalizePlanType(p.plan_type)
+      if (t === "basic") acc.basic++
+      else if (t === "free trial") acc.freeTrial++
       return acc
     }, { all: 0, basic: 0, freeTrial: 0 }),
   [statusFiltered])
@@ -114,8 +108,6 @@ export function Plans() {
       ? statusFiltered
       : statusFiltered.filter((p) => normalizePlanType(p.plan_type) === normalizePlanType(planTypeFilter)),
   [planTypeFilter, statusFiltered])
-
-  // ─── States ───────────────────────────────────────────────────────────────
 
   if (isLoading) return (
     <div className="flex min-h-[50vh] flex-col items-center justify-center gap-3">
@@ -139,21 +131,9 @@ export function Plans() {
     </div>
   )
 
-  // ─── Render ───────────────────────────────────────────────────────────────
-
   return (
-    
-      <div className="flex w-full animate-in flex-col gap-6 pb-12 duration-200 fade-in">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
-        <div>
-          <h1 className="text-lg font-semibold tracking-tight text-foreground">Plans & Pricing</h1>
-          <p className="text-xs text-muted-foreground mt-1">Manage your subscription configurations.</p>
-        </div>
-        <Button size="sm" onClick={() => navigate("/plan/create")} className="w-full gap-1.5 px-3 sm:w-auto">
-          <Plus className="size-4" /> Create Plan
-        </Button>
-      </div>
+    <div className="flex w-full animate-in flex-col gap-6 pb-12 duration-200 fade-in">
+      <PlansHeader onCreateClick={() => navigate("/plan/create")} />
 
       <Card className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border-border p-0">
         <CardContent className="flex min-h-0 flex-1 flex-col p-0">
