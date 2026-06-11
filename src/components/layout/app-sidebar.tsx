@@ -53,8 +53,8 @@ function SidebarLogoHeader() {
       {/* App name — visible when expanded */}
       <span
         className={cn(
-          "ml-3 text-sm font-semibold text-sidebar-foreground tracking-tight transition-all duration-200 overflow-hidden whitespace-nowrap",
-          open && !isMobile ? "opacity-100 max-w-[120px]" : "opacity-0 max-w-0"
+          "text-sm font-semibold text-sidebar-foreground tracking-tight transition-all duration-200 overflow-hidden whitespace-nowrap",
+          open && !isMobile ? "ml-3 opacity-100 max-w-[120px]" : "ml-0 opacity-0 max-w-0"
         )}
       >
         Invoice IQ
@@ -116,7 +116,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 asChild
                 isActive={isActive}
                 className={cn(
-                  "h-9 rounded-lg text-sm font-medium transition-all duration-200 data-active:bg-blue-50! data-active:text-blue-700!",
+                  "h-9 rounded-lg text-sm font-medium transition-all duration-200 data-active:bg-blue-50! data-active:text-blue-700! group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-0!",
                   isActive
                     ? "hover:bg-blue-100 hover:text-blue-800 border-l-2 border-blue-600 rounded-r-lg rounded-l-none pl-2.5"
                     : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 rounded-lg"
@@ -126,12 +126,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   {Icon && (
                     <Icon
                       className={cn(
-                        "h-[18px] w-[18px] shrink-0",
-                        isActive ? "text-blue-600" : "text-slate-500"
+                        "h-5 w-5 shrink-0 ",
+                        isActive ? "text-blue-600" : "text-slate-500",
+                        //  open && !isMobile ? "ml-1" : "ml-3"
+                        
                       )}
                     />
                   )}
-                  <span className="truncate">{route.title}</span>
+                  <span className="truncate group-data-[collapsible=icon]:hidden">{route.title}</span>
                 </Link>
               </SidebarMenuButton>
             )
@@ -140,13 +142,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               <SidebarMenuItem key={route.title}>
                 {isCollapsed ? (
                   <Tooltip delayDuration={0}>
-                    <TooltipTrigger asChild>{button}</TooltipTrigger>
+                    <TooltipTrigger className="ml-1" asChild>{button}</TooltipTrigger>
                     <TooltipContent side="right" className="text-xs font-medium">
                       {route.title}
                     </TooltipContent>
                   </Tooltip>
                 ) : (
-                  button
+                  <div className="ml-1.5">{button}</div>
                 )}
               </SidebarMenuItem>
             )
@@ -162,16 +164,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton
                   size="lg"
-                  className="h-10 rounded-lg hover:bg-slate-100 data-[state=open]:bg-slate-100"
+                  className="h-10 rounded-lg ml-1.5  hover:bg-slate-100 data-[state=open]:bg-slate-100 group-data-[collapsible=icon]:justify-center"
                 >
                   {/* Avatar */}
-                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-blue-100 text-blue-700 text-[11px] font-semibold">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-blue-100 text-blue-700 text-xs font-semibold group-data-[collapsible=icon]:mx-auto">
                     {userInitials}
                   </div>
 
                   {/* Name + role — hidden when collapsed */}
                   <div className="flex flex-col items-start leading-tight overflow-hidden flex-1 ml-1 group-data-[collapsible=icon]:hidden">
-                    <span className="text-sm font-medium text-slate-700 truncate w-full">
+                    <span className="text-sm font-medium text-slate-700 truncate w-full ">
                       {userName}
                     </span>
                     <span className="text-[11px] text-slate-400 truncate w-full">
