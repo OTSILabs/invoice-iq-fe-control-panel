@@ -5,13 +5,13 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { DataTable, type CustomColumnDef } from "@/components/ui/data-table"
-import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { usePlans } from "@/api/hooks/usePlans"
 import { cn } from "@/lib/utils"
 import type { Plan } from "@/types"
 import { PlansHeader } from "./plans-header"
+import { SearchInput } from "@/components/search-input"
 
 const normalizePlanType = (type: string) => {
   const lower = String(type).toLowerCase()
@@ -153,7 +153,7 @@ export function Plans() {
             </Tabs>
 
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-              <Input value={searchText} onChange={(e) => setSearchText(e.target.value)} placeholder="Search plans..." className="h-9 w-full sm:w-72" />
+              <SearchInput value={searchText} onChange={setSearchText} placeholder="Search plans..." className="w-full sm:w-72" />
               <Select value={status} onValueChange={setStatus}>
                 <SelectTrigger className="h-9 w-full sm:w-40"><SelectValue placeholder="All Plans" /></SelectTrigger>
                 <SelectContent align="end">

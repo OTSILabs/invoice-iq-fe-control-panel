@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { DataTable } from "@/components/ui/data-table"
 import type { CustomColumnDef } from "@/components/ui/data-table"
-import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { cn, getInitials } from "@/lib/utils"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
@@ -17,6 +16,7 @@ import type { PlatformUser } from "@/types"
 import { CreateUserDialog } from "./create-user-dialog"
 import { EditUserDialog } from "./edit-user-dialog"
 import { UsersHeader } from "./users-header"
+import { SearchInput } from "@/components/search-input"
 
 const getRolesList = (u: PlatformUser | null | undefined): string[] => {
   if (!u) return []
@@ -214,13 +214,7 @@ export function Users() {
             </Tabs>
 
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center w-full lg:w-auto">
-              <Input
-                value={searchText}
-                onChange={(e) => setSearchText(e.target.value)}
-                placeholder="Search users..."
-                className="h-9 w-full sm:w-72"
-              />
-
+              <SearchInput value={searchText} onChange={setSearchText} placeholder="Search users..." className="w-full sm:w-72"/>
               <Select value={status} onValueChange={setStatus}>
                 <SelectTrigger className="h-9 w-full sm:w-40 bg-background">
                   <SelectValue placeholder="All Status" />

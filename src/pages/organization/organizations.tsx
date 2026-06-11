@@ -1,10 +1,10 @@
 import { useState, useMemo } from "react"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { CreateOrganizationModal } from "@/pages/organization/modals/create-organization-modal"
 import { useOrganizations } from "@/api/hooks/useOrganizations"
 import { Plus, Building2, Users, BarChart3, Search } from "lucide-react"
 import { OrgCard } from "./components/org-card"
+import { SearchInput } from "@/components/search-input"
 
 export function Organizations() {
   const { data: organizations = [], isLoading } = useOrganizations()
@@ -35,14 +35,7 @@ export function Organizations() {
           <p className="text-xs text-muted-foreground mt-1">Manage and onboard organizations within your control panel.</p>
         </div>
         <div className="flex flex-col sm:flex-row items-center gap-2.5 w-full sm:w-auto">
-          {hasOrgs && (
-            <Input
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search organizations..."
-              className="h-9 w-full sm:w-64"
-            />
-          )}
+          {hasOrgs && (<SearchInput value={searchQuery} onChange={setSearchQuery} placeholder="Search organizations..." className="w-full sm:w-64"/>)}
           <CreateOrganizationModal>
             <Button size="sm" className="w-full sm:w-auto font-medium shadow-sm gap-1.5 shrink-0">
               <Plus className="h-4 w-4" /> Start onboarding
