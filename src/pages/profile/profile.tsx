@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { useAuthMe } from "@/api/hooks/useAuth"
 import { getInitials, formatDate, getDecodedToken, formatRole } from "@/lib/utils"
 import { ChangePasswordDialog } from "./change-password-dialog"
+const INITIAL_TIME = Date.now()
 
 export function Profile() {
   const { data: profile } = useAuthMe()
@@ -23,9 +24,9 @@ export function Profile() {
       status: profile?.status || "ACTIVE",
       initials: getInitials(name) || "B",
       id: profile?.id || jwt.sub || "1",
-      lastLogin: formatDate(jwt.iat ? jwt.iat * 1000 : Date.now()),
-      pwdUpdated: formatDate(jwt.pwd || Date.now()).split(",")[0],
-      memberSince: formatDate(jwt.pwd || Date.now()).split(",")[0],
+      lastLogin: formatDate(jwt.iat ? jwt.iat * 1000 : INITIAL_TIME),
+      pwdUpdated: formatDate(jwt.pwd || INITIAL_TIME).split(",")[0],
+      memberSince: formatDate(jwt.pwd || INITIAL_TIME).split(",")[0],
     }
   }, [profile, jwt])
 
