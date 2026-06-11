@@ -124,10 +124,10 @@ function MetaDateItem({
         align === "right" ? "flex flex-col text-right" : "flex flex-col"
       }
     >
-      <span className="text-[10px] font-medium tracking-widest text-muted-foreground uppercase">
+      <span className="text-[10px] font-medium tracking-wider text-muted-foreground/80 uppercase">
         {label}
       </span>
-      <span className="text-xs font-semibold text-foreground">
+      <span className="text-xs font-medium text-foreground/85">
         {getFormattedDate(value)}
       </span>
     </div>
@@ -200,7 +200,7 @@ export function ErpSettings() {
       </div>
 
       {isLoading || isFetching ? (
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           {Array.from({ length: 3 }).map((_, idx) => (
             <Skeleton key={idx} className="h-72 w-full rounded-xl" />
           ))}
@@ -249,7 +249,7 @@ function ErpSettingsCards({ records }: { records: ErpSetting[] }) {
   }
 
   return (
-    <div className="grid animate-in gap-4 duration-200 fade-in md:grid-cols-2 xl:grid-cols-3">
+    <div className="grid animate-in gap-4 duration-200 fade-in sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {records.map((record) => {
         const displayName =
           record.display_name || `${record.erp_type.toUpperCase()} Integration`
@@ -262,10 +262,10 @@ function ErpSettingsCards({ records }: { records: ErpSetting[] }) {
             <CardHeader className="border-b bg-muted/10  pb-4">
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <CardTitle className="truncate text-base font-bold text-foreground">
+                  <CardTitle className="truncate text-base font-semibold text-foreground">
                     {displayName}
                   </CardTitle>
-                  <CardDescription className="mt-1 text-xs font-semibold tracking-wider text-primary uppercase">
+                  <CardDescription className="mt-0.5 text-xs font-medium tracking-wider text-primary/80 uppercase">
                     {record.erp_type}
                   </CardDescription>
                 </div>

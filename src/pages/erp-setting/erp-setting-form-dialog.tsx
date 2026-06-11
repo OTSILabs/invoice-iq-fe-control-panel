@@ -126,7 +126,7 @@ export function ErpSettingFormDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-125">
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Add ERP Setting</DialogTitle>
           <DialogDescription>
@@ -137,7 +137,7 @@ export function ErpSettingFormDialog({
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           {/* ERP Type */}
           <div className="space-y-1.5">
-            <Label htmlFor="erp_type" className="text-foreground font-semibold">ERP Type</Label>
+            <Label htmlFor="erp_type" className="text-foreground/90 font-medium">ERP Type</Label>
             <Input
               id="erp_type"
               type="text"
@@ -154,7 +154,7 @@ export function ErpSettingFormDialog({
 
           {/* Settings JSON */}
           <div className="space-y-1.5">
-            <Label htmlFor="settingsInput" className="text-foreground font-semibold">
+            <Label htmlFor="settingsInput" className="text-foreground/90 font-medium">
               Settings (JSON)
             </Label>
             <Textarea
