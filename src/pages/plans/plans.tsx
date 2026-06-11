@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react"
 import { useNavigate } from "react-router-dom"
-import { Loader2, AlertCircle, RefreshCw } from "lucide-react"
+import { Loader2, AlertCircle, RefreshCw, Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -10,7 +10,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { usePlans } from "@/api/hooks/usePlans"
 import { cn } from "@/lib/utils"
 import type { Plan } from "@/types"
-import { PlansHeader } from "./plans-header"
+import { PageHeader } from "@/components/layout/PageHeader"
 import { SearchInput } from "@/components/search-input"
 
 const normalizePlanType = (type: string) => {
@@ -133,7 +133,14 @@ export function Plans() {
 
   return (
     <div className="flex w-full animate-in flex-col gap-6 pb-12 duration-200 fade-in">
-      <PlansHeader onCreateClick={() => navigate("/plan/create")} />
+      <PageHeader
+        title="Plans & Pricing"
+        description="Manage your subscription configurations."
+      >
+        <Button size="sm" onClick={() => navigate("/plan/create")} className="w-full gap-1.5 px-3 sm:w-auto">
+          <Plus className="size-4" /> Create Plan
+        </Button>
+      </PageHeader>
 
       <Card className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border-border p-0">
         <CardContent className="flex min-h-0 flex-1 flex-col p-0">

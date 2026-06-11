@@ -8,6 +8,8 @@ import { useAuthMe } from "@/api/hooks/useAuth"
 import { getInitials, formatDate, getDecodedToken, formatRole } from "@/lib/utils"
 import { ChangePasswordDialog } from "./change-password-dialog"
 
+import { PageHeader } from "@/components/layout/PageHeader"
+
 const INITIAL_TIME = Date.now()
 
 export function Profile() {
@@ -33,10 +35,11 @@ export function Profile() {
 
   return (
     <div className="w-auto bg-slate-50/50 -m-2 sm:-m-4 lg:-m-8 p-4 sm:p-6 lg:p-8 space-y-6 animate-in duration-300 fade-in min-h-[calc(100vh-6.5rem)]">
-      <div className="flex flex-col gap-1 pb-4 ">
-        <h1 className="text-xl font-bold tracking-tight text-slate-900">My Profile</h1>
-        <p className="text-xs text-muted-foreground">Manage your account information, security settings, and audit activity.</p>
-      </div>
+      <PageHeader
+        title="My Profile"
+        description="Manage your account information, security settings, and audit activity."
+        className="pb-4"
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">

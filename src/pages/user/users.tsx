@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react"
-import { Loader2, AlertCircle, RefreshCw, Edit2, MoreVertical } from "lucide-react"
+import { Loader2, AlertCircle, RefreshCw, Edit2, MoreVertical, Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { DataTable } from "@/components/ui/data-table"
@@ -15,7 +15,7 @@ import { usePlatformUsers, usePlatformRoles } from "@/api/hooks/useUsers"
 import type { PlatformUser } from "@/types"
 import { CreateUserDialog } from "./create-user-dialog"
 import { EditUserDialog } from "./edit-user-dialog"
-import { UsersHeader } from "./users-header"
+import { PageHeader } from "@/components/layout/PageHeader"
 import { SearchInput } from "@/components/search-input"
 
 const getRolesList = (u: PlatformUser | null | undefined): string[] => {
@@ -192,7 +192,18 @@ export function Users() {
 
   return (
     <div className="flex w-full animate-in flex-col gap-6 pb-12 duration-200 fade-in">
-      <UsersHeader onAddClick={() => setIsCreateOpen(true)} />
+      <PageHeader
+        title="Users"
+        description="Manage system access accounts and user permissions."
+      >
+        <Button
+          size="sm"
+          onClick={() => setIsCreateOpen(true)}
+          className="w-full sm:w-auto font-medium px-3 shadow-none gap-1.5 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px cursor-pointer"
+        >
+          <Plus className="h-4 w-4" /> Add User
+        </Button>
+      </PageHeader>
 
       <Card className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border-border p-0">
         <CardContent className="flex min-h-0 flex-1 flex-col p-0">

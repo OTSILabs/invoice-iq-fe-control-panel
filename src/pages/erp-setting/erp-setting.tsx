@@ -1,12 +1,12 @@
 import { useState, useMemo } from "react"
-import { AlertCircle, RefreshCw } from "lucide-react"
+import { AlertCircle, RefreshCw, Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { toast } from "sonner"
 
 import { useErpSettings } from "@/api/hooks/useErp"
 import { ErpSettingFormDialog } from "./erp-setting-form-create"
-import { ErpSettingsHeader } from "./erp-settings-header"
+import { PageHeader } from "@/components/layout/PageHeader"
 import { ErpSettingsCards } from "./erp-settings-cards"
 
 export function ErpSettings() {
@@ -29,11 +29,29 @@ export function ErpSettings() {
 
   return (
     <div className="flex w-full animate-in flex-col gap-6 pb-12 duration-300 fade-in">
-      <ErpSettingsHeader
-        isFetching={isFetching}
-        onRefetch={handleRefetch}
-        onAddClick={() => setIsCreateOpen(true)}
-      />
+      <PageHeader
+        title="ERP Settings"
+        description="Configure and maintain enterprise ERP integrations."
+      >
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={handleRefetch}
+          className="h-9 w-9 shrink-0 cursor-pointer"
+        >
+          <RefreshCw
+            className={isFetching ? "size-4 animate-spin" : "size-4"}
+          />
+        </Button>
+
+        <Button
+          size="sm"
+          onClick={() => setIsCreateOpen(true)}
+          className="w-full sm:w-auto font-medium px-3 shadow-none shrink-0 gap-1.5 animate-in"
+        >
+          <Plus className="h-4 w-4" /> Add ERP Setting
+        </Button>
+      </PageHeader>
 
       {isLoading || isFetching ? (
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">

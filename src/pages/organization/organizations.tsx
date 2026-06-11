@@ -5,6 +5,7 @@ import { useOrganizations } from "@/api/hooks/useOrganizations"
 import { Plus, Building2, Users, BarChart3, Search } from "lucide-react"
 import { OrgCard } from "./components/org-card"
 import { SearchInput } from "@/components/search-input"
+import { PageHeader } from "@/components/layout/PageHeader"
 
 export function Organizations() {
   const { data: organizations = [], isLoading } = useOrganizations()
@@ -29,20 +30,24 @@ export function Organizations() {
   return (
     <div className="flex w-full animate-in flex-col gap-6 pb-12 duration-200 fade-in">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
-        <div>
-          <h1 className="text-lg font-semibold tracking-tight text-foreground">Organizations</h1>
-          <p className="text-xs text-muted-foreground mt-1">Manage and onboard organizations within your control panel.</p>
-        </div>
-        <div className="flex flex-col sm:flex-row items-center gap-2.5 w-full sm:w-auto">
-          {hasOrgs && (<SearchInput value={searchQuery} onChange={setSearchQuery} placeholder="Search organizations..." className="w-full sm:w-64"/>)}
-          <CreateOrganizationModal>
-            <Button size="sm" className="w-full sm:w-auto font-medium shadow-sm gap-1.5 shrink-0">
-              <Plus className="h-4 w-4" /> Start onboarding
-            </Button>
-          </CreateOrganizationModal>
-        </div>
-      </div>
+      <PageHeader
+        title="Organizations"
+        description="Manage and onboard organizations within your control panel."
+      >
+        {hasOrgs && (
+          <SearchInput
+            value={searchQuery}
+            onChange={setSearchQuery}
+            placeholder="Search organizations..."
+            className="w-full sm:w-64"
+          />
+        )}
+        <CreateOrganizationModal>
+          <Button size="sm" className="w-full sm:w-auto font-medium shadow-sm gap-1.5 shrink-0">
+            <Plus className="h-4 w-4" /> Start onboarding
+          </Button>
+        </CreateOrganizationModal>
+      </PageHeader>
 
       {/* Stats */}
       {hasOrgs && (
