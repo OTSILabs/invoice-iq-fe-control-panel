@@ -61,9 +61,10 @@ export function DeleteTenantDialog({ tenant, onClose, onSuccess, orgId }: Delete
   const handleDeleteConfirm = async () => {
     if (!tenant) return;
     
-    const isCurrentlyDeactivated = String(tenant.access_status || "").toLowerCase() === 'deactivated';
+    const status = String(tenant.access_status || "").toLowerCase();
+    const canDeleteDirectly = status === 'deactivated' || status === 'expired';
     
-    if (!isCurrentlyDeactivated) {
+    if (!canDeleteDirectly) {
       if (!isDeactivateChecked) {
         toast.error("You must check the deactivation confirmation box before deleting.");
         return;
@@ -94,10 +95,10 @@ export function DeleteTenantDialog({ tenant, onClose, onSuccess, orgId }: Delete
         </DialogHeader>
         
         <div className="py-4 space-y-4">
-          {tenant && String(tenant.access_status || "").toLowerCase() !== 'deactivated' ? (
+          {tenant && !['deactivated', 'expired'].includes(String(tenant.access_status || "").toLowerCase()) ? (
             <>
               <div className="bg-amber-50 border border-amber-200 text-amber-800 rounded-md p-3 text-sm mb-4">
-                This tenant is currently active. You must deactivate the account before it can be deleted.
+                This tenant is not deactivated or expired. You must deactivate the account before it can be deleted.
               </div>
               <div className="flex items-start space-x-2">
                 <Checkbox 
@@ -133,11 +134,11 @@ export function DeleteTenantDialog({ tenant, onClose, onSuccess, orgId }: Delete
             disabled={
               deleteMutation.isPending || 
               deactivateMutation.isPending || 
-              (!!tenant && String(tenant.access_status || "").toLowerCase() !== 'deactivated' && !isDeactivateChecked)
+              (!!tenant && !['deactivated', 'expired'].includes(String(tenant.access_status || "").toLowerCase()) && !isDeactivateChecked)
             }
           >
             {(deleteMutation.isPending || deactivateMutation.isPending) && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            {tenant && String(tenant.access_status || "").toLowerCase() !== 'deactivated' ? "Deactivate & Delete" : "Delete"}
+            {tenant && !['deactivated', 'expired'].includes(String(tenant.access_status || "").toLowerCase()) ? "Deactivate & Delete" : "Delete"}
           </Button>
         </DialogFooter>
       </DialogContent>
