@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react"
-import { Plus, Loader2, AlertCircle, RefreshCw, MoreHorizontal, Edit2 } from "lucide-react"
+import { Plus, Loader2, AlertCircle, RefreshCw, Edit2, MoreVertical } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { DataTable } from "@/components/ui/data-table"
@@ -36,7 +36,7 @@ const getRolesList = (user: PlatformUser | null | undefined): string[] => {
   const raw = Array.isArray(user.roles) ? user.roles 
             : Array.isArray(user.role_names) ? user.role_names 
             : [user.role, user.role_name].filter(Boolean)
-  return raw.map((r: any) => typeof r === "string" ? r : r?.name || "").filter(Boolean)
+  return raw.map((r: unknown) => typeof r === "string" ? r : (r as { name?: string })?.name || "").filter(Boolean)
 }
 
 
@@ -195,7 +195,7 @@ export function Users() {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="sm" className="h-8 w-8 p-0 cursor-pointer">
-                    <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
+                    <MoreVertical className="h-4 w-4 text-muted-foreground" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-45">
@@ -305,7 +305,7 @@ export function Users() {
                   const val = role.name.toLowerCase()
                   return (
                     <TabsTrigger
-                      key={role.id}
+                      key={role.id || val}
                       value={val}
                       className="h-7 cursor-pointer rounded-sm px-2.5 text-xs capitalize"
                     >
