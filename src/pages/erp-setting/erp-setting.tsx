@@ -21,10 +21,6 @@ export function ErpSettings() {
   const [isCreateOpen, setIsCreateOpen] = useState(false)
 
   const settings = useMemo(() => data || [], [data])
-  const usedErpTypes = useMemo(
-    () => settings.map((s) => s.erp_type.toLowerCase()),
-    [settings]
-  )
 
   const handleRefetch = async () => {
     await refetch()
@@ -68,7 +64,6 @@ export function ErpSettings() {
       <ErpSettingFormDialog
         open={isCreateOpen}
         onOpenChange={setIsCreateOpen}
-        usedErpTypes={usedErpTypes}
       />
     </div>
   )
