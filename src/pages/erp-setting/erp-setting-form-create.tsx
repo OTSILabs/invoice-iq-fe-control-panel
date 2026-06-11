@@ -137,7 +137,9 @@ export function ErpSettingFormDialog({
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           {/* ERP Type */}
           <div className="space-y-1.5">
-            <Label htmlFor="erp_type" className="text-foreground/90 font-medium">ERP Type</Label>
+            <Label htmlFor="erp_type" className="text-foreground/90 font-medium">
+              ERP Type <span className="text-destructive ml-0.5">*</span>
+            </Label>
             <Input
               id="erp_type"
               type="text"
@@ -155,7 +157,7 @@ export function ErpSettingFormDialog({
           {/* Settings JSON */}
           <div className="space-y-1.5">
             <Label htmlFor="settingsInput" className="text-foreground/90 font-medium">
-              Settings (JSON)
+              Settings (JSON) <span className="text-destructive ml-0.5">*</span>
             </Label>
             <Textarea
               id="settingsInput"
