@@ -45,8 +45,13 @@ function SidebarLogoHeader() {
       role="button"
       aria-label={open ? "Collapse sidebar" : "Expand sidebar"}
     >
-      {/* App icon — always visible */}
-      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-600 text-white">
+      {/* App icon — disappears on hover when collapsed */}
+      <div
+        className={cn(
+          "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-600 text-white transition-opacity duration-200",
+          !open && !isMobile && hovered ? "opacity-0 pointer-events-none" : "opacity-100"
+        )}
+      >
         <FileCheck2 className="h-4 w-4" />
       </div>
 
@@ -60,18 +65,22 @@ function SidebarLogoHeader() {
         Invoice IQ
       </span>
 
-      {/* Collapse/expand icon — appears on hover */}
+      {/* Collapse/expand icon — always visible on the right when open, shown in place of logo when collapsed and hovered */}
       <div
         className={cn(
-          "absolute flex items-center justify-center rounded-md p-1 text-sidebar-foreground/50 transition-all duration-150",
-          hovered ? "opacity-100" : "opacity-0",
-          open && !isMobile ? "ml-auto" : ""
+          "absolute flex items-center justify-center rounded-md p-1 text-sidebar-foreground/50 transition-all duration-200 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+          open && !isMobile
+            ? "right-4 opacity-100"
+            : cn(
+                "left-1/2 -translate-x-1/2",
+                hovered ? "opacity-100" : "opacity-0 pointer-events-none"
+              )
         )}
       >
         {open && !isMobile ? (
-          <PanelLeftClose className="h-4 w-4" />
+          <PanelLeftClose className="h-5 w-5" />
         ) : (
-          <PanelLeftOpen className="h-4 w-4" />
+          <PanelLeftOpen className="h-5 w-5" />
         )}
       </div>
     </div>
