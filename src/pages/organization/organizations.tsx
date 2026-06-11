@@ -6,6 +6,7 @@ import { Plus, Building2, Users, BarChart3, Search } from "lucide-react"
 import { OrgCard } from "./components/org-card"
 import { SearchInput } from "@/components/search-input"
 import { PageHeader } from "@/components/layout/PageHeader"
+import { StatsCard } from "@/components/StatsCard"
 
 export function Organizations() {
   const { data: organizations = [], isLoading } = useOrganizations()
@@ -52,21 +53,21 @@ export function Organizations() {
       {/* Stats */}
       {hasOrgs && (
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
-          {[
-            { label: "Total organizations", val: organizations.length, icon: Building2 },
-            { label: "Total tenants", val: totalTenants, icon: Users },
-            { label: "Avg tenants / org", val: Math.round(totalTenants / organizations.length) || 0, icon: BarChart3 }
-          ].map(({ label, val, icon: Icon }) => (
-            <div key={label} className="relative overflow-hidden bg-card border border-border rounded-xl p-4 shadow-sm flex items-center justify-between gap-4 transition-all duration-300 hover:border-primary/30 hover:shadow-xs">
-              <div>
-                <p className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">{label}</p>
-                <p className="text-lg font-semibold tracking-tight text-foreground mt-1.5">{val}</p>
-              </div>
-              <div className="h-8 w-8 rounded-lg flex items-center justify-center border shrink-0 bg-slate-100/80 text-slate-700 border-slate-200/50 dark:bg-slate-800/80 dark:text-slate-300 dark:border-slate-700/50">
-                <Icon className="h-4 w-4" />
-              </div>
-            </div>
-          ))}
+          <StatsCard
+            label="Total organizations"
+            value={organizations.length}
+            icon={Building2}
+          />
+          <StatsCard
+            label="Total tenants"
+            value={totalTenants}
+            icon={Users}
+          />
+          <StatsCard
+            label="Avg tenants / org"
+            value={Math.round(totalTenants / organizations.length) || 0}
+            icon={BarChart3}
+          />
         </div>
       )}
 
