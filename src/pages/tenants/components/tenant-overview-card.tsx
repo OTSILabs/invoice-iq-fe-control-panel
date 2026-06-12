@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge"
-import { CopyButton } from "./copyable-field"
-import { getInitials, formatDate } from "../utils"
+import { CopyButton } from "@/components/ui/copyable-field"
+import { formatDate, getInitials } from "@/lib/utils"
 import type { Tenant } from "@/types"
 
 interface TenantOverviewCardProps {

@@ -1,8 +1,7 @@
 import { User, FileText, Building2, Info } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { cn } from "@/lib/utils"
-import { formatDate } from "../utils"
+import { cn, formatDate } from "@/lib/utils"
 import type { Tenant } from "@/types"
 
 interface TenantProfileTabProps {

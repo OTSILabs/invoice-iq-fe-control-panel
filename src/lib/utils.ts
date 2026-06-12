@@ -39,15 +39,7 @@ export function getDecodedToken(): any {
   return null
 }
 
-export function getInitials(name: string): string {
-  if (!name) return ""
-  return name
-    .split(" ")
-    .map((w) => w[0])
-    .slice(0, 2)
-    .join("")
-    .toUpperCase()
-}
+
 
 export function formatRole(role?: string | string[]): string {
   if (!role) return "User"
@@ -57,30 +49,6 @@ export function formatRole(role?: string | string[]): string {
     .split(/[_-]/)
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
     .join(" ")
-}
-
-export function formatDate(dateInput?: string | number) {
-  if (!dateInput) return "N/A"
-  try {
-    const date = new Date(dateInput)
-    if (isNaN(date.getTime())) return String(dateInput)
-    
-    const day = date.getDate().toString().padStart(2, '0')
-    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-    const month = months[date.getMonth()]
-    const year = date.getFullYear()
-    
-    let hours = date.getHours()
-    const minutes = date.getMinutes().toString().padStart(2, '0')
-    const ampm = hours >= 12 ? 'PM' : 'AM'
-    hours = hours % 12
-    hours = hours ? hours : 12 // the hour '0' should be '12'
-    const strTime = hours.toString().padStart(2, '0') + ':' + minutes + ' ' + ampm
-    
-    return `${day} ${month} ${year}, ${strTime}`
-  } catch {
-    return String(dateInput)
-  }
 }
 
 
@@ -154,3 +122,36 @@ function resolveSegmentTitle(
   // 4. Capitalize plain segment
   return raw.charAt(0).toUpperCase() + raw.slice(1)
 }
+
+export function getInitials(name: string): string {
+  return name
+    .split(" ")
+    .map((w) => w[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
+}
+
+export function formatDate(dateStr?: string | number): string {
+  if (!dateStr) return "N/A";
+  try {
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return "N/A";
+    const day = String(d.getDate()).padStart(2, '0');
+    const allMonths = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const month = allMonths[d.getMonth()];
+    const year = d.getFullYear();
+    
+    let hours = d.getHours();
+    const minutes = String(d.getMinutes()).padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+    const hourStr = String(hours).padStart(2, '0');
+    
+    return `${day} ${month} ${year}, ${hourStr}:${minutes} ${ampm}`;
+  } catch {
+    return "N/A";
+  }
+}
+

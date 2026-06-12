@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react"
-import { Info, Plus, Save, X, Eye, EyeOff, Copy, Check } from "lucide-react"
+import { Info, Plus, Save, X } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -7,33 +7,11 @@ import { DataTable } from "@/components/ui/data-table"
 import type { CustomColumnDef } from "@/components/ui/data-table"
 import { useEntityConfigurations, useUpdateEntityConfigurations } from "@/api/hooks/useOrganizations"
 import type { Configuration } from "@/types"
+import { MaskedValue } from "@/components/ui/copyable-field"
 
 interface ConfigurationsTableProps {
   entityId: string
   entityType: 'organization' | 'tenant'
-}
-
-function MaskedValue({ value }: { value: string }) {
-  const [show, setShow] = useState(false)
-  const [copied, setCopied] = useState(false)
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(value)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }
-
-  return (
-    <div className="flex items-center gap-2 max-w-[200px]">
-      <span className="font-mono text-xs text-muted-foreground truncate">{show ? value : "••••••••"}</span>
-      <button onClick={() => setShow(v => !v)} className="flex-shrink-0 text-muted-foreground hover:text-foreground transition-colors cursor-pointer">
-        {show ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
-      </button>
-      <button onClick={handleCopy} className="flex-shrink-0 text-muted-foreground hover:text-foreground transition-colors cursor-pointer">
-        {copied ? <Check className="h-3.5 w-3.5 text-emerald-500" /> : <Copy className="h-3.5 w-3.5" />}
-      </button>
-    </div>
-  )
 }
 
 export function ConfigurationsTable({ entityId, entityType }: ConfigurationsTableProps) {

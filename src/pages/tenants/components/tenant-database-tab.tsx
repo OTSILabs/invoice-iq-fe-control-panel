@@ -1,6 +1,6 @@
 import { Loader2, ArrowUpRight, RefreshCw } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { CopyableField } from "./copyable-field"
+import { CopyableField } from "@/components/ui/copyable-field"
 import type { Tenant } from "@/types"
 
 interface TenantDatabaseTabProps {

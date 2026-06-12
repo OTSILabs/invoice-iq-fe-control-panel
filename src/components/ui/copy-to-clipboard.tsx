@@ -10,6 +10,7 @@ export interface CopyToClipboardProps {
   className?: string
   isLoading?: boolean
   iconSize?: string
+  title?: string
 }
 
 export function CopyToClipboard({
@@ -17,6 +18,7 @@ export function CopyToClipboard({
   className,
   isLoading = false,
   iconSize = "size-4",
+  title,
 }: CopyToClipboardProps) {
   const [copied, setCopied] = useState(false)
 
@@ -47,7 +49,7 @@ export function CopyToClipboard({
       size="sm"
       onClick={handleCopy}
       className={cn("p-0", className, iconSize)}
-      title="Copy to clipboard"
+      title={title || "Copy to clipboard"}
       type="button"
     >
       {copied ? (
