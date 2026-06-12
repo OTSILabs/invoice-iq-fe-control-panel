@@ -38,6 +38,7 @@ export function ErpSettings() {
           size="icon"
           onClick={handleRefetch}
           className="h-9 w-9 shrink-0 cursor-pointer"
+          disabled={isFetching}
         >
           <RefreshCw
             className={isFetching ? "size-4 animate-spin" : "size-4"}
@@ -48,6 +49,7 @@ export function ErpSettings() {
           size="sm"
           onClick={() => setIsCreateOpen(true)}
           className="w-full sm:w-auto font-medium px-3 shadow-none shrink-0 gap-1.5 animate-in"
+          disabled={isFetching}
         >
           <Plus className="h-4 w-4" /> Add ERP Setting
         </Button>
@@ -71,7 +73,7 @@ export function ErpSettings() {
               config.
             </p>
           </div>
-          <Button onClick={handleRefetch} variant="outline" className="gap-2">
+          <Button onClick={handleRefetch} variant="outline" className="gap-2" disabled={isFetching}>
             <RefreshCw className="h-4 w-4" /> Try Again
           </Button>
         </div>

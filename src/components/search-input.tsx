@@ -7,6 +7,7 @@ interface SearchInputProps {
   onChange: (value: string) => void
   placeholder?: string
   className?: string
+  disabled?: boolean
 }
 
 export function SearchInput({
@@ -14,6 +15,7 @@ export function SearchInput({
   onChange,
   placeholder = "Search...",
   className,
+  disabled,
 }: SearchInputProps) {
   return (
     <div className={cn("relative flex items-center w-full sm:w-auto", className)}>
@@ -24,6 +26,7 @@ export function SearchInput({
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         className="pl-9 h-9 bg-background w-full"
+        disabled={disabled}
       />
     </div>
   )
