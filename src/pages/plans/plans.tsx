@@ -125,7 +125,7 @@ export function Plans() {
         <h2 className="text-xl font-bold">Failed to load plans</h2>
         <p className="mt-1 text-muted-foreground">There was a connection issue. Please check your network and API config.</p>
       </div>
-      <Button onClick={() => refetch()} variant="outline" className="gap-2">
+      <Button onClick={() => refetch()} variant="outline" className="gap-2" disabled={isFetching}>
         <RefreshCw className="size-4" /> Try Again
       </Button>
     </div>
@@ -137,7 +137,7 @@ export function Plans() {
         title="Plans & Pricing"
         description="Manage your subscription configurations."
       >
-        <Button size="sm" onClick={() => navigate("/plan/create")} className="w-full gap-1.5 px-3 sm:w-auto">
+        <Button size="sm" onClick={() => navigate("/plan/create")} className="w-full gap-1.5 px-3 sm:w-auto" disabled={isFetching}>
           <Plus className="size-4" /> Create Plan
         </Button>
       </PageHeader>
@@ -160,8 +160,8 @@ export function Plans() {
             </Tabs>
 
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-              <SearchInput value={searchText} onChange={setSearchText} placeholder="Search plans..." className="w-full sm:w-72" />
-              <Select value={status} onValueChange={setStatus}>
+              <SearchInput value={searchText} onChange={setSearchText} disabled={isFetching} placeholder="Search plans..." className="w-full sm:w-72" />
+              <Select value={status} onValueChange={setStatus} disabled={isFetching}>
                 <SelectTrigger className="h-9 w-full sm:w-40"><SelectValue placeholder="All Plans" /></SelectTrigger>
                 <SelectContent align="end">
                   {[["all", "All Plans"], ["active", "Active"], ["inactive", "Inactive"]].map(([v, l]) => (
@@ -169,7 +169,7 @@ export function Plans() {
                   ))}
                 </SelectContent>
               </Select>
-              <Button variant="outline" size="icon" onClick={() => refetch()} className="size-9 cursor-pointer">
+              <Button variant="outline" size="icon" onClick={() => refetch()} className="size-9 cursor-pointer" disabled={isFetching}>
                 <RefreshCw className={cn("size-4", isFetching && "animate-spin")} />
               </Button>
             </div>
@@ -197,7 +197,7 @@ export function Plans() {
                     </p>
                   </div>
                   {plans.length === 0 && (
-                    <Button onClick={() => navigate("/plan/create")} className="gap-2 rounded-xl px-6 py-5 text-base font-semibold">
+                    <Button onClick={() => navigate("/plan/create")} className="gap-2 rounded-xl px-6 py-5 text-base font-semibold"disabled={isFetching}>
                       Create Plan
                     </Button>
                   )}

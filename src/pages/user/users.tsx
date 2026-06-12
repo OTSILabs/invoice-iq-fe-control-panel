@@ -184,7 +184,7 @@ export function Users() {
         <h2 className="text-xl font-bold">Failed to load platform data</h2>
         <p className="mt-1 text-muted-foreground">There was a connection issue. Please check your network and API config.</p>
       </div>
-      <Button onClick={handleRefetch} variant="outline" className="gap-2">
+      <Button onClick={handleRefetch} variant="outline" className="gap-2" disabled={isFetchingUsers}>
         <RefreshCw className="h-4 w-4" /> Try Again
       </Button>
     </div>
@@ -200,6 +200,7 @@ export function Users() {
           size="sm"
           onClick={() => setIsCreateOpen(true)}
           className="w-full sm:w-auto font-medium px-3 shadow-none gap-1.5 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px cursor-pointer"
+          disabled={isFetchingUsers}
         >
           <Plus className="h-4 w-4" /> Add User
         </Button>
@@ -225,8 +226,8 @@ export function Users() {
             </Tabs>
 
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center w-full lg:w-auto">
-              <SearchInput value={searchText} onChange={setSearchText} placeholder="Search users..." className="w-full sm:w-72"/>
-              <Select value={status} onValueChange={setStatus}>
+              <SearchInput value={searchText} onChange={setSearchText} disabled={isFetchingUsers} placeholder="Search users..." className="w-full sm:w-72"/>
+              <Select value={status} onValueChange={setStatus} disabled={isFetchingUsers}>
                 <SelectTrigger className="h-9 w-full sm:w-40 bg-background">
                   <SelectValue placeholder="All Status" />
                 </SelectTrigger>
@@ -248,6 +249,7 @@ export function Users() {
                 size="icon"
                 onClick={handleRefetch}
                 className="h-9 w-9 cursor-pointer shrink-0 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px"
+                disabled={isFetchingUsers}
               >
                 <RefreshCw className={cn("size-4", isFetchingUsers && "animate-spin")} />
               </Button>
