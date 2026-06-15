@@ -110,11 +110,13 @@ export function TenantDetail() {
           }
         }} 
       />
-      <AssignPlanDialog 
-        tenant={tenantAction?.type === "assignPlan" ? tenantAction.tenant : null} 
-        onClose={() => setTenantAction(null)} 
-        orgId={orgId} 
-      />
+      {tenantAction?.type === "assignPlan" && (
+        <AssignPlanDialog 
+          tenant={tenantAction.tenant} 
+          onClose={() => setTenantAction(null)} 
+          orgId={orgId} 
+        />
+      )}
 
     </div>
   )

@@ -9,7 +9,7 @@ export type CreatedTenantState = {
   slug: string
 }
 
-export const replicationOptions = [
+const replicationOptions = [
   { key: "extraction_fields", label: "Extraction Fields" },
   { key: "extraction_templates", label: "Extraction Templates" },
   { key: "tenant_configurations", label: "Tenant Configurations" },

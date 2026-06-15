@@ -34,15 +34,15 @@ function SidebarLogoHeader() {
   const isCollapsed = !open && !isMobile
 
   return (
-    <div
+    <button
+      type="button"
       className={cn(
-        "relative flex h-16 w-full items-center border-b border-sidebar-border cursor-pointer select-none transition-all duration-200",
+        "relative flex h-16 w-full items-center border-b border-sidebar-border cursor-pointer select-none transition-all duration-200 text-left bg-transparent p-0 border-t-0 border-x-0 outline-none",
         isCollapsed ? "justify-center" : "px-4"
       )}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       onClick={toggleSidebar}
-      role="button"
       aria-label={open ? "Collapse sidebar" : "Expand sidebar"}
     >
       {/* App icon — disappears on hover when collapsed */}
@@ -65,7 +65,6 @@ function SidebarLogoHeader() {
         Invoice IQ
       </span>
 
-      {/* Collapse/expand icon — always visible on the right when open, shown in place of logo when collapsed and hovered */}
       <div
         className={cn(
           "absolute flex items-center justify-center rounded-md p-1 text-sidebar-foreground/50 transition-all duration-200 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
@@ -83,7 +82,7 @@ function SidebarLogoHeader() {
           <PanelLeftOpen className="h-5 w-5" />
         )}
       </div>
-    </div>
+    </button>
   )
 }
 

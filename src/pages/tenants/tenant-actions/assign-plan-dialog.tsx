@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -27,9 +27,13 @@ interface AssignPlanDialogProps {
 
 export function AssignPlanDialog({ tenant, onClose, onSuccess, orgId }: AssignPlanDialogProps) {
   const queryClient = useQueryClient();
-  const [selectedPlanId, setSelectedPlanId] = useState("");
-  const [validFrom, setValidFrom] = useState("");
-  const [validTo, setValidTo] = useState("");
+  const [selectedPlanId, setSelectedPlanId] = useState(tenant?.effective_plan_id || "");
+  const [validFrom, setValidFrom] = useState(
+    tenant?.effective_plan_valid_from ? new Date(tenant.effective_plan_valid_from).toISOString().split("T")[0] : ""
+  );
+  const [validTo, setValidTo] = useState(
+    tenant?.effective_plan_valid_to ? new Date(tenant.effective_plan_valid_to).toISOString().split("T")[0] : ""
+  );
   const [reason, setReason] = useState("");
 
   const { data: plans = [], isLoading: isPlansLoading } = useQuery<Plan[]>({
@@ -37,15 +41,6 @@ export function AssignPlanDialog({ tenant, onClose, onSuccess, orgId }: AssignPl
     queryFn: plansService.getAll,
     enabled: !!tenant,
   });
-
-  useEffect(() => {
-    if (tenant) {
-      setSelectedPlanId(tenant.effective_plan_id || "");
-      setValidFrom(tenant.effective_plan_valid_from ? new Date(tenant.effective_plan_valid_from).toISOString().split("T")[0] : "");
-      setValidTo(tenant.effective_plan_valid_to ? new Date(tenant.effective_plan_valid_to).toISOString().split("T")[0] : "");
-      setReason("");
-    }
-  }, [tenant]);
 
   const assignPlanMutation = useMutation({
     mutationFn: (payload: { plan_id: string; valid_from: string; valid_to: string; reason: string }) =>
