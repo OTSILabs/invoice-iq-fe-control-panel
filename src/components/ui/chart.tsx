@@ -1,8 +1,37 @@
 "use client"
 
 import * as React from "react"
-import * as RechartsPrimitive from "recharts"
-import type { TooltipValueType } from "recharts"
+import type {
+  TooltipProps,
+  DefaultTooltipContentProps,
+  DefaultLegendContentProps,
+  TooltipValueType,
+  ResponsiveContainer,
+} from "recharts"
+
+const LazyResponsiveContainer = React.lazy(() =>
+  import("recharts").then((m) => ({ default: m.ResponsiveContainer }))
+)
+const LazyTooltip = React.lazy(() =>
+  import("recharts").then((m) => ({ default: m.Tooltip }))
+)
+const LazyLegend = React.lazy(() =>
+  import("recharts").then((m) => ({ default: m.Legend }))
+)
+
+const ChartTooltip = (props: React.ComponentProps<any>) => (
+  <React.Suspense fallback={null}>
+    <LazyTooltip {...props} />
+  </React.Suspense>
+)
+ChartTooltip.displayName = "Tooltip"
+
+const ChartLegend = (props: React.ComponentProps<any>) => (
+  <React.Suspense fallback={null}>
+    <LazyLegend {...props} />
+  </React.Suspense>
+)
+ChartLegend.displayName = "Legend"
 
 import { cn } from "@/lib/utils"
 
@@ -49,7 +78,7 @@ function ChartContainer({
 }: React.ComponentProps<"div"> & {
   config: ChartConfig
   children: React.ComponentProps<
-    typeof RechartsPrimitive.ResponsiveContainer
+    typeof ResponsiveContainer
   >["children"]
   initialDimension?: {
     width: number
@@ -72,11 +101,11 @@ function ChartContainer({
         {...props}
       >
         <ChartStyle id={chartId} config={config} />
-        <RechartsPrimitive.ResponsiveContainer
-          initialDimension={initialDimension}
-        >
-          {children}
-        </RechartsPrimitive.ResponsiveContainer>
+        <React.Suspense fallback={<div className="h-full w-full min-h-[300px] animate-pulse rounded-lg bg-muted/20" />}>
+          <LazyResponsiveContainer initialDimension={initialDimension}>
+            {children}
+          </LazyResponsiveContainer>
+        </React.Suspense>
       </div>
     </ChartContext.Provider>
   )
@@ -113,7 +142,7 @@ ${colorConfig
   )
 }
 
-const ChartTooltip = RechartsPrimitive.Tooltip
+// ChartTooltip is defined above dynamically
 
 function ChartTooltipContent({
   active,
@@ -129,7 +158,7 @@ function ChartTooltipContent({
   color,
   nameKey,
   labelKey,
-}: React.ComponentProps<typeof RechartsPrimitive.Tooltip> &
+}: TooltipProps &
   React.ComponentProps<"div"> & {
     hideLabel?: boolean
     hideIndicator?: boolean
@@ -137,7 +166,7 @@ function ChartTooltipContent({
     nameKey?: string
     labelKey?: string
   } & Omit<
-    RechartsPrimitive.DefaultTooltipContentProps<
+    DefaultTooltipContentProps<
       TooltipValueType,
       TooltipNameType
     >,
@@ -256,7 +285,7 @@ function ChartTooltipContent({
   )
 }
 
-const ChartLegend = RechartsPrimitive.Legend
+// ChartLegend is defined above dynamically
 
 function ChartLegendContent({
   className,
@@ -267,7 +296,7 @@ function ChartLegendContent({
 }: React.ComponentProps<"div"> & {
   hideIcon?: boolean
   nameKey?: string
-} & RechartsPrimitive.DefaultLegendContentProps) {
+} & DefaultLegendContentProps) {
   const { config } = useChart()
 
   if (!payload?.length) {

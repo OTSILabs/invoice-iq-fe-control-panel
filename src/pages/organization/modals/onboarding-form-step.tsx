@@ -2,12 +2,11 @@ import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog"
 import { InputField } from "../../../components/ui/input-field"
-import { Input } from "@/components/ui/input"
-import { Field, FieldLabel } from "@/components/ui/field"
-import { Plus, Minus, ArrowLeft, Loader2 } from "lucide-react"
+import { Plus, Loader2 } from "lucide-react"
 import { useFormContext } from "react-hook-form"
 import type { Organization, Plan } from "@/types"
-import { PlanForm } from "@/pages/plans/modals/plan-form-dailog"
+import { OrganizationSection } from "./organization-section"
+import { PlanSelectionSection } from "./plan-selection-section"
 
 interface OnboardingFormStepProps {
   existingOrganization?: { id: string; name: string }
@@ -44,7 +43,7 @@ export function OnboardingFormStep({
   isPending,
   isFormReadyToSubmit,
 }: OnboardingFormStepProps) {
-  const { register, setValue, formState: { errors } } = useFormContext()
+  const { register, formState: { errors } } = useFormContext()
 
   return (
     <>
@@ -71,105 +70,18 @@ export function OnboardingFormStep({
             className="space-y-8"
             noValidate
           >
-            {/* Organization Section */}
-            <div className="space-y-4">
-              <div>
-                <h3 className="mb-1 text-base font-bold text-foreground">
-                  1. Organization Details
-                </h3>
-                <p className="text-xs text-muted-foreground">
-                  {existingOrganization 
-                    ? "Adding tenant to pre-selected organization." 
-                    : "Choose an existing organization or set up a new one."}
-                </p>
-              </div>
+            {/* Organization Details Section */}
+            <OrganizationSection
+              existingOrganization={existingOrganization}
+              organizations={organizations}
+              isOrgsLoading={isOrgsLoading}
+              isCreatingOrg={isCreatingOrg}
+              selectedOrgId={selectedOrgId}
+              handleToggleCreatingOrg={handleToggleCreatingOrg}
+              handleOrgChange={handleOrgChange}
+            />
 
-              <div className="space-y-1">
-                {!isCreatingOrg ? (
-                  <>
-                    <InputField
-                      id="existingOrgSelect"
-                      label="Organization"
-                      required
-                      type="select"
-                      value={selectedOrgId}
-                      onChange={(e) => {
-                        if (e.target.value === "__create__") {
-                          handleToggleCreatingOrg(true);
-                        } else {
-                          handleOrgChange(e as React.ChangeEvent<HTMLSelectElement>);
-                        }
-                      }}
-                    >
-                      <option value="" disabled>Select Organization</option>
-
-                      {isOrgsLoading ? (
-                        <option value="" disabled>
-                          Loading organizations…
-                        </option>
-                      ) : organizations.length === 0 ? (
-                        <option value="" disabled>
-                          No organizations found
-                        </option>
-                      ) : (
-                        organizations.map((org) => (
-                          <option key={org.id} value={org.id}>
-                            {org.name}
-                          </option>
-                        ))
-                      )}
-                    </InputField>
-                    <Button
-                      // type="button"
-                      variant="text"
-                      size="xs"
-                      className="text-primary hover:text-primary/80 mt-1"
-                      onClick={() => handleToggleCreatingOrg(true)}
-                    >
-                      <Plus className="size-3" />
-                      Create organization
-                    </Button>
-                  </>
-                ) : (
-                  <Field>
-                    <FieldLabel htmlFor="orgName" className="text-sm font-medium text-foreground">
-                      Organization name
-                      <span className="text-destructive ml-0.5">*</span>
-                    </FieldLabel>
-                    <div className="flex items-center gap-2">
-                      <Input
-                        id="orgName"
-                        placeholder="e.g. Acme Corp"
-                        className="h-9 flex-1 rounded-lg border border-input bg-inherit px-3 text-sm text-foreground placeholder:text-muted-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:border-primary disabled:cursor-not-allowed disabled:opacity-50"
-                        {...register("orgName")}
-                      />
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        className="h-9 shrink-0 text-xs text-muted-foreground hover:text-foreground cursor-pointer"
-                        onClick={() => handleToggleCreatingOrg(false)}
-                      >
-                        Cancel
-                      </Button>
-                    </div>
-                    {errors.orgName?.message && (
-                      <span className="px-1 text-[11px] font-medium text-destructive">
-                        {String(errors.orgName.message)}
-                      </span>
-                    )}
-                  </Field>
-                )}
-
-                {existingOrganization && (
-                  <p className="text-[11px] text-muted-foreground">
-                    Defaults to the pre-selected organization. You can select another if needed.
-                  </p>
-                )}
-              </div>
-            </div>
-
-            {/* Tenant Section */}
+            {/* Tenant Configuration Section */}
             <div className="space-y-4 border-t border-border pt-6">
               <div>
                 <h3 className="mb-1 text-base font-bold text-foreground">
@@ -246,106 +158,23 @@ export function OnboardingFormStep({
               </div>
             </div>
 
-            {/* Plan Section */}
-            <div className="space-y-4 border-t border-border pt-6">
-              <div>
-                <h3 className="mb-1 text-base font-bold text-foreground">
-                  3. Plan Selection
-                </h3>
-                <p className="text-sm text-muted-foreground">
-                  Choose a billing tier for this organization.
-                </p>
-              </div>
-              <div className="space-y-2">
-                <InputField
-                  id="planSelect"
-                  type="select"
-                  disabled={isCreatingPlan}
-                  label={
-                    <div className="flex items-center justify-between w-full">
-                      <span>
-                        Select Plan
-                        <span className="text-destructive ml-0.5">*</span>
-                      </span>
-                      {isCreatingPlan ? (
-                        <Button
-                          type="button"
-                          variant="text"
-                          size="xs"
-                          className="text-primary hover:text-primary/80"
-                          onClick={() => setIsCreatingPlan(false)}
-                        >
-                          <ArrowLeft className="mr-1 h-3 w-3" /> Select Plan
-                        </Button>
-                      ) : (
-                        <Button
-                          type="button"
-                          variant="text"
-                          size="xs"
-                          className="text-primary hover:text-primary/80"
-                          onClick={() => {
-                            setValue("plan_id", "")
-                            setIsCreatingPlan(true)
-                          }}
-                        >
-                          <Plus className="mr-1 h-3 w-3" /> Add Plan
-                        </Button>
-                      )}
-                    </div>
-                  }
-                  {...register("plan_id")}
-                >
-                  <option value="" disabled>
-                    {isPlansLoading ? "Loading plans..." : "Select a plan"}
-                  </option>
-                  {plans?.map((plan) => (
-                    <option key={plan.id} value={plan.id}>
-                      {plan.description}
-                    </option>
-                  ))}
-                </InputField>
-              </div>
-            </div>
+            {/* Plan Selection Section */}
+            <PlanSelectionSection
+              plans={plans}
+              isPlansLoading={isPlansLoading}
+              isCreatingPlan={isCreatingPlan}
+              setIsCreatingPlan={setIsCreatingPlan}
+              handleInlinePlanSuccess={handleInlinePlanSuccess}
+            />
           </form>
-
-          {isCreatingPlan && (
-            <div className="mt-4 animate-in border-t border-border pt-6 duration-300 fade-in slide-in-from-bottom-4">
-              <div className="mb-4 flex items-start justify-between">
-                <div>
-                  <h4 className="mb-1 text-sm font-bold text-foreground">
-                    Create New Plan
-                  </h4>
-                  <p className="text-xs text-muted-foreground">
-                    Add a new plan to the system. It will be
-                    automatically available to select once created.
-                  </p>
-                </div>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8 rounded-full text-muted-foreground hover:bg-destructive/10 hover:text-destructive cursor-pointer"
-                  onClick={() => setIsCreatingPlan(false)}
-                >
-                  <Minus className="h-4 w-4" />
-                </Button>
-              </div>
-              <PlanForm
-                formId="inline-plan-form"
-                showFooter={false}
-                onCancel={() => setIsCreatingPlan(false)}
-                onSuccess={handleInlinePlanSuccess}
-              />
-            </div>
-          )}
         </div>
       </ScrollArea>
-      
+
       <DialogFooter className="flex flex-col-reverse gap-3 border-t border-border bg-popover px-8 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
         <div className="mt-2 w-full sm:mt-0 sm:w-auto"></div>
         <Button
           type="submit"
-          size={"sm"}
+          size="sm"
           form={isCreatingPlan ? "inline-plan-form" : "create-all-form"}
           className="w-full px-3 font-medium bg-primary hover:bg-primary/90 text-white shadow-none sm:w-auto cursor-pointer"
           disabled={isPending || !isFormReadyToSubmit}

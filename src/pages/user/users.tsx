@@ -42,9 +42,11 @@ export function Users() {
   const { data: users = [], isLoading: isLoadingUsers, isError: isErrorUsers, refetch: refetchUsers, isFetching: isFetchingUsers } = usePlatformUsers()
   const { data: roles = [], isLoading: isLoadingRoles, isError: isErrorRoles, refetch: refetchRoles } = usePlatformRoles()
 
-  const [searchText, setSearchText] = useState("")
-  const [status, setStatus] = useState("all")
-  const [roleFilter, setRoleFilter] = useState("all")
+  const [filters, setFilters] = useState({
+    searchText: "",
+    status: "all",
+    roleFilter: "all",
+  })
   const [isCreateOpen, setIsCreateOpen] = useState(false)
   const [editingUser, setEditingUser] = useState<PlatformUser | null>(null)
 
@@ -159,18 +161,18 @@ export function Users() {
     []
   )
   const filteredUsers = useMemo(() => {
-    const q = searchText.trim().toLowerCase()
+    const q = filters.searchText.trim().toLowerCase()
     return users.filter((u) => {
       const active = u.status === "ACTIVE"
-      if (status === "active" && !active) return false
-      if (status === "inactive" && active) return false
+      if (filters.status === "active" && !active) return false
+      if (filters.status === "inactive" && active) return false
 
       const rList = getRolesList(u)
-      if (roleFilter !== "all" && !rList.some((r) => r.toLowerCase() === roleFilter)) return false
+      if (filters.roleFilter !== "all" && !rList.some((r) => r.toLowerCase() === filters.roleFilter)) return false
 
       return !q || [u.full_name, u.email, rList.join(", ")].some((v) => v && String(v).toLowerCase().includes(q))
     })
-  }, [users, searchText, status, roleFilter])
+  }, [users, filters])
 
   if (isLoadingUsers || isLoadingRoles) return (
     <div className="flex min-h-[50vh] flex-col items-center justify-center gap-3">
@@ -213,7 +215,7 @@ export function Users() {
       <Card className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border-border p-0">
         <CardContent className="flex min-h-0 flex-1 flex-col p-0">
           <div className="flex flex-col gap-3 border-b bg-card p-3 lg:flex-row lg:items-center lg:justify-between">
-            <Tabs value={roleFilter} onValueChange={setRoleFilter}>
+            <Tabs value={filters.roleFilter} onValueChange={(val) => setFilters((s) => ({ ...s, roleFilter: val }))}>
               <TabsList className="h-9 rounded-md p-0.5">
                 <TabsTrigger value="all" className="h-7 cursor-pointer rounded-sm px-2.5 text-xs">
                   All ({roleCounts.all})
@@ -230,8 +232,8 @@ export function Users() {
             </Tabs>
 
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center w-full lg:w-auto">
-              <SearchInput value={searchText} onChange={setSearchText} disabled={isFetchingUsers} placeholder="Search users..." className="w-full sm:w-72"/>
-              <Select value={status} onValueChange={setStatus} disabled={isFetchingUsers}>
+              <SearchInput value={filters.searchText} onChange={(val) => setFilters((s) => ({ ...s, searchText: val }))} disabled={isFetchingUsers} placeholder="Search users..." className="w-full sm:w-72"/>
+              <Select value={filters.status} onValueChange={(val) => setFilters((s) => ({ ...s, status: val }))} disabled={isFetchingUsers}>
                 <SelectTrigger className="h-9 w-full sm:w-40 bg-background">
                   <SelectValue placeholder="All Status" />
                 </SelectTrigger>

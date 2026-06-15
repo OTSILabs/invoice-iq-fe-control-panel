@@ -1,7 +1,9 @@
 import { useNavigate } from "react-router-dom"
-import { Loader2, ArrowLeft, RefreshCw, ArrowUpRight, Trash2 } from "lucide-react"
+import { ArrowLeft, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import type { Tenant } from "@/types"
+import { MigrateButton } from "./migrate-button"
+import { RetryButton } from "./retry-button"
 
 interface TenantDetailHeaderProps {
   tenant: Tenant
@@ -39,37 +41,20 @@ export function TenantDetailHeader({
       <div className="flex flex-wrap items-center gap-2">
         {/* Retry Provisioning (Conditional: if provisioning is Failed or there is a last_error) */}
         {(tenant.provisioning_status?.toLowerCase() === "failed" || tenant.last_error) && (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={onRetry}
-            disabled={isPendingRetry}
-            className="text-xs font-semibold gap-1.5 border-amber-200 bg-amber-50/50 hover:bg-amber-100 text-amber-800 dark:border-amber-900/30 dark:bg-amber-950/20 dark:text-amber-400 cursor-pointer"
-          >
-            {isPendingRetry ? (
-              <Loader2 className="h-3.5 w-3.5 animate-spin" />
-            ) : (
-              <RefreshCw className="h-3.5 w-3.5" />
-            )}
-            Retry Provisioning
-          </Button>
+          <RetryButton
+            onRetry={onRetry}
+            isPendingRetry={isPendingRetry}
+            failed={true}
+            label="Retry Provisioning"
+          />
         )}
 
         {/* Migrate Database Schema */}
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={onMigrate}
-          disabled={isPendingMigrate}
-          className="text-xs font-semibold gap-1.5 cursor-pointer"
-        >
-          {isPendingMigrate ? (
-            <Loader2 className="h-3.5 w-3.5 animate-spin" />
-          ) : (
-            <ArrowUpRight className="h-3.5 w-3.5" />
-          )}
-          Migrate Schema
-        </Button>
+        <MigrateButton
+          onMigrate={onMigrate}
+          isPendingMigrate={isPendingMigrate}
+          label="Migrate Schema"
+        />
 
         {/* Activate / Deactivate */}
         {tenant.access_status?.toLowerCase() === "active" ? (

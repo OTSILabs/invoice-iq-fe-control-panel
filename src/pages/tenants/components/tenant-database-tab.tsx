@@ -1,7 +1,7 @@
-import { Loader2, ArrowUpRight, RefreshCw } from "lucide-react"
-import { Button } from "@/components/ui/button"
 import { CopyableField } from "@/components/ui/copyable-field"
 import type { Tenant } from "@/types"
+import { MigrateButton } from "./migrate-button"
+import { RetryButton } from "./retry-button"
 
 interface TenantDatabaseTabProps {
   tenant: Tenant
@@ -56,52 +56,13 @@ export function TenantDatabaseTab({
           Database Maintenance Operations
         </h4>
         <div className="flex flex-wrap gap-3">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={onMigrate}
-            disabled={isPendingMigrate}
-            className="text-xs font-semibold gap-1.5 cursor-pointer"
-          >
-            {isPendingMigrate ? (
-              <Loader2 className="h-3.5 w-3.5 animate-spin" />
-            ) : (
-              <ArrowUpRight className="h-3.5 w-3.5" />
-            )}
-            Migrate Database Schema
-          </Button>
+          <MigrateButton onMigrate={onMigrate} isPendingMigrate={isPendingMigrate} />
 
-          {tenant.provisioning_status?.toLowerCase() === "failed" || tenant.last_error ? (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={onRetry}
-              disabled={isPendingRetry}
-              className="text-xs font-semibold gap-1.5 border-amber-200 bg-amber-50/50 hover:bg-amber-100 text-amber-800 cursor-pointer"
-            >
-              {isPendingRetry ? (
-                <Loader2 className="h-3.5 w-3.5 animate-spin" />
-              ) : (
-                <RefreshCw className="h-3.5 w-3.5" />
-              )}
-              Retry Provisioning Setup
-            </Button>
-          ) : (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={onRetry}
-              disabled={isPendingRetry}
-              className="text-xs font-semibold gap-1.5 text-muted-foreground cursor-pointer"
-            >
-              {isPendingRetry ? (
-                <Loader2 className="h-3.5 w-3.5 animate-spin" />
-              ) : (
-                <RefreshCw className="h-3.5 w-3.5" />
-              )}
-              Force Provisioning Retry
-            </Button>
-          )}
+          <RetryButton
+            onRetry={onRetry}
+            isPendingRetry={isPendingRetry}
+            failed={tenant.provisioning_status?.toLowerCase() === "failed" || !!tenant.last_error}
+          />
         </div>
       </div>
     </div>
