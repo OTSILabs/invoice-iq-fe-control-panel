@@ -122,10 +122,6 @@ const data = [
 export function NavActions() {
   const [isOpen, setIsOpen] = React.useState(false)
 
-  React.useEffect(() => {
-    setIsOpen(true)
-  }, [])
-
   return (
     <div className="flex items-center gap-2 text-sm">
       <div className="hidden font-medium text-muted-foreground md:inline-block">
@@ -153,11 +149,11 @@ export function NavActions() {
           <Sidebar collapsible="none" className="bg-transparent">
             <SidebarContent>
               {data.map((group, index) => (
-                <SidebarGroup key={index} className="border-b last:border-none">
+                <SidebarGroup key={group[0]?.label || index} className="border-b last:border-none">
                   <SidebarGroupContent className="gap-0">
                     <SidebarMenu>
-                      {group.map((item, index) => (
-                        <SidebarMenuItem key={index}>
+                      {group.map((item) => (
+                        <SidebarMenuItem key={item.label}>
                           <SidebarMenuButton>
                             {item.icon} <span>{item.label}</span>
                           </SidebarMenuButton>

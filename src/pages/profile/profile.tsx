@@ -76,8 +76,8 @@ export function Profile() {
                   { label: "Email Address", value: user.email, icon: Mail },
                   { label: "Member Since", value: user.memberSince, icon: Calendar },
                   { label: "Account ID", value: user.id, icon: User },
-                ].map(({ label, value, icon: Icon }, idx) => (
-                  <div key={idx} className="flex items-center gap-3 p-3 rounded-xl border border-slate-100 bg-slate-50/40 hover:border-slate-200 transition-colors duration-200">
+                ].map(({ label, value, icon: Icon }) => (
+                  <div key={label} className="flex items-center gap-3 p-3 rounded-xl border border-slate-100 bg-slate-50/40 hover:border-slate-200 transition-colors duration-200">
                     <div className="h-8 w-8 rounded-lg flex items-center justify-center border border-slate-100 bg-white text-slate-500 shrink-0 shadow-2xs">
                       <Icon className="h-4 w-4" />
                     </div>
@@ -126,8 +126,8 @@ export function Profile() {
                 {[
                   { title: "Successful Login", date: user.lastLogin, icon: <LogIn className="size-3" /> },
                   { title: "Password Updated", date: user.pwdUpdated, icon: <Key className="size-3" /> },
-                ].map((item, idx) => (
-                  <div key={idx} className="relative">
+                ].map((item) => (
+                  <div key={item.title} className="relative">
                     <span className="absolute -left-[26px] top-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-white border border-slate-100 text-slate-500 shadow-2xs">{item.icon}</span>
                     <div className="space-y-0.5">
                       <h5 className="text-xs font-bold text-slate-700">{item.title}</h5>

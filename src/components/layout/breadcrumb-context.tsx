@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react"
+import { createContext, useContext, useState, useMemo } from "react"
 import type { ReactNode } from "react"
 
 export interface BreadcrumbItem {
@@ -16,8 +16,10 @@ const BreadcrumbContext = createContext<BreadcrumbContextType | undefined>(undef
 export function BreadcrumbProvider({ children }: { children: ReactNode }) {
   const [breadcrumbs, setBreadcrumbs] = useState<BreadcrumbItem[]>([])
 
+  const contextValue = useMemo(() => ({ breadcrumbs, setBreadcrumbs }), [breadcrumbs])
+
   return (
-    <BreadcrumbContext.Provider value={{ breadcrumbs, setBreadcrumbs }}>
+    <BreadcrumbContext.Provider value={contextValue}>
       {children}
     </BreadcrumbContext.Provider>
   )

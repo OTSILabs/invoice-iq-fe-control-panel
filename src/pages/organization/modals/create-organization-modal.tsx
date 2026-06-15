@@ -31,10 +31,9 @@ export function CreateOrganizationModal({ children, existingOrganization }: Prop
   const [searchParams, setSearchParams] = useSearchParams()
 
   const [isOpen, setIsOpen] = useState(false)
-  const [hasInitialized, setHasInitialized] = useState(false)
   const [isCreatingOrg, setIsCreatingOrg] = useState(false)
   const [isCreatingPlan, setIsCreatingPlan] = useState(false)
-  const [selectedOrgId, setSelectedOrgId] = useState("")
+  const [selectedOrgId, setSelectedOrgId] = useState(existingOrganization?.id ?? "")
   const [createdTenant, setCreatedTenant] = useState<CreatedTenantState | null>(null)
   const [replicationSettings, setReplicationSettings] = useState<ReplicationSettings>(DEFAULT_REPLICATION_SETTINGS)
 
@@ -58,10 +57,14 @@ export function CreateOrganizationModal({ children, existingOrganization }: Prop
   }
 
   useEffect(() => {
-    if (!isOpen || isOrgsLoading || hasInitialized) return
-    setHasInitialized(true)
+    if (isOpen && !isOrgsLoading && organizations.length === 0) {
+      setIsCreatingOrg(true)
+    }
+  }, [isOpen, isOrgsLoading, organizations.length])
 
-    if (!isCreatingOrg) {
+  const handleOpenChange = (open: boolean) => {
+    setIsOpen(open)
+    if (open) {
       if (existingOrganization) {
         setSelectedOrgId(existingOrganization.id)
         setValue("orgName", existingOrganization.name, { shouldValidate: true })
@@ -70,21 +73,17 @@ export function CreateOrganizationModal({ children, existingOrganization }: Prop
         setValue("orgName", "", { shouldValidate: true })
         updateSearchParam("org_id")
       }
-    } else if (organizations.length === 0) {
-      setIsCreatingOrg(true)
-    }
-  }, [isOpen, isOrgsLoading, hasInitialized])
-
-  const handleOpenChange = (open: boolean) => {
-    setIsOpen(open)
-    if (!open) {
-      setHasInitialized(false)
+      if (!isOrgsLoading && organizations.length === 0) {
+        setIsCreatingOrg(true)
+      }
+    } else {
       setTimeout(() => {
         setIsCreatingPlan(false)
         setIsCreatingOrg(false)
         setCreatedTenant(null)
         setReplicationSettings({ ...DEFAULT_REPLICATION_SETTINGS })
         reset(DEFAULT_FORM_VALUES(existingOrganization?.name))
+        setSelectedOrgId(existingOrganization?.id ?? "")
         updateSearchParam("org_id")
       }, 300)
     }

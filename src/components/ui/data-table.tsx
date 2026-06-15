@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useMemo, useRef, useState } from "react";
 import {
   flexRender,
   getFilteredRowModel,
@@ -231,8 +231,11 @@ export function DataTable<TData, TValue = unknown>({
     enableColumnFilters: true,
     enableSorting: true,
     getFilteredRowModel: getFilteredRowModel(),
-    onColumnFiltersChange: (filters) => {
-      setColumnFilters(filters);
+    onColumnFiltersChange: (updater) => {
+      const nextFilters =
+        typeof updater === "function" ? updater(columnFilters) : updater;
+      setColumnFilters(nextFilters);
+      onFilterChange?.(nextFilters);
     },
 
     onRowSelectionChange: onRowSelectionChange,
@@ -246,10 +249,6 @@ export function DataTable<TData, TValue = unknown>({
       sorting: sortingState,
     },
   });
-
-  useEffect(() => {
-    onFilterChange?.(columnFilters);
-  }, [columnFilters]);
 
   return (
     <div

@@ -87,8 +87,8 @@ export function OrganizationDetail() {
               { label: "Created At", content: <p className="text-xs font-semibold text-foreground">{formatDate(organization.created_at)}</p> },
               { label: "Updated At", content: <p className="text-xs font-semibold text-foreground">{formatDate(organization.updated_at)}</p> },
               { label: "Organization ID", content: <p className="font-mono text-xs font-medium text-foreground truncate" title={organization.id}>{organization.id}</p> }
-            ].map((item, idx) => (
-              <div key={idx} className="bg-card px-4 py-3.5 hover:bg-muted/10 transition-colors flex flex-col justify-center">
+            ].map((item) => (
+              <div key={item.label} className="bg-card px-4 py-3.5 hover:bg-muted/10 transition-colors flex flex-col justify-center">
                 <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1">{item.label}</p>
                 {item.content}
               </div>

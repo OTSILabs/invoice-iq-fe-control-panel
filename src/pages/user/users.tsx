@@ -98,10 +98,10 @@ export function Users() {
         minWidth: "180px",
         cell: ({ row }) => (
           <div className="flex flex-wrap items-center gap-2">
-            {getRolesList(row.original).map((role, idx) => {
+            {getRolesList(row.original).map((role) => {
               const badge = getRoleBadgeVariant(role)
               return (
-                <Badge key={idx} variant={badge.variant} className={badge.className}>
+                <Badge key={role} variant={badge.variant} className={badge.className}>
                   {String(role).toUpperCase()}
                 </Badge>
               )
@@ -270,8 +270,12 @@ export function Users() {
         </CardContent>
       </Card>
 
-      <CreateUserDialog open={isCreateOpen} onOpenChange={setIsCreateOpen} roles={roles} />
-      <EditUserDialog user={editingUser} open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen} />
+      {isCreateOpen && (
+        <CreateUserDialog open={isCreateOpen} onOpenChange={setIsCreateOpen} roles={roles} />
+      )}
+      {isEditDialogOpen && editingUser && (
+        <EditUserDialog user={editingUser} open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen} />
+      )}
     </div>
   )
 }

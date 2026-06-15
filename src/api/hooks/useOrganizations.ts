@@ -125,6 +125,8 @@ export const useOnboardOrganizationAndTenant = () => {
 
 // Master data replication mutation hook
 export const useReplicateMasterData = () => {
+  const queryClient = useQueryClient()
+
   return useMutation({
     mutationFn: ({
       tenantId,
@@ -133,6 +135,10 @@ export const useReplicateMasterData = () => {
       tenantId: string
       settings: Record<string, boolean>
     }) => organizationsService.replicateMasterData(tenantId, settings),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["organizations"] })
+      queryClient.invalidateQueries({ queryKey: ["tenants"] })
+    },
   })
 }
 

@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useNavigate } from "react-router-dom"
 import { AuthAPI } from "../services/auth.service"
 import { toast } from "sonner"
@@ -6,6 +6,7 @@ import type { LoginPayload, LoginResponse } from "../../types"
 
 export const useAuth = () => {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
 
   return useMutation<LoginResponse, Error, LoginPayload>({
     mutationFn: (payload: LoginPayload) => {
@@ -14,6 +15,7 @@ export const useAuth = () => {
     onSuccess: (data) => {
       // Store the auth response in sessionStorage
       sessionStorage.setItem("token", JSON.stringify(data))
+      queryClient.invalidateQueries({ queryKey: ["auth", "me"] })
       toast.success("Successfully logged in!")
       navigate("/organizations", { replace: true })
     },
@@ -38,12 +40,14 @@ export const useAuthMe = (options = {}) => {
 
 export const useRegister = () => {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: (payload: any) => {
       return AuthAPI.register(payload)
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["auth", "me"] })
       toast.success("Registration successful! Please login.")
       navigate("/login")
     },
@@ -54,11 +58,14 @@ export const useRegister = () => {
 }
 
 export const useForgotPassword = () => {
+  const queryClient = useQueryClient()
+
   return useMutation({
     mutationFn: ({ client_name, email }: { client_name: string; email: string }) => {
       return AuthAPI.forgotPassword(client_name, email)
     },
     onSuccess: (data: any) => {
+      queryClient.invalidateQueries({ queryKey: ["auth", "me"] })
       toast.success(data?.message || "Password reset link sent to your email.")
     },
     onError: (error: any) => {
@@ -72,12 +79,14 @@ export const useForgotPassword = () => {
 
 export const useResetPassword = () => {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: (payload: any) => {
       return AuthAPI.resetPassword(payload)
     },
     onSuccess: (data: any) => {
+      queryClient.invalidateQueries({ queryKey: ["auth", "me"] })
       toast.success(data?.message || "Password reset successful. Please sign in.")
       navigate("/login")
     },
@@ -92,12 +101,14 @@ export const useResetPassword = () => {
 
 export const useChangePassword = () => {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: (payload: any) => {
       return AuthAPI.changePassword(payload)
     },
     onSuccess: (data: any) => {
+      queryClient.invalidateQueries({ queryKey: ["auth", "me"] })
       toast.success(
         data?.message || "Password changed successfully. Please login again."
       )

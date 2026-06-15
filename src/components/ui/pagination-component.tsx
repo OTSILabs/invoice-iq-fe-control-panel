@@ -41,12 +41,12 @@ export function PaginationComponent({
       return Array.from({ length: totalPages }, (_, i) => i + 1)
     }
     if (currentPage <= 3) {
-      return [1, 2, 3, 4, 'ellipsis', totalPages]
+      return [1, 2, 3, 4, 'right-ellipsis', totalPages]
     }
     if (currentPage >= totalPages - 2) {
-      return [1, 'ellipsis', totalPages - 3, totalPages - 2, totalPages - 1, totalPages]
+      return [1, 'left-ellipsis', totalPages - 3, totalPages - 2, totalPages - 1, totalPages]
     }
-    return [1, 'ellipsis', currentPage - 1, currentPage, currentPage + 1, 'ellipsis', totalPages]
+    return [1, 'left-ellipsis', currentPage - 1, currentPage, currentPage + 1, 'right-ellipsis', totalPages]
   }
 
   const pages = getPageNumbers()
@@ -85,9 +85,9 @@ export function PaginationComponent({
             />
           </PaginationItem>
 
-          {pages.map((p, i) => (
-            <PaginationItem key={i}>
-              {p === 'ellipsis' ? (
+          {pages.map((p) => (
+            <PaginationItem key={p}>
+              {String(p).includes('ellipsis') ? (
                 <PaginationEllipsis />
               ) : (
                 <PaginationLink

@@ -1,4 +1,3 @@
-import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Loader2, UserCog } from "lucide-react"
@@ -60,24 +59,9 @@ export function EditUserDialog({ user, open, onOpenChange }: EditUserDialogProps
   } = useForm<EditUserFormValues>({
     resolver: zodResolver(editUserSchema),
     defaultValues: {
-      role_name: "",
+      role_name: getRolesList(user)[0] || "",
     },
   })
-
-  // Prepopulate form values on open, reset on close
-  useEffect(() => {
-    if (open && user) {
-      const rolesList = getRolesList(user)
-      const currentRole = rolesList[0] || ""
-      reset({
-        role_name: currentRole,
-      })
-    } else if (!open) {
-      reset({
-        role_name: "",
-      })
-    }
-  }, [user, open, reset])
 
   const onSubmit = (data: EditUserFormValues) => {
     if (!user) return

@@ -81,10 +81,12 @@ export function ErpSettings() {
         <ErpSettingsCards records={settings} />
       )}
 
-      <ErpSettingFormDialog
-        open={isCreateOpen}
-        onOpenChange={setIsCreateOpen}
-      />
+      {isCreateOpen && (
+        <ErpSettingFormDialog
+          open={isCreateOpen}
+          onOpenChange={setIsCreateOpen}
+        />
+      )}
     </div>
   )
 }

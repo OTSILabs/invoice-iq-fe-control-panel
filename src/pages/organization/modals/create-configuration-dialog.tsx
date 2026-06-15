@@ -24,7 +24,7 @@ interface CreateConfigurationDialogProps {
 
 export function CreateConfigurationDialog({ entityId, entityType, open, onOpenChange }: CreateConfigurationDialogProps) {
   const queryClient = useQueryClient()
-  const [newConfigs, setNewConfigs] = useState([{ key: "", value: "" }])
+  const [newConfigs, setNewConfigs] = useState(() => [{ id: Math.random().toString(), key: "", value: "" }])
   const queryKeyType = entityType === 'organization' ? 'organizations' : 'tenants'
 
   const createMutation = useMutation({
@@ -36,7 +36,7 @@ export function CreateConfigurationDialog({ entityId, entityType, open, onOpenCh
       queryClient.invalidateQueries({ queryKey: [queryKeyType, entityId, 'configurations'] })
       toast.success("Configurations created successfully")
       onOpenChange(false)
-      setNewConfigs([{ key: "", value: "" }])
+      setNewConfigs([{ id: Math.random().toString(), key: "", value: "" }])
     },
     onError: (error) => {
       toast.error("Failed to create configuration")
@@ -75,15 +75,15 @@ export function CreateConfigurationDialog({ entityId, entityType, open, onOpenCh
         <form onSubmit={handleCreate} className="space-y-4 pt-4">
           <div className="space-y-4 max-h-[300px] overflow-y-auto p-1">
             {newConfigs.map((config, index) => (
-              <div key={index} className="flex items-end gap-2">
+              <div key={config.id} className="flex items-end gap-2">
                 <div className="space-y-2 flex-1">
-                  <Label htmlFor={`key-${index}`}>Key</Label>
-                  <Input id={`key-${index}`} value={config.key} required placeholder="e.g. max_users" className="font-mono text-sm"
+                  <Label htmlFor={`key-${config.id}`}>Key</Label>
+                  <Input id={`key-${config.id}`} value={config.key} required placeholder="e.g. max_users" className="font-mono text-sm"
                     onChange={e => setNewConfigs(newConfigs.map((c, i) => i === index ? { ...c, key: e.target.value } : c))} />
                 </div>
                 <div className="space-y-2 flex-1">
-                  <Label htmlFor={`value-${index}`}>Value</Label>
-                  <Input id={`value-${index}`} value={config.value} required placeholder="e.g. 100"
+                  <Label htmlFor={`value-${config.id}`}>Value</Label>
+                  <Input id={`value-${config.id}`} value={config.value} required placeholder="e.g. 100"
                     onChange={e => setNewConfigs(newConfigs.map((c, i) => i === index ? { ...c, value: e.target.value } : c))} />
                 </div>
                 {newConfigs.length > 1 && (
@@ -101,7 +101,7 @@ export function CreateConfigurationDialog({ entityId, entityType, open, onOpenCh
             variant="outline"
             size="sm"
             className="w-full border-dashed"
-            onClick={() => setNewConfigs([...newConfigs, { key: "", value: "" }])}
+            onClick={() => setNewConfigs([...newConfigs, { id: Math.random().toString(), key: "", value: "" }])}
           >
             <Plus className="mr-2 h-4 w-4" />
             Add Another Row

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Loader2, Eye, EyeOff, UserPlus } from "lucide-react"
@@ -34,13 +34,6 @@ interface CreateUserDialogProps {
 export function CreateUserDialog({ open, onOpenChange, roles }: CreateUserDialogProps) {
   const { mutate: createUser, isPending: isCreating } = useCreatePlatformUserMutation()
   const [showPassword, setShowPassword] = useState(false)
-  const [prevOpen, setPrevOpen] = useState(open)
-
-  // Reset password visibility when the dialog opens or closes
-  if (open !== prevOpen) {
-    setPrevOpen(open)
-    setShowPassword(false)
-  }
 
   const {
     register,
@@ -52,13 +45,6 @@ export function CreateUserDialog({ open, onOpenChange, roles }: CreateUserDialog
     resolver: zodResolver(createUserSchema),
     defaultValues: DEFAULT_CREATE_USER_VALUES,
   })
-
-  // Reset form when dialog closes
-  useEffect(() => {
-    if (!open) {
-      reset(DEFAULT_CREATE_USER_VALUES)
-    }
-  }, [open, reset])
 
   const onCreateUserSubmit = (data: CreateUserFormValues) => {
     const payload: CreatePlatformUserPayload = {
