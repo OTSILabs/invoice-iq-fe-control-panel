@@ -27,7 +27,7 @@ export function decodeJWT(token: string) {
 
 export function getDecodedToken(): any {
   try {
-    const stored = sessionStorage.getItem("token")
+    const stored = sessionStorage.getItem("token:v1")
     if (stored) {
       const session = JSON.parse(stored)
       const actualToken = session.access_token || session.token

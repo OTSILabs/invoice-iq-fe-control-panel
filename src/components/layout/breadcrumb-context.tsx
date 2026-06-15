@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useMemo } from "react"
+import { createContext, use, useState, useMemo } from "react"
 import type { ReactNode } from "react"
 
 export interface BreadcrumbItem {
@@ -26,7 +26,7 @@ export function BreadcrumbProvider({ children }: { children: ReactNode }) {
 }
 
 export function useBreadcrumb() {
-  const context = useContext(BreadcrumbContext)
+  const context = use(BreadcrumbContext)
   if (!context) throw new Error("useBreadcrumb must be used within a BreadcrumbProvider")
   return context
 }

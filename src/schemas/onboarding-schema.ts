@@ -14,7 +14,7 @@ export const onboardingSchema = z.object({
     ),
   tenant_role: z.string().min(1, "Tenant role is required."),
   admin_full_name: z.string().min(1, "Full name is required."),
-  admin_email: z.string().email("Please enter a valid email address."),
+  admin_email: z.email("Please enter a valid email address."),
   admin_password: z.string().min(6, "Password must be at least 6 characters."),
   plan_id: z.string().optional(),
 })

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { useSearchParams, useNavigate } from "react-router-dom"
 import { useForm, FormProvider } from "react-hook-form"
@@ -31,7 +31,7 @@ export function CreateOrganizationModal({ children, existingOrganization }: Prop
   const [searchParams, setSearchParams] = useSearchParams()
 
   const [isOpen, setIsOpen] = useState(false)
-  const [isCreatingOrg, setIsCreatingOrg] = useState(false)
+  const [isCreatingOrgOverride, setIsCreatingOrgOverride] = useState(false)
   const [isCreatingPlan, setIsCreatingPlan] = useState(false)
   const [selectedOrgId, setSelectedOrgId] = useState(existingOrganization?.id ?? "")
   const [createdTenant, setCreatedTenant] = useState<CreatedTenantState | null>(null)
@@ -41,6 +41,8 @@ export function CreateOrganizationModal({ children, existingOrganization }: Prop
   const { data: plans, isLoading: isPlansLoading } = useQuery({ queryKey: ["plans"], queryFn: plansService.getAll })
   const { mutate: onboardTenant, isPending } = useOnboardOrganizationAndTenant()
   const { mutate: replicateMasterData, isPending: isReplicating } = useReplicateMasterData()
+
+  const isCreatingOrg = isCreatingOrgOverride || (!isOrgsLoading && organizations.length === 0)
 
   const formMethods = useForm<FormValues>({
     resolver: zodResolver(onboardingSchema),
@@ -56,12 +58,6 @@ export function CreateOrganizationModal({ children, existingOrganization }: Prop
     setSearchParams(params)
   }
 
-  useEffect(() => {
-    if (isOpen && !isOrgsLoading && organizations.length === 0) {
-      setIsCreatingOrg(true)
-    }
-  }, [isOpen, isOrgsLoading, organizations.length])
-
   const handleOpenChange = (open: boolean) => {
     setIsOpen(open)
     if (open) {
@@ -74,12 +70,12 @@ export function CreateOrganizationModal({ children, existingOrganization }: Prop
         updateSearchParam("org_id")
       }
       if (!isOrgsLoading && organizations.length === 0) {
-        setIsCreatingOrg(true)
+        setIsCreatingOrgOverride(true)
       }
     } else {
       setTimeout(() => {
         setIsCreatingPlan(false)
-        setIsCreatingOrg(false)
+        setIsCreatingOrgOverride(false)
         setCreatedTenant(null)
         setReplicationSettings({ ...DEFAULT_REPLICATION_SETTINGS })
         reset(DEFAULT_FORM_VALUES(existingOrganization?.name))
@@ -90,7 +86,7 @@ export function CreateOrganizationModal({ children, existingOrganization }: Prop
   }
 
   const handleToggleCreatingOrg = (create: boolean) => {
-    setIsCreatingOrg(create)
+    setIsCreatingOrgOverride(create)
 
     if (!create && organizations.length > 0) {
       const org = organizations.find((o) => o.id === selectedOrgId)

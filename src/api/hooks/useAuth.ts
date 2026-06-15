@@ -14,7 +14,7 @@ export const useAuth = () => {
     },
     onSuccess: (data) => {
       // Store the auth response in sessionStorage
-      sessionStorage.setItem("token", JSON.stringify(data))
+      sessionStorage.setItem("token:v1", JSON.stringify(data))
       queryClient.invalidateQueries({ queryKey: ["auth", "me"] })
       toast.success("Successfully logged in!")
       navigate("/organizations", { replace: true })

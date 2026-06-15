@@ -22,9 +22,11 @@ interface CreateConfigurationDialogProps {
   onOpenChange: (open: boolean) => void;
 }
 
+let configIdCounter = 0
+
 export function CreateConfigurationDialog({ entityId, entityType, open, onOpenChange }: CreateConfigurationDialogProps) {
   const queryClient = useQueryClient()
-  const [newConfigs, setNewConfigs] = useState(() => [{ id: Math.random().toString(), key: "", value: "" }])
+  const [newConfigs, setNewConfigs] = useState(() => [{ id: `config-${configIdCounter++}`, key: "", value: "" }])
   const queryKeyType = entityType === 'organization' ? 'organizations' : 'tenants'
 
   const createMutation = useMutation({
@@ -36,7 +38,7 @@ export function CreateConfigurationDialog({ entityId, entityType, open, onOpenCh
       queryClient.invalidateQueries({ queryKey: [queryKeyType, entityId, 'configurations'] })
       toast.success("Configurations created successfully")
       onOpenChange(false)
-      setNewConfigs([{ id: Math.random().toString(), key: "", value: "" }])
+      setNewConfigs([{ id: `config-${configIdCounter++}`, key: "", value: "" }])
     },
     onError: (error) => {
       toast.error("Failed to create configuration")
@@ -101,7 +103,7 @@ export function CreateConfigurationDialog({ entityId, entityType, open, onOpenCh
             variant="outline"
             size="sm"
             className="w-full border-dashed"
-            onClick={() => setNewConfigs([...newConfigs, { id: Math.random().toString(), key: "", value: "" }])}
+            onClick={() => setNewConfigs([...newConfigs, { id: `config-${configIdCounter++}`, key: "", value: "" }])}
           >
             <Plus className="mr-2 h-4 w-4" />
             Add Another Row

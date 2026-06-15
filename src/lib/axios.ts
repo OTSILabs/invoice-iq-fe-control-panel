@@ -7,7 +7,7 @@ const api = axios.create({
 });
 
 const getSession = () => {
-  try { return JSON.parse(sessionStorage.getItem('token') || '{}'); } 
+  try { return JSON.parse(sessionStorage.getItem('token:v1') || '{}'); } 
   catch { return {}; }
 };
 
@@ -42,7 +42,7 @@ api.interceptors.response.use((res) => res, async (error) => {
     try {
       const { data } = await axios.post(`${api.defaults.baseURL}/auth/refresh`, { refresh_token: session.refresh_token });
       const newSession = { ...session, ...data };
-      sessionStorage.setItem('token', JSON.stringify(newSession));
+      sessionStorage.setItem('token:v1', JSON.stringify(newSession));
       
       config.headers.Authorization = getAuthHeader(newSession);
       return api(config);
