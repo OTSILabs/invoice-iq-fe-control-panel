@@ -195,19 +195,21 @@ export function CreateOrganizationModal({ children, existingOrganization }: Prop
             <OnboardingFormStep
               existingOrganization={existingOrganization}
               organizations={organizations}
-              isOrgsLoading={isOrgsLoading}
               plans={plans}
-              isPlansLoading={isPlansLoading}
-              isCreatingOrg={isCreatingOrg}
               selectedOrgId={onboardState.selectedOrgId}
-              isCreatingPlan={onboardState.isCreatingPlan}
               setIsCreatingPlan={(create) => setOnboardState((s) => ({ ...s, isCreatingPlan: create }))}
               handleToggleCreatingOrg={handleToggleCreatingOrg}
               handleOrgChange={handleOrgChange}
               onSubmitForm={(e) => { e.preventDefault(); handleSubmit((d) => onSubmit(d))() }}
               handleInlinePlanSuccess={handleInlinePlanSuccess}
-              isPending={isPending}
-              isFormReadyToSubmit={isFormReadyToSubmit}
+              flags={{
+                isOrgsLoading,
+                isPlansLoading,
+                isCreatingOrg,
+                isCreatingPlan: onboardState.isCreatingPlan,
+                isPending,
+                isFormReadyToSubmit,
+              }}
             />
           </FormProvider>
         )}

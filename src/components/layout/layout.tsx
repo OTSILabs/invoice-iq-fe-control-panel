@@ -8,7 +8,7 @@ import { Toaster } from "@/components/ui/sonner"
 import { AppSidebar } from "./app-sidebar"
 import { AppBreadcrumb } from "./AppBreadcrumb"
 import { TopLoader } from "./TopLoader"
-import { resolveBreadcrumbs } from "@/lib/utils"
+import { resolveBreadcrumbs } from "@/components/layout/breadcrumb-utils"
 import { PoweredByFooter } from "@/components/poweredby"
 
 // ─────────────────────────────────────────────────────────────────────────────

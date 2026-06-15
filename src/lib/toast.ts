@@ -8,7 +8,7 @@ const getString = (value: unknown): string | undefined => {
   return typeof value === "string" ? value : undefined
 }
 
-export const getErrorMessage = (error: unknown, fallback: string): string => {
+const getErrorMessage = (error: unknown, fallback: string): string => {
   if (!isRecord(error)) return fallback
 
   const response = error.response

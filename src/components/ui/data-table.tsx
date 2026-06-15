@@ -31,14 +31,8 @@ import { Skeleton } from "./skeleton";
 import { cn } from "@/lib/utils";
 import { PaginationComponent } from "./pagination-component";
 import { Input } from "./input";
-import { CopyToClipboard } from "./copy-to-clipboard";
-import { Link } from "react-router-dom";
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "./hover-card";
-import { ArrowDown, ArrowUp, LinkIcon, Search, FileX2 } from "lucide-react";
+
+import { ArrowDown, ArrowUp, Search, FileX2 } from "lucide-react";
 
 export type CustomColumnDef<TData, TValue = unknown> = ColumnDef<TData, TValue> & {
   width?: string | number;
@@ -511,103 +505,4 @@ function ColumnHeader<TData, TValue>({ header }: ColumnHeaderProps<TData, TValue
   );
 }
 
-interface RowRenderLinkProps {
-  showLink?: boolean;
-  href: string;
-  value: React.ReactNode;
-  header?: string;
-  allowCopy?: boolean;
-  target?: string;
-  urlText?: string;
-  valueContainerClassName?: string;
-  valueTextClassName?: string;
-}
 
-export function RowRenderLink({
-  showLink = true,
-  href,
-  value,
-  header,
-  allowCopy = true,
-  target = "_self",
-  urlText = "Click to view  ",
-  valueContainerClassName = "max-w-24",
-  valueTextClassName = "max-w-32",
-}: RowRenderLinkProps) {
-  return (
-    <div className="flex items-center gap-1">
-      <div className={cn(valueContainerClassName, "truncate")}>
-        {showLink ? (
-          <Link to={href} className="underline text-primary hover:text-primary-hover font-medium" target={target}>
-            <RowCell
-              value={value}
-              href={href}
-              header={header}
-              urlText={urlText}
-              target={target}
-              className={valueTextClassName}
-            />
-          </Link>
-        ) : (
-          <RowCell
-            value={value}
-            header={header}
-            urlText={urlText}
-            className={valueTextClassName}
-          />
-        )}
-      </div>
-      {allowCopy && <CopyToClipboard value={value} />}
-    </div>
-  );
-}
-
-interface RowCellProps {
-  value: React.ReactNode;
-  className?: string;
-  header?: string;
-  href?: string;
-  urlText?: string;
-  target?: string;
-}
-
-export function RowCell({
-  value,
-  className,
-  header,
-  href,
-  urlText = "View logs",
-  target = "_self",
-}: RowCellProps) {
-  const record = value as unknown as Record<string, string>;
-  const displayValue = typeof value === "object" && value !== null
-    ? (record.full_name || record.username || record.email || JSON.stringify(value))
-    : value;
-
-  return (
-    <HoverCard openDelay={300} closeDelay={100}>
-      <HoverCardTrigger asChild>
-        <div className={cn("max-w-32 truncate cursor-pointer hover:underline text-slate-700 font-medium", className)}>
-          {displayValue}
-        </div>
-      </HoverCardTrigger>
-      <HoverCardContent className="space-y-2 p-0 shadow-xl border border-border/80 bg-popover/95 backdrop-blur-md max-w-sm rounded-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-        <div className="p-4">
-          {header && <h4 className="text-xs uppercase tracking-wider font-semibold text-muted-foreground">{header}</h4>}
-          <div className="text-sm font-medium text-foreground break-all mt-1.5 leading-relaxed">{displayValue}</div>
-        </div>
-
-        {href && (
-          <Link
-            to={href}
-            target={target}
-            className="text-xs bg-muted/60 hover:bg-muted/80 text-primary p-3 flex gap-1.5 items-center justify-center transition-colors border-t border-border/40 font-semibold"
-          >
-            <LinkIcon className="size-3.5" />
-            {urlText}
-          </Link>
-        )}
-      </HoverCardContent>
-    </HoverCard>
-  );
-}

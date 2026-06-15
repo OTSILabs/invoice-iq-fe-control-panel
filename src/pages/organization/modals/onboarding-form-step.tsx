@@ -11,38 +11,43 @@ import { PlanSelectionSection } from "./plan-selection-section"
 interface OnboardingFormStepProps {
   existingOrganization?: { id: string; name: string }
   organizations: Organization[]
-  isOrgsLoading: boolean
   plans?: Plan[]
-  isPlansLoading: boolean
-  isCreatingOrg: boolean
   selectedOrgId: string
-  isCreatingPlan: boolean
   setIsCreatingPlan: (value: boolean) => void
   handleToggleCreatingOrg: (value: boolean) => void
   handleOrgChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
   onSubmitForm: (e: React.FormEvent) => void
   handleInlinePlanSuccess: (newPlan?: { id?: string } | null) => void
-  isPending: boolean
-  isFormReadyToSubmit: boolean
+  flags: {
+    isOrgsLoading: boolean
+    isPlansLoading: boolean
+    isCreatingOrg: boolean
+    isCreatingPlan: boolean
+    isPending: boolean
+    isFormReadyToSubmit: boolean
+  }
 }
 
 export function OnboardingFormStep({
   existingOrganization,
   organizations,
-  isOrgsLoading,
   plans,
-  isPlansLoading,
-  isCreatingOrg,
   selectedOrgId,
-  isCreatingPlan,
   setIsCreatingPlan,
   handleToggleCreatingOrg,
   handleOrgChange,
   onSubmitForm,
   handleInlinePlanSuccess,
-  isPending,
-  isFormReadyToSubmit,
+  flags,
 }: OnboardingFormStepProps) {
+  const {
+    isOrgsLoading,
+    isPlansLoading,
+    isCreatingOrg,
+    isCreatingPlan,
+    isPending,
+    isFormReadyToSubmit,
+  } = flags
   const { register, formState: { errors } } = useFormContext()
 
   return (

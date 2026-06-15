@@ -116,4 +116,4 @@ export function OrganizationDetail() {
   )
 }
 
-export default OrganizationDetail
+

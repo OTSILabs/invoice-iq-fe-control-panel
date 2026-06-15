@@ -1,10 +1,9 @@
 import { useForm, Controller } from "react-hook-form"
-import { CreditCard, Loader2 } from "lucide-react"
+import {  Loader2 } from "lucide-react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Switch } from "@/components/ui/switch"
 import { InputField } from "@/components/ui/input-field"
 import { Label } from "@/components/ui/label"
@@ -27,12 +26,7 @@ interface PlanFormProps {
   formId?: string
 }
 
-interface PlanFormDialogProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  mode?: "create" | "edit"
-  plan?: Plan | null
-}
+
 
 // ─── PlanForm ─────────────────────────────────────────────────────────────────
 
@@ -199,27 +193,3 @@ export function PlanForm({
   )
 }
 
-// ─── PlanFormDialog ───────────────────────────────────────────────────────────
-
-export function PlanFormDialog({ open, onOpenChange, mode = "create", plan = null }: PlanFormDialogProps) {
-  const onDone = () => onOpenChange(false)
-
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[85vh] gap-0 overflow-hidden p-0 sm:max-w-lg">
-        <DialogHeader className="border-b border-border px-6 py-5">
-          <DialogTitle className="flex items-center gap-2 text-lg font-bold">
-            <CreditCard className="size-5 text-primary" />
-            {mode === "create" ? "Create Plan" : "Edit Plan"}
-          </DialogTitle>
-          <DialogDescription>
-            Provide the required specifications to set up the billing plan.
-          </DialogDescription>
-        </DialogHeader>
-        <div className="max-h-[calc(85vh-7rem)] overflow-y-auto px-6 py-5">
-          <PlanForm mode={mode} plan={plan} onSuccess={onDone} onCancel={onDone} />
-        </div>
-      </DialogContent>
-    </Dialog>
-  )
-}

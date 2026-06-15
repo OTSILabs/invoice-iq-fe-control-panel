@@ -122,4 +122,4 @@ export function TenantDetail() {
   )
 }
 
-export default TenantDetail;
+
