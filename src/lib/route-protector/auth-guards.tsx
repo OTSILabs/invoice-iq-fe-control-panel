@@ -1,13 +1,13 @@
 import { Navigate, useLocation } from "react-router-dom";
 
 const isAuthenticated = (): boolean => {
+  const tokenStr = sessionStorage.getItem("token:v1");
+  if (!tokenStr) return false;
   try {
-    const tokenStr = sessionStorage.getItem("token:v1");
-    if (!tokenStr) return false;
     const parsed = JSON.parse(tokenStr);
     return !!(parsed.access_token || parsed.token);
   } catch {
-    return !!sessionStorage.getItem("token:v1");
+    return true;
   }
 };
 

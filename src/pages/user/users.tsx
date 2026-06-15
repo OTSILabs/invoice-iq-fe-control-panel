@@ -21,7 +21,21 @@ import { SearchInput } from "@/components/search-input"
 const getRolesList = (u: PlatformUser | null | undefined): string[] => {
   if (!u) return []
   const raw = Array.isArray(u.roles) ? u.roles : Array.isArray(u.role_names) ? u.role_names : [u.role, u.role_name]
-  return raw.filter(Boolean).map((r: unknown) => typeof r === "string" ? r : (r as { name?: string })?.name || "")
+  return raw.reduce<string[]>((acc, r: unknown) => {
+    if (r) {
+      const name = typeof r === "string" ? r : (r as { name?: string })?.name || ""
+      if (name) acc.push(name)
+    }
+    return acc
+  }, [])
+}
+
+const getRoleBadgeVariant = (role: string) => {
+  const r = role?.toLowerCase()
+  const base = "font-semibold text-[10px] px-1.5 py-0.5"
+  if (r === "admin") return { variant: "outline" as const, className: `${base} border-primary text-primary` }
+  if (r === "user" || r === "standard user") return { variant: "secondary" as const, className: `${base} bg-slate-100 text-foreground hover:bg-slate-200` }
+  return { variant: "outline" as const, className: base }
 }
 
 export function Users() {
@@ -33,7 +47,6 @@ export function Users() {
   const [roleFilter, setRoleFilter] = useState("all")
   const [isCreateOpen, setIsCreateOpen] = useState(false)
   const [editingUser, setEditingUser] = useState<PlatformUser | null>(null)
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
 
   const roleCounts = useMemo(() => {
     const counts: Record<string, number> = { all: users.length }
@@ -49,21 +62,12 @@ export function Users() {
 
   const handleOpenEditDialog = (u: PlatformUser) => {
     setEditingUser(u)
-    setIsEditDialogOpen(true)
   }
 
   const handleRefetch = async () => {
     await Promise.all([refetchUsers(), refetchRoles()])
     toast.success("Users refreshed")
   }
-
-  const getRoleBadgeVariant = (role: string) => {
-  const r = role?.toLowerCase()
-  const base = "font-semibold text-[10px] px-1.5 py-0.5"
-  if (r === "admin") return { variant: "outline" as const, className: `${base} border-primary text-primary` }
-  if (r === "user" || r === "standard user") return { variant: "secondary" as const, className: `${base} bg-slate-100 text-foreground hover:bg-slate-200` }
-  return { variant: "outline" as const, className: base }
-}
   const columns = useMemo<CustomColumnDef<PlatformUser>[]>(
     () => [
       {
@@ -273,8 +277,8 @@ export function Users() {
       {isCreateOpen && (
         <CreateUserDialog open={isCreateOpen} onOpenChange={setIsCreateOpen} roles={roles} />
       )}
-      {isEditDialogOpen && editingUser && (
-        <EditUserDialog user={editingUser} open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen} />
+      {editingUser && (
+        <EditUserDialog user={editingUser} open={true} onOpenChange={(open) => { if (!open) setEditingUser(null) }} />
       )}
     </div>
   )

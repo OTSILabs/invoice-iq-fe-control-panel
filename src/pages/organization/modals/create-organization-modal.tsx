@@ -31,18 +31,20 @@ export function CreateOrganizationModal({ children, existingOrganization }: Prop
   const [searchParams, setSearchParams] = useSearchParams()
 
   const [isOpen, setIsOpen] = useState(false)
-  const [isCreatingOrgOverride, setIsCreatingOrgOverride] = useState(false)
-  const [isCreatingPlan, setIsCreatingPlan] = useState(false)
-  const [selectedOrgId, setSelectedOrgId] = useState(existingOrganization?.id ?? "")
   const [createdTenant, setCreatedTenant] = useState<CreatedTenantState | null>(null)
   const [replicationSettings, setReplicationSettings] = useState<ReplicationSettings>(DEFAULT_REPLICATION_SETTINGS)
+  const [onboardState, setOnboardState] = useState({
+    isCreatingOrgOverride: false,
+    isCreatingPlan: false,
+    selectedOrgId: existingOrganization?.id ?? "",
+  })
 
   const { data: organizations = [], isLoading: isOrgsLoading } = useOrganizations()
   const { data: plans, isLoading: isPlansLoading } = useQuery({ queryKey: ["plans"], queryFn: plansService.getAll })
   const { mutate: onboardTenant, isPending } = useOnboardOrganizationAndTenant()
   const { mutate: replicateMasterData, isPending: isReplicating } = useReplicateMasterData()
 
-  const isCreatingOrg = isCreatingOrgOverride || (!isOrgsLoading && organizations.length === 0)
+  const isCreatingOrg = onboardState.isCreatingOrgOverride || (!isOrgsLoading && organizations.length === 0)
 
   const formMethods = useForm<FormValues>({
     resolver: zodResolver(onboardingSchema),
@@ -62,36 +64,38 @@ export function CreateOrganizationModal({ children, existingOrganization }: Prop
     setIsOpen(open)
     if (open) {
       if (existingOrganization) {
-        setSelectedOrgId(existingOrganization.id)
+        setOnboardState((s) => ({ ...s, selectedOrgId: existingOrganization.id }))
         setValue("orgName", existingOrganization.name, { shouldValidate: true })
       } else {
-        setSelectedOrgId("")
+        setOnboardState((s) => ({ ...s, selectedOrgId: "" }))
         setValue("orgName", "", { shouldValidate: true })
         updateSearchParam("org_id")
       }
       if (!isOrgsLoading && organizations.length === 0) {
-        setIsCreatingOrgOverride(true)
+        setOnboardState((s) => ({ ...s, isCreatingOrgOverride: true }))
       }
     } else {
       setTimeout(() => {
-        setIsCreatingPlan(false)
-        setIsCreatingOrgOverride(false)
+        setOnboardState({
+          isCreatingPlan: false,
+          isCreatingOrgOverride: false,
+          selectedOrgId: existingOrganization?.id ?? "",
+        })
         setCreatedTenant(null)
         setReplicationSettings({ ...DEFAULT_REPLICATION_SETTINGS })
         reset(DEFAULT_FORM_VALUES(existingOrganization?.name))
-        setSelectedOrgId(existingOrganization?.id ?? "")
         updateSearchParam("org_id")
       }, 300)
     }
   }
 
   const handleToggleCreatingOrg = (create: boolean) => {
-    setIsCreatingOrgOverride(create)
+    setOnboardState((s) => ({ ...s, isCreatingOrgOverride: create }))
 
     if (!create && organizations.length > 0) {
-      const org = organizations.find((o) => o.id === selectedOrgId)
+      const org = organizations.find((o) => o.id === onboardState.selectedOrgId)
       setValue("orgName", org?.name ?? "", { shouldValidate: true })
-      org ? updateSearchParam("org_id", selectedOrgId) : updateSearchParam("org_id")
+      org ? updateSearchParam("org_id", onboardState.selectedOrgId) : updateSearchParam("org_id")
     } else {
       setValue("orgName", "", { shouldValidate: true })
       updateSearchParam("org_id")
@@ -100,7 +104,7 @@ export function CreateOrganizationModal({ children, existingOrganization }: Prop
 
   const handleOrgChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const id = e.target.value
-    setSelectedOrgId(id)
+    setOnboardState((s) => ({ ...s, selectedOrgId: id }))
     const org = organizations.find((o) => o.id === id)
     if (org) setValue("orgName", org.name, { shouldValidate: true })
     updateSearchParam("org_id", id)
@@ -122,7 +126,7 @@ export function CreateOrganizationModal({ children, existingOrganization }: Prop
         admin_email: data.admin_email,
         admin_password: data.admin_password,
         plan_id: finalPlanId,
-        existingOrgId: isCreatingOrg ? undefined : selectedOrgId || undefined,
+        existingOrgId: isCreatingOrg ? undefined : onboardState.selectedOrgId || undefined,
       },
       {
         onSuccess: (tenant) => {
@@ -160,7 +164,7 @@ export function CreateOrganizationModal({ children, existingOrganization }: Prop
     )
   }
 
-  const isFormReadyToSubmit = isValid && (!!watch("plan_id") || isCreatingPlan)
+  const isFormReadyToSubmit = isValid && (!!watch("plan_id") || onboardState.isCreatingPlan)
 
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
@@ -195,9 +199,9 @@ export function CreateOrganizationModal({ children, existingOrganization }: Prop
               plans={plans}
               isPlansLoading={isPlansLoading}
               isCreatingOrg={isCreatingOrg}
-              selectedOrgId={selectedOrgId}
-              isCreatingPlan={isCreatingPlan}
-              setIsCreatingPlan={setIsCreatingPlan}
+              selectedOrgId={onboardState.selectedOrgId}
+              isCreatingPlan={onboardState.isCreatingPlan}
+              setIsCreatingPlan={(create) => setOnboardState((s) => ({ ...s, isCreatingPlan: create }))}
               handleToggleCreatingOrg={handleToggleCreatingOrg}
               handleOrgChange={handleOrgChange}
               onSubmitForm={(e) => { e.preventDefault(); handleSubmit((d) => onSubmit(d))() }}

@@ -123,13 +123,16 @@ export function AssignPlanDialog({ tenant, onClose, onSuccess, orgId }: AssignPl
                   className="w-full"
                 >
                   <NativeSelectOption value="">Select a subscription plan</NativeSelectOption>
-                  {plans
-                    .filter((p) => p.is_active)
-                    .map((plan) => (
-                      <NativeSelectOption key={plan.id} value={plan.id}>
-                        {plan.description} ({plan.price_per_invoice_amount} {plan.price_per_invoice_currency}/invoice)
-                      </NativeSelectOption>
-                    ))}
+                  {plans.reduce<React.ReactNode[]>((acc, plan) => {
+                    if (plan.is_active) {
+                      acc.push(
+                        <NativeSelectOption key={plan.id} value={plan.id}>
+                          {plan.description} ({plan.price_per_invoice_amount} {plan.price_per_invoice_currency}/invoice)
+                        </NativeSelectOption>
+                      )
+                    }
+                    return acc
+                  }, [])}
                 </NativeSelect>
               )}
             </div>

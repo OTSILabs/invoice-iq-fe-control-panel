@@ -92,11 +92,10 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
   }
 
   return (
-    <style
-      dangerouslySetInnerHTML={{
-        __html: Object.entries(THEMES)
-          .map(
-            ([theme, prefix]) => `
+    <style>
+      {Object.entries(THEMES)
+        .map(
+          ([theme, prefix]) => `
 ${prefix} [data-chart=${id}] {
 ${colorConfig
   .map(([key, itemConfig]) => {
@@ -108,10 +107,9 @@ ${colorConfig
   .join("\n")}
 }
 `
-          )
-          .join("\n"),
-      }}
-    />
+        )
+        .join("\n")}
+    </style>
   )
 }
 
@@ -147,11 +145,12 @@ function ChartTooltipContent({
   >) {
   const { config } = useChart()
 
-  const tooltipLabel = React.useMemo(() => {
-    if (hideLabel || !payload?.length) {
-      return null
-    }
+  if (!active || !payload?.length) {
+    return null
+  }
 
+  let tooltipLabel = null
+  if (!hideLabel) {
     const [item] = payload
     const key = `${labelKey ?? item?.dataKey ?? item?.name ?? "value"}`
     const itemConfig = getPayloadConfigFromPayload(config, item, key)
@@ -161,30 +160,14 @@ function ChartTooltipContent({
         : itemConfig?.label
 
     if (labelFormatter) {
-      return (
+      tooltipLabel = (
         <div className={cn("font-medium", labelClassName)}>
           {labelFormatter(value, payload)}
         </div>
       )
+    } else if (value) {
+      tooltipLabel = <div className={cn("font-medium", labelClassName)}>{value}</div>
     }
-
-    if (!value) {
-      return null
-    }
-
-    return <div className={cn("font-medium", labelClassName)}>{value}</div>
-  }, [
-    label,
-    labelFormatter,
-    payload,
-    hideLabel,
-    labelClassName,
-    config,
-    labelKey,
-  ])
-
-  if (!active || !payload?.length) {
-    return null
   }
 
   const nestLabel = payload.length === 1 && indicator !== "dot"
@@ -198,15 +181,14 @@ function ChartTooltipContent({
     >
       {!nestLabel ? tooltipLabel : null}
       <div className="grid gap-1.5">
-        {payload
-          .filter((item) => item.type !== "none")
-          .map((item, index) => {
+        {payload.reduce<React.ReactNode[]>((acc, item, index) => {
+          if (item.type !== "none") {
             const key = `${nameKey ?? item.name ?? item.dataKey ?? "value"}`
             const itemConfig = getPayloadConfigFromPayload(config, item, key)
             const indicatorColor = color ?? item.payload?.fill ?? item.color
             const itemKey = item.dataKey ? String(item.dataKey) : (item.name ? String(item.name) : index)
 
-            return (
+            acc.push(
               <div
                 key={itemKey}
                 className={cn(
@@ -266,7 +248,9 @@ function ChartTooltipContent({
                 )}
               </div>
             )
-          })}
+          }
+          return acc
+        }, [])}
       </div>
     </div>
   )
@@ -298,14 +282,13 @@ function ChartLegendContent({
         className
       )}
     >
-      {payload
-        .filter((item) => item.type !== "none")
-        .map((item, index) => {
+      {payload.reduce<React.ReactNode[]>((acc, item, index) => {
+        if (item.type !== "none") {
           const key = `${nameKey ?? item.dataKey ?? "value"}`
           const itemConfig = getPayloadConfigFromPayload(config, item, key)
           const itemKey = item.dataKey ? String(item.dataKey) : (item.value ? String(item.value) : index)
 
-          return (
+          acc.push(
             <div
               key={itemKey}
               className={cn(
@@ -325,7 +308,9 @@ function ChartLegendContent({
               {itemConfig?.label}
             </div>
           )
-        })}
+        }
+        return acc
+      }, [])}
     </div>
   )
 }

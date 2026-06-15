@@ -27,10 +27,16 @@ import {
 const getRolesList = (user: PlatformUser | null | undefined): string[] => {
   if (!user) return []
   if (Array.isArray(user.roles)) {
-    return user.roles.map((r: unknown) => (typeof r === "string" ? r : (r as { name?: string })?.name || "")).filter(Boolean)
+    return user.roles.flatMap((r: unknown) => {
+      const name = typeof r === "string" ? r : (r as { name?: string })?.name || ""
+      return name ? [name] : []
+    })
   }
   if (Array.isArray(user.role_names)) {
-    return user.role_names.map((r: unknown) => (typeof r === "string" ? r : (r as { name?: string })?.name || "")).filter(Boolean)
+    return user.role_names.flatMap((r: unknown) => {
+      const name = typeof r === "string" ? r : (r as { name?: string })?.name || ""
+      return name ? [name] : []
+    })
   }
   if (typeof user.role === "string" && user.role) {
     return [user.role]

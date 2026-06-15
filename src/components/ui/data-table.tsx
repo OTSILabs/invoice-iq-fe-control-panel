@@ -50,6 +50,9 @@ export type CustomColumnDef<TData, TValue = unknown> = ColumnDef<TData, TValue> 
   filterFn?: unknown;
 }
 
+const DEFAULT_ROW_SELECTION: RowSelectionState = {};
+const DEFAULT_COLUMN_PINNING = { left: [], right: [] };
+
 function getColumnStyle<TData, TValue>(column: Column<TData, TValue>): React.CSSProperties {
   const columnDef = column.columnDef as CustomColumnDef<TData, TValue>;
   const width = columnDef.width ?? `${column.getSize()}px`;
@@ -183,12 +186,12 @@ export function DataTable<TData, TValue = unknown>({
   onSortingChange,
   onFilterChange,
   onRowSelectionChange,
-  rowSelection = {},
+  rowSelection = DEFAULT_ROW_SELECTION,
   onRowClick,
   className,
   containerClassName,
   tableContainerClassName,
-  columnPinning = { left: [], right: [] },
+  columnPinning = DEFAULT_COLUMN_PINNING,
   stickyHeader = false,
   tableScrollClassName,
   fillAvailableHeight = false,
