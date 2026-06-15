@@ -8,16 +8,7 @@ export const useOrganizations = () => {
   })
 }
 
-export const useCreateOrganization = () => {
-  const queryClient = useQueryClient()
 
-  return useMutation({
-    mutationFn: (payload: any) => organizationsService.create(payload),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["organizations"] })
-    },
-  })
-}
 
 // Coordinated onboarding mutation hook
 export const useOnboardOrganizationAndTenant = () => {
@@ -168,13 +159,7 @@ export const useEntityConfigurations = (entityId: string, entityType: 'organizat
   })
 }
 
-export const useConfigurationKeys = (enabled = true) => {
-  return useQuery({
-    queryKey: ["configuration-keys"],
-    queryFn: () => organizationsService.getConfigurationKeys(),
-    enabled
-  })
-}
+
 
 export const useUpdateEntityConfigurations = (entityId: string, entityType: 'organization' | 'tenant') => {
   const queryClient = useQueryClient()

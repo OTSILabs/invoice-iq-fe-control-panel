@@ -48,7 +48,4 @@ export class AuthAPI {
   }
 }
 
-// Backwards compatibility wrapper for any existing code imports
-export const authService = {
-  login: (payload: LoginPayload) => AuthAPI.login(payload),
-}
+

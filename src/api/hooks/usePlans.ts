@@ -8,7 +8,7 @@ export const usePlans = () => {
   });
 };
 
-export const useCreatePlan = () => {
+const useCreatePlan = () => {
   const queryClient = useQueryClient();
   
   return useMutation({

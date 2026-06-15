@@ -27,17 +27,7 @@ export const useCreatePlatformUserMutation = () => {
   });
 };
 
-export const useUpdateUserStatusMutation = () => {
-  const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: ({ id, status }: { id: string; status: "ACTIVE" | "INACTIVE" }) =>
-      usersService.updatePlatformUserStatus(id, status),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['platform-users'] });
-    },
-  });
-};
 
 export const useUpdatePlatformUserMutation = () => {
   const queryClient = useQueryClient();

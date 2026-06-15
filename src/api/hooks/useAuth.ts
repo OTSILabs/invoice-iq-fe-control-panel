@@ -4,7 +4,7 @@ import { AuthAPI } from "../services/auth.service"
 import { toast } from "sonner"
 import type { LoginPayload, LoginResponse } from "../../types"
 
-export const useAuth = () => {
+const useAuth = () => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
 
@@ -38,66 +38,7 @@ export const useAuthMe = (options = {}) => {
   })
 }
 
-export const useRegister = () => {
-  const navigate = useNavigate()
-  const queryClient = useQueryClient()
 
-  return useMutation({
-    mutationFn: (payload: any) => {
-      return AuthAPI.register(payload)
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["auth", "me"] })
-      toast.success("Registration successful! Please login.")
-      navigate("/login")
-    },
-    onError: (error: any) => {
-      toast.error(error?.response?.data?.message || error?.message || "Registration failed")
-    },
-  })
-}
-
-export const useForgotPassword = () => {
-  const queryClient = useQueryClient()
-
-  return useMutation({
-    mutationFn: ({ client_name, email }: { client_name: string; email: string }) => {
-      return AuthAPI.forgotPassword(client_name, email)
-    },
-    onSuccess: (data: any) => {
-      queryClient.invalidateQueries({ queryKey: ["auth", "me"] })
-      toast.success(data?.message || "Password reset link sent to your email.")
-    },
-    onError: (error: any) => {
-      toast.error(
-        error?.response?.data?.message || error?.message || "Unable to send reset link. Please try again."
-      )
-    },
-    retry: false,
-  })
-}
-
-export const useResetPassword = () => {
-  const navigate = useNavigate()
-  const queryClient = useQueryClient()
-
-  return useMutation({
-    mutationFn: (payload: any) => {
-      return AuthAPI.resetPassword(payload)
-    },
-    onSuccess: (data: any) => {
-      queryClient.invalidateQueries({ queryKey: ["auth", "me"] })
-      toast.success(data?.message || "Password reset successful. Please sign in.")
-      navigate("/login")
-    },
-    onError: (error: any) => {
-      toast.error(
-        error?.response?.data?.message || error?.message || "Unable to reset password. Please try again."
-      )
-    },
-    retry: false,
-  })
-}
 
 export const useChangePassword = () => {
   const navigate = useNavigate()

@@ -32,6 +32,4 @@ export const editUserSchema = z.object({
 
 export type EditUserFormValues = z.infer<typeof editUserSchema>
 
-export const DEFAULT_EDIT_USER_VALUES: EditUserFormValues = {
-  role_name: "",
-}
+

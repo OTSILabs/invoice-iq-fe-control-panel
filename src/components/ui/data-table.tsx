@@ -504,5 +504,3 @@ function ColumnHeader<TData, TValue>({ header }: ColumnHeaderProps<TData, TValue
     </button>
   );
 }
-
-
