@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react"
 import { useNavigate } from "react-router-dom"
-import { Loader2, AlertCircle, RefreshCw, Plus } from "lucide-react"
+import { Loader2, AlertCircle, RefreshCw, Plus, CreditCard } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -186,22 +186,29 @@ export function Plans() {
             fillAvailableHeight
             tableContainerClassName="border-0 rounded-none bg-transparent"
             emptyState={
-              <div className="flex flex-col items-center justify-center px-4 py-12 text-center animate-in fade-in slide-in-from-bottom-2 duration-300">
-                <div className="mx-auto max-w-md space-y-6">
-                  <div className="space-y-2">
-                    <h1 className="text-3xl font-extrabold tracking-tight">No Plans Found</h1>
-                    <p className="mx-auto max-w-sm text-base text-muted-foreground">
-                      {searchText || status !== "all" || planTypeFilter !== "all"
-                        ? "No plans match your current filters."
-                        : "Create your first plan to get started."}
-                    </p>
-                  </div>
-                  {plans.length === 0 && (
-                    <Button onClick={() => navigate("/plan/create")} className="gap-2 rounded-xl px-6 py-5 text-base font-semibold"disabled={isFetching}>
-                      Create Plan
-                    </Button>
-                  )}
+              <div className="flex flex-col items-center justify-center px-4 py-10 text-center animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <div className="bg-primary/5 p-4 rounded-full mb-3 text-primary/80 border border-primary/10">
+                  <CreditCard className="size-8 stroke-[1.5]" />
                 </div>
+                <h3 className="text-sm font-semibold text-foreground">
+                  {searchText || status !== "all" || planTypeFilter !== "all"
+                    ? "No plans match filters"
+                    : "No subscription plans"}
+                </h3>
+                <p className="text-xs text-muted-foreground mt-1.5 max-w-sm leading-relaxed">
+                  {searchText || status !== "all" || planTypeFilter !== "all"
+                    ? "We couldn't find any plans matching your search or filters. Try clearing them to see all plans."
+                    : "Create your first billing plan to manage subscription configurations."}
+                </p>
+                {plans.length === 0 && (
+                  <Button
+                    onClick={() => navigate("/plan/create")}
+                    className="mt-4 gap-1.5 rounded-lg px-4 py-2 text-xs font-semibold cursor-pointer"
+                    disabled={isFetching}
+                  >
+                    <Plus className="size-3.5" /> Create Plan
+                  </Button>
+                )}
               </div>
             }
           />
