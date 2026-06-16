@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react"
-import { Loader2, AlertCircle, RefreshCw, Edit2, MoreVertical, Plus } from "lucide-react"
+import { Loader2, AlertCircle, RefreshCw, Edit2, MoreVertical, Plus, Users as UsersIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { DataTable } from "@/components/ui/data-table"
@@ -272,6 +272,32 @@ export function Users() {
             stickyHeader
             fillAvailableHeight
             tableContainerClassName="border-0 rounded-none bg-transparent"
+            emptyState={
+              <div className="flex flex-col items-center justify-center px-4 py-10 text-center animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <div className="bg-primary/5 p-4 rounded-full mb-3 text-primary/80 border border-primary/10">
+                  <UsersIcon className="size-8 stroke-[1.5]" />
+                </div>
+                <h3 className="text-sm font-semibold text-foreground">
+                  {filters.searchText || filters.status !== "all" || filters.roleFilter !== "all"
+                    ? "No users match filters"
+                    : "No platform users"}
+                </h3>
+                <p className="text-xs text-muted-foreground mt-1.5 max-w-sm leading-relaxed">
+                  {filters.searchText || filters.status !== "all" || filters.roleFilter !== "all"
+                    ? "We couldn't find any users matching your search or filters. Try adjusting your search query or filters."
+                    : "Add your first platform user to manage system access accounts and user permissions."}
+                </p>
+                {users.length === 0 && (
+                  <Button
+                    onClick={() => setIsCreateOpen(true)}
+                    className="mt-4 gap-1.5 rounded-lg px-4 py-2 text-xs font-semibold cursor-pointer"
+                    disabled={isFetchingUsers}
+                  >
+                    <Plus className="size-3.5" /> Add User
+                  </Button>
+                )}
+              </div>
+            }
           />
         </CardContent>
       </Card>
