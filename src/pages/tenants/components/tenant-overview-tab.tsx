@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge"
 import { cn, formatDate } from "@/lib/utils"
 import type { Tenant } from "@/types"
 
-interface TenantProfileTabProps {
+interface TenantOverviewTabProps {
   tenant: Tenant
   onAction: (action: {
     type: "activate" | "deactivate" | "block" | "unblock" | "expire" | "delete" | "assignPlan"
@@ -12,7 +12,7 @@ interface TenantProfileTabProps {
   }) => void
 }
 
-export function TenantProfileTab({ tenant, onAction }: TenantProfileTabProps) {
+export function TenantOverviewTab({ tenant, onAction }: TenantOverviewTabProps) {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -102,6 +102,7 @@ export function OrganizationDetail() {
         <TabsList variant="line" className="mb-4 h-9 justify-start gap-6 [&>button]:flex-none border-b border-border w-full">
           <TabsTrigger value="tenants" className="cursor-pointer">Tenants</TabsTrigger>
           <TabsTrigger value="configuration" className="cursor-pointer">Configurations</TabsTrigger>
+          <TabsTrigger value="profile" className="cursor-pointer">Profile</TabsTrigger>
         </TabsList>
 
         <TabsContent value="tenants" className="m-0 animate-in fade-in duration-300">
@@ -110,6 +111,10 @@ export function OrganizationDetail() {
 
         <TabsContent value="configuration" className="m-0 animate-in fade-in duration-300">
           <ConfigurationsTable entityId={organization.id} entityType="organization" />
+        </TabsContent>
+
+        <TabsContent value="profile" className="m-0 animate-in fade-in duration-300">
+          {/* <OrganizationProfileTab orgId={organization.id} organizationName={organization.name} /> */}
         </TabsContent>
       </Tabs>
     </div>

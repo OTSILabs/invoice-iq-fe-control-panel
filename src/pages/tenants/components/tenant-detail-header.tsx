@@ -34,7 +34,7 @@ export function TenantDetailHeader({
       <div className="space-y-1">
         <h1 className="text-xl font-bold tracking-tight text-foreground">Tenant Details</h1>
         <p className="text-sm text-muted-foreground">
-          View and manage tenant parameters, profile and events log
+          View and manage tenant parameters, overview and events log
         </p>
       </div>
 

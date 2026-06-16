@@ -159,15 +159,26 @@ export const useEntityConfigurations = (entityId: string, entityType: 'organizat
   })
 }
 
-
+export const useConfigurationKeys = () => {
+  return useQuery({
+    queryKey: ["configuration-keys"],
+    queryFn: () => organizationsService.getConfigurationKeys(),
+  })
+}
 
 export const useUpdateEntityConfigurations = (entityId: string, entityType: 'organization' | 'tenant') => {
   const queryClient = useQueryClient()
   const queryKeyType = entityType === 'organization' ? 'organizations' : 'tenants'
 
   return useMutation({
-    mutationFn: async ({ key, value }: { key: string; value: string }) => {
-      const payload = { values: { [key.trim()]: value.trim() } }
+    mutationFn: async (values: Record<string, string>) => {
+      const trimmedValues: Record<string, string> = {}
+      for (const [k, v] of Object.entries(values)) {
+        if (k.trim()) {
+          trimmedValues[k.trim()] = v.trim()
+        }
+      }
+      const payload = { values: trimmedValues }
       return entityType === 'organization'
         ? organizationsService.updateConfigurations(entityId, payload)
         : organizationsService.updateTenantConfigurations(entityId, payload)

@@ -1,7 +1,7 @@
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { ConfigurationsTable } from "@/pages/organization/components/configurations-table"
 import { TenantEventsTable } from "@/pages/tenants/tenant-events-table"
-import { TenantProfileTab } from "./tenant-profile-tab"
+import { TenantOverviewTab } from "./tenant-overview-tab"
 import { TenantDatabaseTab } from "./tenant-database-tab"
 import type { Tenant } from "@/types"
 
@@ -26,10 +26,10 @@ export function TenantTabs({
   isPendingMigrate,
 }: TenantTabsProps) {
   return (
-    <Tabs defaultValue="profile" className="w-full">
+    <Tabs defaultValue="overview" className="w-full">
       <TabsList variant="line" className="mb-6 justify-start gap-6 [&>button]:flex-none border-b border-border w-full">
-        <TabsTrigger value="profile" className="cursor-pointer">
-          Profile
+        <TabsTrigger value="overview" className="cursor-pointer">
+          Overview
         </TabsTrigger>
         <TabsTrigger value="configuration" className="cursor-pointer">
           Configurations
@@ -42,9 +42,9 @@ export function TenantTabs({
         </TabsTrigger>
       </TabsList>
 
-      {/* PROFILE TAB */}
-      <TabsContent value="profile" className="m-0 animate-in fade-in duration-300 space-y-6">
-        <TenantProfileTab tenant={tenant} onAction={onAction} />
+      {/* OVERVIEW TAB */}
+      <TabsContent value="overview" className="m-0 animate-in fade-in duration-300 space-y-6">
+        <TenantOverviewTab tenant={tenant} onAction={onAction} />
       </TabsContent>
 
       {/* CONFIGURATIONS TAB */}
