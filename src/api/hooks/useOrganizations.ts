@@ -188,3 +188,44 @@ export const useUpdateEntityConfigurations = (entityId: string, entityType: 'org
     }
   })
 }
+
+export const useEntityProfile = (entityId: string, entityType: 'organization' | 'tenant') => {
+  return useQuery({
+    queryKey: [entityType === 'organization' ? 'organizations' : 'tenants', entityId, 'profile'],
+    queryFn: () => entityType === 'organization'
+      ? organizationsService.getProfile(entityId)
+      : organizationsService.getTenantProfile(entityId),
+    enabled: !!entityId
+  })
+}
+
+export const useProfileKeys = () => {
+  return useQuery({
+    queryKey: ["profile-keys"],
+    queryFn: () => organizationsService.getProfileKeys(),
+  })
+}
+
+export const useUpdateEntityProfile = (entityId: string, entityType: 'organization' | 'tenant') => {
+  const queryClient = useQueryClient()
+  const queryKeyType = entityType === 'organization' ? 'organizations' : 'tenants'
+
+  return useMutation({
+    mutationFn: async (values: Record<string, string>) => {
+      const trimmedValues: Record<string, string> = {}
+      for (const [k, v] of Object.entries(values)) {
+        if (k.trim()) {
+          trimmedValues[k.trim()] = v.trim()
+        }
+      }
+      const payload = { values: trimmedValues }
+      return entityType === 'organization'
+        ? organizationsService.updateProfile(entityId, payload)
+        : organizationsService.updateTenantProfile(entityId, payload)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [queryKeyType, entityId, 'profile'] })
+    }
+  })
+}
+

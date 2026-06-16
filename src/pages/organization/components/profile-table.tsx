@@ -1,29 +1,45 @@
 import { useState, useMemo, useCallback } from "react"
 import { DataTable } from "@/components/ui/data-table"
-import { useEntityConfigurations, useUpdateEntityConfigurations, useConfigurationKeys } from "@/api/hooks/useOrganizations"
+import { useEntityProfile, useUpdateEntityProfile, useProfileKeys } from "@/api/hooks/useOrganizations"
 import { toast } from "sonner"
-import { ConfigurationsTableHeader } from "./configurations-table-header"
+import { ProfileTableHeader } from "./profile-table-header"
 import { useEntityKeysMetadata } from "./use-entity-keys-metadata"
-import { useConfigurationsTableColumns } from "./use-configurations-table-columns"
+import { useProfileTableColumns } from "./use-profile-table-columns"
 
-interface ConfigurationsTableProps {
+interface ProfileTableProps {
   entityId: string
   entityType: 'organization' | 'tenant'
 }
 
-export function ConfigurationsTable({ entityId, entityType }: ConfigurationsTableProps) {
+export function ProfileTable({ entityId, entityType }: ProfileTableProps) {
   const [isAdding, setIsAdding] = useState(false)
   const [newValues, setNewValues] = useState<Record<string, string>>({})
 
-  const { data: configurations = [], isLoading } = useEntityConfigurations(entityId, entityType)
-  const { mutateAsync: updateConfig, isPending: isSaving } = useUpdateEntityConfigurations(entityId, entityType)
-  const { data: configurationKeys = [] } = useConfigurationKeys()
+  const { data: profileEntries = [], isLoading } = useEntityProfile(entityId, entityType)
+  const { mutateAsync: updateProfile, isPending: isSaving } = useUpdateEntityProfile(entityId, entityType)
+  const { data: profileKeys = [] } = useProfileKeys()
 
-  const existingKeys = useMemo(() => new Set(configurations.map(c => c.key)), [configurations])
+  const existingKeys = useMemo(() => {
+    const set = new Set<string>()
+    profileEntries.forEach(c => {
+      const val = String(c.value || "").trim()
+      if (val && val !== "Not Configured") {
+        set.add(c.key)
+      }
+    })
+    return set
+  }, [profileEntries])
 
-  // Extract metadata hook to separate file
+  const activeProfileEntries = useMemo(() => {
+    return profileEntries.filter(c => {
+      const val = String(c.value || "").trim()
+      return val && val !== "Not Configured"
+    })
+  }, [profileEntries])
+
+  // Extract metadata parsing logic into custom hook
   const { apiKeysMetadata, newKeysToAdd } = useEntityKeysMetadata(
-    configurationKeys,
+    profileKeys,
     entityType,
     existingKeys,
     isAdding
@@ -43,25 +59,25 @@ export function ConfigurationsTable({ entityId, entityType }: ConfigurationsTabl
         finalVal = metadata.defaultValue.trim()
       }
       
-      if (!finalVal) {
+      if (!finalVal && metadata.isRequired) {
         missedFields.push(metadata.label)
-      } else {
+      } else if (finalVal) {
         payload[key] = finalVal
       }
     })
 
     if (missedFields.length > 0) {
-      toast.error(`Please fill in all configurations. Missed: ${missedFields.join(", ")}`)
+      toast.error(`Please fill in required fields. Missed: ${missedFields.join(", ")}`)
       return
     }
 
     try {
-      await updateConfig(payload)
-      toast.success("Configurations updated successfully")
+      await updateProfile(payload)
+      toast.success("Profile updated successfully")
       setNewValues({})
       setIsAdding(false)
     } catch (error: unknown) {
-      let errMsg = "Failed to save configurations"
+      let errMsg = "Failed to save profile"
       if (error && typeof error === "object" && "response" in error) {
         const resp = (error as { response: unknown }).response
         if (resp && typeof resp === "object" && "data" in resp) {
@@ -95,26 +111,25 @@ export function ConfigurationsTable({ entityId, entityType }: ConfigurationsTabl
         key,
         value: newValues[key] || "",
         is_active: true,
-        is_editable_by_tenant: true,
+        is_tenant_editable: true,
+        is_visible_to_tenant: true,
         isNewRow: true
       }))
-      return [...newRows, ...configurations]
+      return [...newRows, ...activeProfileEntries]
     }
-    return configurations
-  }, [configurations, isAdding, newKeysToAdd, newValues])
+    return activeProfileEntries
+  }, [activeProfileEntries, isAdding, newKeysToAdd, newValues])
 
   // Extract columns configuration into custom hook
-  const columns = useConfigurationsTableColumns(isSaving, apiKeysMetadata, handleValueChange)
+  const columns = useProfileTableColumns(isSaving, apiKeysMetadata, handleValueChange)
 
-  const handleAddConfiguration = () => {
-    const unconfigured: { key: string; defaultValue: string }[] = []
-    
-    for (const item of (configurationKeys as unknown[])) {
+  const handleAddProfile = () => {
+    const unconfigured = (profileKeys as unknown[]).reduce<{ key: string; defaultValue: string }[]>((acc, item) => {
       const isObj = typeof item === "object" && item !== null
       const obj = item as Record<string, unknown>
       const key = typeof item === "string" ? item : String(obj.key || obj.name || "")
       
-      if (key && !existingKeys.has(key) && apiKeysMetadata[key]) {
+      if (key && !existingKeys.has(key) && !!apiKeysMetadata[key]) {
         let defaultValue = ""
         if (isObj) {
           const rawDefault = obj.default_value !== undefined ? obj.default_value :
@@ -124,12 +139,13 @@ export function ConfigurationsTable({ entityId, entityType }: ConfigurationsTabl
             defaultValue = String(rawDefault)
           }
         }
-        unconfigured.push({ key, defaultValue })
+        acc.push({ key, defaultValue })
       }
-    }
+      return acc
+    }, [])
 
     if (unconfigured.length === 0) {
-      toast.info("All available configurations have already been set.")
+      toast.info("All available profile settings have already been set.")
       return
     }
 
@@ -145,11 +161,11 @@ export function ConfigurationsTable({ entityId, entityType }: ConfigurationsTabl
 
   return (
     <div className="flex flex-col bg-card border border-border rounded-xl overflow-hidden min-h-[300px]">
-      <ConfigurationsTableHeader
+      <ProfileTableHeader
         entityType={entityType}
         isAdding={isAdding}
         isSaving={isSaving}
-        onAdd={handleAddConfiguration}
+        onAdd={handleAddProfile}
         onSave={handleSave}
         onCancel={handleCancel}
       />
@@ -166,8 +182,8 @@ export function ConfigurationsTable({ entityId, entityType }: ConfigurationsTabl
           tableContainerClassName="border-0 rounded-none bg-transparent"
           emptyState={
             <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
-              <h3 className="text-sm font-semibold text-foreground">No Configurations Yet</h3>
-              <p className="text-xs text-muted-foreground mt-1">Click "Add Configuration" above to create your first setting.</p>
+              <h3 className="text-sm font-semibold text-foreground">No Profile Settings Yet</h3>
+              <p className="text-xs text-muted-foreground mt-1">Click "Add Profile" above to configure your first setting.</p>
             </div>
           }
         />
