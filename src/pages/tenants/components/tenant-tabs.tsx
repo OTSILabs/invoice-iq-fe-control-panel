@@ -3,12 +3,20 @@ import { ConfigurationsTable } from "@/pages/organization/components/configurati
 import { TenantEventsTable } from "@/pages/tenants/tenant-events-table"
 import { TenantOverviewTab } from "./tenant-overview-tab"
 import { TenantDatabaseTab } from "./tenant-database-tab"
+import { ProfileTable } from "@/pages/organization/components/profile-table"
 import type { Tenant } from "@/types"
 
 interface TenantTabsProps {
   tenant: Tenant
   onAction: (action: {
-    type: "activate" | "deactivate" | "block" | "unblock" | "expire" | "delete" | "assignPlan"
+    type:
+      | "activate"
+      | "deactivate"
+      | "block"
+      | "unblock"
+      | "expire"
+      | "delete"
+      | "assignPlan"
     tenant: Tenant
   }) => void
   onRetry: () => void
@@ -27,12 +35,18 @@ export function TenantTabs({
 }: TenantTabsProps) {
   return (
     <Tabs defaultValue="overview" className="w-full">
-      <TabsList variant="line" className="mb-6 justify-start gap-6 [&>button]:flex-none border-b border-border w-full">
+      <TabsList
+        variant="line"
+        className="mb-6 w-full justify-start gap-6 border-b border-border [&>button]:flex-none"
+      >
         <TabsTrigger value="overview" className="cursor-pointer">
           Overview
         </TabsTrigger>
         <TabsTrigger value="configuration" className="cursor-pointer">
           Configurations
+        </TabsTrigger>
+        <TabsTrigger value="profile" className="cursor-pointer">
+          Profile
         </TabsTrigger>
         <TabsTrigger value="database" className="cursor-pointer">
           Database
@@ -43,17 +57,34 @@ export function TenantTabs({
       </TabsList>
 
       {/* OVERVIEW TAB */}
-      <TabsContent value="overview" className="m-0 animate-in fade-in duration-300 space-y-6">
+      <TabsContent
+        value="overview"
+        className="m-0 animate-in space-y-6 duration-300 fade-in"
+      >
         <TenantOverviewTab tenant={tenant} onAction={onAction} />
       </TabsContent>
 
       {/* CONFIGURATIONS TAB */}
-      <TabsContent value="configuration" className="m-0 animate-in fade-in duration-300">
+      <TabsContent
+        value="configuration"
+        className="m-0 animate-in duration-300 fade-in"
+      >
         <ConfigurationsTable entityId={tenant.id} entityType="tenant" />
       </TabsContent>
 
+      {/* PROFILE TAB */}
+      <TabsContent
+        value="profile"
+        className="m-0 animate-in duration-300 fade-in"
+      >
+        <ProfileTable entityId={tenant.id} entityType="tenant" />
+      </TabsContent>
+
       {/* DATABASE TAB */}
-      <TabsContent value="database" className="m-0 animate-in fade-in duration-300">
+      <TabsContent
+        value="database"
+        className="m-0 animate-in duration-300 fade-in"
+      >
         <TenantDatabaseTab
           tenant={tenant}
           onRetry={onRetry}
@@ -64,7 +95,10 @@ export function TenantTabs({
       </TabsContent>
 
       {/* EVENTS TAB */}
-      <TabsContent value="events" className="m-0 animate-in fade-in duration-300">
+      <TabsContent
+        value="events"
+        className="m-0 animate-in duration-300 fade-in"
+      >
         <TenantEventsTable tenantId={tenant.id} />
       </TabsContent>
     </Tabs>

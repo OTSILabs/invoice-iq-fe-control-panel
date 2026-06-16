@@ -111,6 +111,15 @@ export interface Configuration {
   is_editable_by_tenant: boolean;
 }
 
+export interface ProfileEntry {
+  key: string;
+  value: string;
+  is_active: boolean;
+  is_tenant_editable: boolean;
+  is_visible_to_tenant: boolean;
+}
+
+
 
 
 

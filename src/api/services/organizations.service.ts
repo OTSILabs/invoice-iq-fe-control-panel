@@ -1,5 +1,5 @@
 import api from "../../lib/axios"
-import type { Organization, Tenant, Configuration } from "../../types"
+import type { Organization, Tenant, Configuration, ProfileEntry } from "../../types"
 
 export const organizationsService = {
   getAll: async (): Promise<Organization[]> => {
@@ -132,6 +132,47 @@ export const organizationsService = {
   ): Promise<any> => {
     const response = await api.post<any>(
       `/tenants/${tenantId}/plan-assignments`,
+      payload
+    )
+    return response.data
+  },
+
+  getProfileKeys: async (): Promise<any[]> => {
+    const response = await api.get<any[]>("/api/profile-keys")
+    return response.data
+  },
+
+  getProfile: async (orgId: string): Promise<ProfileEntry[]> => {
+    const response = await api.get<ProfileEntry[]>(
+      `/organisations/${orgId}/profile`
+    )
+    return response.data
+  },
+
+  updateProfile: async (
+    orgId: string,
+    payload: { values: Record<string, string> }
+  ): Promise<ProfileEntry[]> => {
+    const response = await api.post<ProfileEntry[]>(
+      `/organisations/${orgId}/profile`,
+      payload
+    )
+    return response.data
+  },
+
+  getTenantProfile: async (tenantId: string): Promise<ProfileEntry[]> => {
+    const response = await api.get<ProfileEntry[]>(
+      `/tenants/${tenantId}/profile`
+    )
+    return response.data
+  },
+
+  updateTenantProfile: async (
+    tenantId: string,
+    payload: { values: Record<string, string> }
+  ): Promise<ProfileEntry[]> => {
+    const response = await api.post<ProfileEntry[]>(
+      `/tenants/${tenantId}/profile`,
       payload
     )
     return response.data

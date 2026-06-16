@@ -8,6 +8,7 @@ import { useOrganizationDetail, useOrganizationTenants } from "@/api/hooks/useOr
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { ConfigurationsTable } from "@/pages/organization/components/configurations-table"
 import { OrganizationTenantsTab } from "@/pages/organization/components/organization-tenants-tab"
+import { ProfileTable } from "@/pages/organization/components/profile-table"
 
 
 const formatDate = (dateStr?: string) => {
@@ -114,7 +115,7 @@ export function OrganizationDetail() {
         </TabsContent>
 
         <TabsContent value="profile" className="m-0 animate-in fade-in duration-300">
-          {/* <OrganizationProfileTab orgId={organization.id} organizationName={organization.name} /> */}
+          <ProfileTable entityId={organization.id} entityType="organization" />
         </TabsContent>
       </Tabs>
     </div>
