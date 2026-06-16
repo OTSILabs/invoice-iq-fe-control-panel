@@ -1,90 +1,14 @@
 import { useState, useMemo, useCallback } from "react"
-import { Badge } from "@/components/ui/badge"
 import { DataTable } from "@/components/ui/data-table"
-import type { CustomColumnDef } from "@/components/ui/data-table"
 import { useEntityConfigurations, useUpdateEntityConfigurations, useConfigurationKeys } from "@/api/hooks/useOrganizations"
-import type { Configuration } from "@/types"
-import { MaskedValue } from "@/components/ui/copyable-field"
 import { toast } from "sonner"
-import { EditableValueCell } from "./editable-value-cell"
 import { ConfigurationsTableHeader } from "./configurations-table-header"
+import { useEntityKeysMetadata } from "./use-entity-keys-metadata"
+import { useConfigurationsTableColumns } from "./use-configurations-table-columns"
 
 interface ConfigurationsTableProps {
   entityId: string
   entityType: 'organization' | 'tenant'
-}
-
-function useConfigurationKeysMetadata(configurationKeys: unknown[], entityType: 'organization' | 'tenant') {
-  return useMemo(() => {
-    const metadata: Record<string, { defaultValue: string; isBoolean: boolean; isRequired: boolean; label: string }> = {}
-    
-    ;(configurationKeys as unknown[]).forEach((item) => {
-      const isObj = typeof item === "object" && item !== null
-      const obj = item as Record<string, unknown>
-      const key = typeof item === "string" ? item : String(obj.key || obj.name || "")
-      if (!key) return
-      
-      // Check scope compatibility
-      let isScopeCompatible = true
-      const rawScopes = obj.allowed_scopes !== undefined ? obj.allowed_scopes :
-                        obj.allowed_scope !== undefined ? obj.allowed_scope :
-                        obj.scopes !== undefined ? obj.scopes : null;
-      
-      if (rawScopes !== null && rawScopes !== undefined) {
-        const scopesList = Array.isArray(rawScopes)
-          ? rawScopes.map(s => String(s).toLowerCase())
-          : [String(rawScopes).toLowerCase()]
-        
-        if (entityType === "organization") {
-          isScopeCompatible = scopesList.some(s => 
-            s.includes("organisation") || 
-            s.includes("organization") || 
-            s.includes("org") || 
-            s.includes("both")
-          )
-        } else if (entityType === "tenant") {
-          isScopeCompatible = scopesList.some(s => 
-            s.includes("tenant") || 
-            s.includes("both")
-          )
-        }
-      }
-      
-      if (!isScopeCompatible) return
-      
-      const label = isObj ? String(obj.label || obj.description || key) : key
-      const isRequired = isObj ? Boolean(obj.is_required || obj.required) : false
-      
-      let defaultValue = ""
-      if (isObj) {
-        const rawDefault = obj.default_value !== undefined ? obj.default_value :
-                           obj.defaultValue !== undefined ? obj.defaultValue :
-                           obj.default !== undefined ? obj.default : "";
-        if (rawDefault !== null && rawDefault !== undefined) {
-          defaultValue = String(rawDefault)
-        }
-      }
-      
-      let isBoolean = false
-      if (isObj) {
-        const isBool = (val: unknown): val is boolean => typeof val === "boolean"
-        if (isBool(obj.default_value) || isBool(obj.defaultValue) || isBool(obj.default)) {
-          isBoolean = true
-        } else if (obj.type === "boolean" || obj.value_type === "boolean") {
-          isBoolean = true
-        } else {
-          const rawStr = String(obj.default_value || obj.defaultValue || obj.default || "").toLowerCase()
-          if (rawStr === "true" || rawStr === "false") {
-            isBoolean = true
-          }
-        }
-      }
-      
-      metadata[key] = { defaultValue, isBoolean, isRequired, label }
-    })
-    
-    return metadata
-  }, [configurationKeys, entityType])
 }
 
 export function ConfigurationsTable({ entityId, entityType }: ConfigurationsTableProps) {
@@ -96,20 +20,14 @@ export function ConfigurationsTable({ entityId, entityType }: ConfigurationsTabl
   const { data: configurationKeys = [] } = useConfigurationKeys()
 
   const existingKeys = useMemo(() => new Set(configurations.map(c => c.key)), [configurations])
-  const apiKeysMetadata = useConfigurationKeysMetadata(configurationKeys, entityType)
 
-  const newKeysToAdd = useMemo(() => {
-    if (!isAdding) return []
-    const keys: string[] = []
-    for (const item of (configurationKeys as unknown[])) {
-      const obj = item as Record<string, string>
-      const key = typeof item === "string" ? item : (obj.key || obj.name || "")
-      if (key && apiKeysMetadata[key] && !existingKeys.has(key)) {
-        keys.push(key)
-      }
-    }
-    return keys
-  }, [configurationKeys, existingKeys, isAdding, apiKeysMetadata])
+  // Extract metadata hook to separate file
+  const { apiKeysMetadata, newKeysToAdd } = useEntityKeysMetadata(
+    configurationKeys,
+    entityType,
+    existingKeys,
+    isAdding
+  )
 
   const handleSave = async () => {
     const payload: Record<string, string> = {}
@@ -185,70 +103,8 @@ export function ConfigurationsTable({ entityId, entityType }: ConfigurationsTabl
     return configurations
   }, [configurations, isAdding, newKeysToAdd, newValues])
 
-  const columns = useMemo<CustomColumnDef<Configuration>[]>(() => [
-    {
-      accessorKey: "key",
-      header: "Key",
-      width: 150,
-      cell: ({ row }) => {
-        const isNewRow = (row.original as { isNewRow?: boolean }).isNewRow
-        if (isNewRow) {
-          const key = row.original.key
-          const metadata = apiKeysMetadata[key] || { defaultValue: "", isBoolean: false, isRequired: false, label: key }
-          return (
-            <div className="flex flex-col gap-0.5">
-              <span className="font-mono text-xs font-semibold text-foreground">{metadata.label}</span>
-              <span className="font-mono text-[10px] text-muted-foreground">{key}</span>
-            </div>
-          )
-        }
-        return <span className="font-mono text-xs font-medium text-foreground">{row.original.key}</span>
-      }
-    },
-    {
-      accessorKey: "value",
-      header: "Value",
-      width: 200,
-      cell: ({ row }) => {
-        const isNewRow = (row.original as { isNewRow?: boolean }).isNewRow
-        if (isNewRow) {
-          const key = row.original.key
-          const metadata = apiKeysMetadata[key] || { defaultValue: "", isBoolean: false, isRequired: false, label: key }
-          
-          return (
-            <EditableValueCell
-              configKey={key}
-              initialValue={String(row.original.value)}
-              isSaving={isSaving}
-              isBoolean={metadata.isBoolean}
-              onValueChange={handleValueChange}
-            />
-          )
-        }
-        return <MaskedValue value={String(row.original.value)} />
-      }
-    },
-    {
-      accessorKey: "is_active",
-      header: "Status",
-      width: 100,
-      cell: ({ row }) => {
-        const isNewRow = (row.original as { isNewRow?: boolean }).isNewRow
-        if (isNewRow) {
-          return (
-            <Badge variant="secondary" className="border-emerald-200 bg-emerald-50 text-emerald-700">
-              Active
-            </Badge>
-          )
-        }
-        return (
-          <Badge variant={row.original.is_active ? "secondary" : "outline"} className={row.original.is_active ? "border-emerald-200 bg-emerald-50 text-emerald-700" : "text-muted-foreground"}>
-            {row.original.is_active ? "Active" : "Inactive"}
-          </Badge>
-        )
-      }
-    },
-  ], [isSaving, apiKeysMetadata, handleValueChange])
+  // Extract columns configuration into custom hook
+  const columns = useConfigurationsTableColumns(isSaving, apiKeysMetadata, handleValueChange)
 
   const handleAddConfiguration = () => {
     const unconfigured: { key: string; defaultValue: string }[] = []
