@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react"
-import { Database, Plus, RefreshCw, MoreVertical, Edit, Eye } from "lucide-react"
+import { ShieldCheck, Plus, RefreshCw, MoreVertical, Edit, Eye, Trash2, Loader2 } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { toast } from "sonner"
 import { PageHeader } from "@/components/layout/PageHeader"
@@ -8,9 +8,9 @@ import { Button } from "@/components/ui/button"
 import { DataTable } from "@/components/ui/data-table"
 import type { CustomColumnDef } from "@/components/ui/data-table"
 import { SearchInput } from "@/components/search-input"
-import { useDataTypes } from "@/api/hooks/data-types"
-import type { DataType } from "@/types"
-import { DataTypeDialog } from "./modals/data-type-dialog"
+import { useValidationRules, useDeleteValidationRuleMutation } from "@/api/hooks/validation-rules"
+import type { ValidationRule } from "@/types"
+import { ValidationRuleDialog } from "./modals/validation-rule-dialog"
 import { cn } from "@/lib/utils"
 import {
   DropdownMenu,
@@ -18,44 +18,70 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog"
 
-export function DataTypes() {
+export function ValidationRules() {
   const navigate = useNavigate()
-  const {
-    data: dataTypes = [],
-    isLoading,
-    refetch,
-    isFetching,
-  } = useDataTypes()
+  const { data: rules = [], isLoading, refetch, isFetching } = useValidationRules()
   const [searchText, setSearchText] = useState("")
   const [createOpen, setCreateOpen] = useState(false)
-  const [editingDataType, setEditingDataType] = useState<DataType | null>(null)
+  const [editingRule, setEditingRule] = useState<ValidationRule | null>(null)
+  const [deletingRule, setDeletingRule] = useState<ValidationRule | null>(null)
+
+  const { mutate: deleteRule, isPending: isDeleting } = useDeleteValidationRuleMutation()
 
   const handleRefetch = async () => {
     try {
       await refetch()
-      toast.success("Data types refreshed")
+      toast.success("Validation rules refreshed")
     } catch {
-      toast.error("Failed to refresh data types")
+      toast.error("Failed to refresh validation rules")
     }
   }
 
-  const columns = useMemo<CustomColumnDef<DataType>[]>(
+  const handleDeleteConfirm = () => {
+    if (!deletingRule) return
+    deleteRule(deletingRule.rule_code, {
+      onSuccess: () => {
+        toast.success(`Validation rule "${deletingRule.display_label}" deleted successfully!`)
+        setDeletingRule(null)
+      },
+      onError: (err: unknown) => {
+        let errMsg = "Failed to delete validation rule."
+        const axiosErr = err as { response?: { data?: { message?: unknown } } }
+        if (axiosErr.response?.data?.message) {
+          errMsg = String(axiosErr.response.data.message)
+        } else if (err instanceof Error) {
+          errMsg = err.message
+        }
+        toast.error(errMsg)
+      },
+    })
+  }
+
+  const columns = useMemo<CustomColumnDef<ValidationRule>[]>(
     () => [
       {
-        accessorKey: "data_type_code",
+        accessorKey: "rule_code",
         header: "Code",
-        width: 130,
+        width: 120,
         cell: ({ row }) => (
           <span className="font-mono text-xs font-semibold text-foreground">
-            {row.original.data_type_code}
+            {row.original.rule_code}
           </span>
         ),
       },
       {
         accessorKey: "display_label",
         header: "Display Label",
-        width: 130,
+        width: 140,
         cell: ({ row }) => (
           <span className="text-xs font-medium text-foreground">
             {row.original.display_label}
@@ -77,37 +103,35 @@ export function DataTypes() {
         ),
       },
       {
-        accessorKey: "sample_value",
-        header: "Sample Value",
-        width: 120,
+        accessorKey: "rule_mode",
+        header: "Mode",
+        width: 100,
         rowClassName: "hidden lg:table-cell",
         cell: ({ row }) => (
-          <span className="block max-w-[110px] truncate font-mono text-xs text-muted-foreground">
-            {row.original.sample_value || "—"}
+          <span className="text-xs text-foreground font-mono uppercase">
+            {row.original.rule_mode || "DECLARATIVE"}
+          </span>
+        ),
+      },
+      {
+        accessorKey: "engine_type",
+        header: "Engine Type",
+        width: 110,
+        rowClassName: "hidden lg:table-cell",
+        cell: ({ row }) => (
+          <span className="text-xs text-muted-foreground font-mono">
+            {row.original.engine_type}
           </span>
         ),
       },
       {
         accessorKey: "sort_sequence",
         header: "Sort Sequence",
-        width: 60,
+        width: 80,
         rowClassName: "hidden lg:table-cell",
         cell: ({ row }) => (
           <span className="text-xs font-medium text-foreground">
             {row.original.sort_sequence ?? "—"}
-          </span>
-        ),
-      },
-      {
-        accessorKey: "created_at",
-        header: "Created At",
-        width: 100,
-        rowClassName: "hidden md:table-cell",
-        cell: ({ row }) => (
-          <span className="text-xs text-muted-foreground">
-            {row.original.created_at
-              ? new Date(row.original.created_at).toLocaleDateString()
-              : "—"}
           </span>
         ),
       },
@@ -130,17 +154,24 @@ export function DataTypes() {
               <DropdownMenuContent align="end" className="w-32">
                 <DropdownMenuItem
                   className="cursor-pointer text-xs"
-                  onClick={() => navigate(`/platform-standard-content/data-types/${row.original.data_type_code}`)}
+                  onClick={() => navigate(`/platform-standard-content/validation-rules/${row.original.rule_code}`)}
                 >
                   <Eye className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
                   View
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   className="cursor-pointer text-xs"
-                  onClick={() => setEditingDataType(row.original)}
+                  onClick={() => setEditingRule(row.original)}
                 >
                   <Edit className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
                   Edit
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="cursor-pointer text-xs text-red-600 focus:text-red-600 focus:bg-red-50"
+                  onClick={() => setDeletingRule(row.original)}
+                >
+                  <Trash2 className="mr-2 h-3.5 w-3.5" />
+                  Delete
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -153,27 +184,27 @@ export function DataTypes() {
 
   const filteredData = useMemo(() => {
     const q = searchText.trim().toLowerCase()
-    if (!q) return dataTypes
-    return dataTypes.filter(
+    if (!q) return rules
+    return rules.filter(
       (item) =>
-        item.data_type_code.toLowerCase().includes(q) ||
+        item.rule_code.toLowerCase().includes(q) ||
         item.display_label.toLowerCase().includes(q) ||
         (item.description && item.description.toLowerCase().includes(q))
     )
-  }, [dataTypes, searchText])
+  }, [rules, searchText])
 
   return (
     <div className="flex w-full animate-in flex-col gap-6 pb-12 duration-200 fade-in">
       <PageHeader
-        title="Data Types"
-        description="Configure and manage platform standard data types for fields."
+        title="Validation Rules"
+        description="Define and manage declarative rules for data validation."
       >
         <Button
           size="sm"
           onClick={() => setCreateOpen(true)}
           className="w-full gap-1.5 px-3 sm:w-auto"
         >
-          <Plus className="size-4" /> Create Data Type
+          <Plus className="size-4" /> Create Validation Rule
         </Button>
       </PageHeader>
 
@@ -181,7 +212,7 @@ export function DataTypes() {
         <CardContent className="flex min-h-0 flex-1 flex-col p-0">
           <div className="flex flex-col gap-3 border-b bg-card p-3 lg:flex-row lg:items-center lg:justify-between">
             <h3 className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
-              Standard Data Types ({filteredData.length})
+              Validation Rules ({filteredData.length})
             </h3>
 
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
@@ -189,7 +220,7 @@ export function DataTypes() {
                 value={searchText}
                 onChange={setSearchText}
                 disabled={isLoading}
-                placeholder="Search data types..."
+                placeholder="Search validation rules..."
                 className="w-full sm:w-72"
               />
               <Button
@@ -215,28 +246,28 @@ export function DataTypes() {
             totalItems={filteredData.length}
             stickyHeader
             tableContainerClassName="border-0 rounded-none bg-transparent"
-            onRowClick={(dataType) => navigate(`/platform-standard-content/data-types/${dataType.data_type_code}`)}
+            onRowClick={(rule) => navigate(`/platform-standard-content/validation-rules/${rule.rule_code}`)}
             emptyState={
               <div className="flex animate-in flex-col items-center justify-center px-4 py-16 text-center duration-300 fade-in slide-in-from-bottom-2">
                 <div className="mb-3 rounded-full border border-primary/10 bg-primary/5 p-4 text-primary/80">
-                  <Database className="size-8 stroke-[1.5]" />
+                  <ShieldCheck className="size-8 stroke-[1.5]" />
                 </div>
                 <h3 className="text-sm font-semibold text-foreground">
                   {searchText
-                    ? "No data types match filters"
-                    : "No standard data types"}
+                    ? "No validation rules match filters"
+                    : "No standard validation rules"}
                 </h3>
                 <p className="mt-1.5 max-w-sm text-xs leading-relaxed text-muted-foreground">
                   {searchText
-                    ? "We couldn't find any data types matching your search term. Try adjusting your search query."
-                    : "Create your first platform standard data type to manage field formats."}
+                    ? "We couldn't find any validation rules matching your search term. Try adjusting your search query."
+                    : "Create your first platform standard validation rule to manage formats."}
                 </p>
-                {!searchText && dataTypes.length === 0 && (
+                {!searchText && rules.length === 0 && (
                   <Button
                     onClick={() => setCreateOpen(true)}
                     className="mt-4 cursor-pointer gap-1.5 rounded-lg px-4 py-2 text-xs font-semibold"
                   >
-                    <Plus className="size-3.5" /> Create Data Type
+                    <Plus className="size-3.5" /> Create Validation Rule
                   </Button>
                 )}
               </div>
@@ -245,17 +276,55 @@ export function DataTypes() {
         </CardContent>
       </Card>
 
-      {(createOpen || !!editingDataType) && (
-        <DataTypeDialog
-          open={createOpen || !!editingDataType}
-          dataType={editingDataType}
+      {(createOpen || !!editingRule) && (
+        <ValidationRuleDialog
+          open={createOpen || !!editingRule}
+          validationRule={editingRule}
           onOpenChange={(open) => {
             if (!open) {
               setCreateOpen(false)
-              setEditingDataType(null)
+              setEditingRule(null)
             }
           }}
         />
+      )}
+
+      {deletingRule && (
+        <Dialog open={!!deletingRule} onOpenChange={(open) => !open && setDeletingRule(null)}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Delete Validation Rule</DialogTitle>
+              <DialogDescription>
+                Are you sure you want to delete the validation rule <strong>{deletingRule.rule_code}</strong>?
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 py-3">
+              <p className="text-xs text-muted-foreground">
+                Deleting this validation rule is permanent and cannot be undone.
+              </p>
+            </div>
+            <DialogFooter>
+              <Button
+                variant="outline"
+                size="sm"
+                className="cursor-pointer"
+                onClick={() => setDeletingRule(null)}
+                disabled={isDeleting}
+              >
+                Cancel
+              </Button>
+              <Button
+                className="bg-red-600 hover:bg-red-700 text-white border-0 shadow-sm cursor-pointer"
+                size="sm"
+                onClick={handleDeleteConfirm}
+                disabled={isDeleting}
+              >
+                {isDeleting && <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />}
+                Delete
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       )}
     </div>
   )
