@@ -21,13 +21,32 @@ export function App() {
         
         <Route path="/" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
           <Route index element={<Navigate to="organizations" replace />} />
-          {APP_ROUTES.map((route) => (
-            <Route 
-              key={route.path} 
-              path={route.path.replace(/^\//, '')} // Remove leading slash for nested routes
-              element={<route.component />} 
-            />
-          ))}
+          {APP_ROUTES.map((route) => {
+            if (route.children) {
+              return (
+                <Route key={route.path} path={route.path.replace(/^\//, '')}>
+                  <Route index element={<Navigate to={route.children[0].path} replace />} />
+                  {route.children.map((child) => (
+                    <Route 
+                      key={child.path} 
+                      path={child.path.replace(route.path, '').replace(/^\//, '')} 
+                      element={<child.component />} 
+                    />
+                  ))}
+                </Route>
+              )
+            }
+            if (route.component) {
+              return (
+                <Route 
+                  key={route.path} 
+                  path={route.path.replace(/^\//, '')} // Remove leading slash for nested routes
+                  element={<route.component />} 
+                />
+              )
+            }
+            return null
+          })}
           <Route path="organizations/:id" element={<OrganizationDetail />} />
           <Route path="organizations/:id/tenants" element={<OrgRedirect />} />
           <Route path="organizations/:orgId/tenants/:tenantId" element={<TenantDetail />} />
