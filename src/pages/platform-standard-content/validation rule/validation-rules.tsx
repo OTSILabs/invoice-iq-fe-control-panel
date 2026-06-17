@@ -248,29 +248,11 @@ export function ValidationRules() {
             tableContainerClassName="border-0 rounded-none bg-transparent"
             onRowClick={(rule) => navigate(`/platform-standard-content/validation-rules/${rule.rule_code}`)}
             emptyState={
-              <div className="flex animate-in flex-col items-center justify-center px-4 py-16 text-center duration-300 fade-in slide-in-from-bottom-2">
-                <div className="mb-3 rounded-full border border-primary/10 bg-primary/5 p-4 text-primary/80">
-                  <ShieldCheck className="size-8 stroke-[1.5]" />
-                </div>
-                <h3 className="text-sm font-semibold text-foreground">
-                  {searchText
-                    ? "No validation rules match filters"
-                    : "No standard validation rules"}
-                </h3>
-                <p className="mt-1.5 max-w-sm text-xs leading-relaxed text-muted-foreground">
-                  {searchText
-                    ? "We couldn't find any validation rules matching your search term. Try adjusting your search query."
-                    : "Create your first platform standard validation rule to manage formats."}
-                </p>
-                {!searchText && rules.length === 0 && (
-                  <Button
-                    onClick={() => setCreateOpen(true)}
-                    className="mt-4 cursor-pointer gap-1.5 rounded-lg px-4 py-2 text-xs font-semibold"
-                  >
-                    <Plus className="size-3.5" /> Create Validation Rule
-                  </Button>
-                )}
-              </div>
+              <ValidationRulesEmptyState
+                searchText={searchText}
+                rulesLength={rules.length}
+                onCreateClick={() => setCreateOpen(true)}
+              />
             }
           />
         </CardContent>
@@ -289,43 +271,103 @@ export function ValidationRules() {
         />
       )}
 
-      {deletingRule && (
-        <Dialog open={!!deletingRule} onOpenChange={(open) => !open && setDeletingRule(null)}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Delete Validation Rule</DialogTitle>
-              <DialogDescription>
-                Are you sure you want to delete the validation rule <strong>{deletingRule.rule_code}</strong>?
-              </DialogDescription>
-            </DialogHeader>
-            <div className="space-y-4 py-3">
-              <p className="text-xs text-muted-foreground">
-                Deleting this validation rule is permanent and cannot be undone.
-              </p>
-            </div>
-            <DialogFooter>
-              <Button
-                variant="outline"
-                size="sm"
-                className="cursor-pointer"
-                onClick={() => setDeletingRule(null)}
-                disabled={isDeleting}
-              >
-                Cancel
-              </Button>
-              <Button
-                className="bg-red-600 hover:bg-red-700 text-white border-0 shadow-sm cursor-pointer"
-                size="sm"
-                onClick={handleDeleteConfirm}
-                disabled={isDeleting}
-              >
-                {isDeleting && <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />}
-                Delete
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+      <DeleteValidationRuleDialog
+        deletingRule={deletingRule}
+        onClose={() => setDeletingRule(null)}
+        onConfirm={handleDeleteConfirm}
+        isDeleting={isDeleting}
+      />
+    </div>
+  )
+}
+
+interface ValidationRulesEmptyStateProps {
+  searchText: string
+  rulesLength: number
+  onCreateClick: () => void
+}
+
+function ValidationRulesEmptyState({
+  searchText,
+  rulesLength,
+  onCreateClick,
+}: ValidationRulesEmptyStateProps) {
+  return (
+    <div className="flex animate-in flex-col items-center justify-center px-4 py-16 text-center duration-300 fade-in slide-in-from-bottom-2">
+      <div className="mb-3 rounded-full border border-primary/10 bg-primary/5 p-4 text-primary/80">
+        <ShieldCheck className="size-8 stroke-[1.5]" />
+      </div>
+      <h3 className="text-sm font-semibold text-foreground">
+        {searchText
+          ? "No validation rules match filters"
+          : "No standard validation rules"}
+      </h3>
+      <p className="mt-1.5 max-w-sm text-xs leading-relaxed text-muted-foreground">
+        {searchText
+          ? "We couldn't find any validation rules matching your search term. Try adjusting your search query."
+          : "Create your first platform standard validation rule to manage formats."}
+      </p>
+      {!searchText && rulesLength === 0 && (
+        <Button
+          onClick={onCreateClick}
+          className="mt-4 cursor-pointer gap-1.5 rounded-lg px-4 py-2 text-xs font-semibold"
+        >
+          <Plus className="size-3.5" /> Create Validation Rule
+        </Button>
       )}
     </div>
+  )
+}
+
+interface DeleteValidationRuleDialogProps {
+  deletingRule: ValidationRule | null
+  onClose: () => void
+  onConfirm: () => void
+  isDeleting: boolean
+}
+
+function DeleteValidationRuleDialog({
+  deletingRule,
+  onClose,
+  onConfirm,
+  isDeleting,
+}: DeleteValidationRuleDialogProps) {
+  if (!deletingRule) return null
+  return (
+    <Dialog open={!!deletingRule} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Delete Validation Rule</DialogTitle>
+          <DialogDescription>
+            Are you sure you want to delete the validation rule <strong>{deletingRule.rule_code}</strong>?
+          </DialogDescription>
+        </DialogHeader>
+        <div className="space-y-4 py-3">
+          <p className="text-xs text-muted-foreground">
+            Deleting this validation rule is permanent and cannot be undone.
+          </p>
+        </div>
+        <DialogFooter>
+          <Button
+            variant="outline"
+            size="sm"
+            className="cursor-pointer"
+            onClick={onClose}
+            disabled={isDeleting}
+          >
+            Cancel
+          </Button>
+          <Button
+            className="bg-red-600 hover:bg-red-700 text-white border-0 shadow-sm cursor-pointer"
+            size="sm"
+            onClick={onConfirm}
+            disabled={isDeleting}
+          >
+            {isDeleting && <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />}
+            Delete
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   )
 }

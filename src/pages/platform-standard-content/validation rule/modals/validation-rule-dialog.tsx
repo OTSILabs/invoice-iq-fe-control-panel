@@ -1,4 +1,5 @@
 import { useForm, Controller } from "react-hook-form"
+import type { UseFormRegister, FieldErrors, Control } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Loader2, ShieldCheck } from "lucide-react"
 import { toast } from "sonner"
@@ -102,10 +103,16 @@ export function ValidationRuleDialog({
       parameter_schema_json: parseJSON(data.parameter_schema_json),
       engine_config_json: parseJSON(data.engine_config_json),
       supported_data_types_json: data.supported_data_types
-        ? data.supported_data_types.split(",").map((s) => s.trim()).filter(Boolean)
+        ? data.supported_data_types.split(",").flatMap((s) => {
+            const trimmed = s.trim()
+            return trimmed ? [trimmed] : []
+          })
         : [],
       supported_header_items_json: data.supported_header_items
-        ? data.supported_header_items.split(",").map((s) => s.trim()).filter(Boolean)
+        ? data.supported_header_items.split(",").flatMap((s) => {
+            const trimmed = s.trim()
+            return trimmed ? [trimmed] : []
+          })
         : [],
       is_active: data.is_active,
       sort_sequence: data.sort_sequence,
@@ -178,173 +185,14 @@ export function ValidationRuleDialog({
 
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col max-h-[calc(85vh-5.5rem)]" noValidate>
           <ScrollArea className="flex-1 min-h-0">
-            <div className="px-6 py-5 space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <InputField
-                  label={isEdit ? "Rule Code (Read-only)" : "Rule Code"}
-                  placeholder="e.g. valid_email"
-                  disabled={isEdit || isPending}
-                  error={errors.rule_code?.message}
-                  {...register("rule_code")}
-                  required
-                  className={isEdit ? "bg-muted text-muted-foreground opacity-100 cursor-not-allowed" : ""}
-                />
-
-                <InputField
-                  label="Display Label"
-                  placeholder="e.g. Valid Email Format"
-                  error={errors.display_label?.message}
-                  disabled={isPending}
-                  {...register("display_label")}
-                  required
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <Label htmlFor="description" className="text-sm font-medium text-foreground">
-                  Description <span className="text-destructive ml-0.5">*</span>
-                </Label>
-                <Textarea
-                  id="description"
-                  placeholder="e.g. Ensures that the field conforms to a valid email address format"
-                  disabled={isPending}
-                  {...register("description")}
-                  className="min-h-[80px] text-xs bg-inherit border border-input rounded-lg"
-                />
-                {errors.description && (
-                  <span className="px-1 text-[11px] font-medium text-destructive block">
-                    {errors.description.message}
-                  </span>
-                )}
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <InputField
-                  label="Rule Mode"
-                  type="select"
-                  error={errors.rule_mode?.message}
-                  disabled={isPending}
-                  {...register("rule_mode")}
-                  required
-                >
-                  <option value="DECLARATIVE">DECLARATIVE</option>
-                  <option value="CODE">CODE</option>
-                </InputField>
-
-                <InputField
-                  label="Sort Sequence"
-                  type="number"
-                  placeholder="e.g. 1"
-                  error={errors.sort_sequence?.message}
-                  disabled={isPending}
-                  {...register("sort_sequence", { valueAsNumber: true })}
-                  required
-                />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <InputField
-                  label="Engine Type"
-                  placeholder="e.g. regex_validator"
-                  error={errors.engine_type?.message}
-                  disabled={isPending}
-                  {...register("engine_type")}
-                />
-
-                <InputField
-                  label="Implementation Key"
-                  placeholder="e.g. regex"
-                  error={errors.implementation_key?.message}
-                  disabled={isPending}
-                  {...register("implementation_key")}
-                />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <InputField
-                  label="Supported Data Types"
-                  placeholder="e.g. string, email (comma-separated)"
-                  error={errors.supported_data_types?.message}
-                  disabled={isPending}
-                  {...register("supported_data_types")}
-                />
-
-                <InputField
-                  label="Supported Header Items"
-                  placeholder="e.g. billing_email, vendor_email (comma-separated)"
-                  error={errors.supported_header_items?.message}
-                  disabled={isPending}
-                  {...register("supported_header_items")}
-                />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-1.5">
-                  <Label htmlFor="parameter_schema_json" className="text-sm font-medium text-foreground">
-                    Parameter Schema (JSON)
-                  </Label>
-                  <Textarea
-                    id="parameter_schema_json"
-                    placeholder='e.g. { "pattern": "^.+@.+$" }'
-                    disabled={isPending}
-                    {...register("parameter_schema_json")}
-                    onBlur={(e) => {
-                      register("parameter_schema_json").onBlur(e)
-                      formatJSONField("parameter_schema_json")
-                    }}
-                    className="font-mono text-xs min-h-[120px] bg-inherit border border-input rounded-lg"
-                  />
-                  {errors.parameter_schema_json && (
-                    <span className="px-1 text-[11px] font-medium text-destructive block">
-                      {errors.parameter_schema_json.message}
-                    </span>
-                  )}
-                </div>
-
-                <div className="space-y-1.5">
-                  <Label htmlFor="engine_config_json" className="text-sm font-medium text-foreground">
-                    Engine Config (JSON)
-                  </Label>
-                  <Textarea
-                    id="engine_config_json"
-                    placeholder='e.g. { "case_insensitive": true }'
-                    disabled={isPending}
-                    {...register("engine_config_json")}
-                    onBlur={(e) => {
-                      register("engine_config_json").onBlur(e)
-                      formatJSONField("engine_config_json")
-                    }}
-                    className="font-mono text-xs min-h-[120px] bg-inherit border border-input rounded-lg"
-                  />
-                  {errors.engine_config_json && (
-                    <span className="px-1 text-[11px] font-medium text-destructive block">
-                      {errors.engine_config_json.message}
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              {/* Is Active Toggle */}
-              <div className="flex items-center justify-between rounded-lg border border-border bg-muted/30 px-4 py-3">
-                <div>
-                  <Label htmlFor="is_active" className="text-xs font-semibold text-foreground">Is Active</Label>
-                  <p className="text-[10px] text-muted-foreground mt-0.5">Toggle validation rule active status</p>
-                </div>
-                <Controller
-                  name="is_active"
-                  control={control}
-                  render={({ field }) => (
-                    <Switch
-                      id="is_active"
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                      disabled={isPending}
-                      className="data-[state=checked]:bg-primary"
-                    />
-                  )}
-                />
-              </div>
-            </div>
+            <ValidationRuleFormFields
+              register={register}
+              errors={errors}
+              control={control}
+              isEdit={isEdit}
+              isPending={isPending}
+              formatJSONField={formatJSONField}
+            />
           </ScrollArea>
 
           {/* Dialog Footer Actions */}
@@ -370,5 +218,193 @@ export function ValidationRuleDialog({
         </form>
       </DialogContent>
     </Dialog>
+  )
+}
+
+interface ValidationRuleFormFieldsProps {
+  register: UseFormRegister<ValidationRuleFormValues>
+  errors: FieldErrors<ValidationRuleFormValues>
+  control: Control<ValidationRuleFormValues>
+  isEdit: boolean
+  isPending: boolean
+  formatJSONField: (fieldName: "parameter_schema_json" | "engine_config_json") => void
+}
+
+function ValidationRuleFormFields({
+  register,
+  errors,
+  control,
+  isEdit,
+  isPending,
+  formatJSONField,
+}: ValidationRuleFormFieldsProps) {
+  return (
+    <div className="px-6 py-5 space-y-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <InputField
+          label={isEdit ? "Rule Code (Read-only)" : "Rule Code"}
+          placeholder="e.g. valid_email"
+          disabled={isEdit || isPending}
+          error={errors.rule_code?.message}
+          {...register("rule_code")}
+          required
+          className={isEdit ? "bg-muted text-muted-foreground opacity-100 cursor-not-allowed" : ""}
+        />
+
+        <InputField
+          label="Display Label"
+          placeholder="e.g. Valid Email Format"
+          error={errors.display_label?.message}
+          disabled={isPending}
+          {...register("display_label")}
+          required
+        />
+      </div>
+
+      <div className="space-y-1.5">
+        <Label htmlFor="description" className="text-sm font-medium text-foreground">
+          Description <span className="text-destructive ml-0.5">*</span>
+        </Label>
+        <Textarea
+          id="description"
+          placeholder="e.g. Ensures that the field conforms to a valid email address format"
+          disabled={isPending}
+          {...register("description")}
+          className="min-h-[80px] text-xs bg-inherit border border-input rounded-lg"
+        />
+        {errors.description && (
+          <span className="px-1 text-[11px] font-medium text-destructive block">
+            {errors.description.message}
+          </span>
+        )}
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <InputField
+          label="Rule Mode"
+          type="select"
+          error={errors.rule_mode?.message}
+          disabled={isPending}
+          {...register("rule_mode")}
+          required
+        >
+          <option value="DECLARATIVE">DECLARATIVE</option>
+          <option value="CODE">CODE</option>
+        </InputField>
+
+        <InputField
+          label="Sort Sequence"
+          type="number"
+          placeholder="e.g. 1"
+          error={errors.sort_sequence?.message}
+          disabled={isPending}
+          {...register("sort_sequence", { valueAsNumber: true })}
+          required
+        />
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <InputField
+          label="Engine Type"
+          placeholder="e.g. regex_validator"
+          error={errors.engine_type?.message}
+          disabled={isPending}
+          {...register("engine_type")}
+        />
+
+        <InputField
+          label="Implementation Key"
+          placeholder="e.g. regex"
+          error={errors.implementation_key?.message}
+          disabled={isPending}
+          {...register("implementation_key")}
+        />
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <InputField
+          label="Supported Data Types"
+          placeholder="e.g. string, email (comma-separated)"
+          error={errors.supported_data_types?.message}
+          disabled={isPending}
+          {...register("supported_data_types")}
+        />
+
+        <InputField
+          label="Supported Header Items"
+          placeholder="e.g. billing_email, vendor_email (comma-separated)"
+          error={errors.supported_header_items?.message}
+          disabled={isPending}
+          {...register("supported_header_items")}
+        />
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-1.5">
+          <Label htmlFor="parameter_schema_json" className="text-sm font-medium text-foreground">
+            Parameter Schema (JSON)
+          </Label>
+          <Textarea
+            id="parameter_schema_json"
+            placeholder='e.g. { "pattern": "^.+@.+$" }'
+            disabled={isPending}
+            {...register("parameter_schema_json")}
+            onBlur={(e) => {
+              register("parameter_schema_json").onBlur(e)
+              formatJSONField("parameter_schema_json")
+            }}
+            className="font-mono text-xs min-h-[120px] bg-inherit border border-input rounded-lg"
+          />
+          {errors.parameter_schema_json && (
+            <span className="px-1 text-[11px] font-medium text-destructive block">
+              {errors.parameter_schema_json.message}
+            </span>
+          )}
+        </div>
+
+        <div className="space-y-1.5">
+          <Label htmlFor="engine_config_json" className="text-sm font-medium text-foreground">
+            Engine Config (JSON)
+          </Label>
+          <Textarea
+            id="engine_config_json"
+            placeholder='e.g. { "case_insensitive": true }'
+            disabled={isPending}
+            {...register("engine_config_json")}
+            onBlur={(e) => {
+              register("engine_config_json").onBlur(e)
+              formatJSONField("engine_config_json")
+            }}
+            className="font-mono text-xs min-h-[120px] bg-inherit border border-input rounded-lg"
+          />
+          {errors.engine_config_json && (
+            <span className="px-1 text-[11px] font-medium text-destructive block">
+              {errors.engine_config_json.message}
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* Is Active Toggle */}
+      <div className="flex items-center justify-between rounded-lg border border-border bg-muted/30 px-4 py-3">
+        <div>
+          <Label htmlFor="is_active" className="text-xs font-semibold text-foreground">Is Active</Label>
+          <p className="text-[10px] text-muted-foreground mt-0.5">Toggle validation rule active status</p>
+        </div>
+        <Controller
+          name="is_active"
+          control={control}
+          render={({ field }) => (
+            <Switch
+              id="is_active"
+              checked={field.value}
+              onCheckedChange={field.onChange}
+              disabled={isPending}
+              className="data-[state=checked]:bg-primary"
+            />
+          )}
+        />
+      </div>
+    </div>
   )
 }

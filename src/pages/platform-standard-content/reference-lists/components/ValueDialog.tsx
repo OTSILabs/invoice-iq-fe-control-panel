@@ -34,7 +34,7 @@ export function ValueDialog({ open, onOpenChange, registryKey, valueItem }: Valu
   }
 
   const { register, handleSubmit, formState: { errors } } = useForm<ReferenceValueFormValues>({
-    resolver: zodResolver(referenceValueSchema),
+    resolver: zodResolver(referenceValueSchema) as any,
     defaultValues: valueItem
       ? {
           value_code: valueItem.value_code,

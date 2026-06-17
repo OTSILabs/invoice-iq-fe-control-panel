@@ -27,7 +27,7 @@ export function RegistryDialog({ open, onOpenChange, registry }: RegistryDialogP
   const isSaving = createMutation.isPending || updateMutation.isPending
 
   const { register, handleSubmit, formState: { errors } } = useForm<ReferenceRegistryFormValues>({
-    resolver: zodResolver(referenceRegistrySchema),
+    resolver: zodResolver(referenceRegistrySchema) as any,
     defaultValues: registry
       ? {
           registry_key: registry.registry_key,
