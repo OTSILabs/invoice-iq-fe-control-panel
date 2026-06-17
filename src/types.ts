@@ -119,6 +119,35 @@ export interface ProfileEntry {
   is_visible_to_tenant: boolean;
 }
 
+export interface FieldCategoryResponse {
+  field_category_code: string;
+  ui_label: string;
+  description: string;
+  example_fields: string[];
+  sort_sequence: number;
+  version_no: number;
+  created_by?: number | null;
+  created_at?: string | null;
+  updated_at?: string | null;
+}
+
+export interface FieldCategoryCreateRequest {
+  field_category_code: string;
+  ui_label: string;
+  description: string;
+  example_fields?: string[];
+  sort_sequence?: number;
+}
+
+export interface FieldCategoryUpdateRequest {
+  field_category_code?: string;
+  ui_label?: string;
+  description?: string;
+  example_fields?: string[];
+  sort_sequence?: number;
+}
+
+
 
 
 
