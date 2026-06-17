@@ -24,7 +24,7 @@ import { Profile } from "@/pages/profile/profile"
 // Import Platform Standard Content pages
 import { DataTypes } from "@/pages/platform-standard-content/data-type/data-types"
 import { FieldCategories } from "@/pages/platform-standard-content/field-categories/field-categories"
-import { ReferenceLists } from "@/pages/platform-standard-content/reference-lists"
+import { ReferenceLists } from "@/pages/platform-standard-content/reference-lists/reference-lists"
 import { ValidationRules } from "@/pages/platform-standard-content/validation-rules"
 import { NormalizationRules } from "@/pages/platform-standard-content/normalization-rules"
 import { ExtractionFields } from "@/pages/platform-standard-content/extraction-fields"

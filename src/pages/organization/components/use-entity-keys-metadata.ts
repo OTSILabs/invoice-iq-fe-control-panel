@@ -5,6 +5,7 @@ export interface EntityKeyMetadata {
   isBoolean: boolean
   isRequired: boolean
   label: string
+  referenceKey?: string | null
 }
 
 export function useEntityKeysMetadata(
@@ -74,6 +75,7 @@ export function useEntityKeysMetadata(
       }
       
       let isBoolean = false
+      let referenceKey: string | null = null
       if (isObj) {
         const isBool = (val: unknown): val is boolean => typeof val === "boolean"
         if (isBool(obj.default_value) || isBool(obj.defaultValue) || isBool(obj.default)) {
@@ -86,9 +88,16 @@ export function useEntityKeysMetadata(
             isBoolean = true
           }
         }
+
+        const refKey = obj.reference_key || obj.reference_list_key || obj.reference || obj.registry_key || obj.reference_registry_key
+        if (refKey) {
+          referenceKey = String(refKey)
+        } else if (obj.type === "reference" || obj.value_type === "reference") {
+          referenceKey = key
+        }
       }
       
-      metadata[key] = { defaultValue, isBoolean, isRequired, label }
+      metadata[key] = { defaultValue, isBoolean, isRequired, label, referenceKey }
     })
     
     return metadata

@@ -8,6 +8,8 @@ import { OrganizationDetail } from "./pages/organization/organization-detail"
 import { TenantDetail } from "./pages/tenants/tenant-detail"
 import { DataTypeDetail } from "./pages/platform-standard-content/data-type/data-type-detail"
 import { FieldCategoryDetails } from "./pages/platform-standard-content/field-categories/field-category-details"
+import { ReferenceListDetails } from "./pages/platform-standard-content/reference-lists/reference-list-details"
+import { ReferenceValueDetails } from "./pages/platform-standard-content/reference-lists/reference-value-details"
 import { Layout } from "./components/layout/layout"
 
 function OrgRedirect() {
@@ -25,16 +27,25 @@ export function App() {
           <Route index element={<Navigate to="organizations" replace />} />
           {APP_ROUTES.map((route) => {
             if (route.children) {
+              const isPlatformContent = route.path === "/platform-standard-content"
               return (
                 <Route key={route.path} path={route.path.replace(/^\//, '')}>
                   <Route index element={<Navigate to={route.children[0].path} replace />} />
-                  {route.children.map((child) => (
+                  {route.children.map((subRoute) => (
                     <Route 
-                      key={child.path} 
-                      path={child.path.replace(route.path, '').replace(/^\//, '')} 
-                      element={<child.component />} 
+                      key={subRoute.path} 
+                      path={subRoute.path.split('/').pop()} // Use only the last part of path
+                      element={<subRoute.component />} 
                     />
                   ))}
+                  {isPlatformContent && (
+                    <>
+                      <Route path="data-types/:code" element={<DataTypeDetail />} />
+                      <Route path="field-categories/:code" element={<FieldCategoryDetails />} />
+                      <Route path="reference-lists/:key" element={<ReferenceListDetails />} />
+                      <Route path="reference-lists/:key/:valueCode" element={<ReferenceValueDetails />} />
+                    </>
+                  )}
                 </Route>
               )
             }
@@ -52,8 +63,6 @@ export function App() {
           <Route path="organizations/:id" element={<OrganizationDetail />} />
           <Route path="organizations/:id/tenants" element={<OrgRedirect />} />
           <Route path="organizations/:orgId/tenants/:tenantId" element={<TenantDetail />} />
-          <Route path="platform-standard-content/data-types/:code" element={<DataTypeDetail />} />
-          <Route path="platform-standard-content/field-categories/:code" element={<FieldCategoryDetails />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/organizations" replace />} />
