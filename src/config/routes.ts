@@ -22,7 +22,7 @@ import { CreatePlan } from "@/pages/plans/create-plan"
 import { Profile } from "@/pages/profile/profile"
 
 // Import Platform Standard Content pages
-import { DataTypes } from "@/pages/platform-standard-content/data-types"
+import { DataTypes } from "@/pages/platform-standard-content/data-type/data-types"
 import { FieldCategories } from "@/pages/platform-standard-content/field-categories"
 import { ReferenceLists } from "@/pages/platform-standard-content/reference-lists"
 import { ValidationRules } from "@/pages/platform-standard-content/validation-rules"
