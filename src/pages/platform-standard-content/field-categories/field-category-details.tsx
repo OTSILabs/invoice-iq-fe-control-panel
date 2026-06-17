@@ -120,7 +120,7 @@ export function FieldCategoryDetails() {
             {/* Description - Full Width Row */}
             <div className="col-span-1 sm:col-span-2 lg:col-span-3 bg-card px-4 py-3.5 hover:bg-muted/10 transition-colors flex flex-col justify-center">
               <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1.5">Description</p>
-              <p className="text-sm text-foreground leading-relaxed whitespace-pre-wrap">
+              <p className="text-xs text-foreground leading-relaxed whitespace-pre-wrap">
                 {category.description || <span className="text-muted-foreground italic">No description provided.</span>}
               </p>
             </div>

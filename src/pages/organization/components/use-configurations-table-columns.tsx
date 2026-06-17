@@ -1,4 +1,5 @@
 import { useMemo } from "react"
+import { Link } from "react-router-dom"
 import { Badge } from "@/components/ui/badge"
 import type { CustomColumnDef } from "@/components/ui/data-table"
 import type { Configuration } from "@/types"
@@ -37,20 +38,36 @@ export function useConfigurationsTableColumns(
       width: 200,
       cell: ({ row }) => {
         const isNewRow = (row.original as { isNewRow?: boolean }).isNewRow
+        const key = row.original.key
+        const metadata = apiKeysMetadata[key] || { defaultValue: "", isBoolean: false, isRequired: false, label: key }
+        
         if (isNewRow) {
-          const key = row.original.key
-          const metadata = apiKeysMetadata[key] || { defaultValue: "", isBoolean: false, isRequired: false, label: key }
-          
           return (
             <EditableValueCell
               configKey={key}
               initialValue={String(row.original.value)}
               isSaving={isSaving}
               isBoolean={metadata.isBoolean}
+              referenceKey={metadata.referenceKey}
               onValueChange={handleValueChange}
             />
           )
         }
+        
+        if (metadata.referenceKey && row.original.value) {
+          return (
+            <div className="flex items-center">
+              <Link
+                to={`/platform-standard-content/reference-lists/${metadata.referenceKey}/${row.original.value}`}
+                className="font-mono text-xs font-semibold text-foreground hover:underline bg-muted/50 hover:bg-muted px-2 py-0.5 rounded border border-border transition-colors cursor-pointer text-left"
+                title="Click to view reference item details"
+              >
+                {String(row.original.value)}
+              </Link>
+            </div>
+          )
+        }
+        
         return <MaskedValue value={String(row.original.value)} />
       }
     },

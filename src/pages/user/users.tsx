@@ -231,10 +231,10 @@ export function Users() {
               </TabsList>
             </Tabs>
 
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center w-full lg:w-auto">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center w-full lg:w-auto ">
               <SearchInput value={filters.searchText} onChange={(val) => setFilters((s) => ({ ...s, searchText: val }))} disabled={isFetchingUsers} placeholder="Search users..." className="w-full sm:w-72"/>
               <Select value={filters.status} onValueChange={(val) => setFilters((s) => ({ ...s, status: val }))} disabled={isFetchingUsers}>
-                <SelectTrigger className="h-9 w-full sm:w-40 bg-background">
+                <SelectTrigger className="h-9 w-full sm:w-40">
                   <SelectValue placeholder="All Status" />
                 </SelectTrigger>
                 <SelectContent align="end">

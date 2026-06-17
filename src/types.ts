@@ -147,36 +147,6 @@ export interface FieldCategoryUpdateRequest {
   sort_sequence?: number;
 }
 
-
-export interface FieldCategoryResponse {
-  field_category_code: string;
-  ui_label: string;
-  description: string;
-  example_fields: string[];
-  sort_sequence: number;
-  version_no: number;
-  created_by?: number | null;
-  created_at?: string | null;
-  updated_at?: string | null;
-}
-
-export interface FieldCategoryCreateRequest {
-  field_category_code: string;
-  ui_label: string;
-  description: string;
-  example_fields?: string[];
-  sort_sequence?: number;
-}
-
-export interface FieldCategoryUpdateRequest {
-  field_category_code?: string;
-  ui_label?: string;
-  description?: string;
-  example_fields?: string[];
-  sort_sequence?: number;
-}
-
-
 export interface DataType {
   data_type_id?: string;
   id?: string;
@@ -195,6 +165,76 @@ export interface CreateDataTypePayload {
   description: string;
   sample_value: string;
   sort_sequence: number;
+}
+
+export interface ReferenceListRegistryResponse {
+  registry_key: string;
+  display_label: string;
+  description?: string | null;
+  source_type: string;
+  sort_sequence: number;
+  version_no: number;
+  created_by?: number | null;
+  created_at?: string | null;
+  updated_at?: string | null;
+}
+
+export interface ReferenceListRegistryPublicationResponse {
+  registry_key: string;
+  display_label: string;
+  description?: string | null;
+  source_type: string;
+  sort_sequence: number;
+  version_no: number;
+  created_by?: number | null;
+  created_at?: string | null;
+  updated_at?: string | null;
+  values: ReferenceValueResponse[];
+}
+
+export interface ReferenceListRegistryCreateRequest {
+  registry_key: string;
+  display_label: string;
+  description?: string | null;
+  source_type?: string;
+  sort_sequence?: number;
+}
+
+export interface ReferenceListRegistryUpdateRequest {
+  registry_key?: string | null;
+  display_label?: string | null;
+  description?: string | null;
+  source_type?: string | null;
+  sort_sequence?: number | null;
+}
+
+export interface ReferenceValueResponse {
+  registry_key: string;
+  value_code: string;
+  value_label: string;
+  description?: string | null;
+  attributes?: Record<string, any> | null;
+  sort_sequence: number;
+  version_no: number;
+  created_by?: number | null;
+  created_at?: string | null;
+  updated_at?: string | null;
+}
+
+export interface ReferenceValueCreateRequest {
+  value_code: string;
+  value_label: string;
+  description?: string | null;
+  attributes?: Record<string, any> | null;
+  sort_sequence?: number;
+}
+
+export interface ReferenceValueUpdateRequest {
+  value_code?: string | null;
+  value_label?: string | null;
+  description?: string | null;
+  attributes?: Record<string, any> | null;
+  sort_sequence?: number | null;
 }
 
 export interface ValidationRule {
