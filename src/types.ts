@@ -148,7 +148,52 @@ export interface FieldCategoryUpdateRequest {
 }
 
 
+export interface FieldCategoryResponse {
+  field_category_code: string;
+  ui_label: string;
+  description: string;
+  example_fields: string[];
+  sort_sequence: number;
+  version_no: number;
+  created_by?: number | null;
+  created_at?: string | null;
+  updated_at?: string | null;
+}
+
+export interface FieldCategoryCreateRequest {
+  field_category_code: string;
+  ui_label: string;
+  description: string;
+  example_fields?: string[];
+  sort_sequence?: number;
+}
+
+export interface FieldCategoryUpdateRequest {
+  field_category_code?: string;
+  ui_label?: string;
+  description?: string;
+  example_fields?: string[];
+  sort_sequence?: number;
+}
 
 
+export interface DataType {
+  data_type_id?: string;
+  id?: string;
+  data_type_code: string;
+  display_label: string;
+  description: string;
+  sample_value?: string;
+  sort_sequence?: number;
+  created_at?: string;
+  updated_at?: string;
+}
 
+export interface CreateDataTypePayload {
+  data_type_code: string;
+  display_label: string;
+  description: string;
+  sample_value: string;
+  sort_sequence: number;
+}
 
