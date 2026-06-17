@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { datatypeService } from "../services/data-types.service"
-import type { CreateDataTypePayload } from "../services/data-types.service"
+import type { CreateDataTypePayload } from "../../types"
 
 export const useDataTypes = () => {
   return useQuery({

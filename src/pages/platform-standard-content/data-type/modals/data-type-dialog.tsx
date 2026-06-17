@@ -1,4 +1,3 @@
-import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Loader2 } from "lucide-react"
@@ -23,7 +22,7 @@ import {
   type CreateDataTypeFormValues,
   DEFAULT_CREATE_DATA_TYPE_VALUES,
 } from "@/schemas/data-type-schema"
-import type { DataType } from "@/api/services/data-types.service"
+import type { DataType } from "@/types"
 
 interface DataTypeDialogProps {
   dataType?: DataType | null
@@ -47,29 +46,19 @@ export function DataTypeDialog({
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm<CreateDataTypeFormValues>({
     resolver: zodResolver(createDataTypeSchema),
-    defaultValues: DEFAULT_CREATE_DATA_TYPE_VALUES,
-  })
-
-  // Sync form values with dataType when it changes (or when opening/closing)
-  useEffect(() => {
-    if (open) {
-      if (dataType) {
-        reset({
+    defaultValues: dataType
+      ? {
           data_type_code: dataType.data_type_code,
           display_label: dataType.display_label,
           description: dataType.description,
           sample_value: dataType.sample_value || "",
           sort_sequence: dataType.sort_sequence ?? 1,
-        })
-      } else {
-        reset(DEFAULT_CREATE_DATA_TYPE_VALUES)
-      }
-    }
-  }, [dataType, open, reset])
+        }
+      : DEFAULT_CREATE_DATA_TYPE_VALUES,
+  })
 
   const onSubmit = (data: CreateDataTypeFormValues) => {
     if (isEdit && dataType) {

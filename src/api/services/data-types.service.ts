@@ -1,24 +1,5 @@
 import api from "../../lib/axios"
-
-export interface DataType {
-  data_type_id?: string
-  id?: string
-  data_type_code: string
-  display_label: string
-  description: string
-  sample_value?: string
-  sort_sequence?: number
-  created_at?: string
-  updated_at?: string
-}
-
-export interface CreateDataTypePayload {
-  data_type_code: string
-  display_label: string
-  description: string
-  sample_value: string
-  sort_sequence: number
-}
+import type { DataType, CreateDataTypePayload } from "../../types"
 
 export const datatypeService = {
   getDataTypes: async (): Promise<DataType[]> => {

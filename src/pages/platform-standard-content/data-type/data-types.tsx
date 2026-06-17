@@ -7,7 +7,7 @@ import { DataTable } from "@/components/ui/data-table"
 import type { CustomColumnDef } from "@/components/ui/data-table"
 import { SearchInput } from "@/components/search-input"
 import { useDataTypes } from "@/api/hooks/data-types"
-import type { DataType } from "@/api/services/data-types.service"
+import type { DataType } from "@/types"
 import { DataTypeDialog } from "./modals/data-type-dialog"
 import { cn } from "@/lib/utils"
 import {
@@ -219,16 +219,18 @@ export function DataTypes() {
         </CardContent>
       </Card>
 
-      <DataTypeDialog
-        open={createOpen || !!editingDataType}
-        dataType={editingDataType}
-        onOpenChange={(open) => {
-          if (!open) {
-            setCreateOpen(false)
-            setEditingDataType(null)
-          }
-        }}
-      />
+      {(createOpen || !!editingDataType) && (
+        <DataTypeDialog
+          open={createOpen || !!editingDataType}
+          dataType={editingDataType}
+          onOpenChange={(open) => {
+            if (!open) {
+              setCreateOpen(false)
+              setEditingDataType(null)
+            }
+          }}
+        />
+      )}
     </div>
   )
 }
