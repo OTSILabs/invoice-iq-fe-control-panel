@@ -384,22 +384,26 @@ export function DataTable<TData, TValue = unknown>({
                       : undefined
                   }
                 >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell
-                      key={cell.id}
-                      className={cn(
-                        "px-4 py-3 text-slate-600 font-normal transition-colors group-hover/row:text-foreground",
-                        getPinnedColumnClassName(cell.column),
-                      )}
-                      style={{
-                        ...getColumnStyle(cell.column),
-                        ...getPinnedColumnStyle(cell.column),
-                        zIndex: cell.column.getIsPinned() ? 2 : undefined,
-                      }}
-                    >
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </TableCell>
-                  ))}
+                  {row.getVisibleCells().map((cell) => {
+                    const customColumnDef = cell.column.columnDef as CustomColumnDef<TData, TValue>;
+                    return (
+                      <TableCell
+                        key={cell.id}
+                        className={cn(
+                          "px-4 py-3 text-slate-600 font-normal transition-colors group-hover/row:text-foreground",
+                          getPinnedColumnClassName(cell.column),
+                          customColumnDef.rowClassName,
+                        )}
+                        style={{
+                          ...getColumnStyle(cell.column),
+                          ...getPinnedColumnStyle(cell.column),
+                          zIndex: cell.column.getIsPinned() ? 2 : undefined,
+                        }}
+                      >
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </TableCell>
+                    );
+                  })}
                 </TableRow>
               );
             })

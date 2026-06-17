@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react"
-import { Database, Plus, RefreshCw, MoreVertical, Edit } from "lucide-react"
+import { Database, Plus, RefreshCw, MoreVertical, Edit, Eye } from "lucide-react"
+import { useNavigate } from "react-router-dom"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -18,6 +19,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 export function DataTypes() {
+  const navigate = useNavigate()
   const {
     data: dataTypes = [],
     isLoading,
@@ -33,7 +35,7 @@ export function DataTypes() {
       {
         accessorKey: "data_type_code",
         header: "Code",
-        width: 150,
+        width: 130,
         cell: ({ row }) => (
           <span className="font-mono text-xs font-semibold text-foreground">
             {row.original.data_type_code}
@@ -43,7 +45,7 @@ export function DataTypes() {
       {
         accessorKey: "display_label",
         header: "Display Label",
-        width: 150,
+        width: 130,
         cell: ({ row }) => (
           <span className="text-xs font-medium text-foreground">
             {row.original.display_label}
@@ -53,10 +55,11 @@ export function DataTypes() {
       {
         accessorKey: "description",
         header: "Description",
-        width: 250,
+        width: 180,
+        rowClassName: "hidden md:table-cell",
         cell: ({ row }) => (
           <span
-            className="block max-w-xs truncate text-xs text-muted-foreground"
+            className="block max-w-[170px] truncate text-xs text-muted-foreground"
             title={row.original.description}
           >
             {row.original.description}
@@ -66,9 +69,10 @@ export function DataTypes() {
       {
         accessorKey: "sample_value",
         header: "Sample Value",
-        width: 150,
+        width: 120,
+        rowClassName: "hidden lg:table-cell",
         cell: ({ row }) => (
-          <span className="block max-w-[150px] truncate font-mono text-xs text-muted-foreground">
+          <span className="block max-w-[110px] truncate font-mono text-xs text-muted-foreground">
             {row.original.sample_value || "—"}
           </span>
         ),
@@ -76,7 +80,8 @@ export function DataTypes() {
       {
         accessorKey: "sort_sequence",
         header: "Sort Sequence",
-        width: 100,
+        width: 60,
+        rowClassName: "hidden lg:table-cell",
         cell: ({ row }) => (
           <span className="text-xs font-medium text-foreground">
             {row.original.sort_sequence ?? "—"}
@@ -86,7 +91,8 @@ export function DataTypes() {
       {
         accessorKey: "created_at",
         header: "Created At",
-        width: 140,
+        width: 100,
+        rowClassName: "hidden md:table-cell",
         cell: ({ row }) => (
           <span className="text-xs text-muted-foreground">
             {row.original.created_at
@@ -98,7 +104,7 @@ export function DataTypes() {
       {
         id: "actions",
         header: "Action",
-        width: 80,
+        width: 60,
         cell: ({ row }) => (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -113,6 +119,13 @@ export function DataTypes() {
             <DropdownMenuContent align="end" className="w-32">
               <DropdownMenuItem
                 className="cursor-pointer text-xs"
+                onClick={() => navigate(`/platform-standard-content/data-types/${row.original.data_type_code}`)}
+              >
+                <Eye className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
+                View
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="cursor-pointer text-xs"
                 onClick={() => setEditingDataType(row.original)}
               >
                 <Edit className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
@@ -123,7 +136,7 @@ export function DataTypes() {
         ),
       },
     ],
-    []
+    [navigate]
   )
 
   const filteredData = useMemo(() => {
