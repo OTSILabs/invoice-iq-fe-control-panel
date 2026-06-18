@@ -86,5 +86,6 @@ export const useReferenceListPublications = (apiKey?: string) => {
   return useQuery({
     queryKey: ['reference-list-publications', apiKey],
     queryFn: () => referenceListsService.listPublications(apiKey),
+    enabled: !!apiKey,
   });
 };

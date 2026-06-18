@@ -10,8 +10,6 @@ import {
   ShieldCheck,
   RefreshCw,
   FileText,
-  FileCheck,
-  LayoutTemplate
 } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
 import { Organizations } from "@/pages/organization/organizations"
@@ -27,9 +25,7 @@ import { FieldCategories } from "@/pages/platform-standard-content/field-categor
 import { ReferenceLists } from "@/pages/platform-standard-content/reference-lists/reference-lists"
 import { ValidationRules } from "@/pages/platform-standard-content/validation rule/validation-rules"
 import { NormalizationRules } from "@/pages/platform-standard-content/normalization-rules"
-import { ExtractionFields } from "@/pages/platform-standard-content/extraction-fields"
-import { DerivedTemplates } from "@/pages/platform-standard-content/derived-templates"
-import { ExtractionTemplateLayouts } from "@/pages/platform-standard-content/extraction-template-layouts"
+import { ExtractionManagement } from "@/pages/platform-standard-content/extraction-management/extraction-management"
 
 export type AppSubRoute = {
   path: string;
@@ -114,22 +110,10 @@ export const APP_ROUTES: AppRoute[] = [
         component: NormalizationRules,
       },
       {
-        path: "/platform-standard-content/extraction-fields",
-        title: "Extraction Fields",
+        path: "/platform-standard-content/extraction-management",
+        title: "Extraction Manager",
         icon: FileText,
-        component: ExtractionFields,
-      },
-      {
-        path: "/platform-standard-content/derived-templates",
-        title: "Derived Templates",
-        icon: FileCheck,
-        component: DerivedTemplates,
-      },
-      {
-        path: "/platform-standard-content/extraction-template-layouts",
-        title: "Template Layouts",
-        icon: LayoutTemplate,
-        component: ExtractionTemplateLayouts,
+        component: ExtractionManagement,
       },
     ]
   },

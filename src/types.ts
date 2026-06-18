@@ -269,4 +269,142 @@ export interface CreateValidationRulePayload {
   is_active: boolean;
   sort_sequence: number;
 }
+// --- Extraction Fields ---
+export interface StandardExtractionFieldResponse {
+  field_id: string;
+  field_label: string;
+  short_desc?: string | null;
+  field_long_description?: string | null;
+  data_type_code: string;
+  labels?: string[] | null;
+  examples?: string[] | null;
+  extraction_instructions?: string[] | null;
+  header_item: string;
+  content_type: string;
+  allowed_value_mode: string;
+  allowed_static_list?: string[] | null;
+  allowed_reference_registry_key?: string | null;
+  default_value?: string | null;
+  field_category_code: string;
+  version_no: number;
+  data_type: DataType;
+  field_category: FieldCategoryResponse;
+  reference_list?: ReferenceListRegistryResponse | null;
+  created_by?: number | null;
+  created_at?: string | null;
+  updated_at?: string | null;
+}
+
+export interface StandardExtractionFieldCreateRequest {
+  field_id: string;
+  field_label: string;
+  short_desc?: string | null;
+  field_long_description?: string | null;
+  data_type_code: string;
+  labels?: string[] | null;
+  examples?: string[] | null;
+  extraction_instructions?: string[] | null;
+  header_item: string;
+  allowed_value_mode: string;
+  allowed_static_list?: string[] | null;
+  allowed_reference_registry_key?: string | null;
+  default_value?: string | null;
+  field_category_code: string;
+}
+
+export interface StandardExtractionFieldUpdateRequest {
+  field_id?: string | null;
+  field_label?: string | null;
+  short_desc?: string | null;
+  field_long_description?: string | null;
+  data_type_code?: string | null;
+  labels?: string[] | null;
+  examples?: string[] | null;
+  extraction_instructions?: string[] | null;
+  header_item?: string | null;
+  allowed_value_mode?: string | null;
+  allowed_static_list?: string[] | null;
+  allowed_reference_registry_key?: string | null;
+  default_value?: string | null;
+  field_category_code?: string | null;
+}
+
+// --- Extraction Templates ---
+export interface StandardTemplateFieldMembershipResponse {
+  template_field_id: string;
+  sort_sequence: number;
+  source_mode: string;
+  validation_rules?: string[] | null;
+  normalization_rules?: string[] | null;
+  derivation_implementations?: string[] | null;
+  field: StandardExtractionFieldResponse;
+}
+
+export interface StandardTemplateFieldMembershipRequest {
+  field_id: string;
+  sort_sequence: number;
+  source_mode?: string;
+  validation_rules?: string[];
+  normalization_rules?: string[];
+  derivation_implementations?: string[];
+}
+
+export interface StandardExtractionTemplateResponse {
+  template_id: string;
+  name: string;
+  description?: string | null;
+  content_type: string;
+  business_process_tags?: string[] | null;
+  document_type_tags?: string[] | null;
+  taxation_tags?: string[] | null;
+  version_no: number;
+  field_membership?: StandardTemplateFieldMembershipResponse[] | null;
+  created_by?: number | null;
+  created_at?: string | null;
+  updated_at?: string | null;
+}
+
+export interface StandardExtractionTemplateCreateRequest {
+  template_id: string;
+  name: string;
+  description?: string | null;
+  business_process_tags?: string[];
+  document_type_tags?: string[];
+  taxation_tags?: string[];
+  field_membership: StandardTemplateFieldMembershipRequest[];
+}
+
+export interface StandardExtractionTemplateUpdateRequest {
+  template_id?: string | null;
+  name?: string | null;
+  description?: string | null;
+  business_process_tags?: string[] | null;
+  document_type_tags?: string[] | null;
+  taxation_tags?: string[] | null;
+  field_membership?: StandardTemplateFieldMembershipRequest[] | null;
+}
+
+// --- Derived Templates ---
+export interface StandardDerivedTemplateResponse {
+  derived_template_id: string;
+  template_id: string;
+  name: string;
+  description?: string | null;
+  version_no: number;
+  created_at?: string | null;
+  updated_at?: string | null;
+  base_template?: StandardExtractionTemplateResponse;
+}
+
+export interface StandardDerivedTemplateCreateRequest {
+  derived_template_id: string;
+  template_id: string;
+  name: string;
+  description?: string | null;
+}
+
+export interface StandardDerivedTemplateUpdateRequest {
+  name?: string;
+  description?: string | null;
+}
 
