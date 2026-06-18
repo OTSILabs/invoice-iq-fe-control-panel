@@ -124,7 +124,7 @@ export function CreateUserDialog({ open, onOpenChange, roles }: CreateUserDialog
                 <button
                   type="button"
                   onClick={() => setShowPassword((prev) => !prev)}
-                  className="absolute right-3 top-[32px] text-muted-foreground hover:text-slate-600 focus:outline-none cursor-pointer z-10"
+                  className="absolute right-3 top-[32px] text-muted-foreground hover:text-foreground focus:outline-none cursor-pointer z-10"
                 >
                   {showPassword ? (
                     <EyeOff className="h-4 w-4" />

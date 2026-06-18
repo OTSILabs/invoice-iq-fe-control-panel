@@ -390,7 +390,7 @@ function FieldsTable({ data, isLoading, onEdit }: FieldsTableProps) {
         cell: ({ row }) => {
           const isHeader = row.original.header_item === "header";
           return (
-            <Badge variant={isHeader ? "secondary" : "outline"} className={cn("text-[9px] font-semibold px-2 py-0.5 capitalize", isHeader ? "bg-slate-50 text-slate-700 border-slate-200" : "bg-blue-50/50 text-blue-700 border-blue-200")}>
+            <Badge variant={isHeader ? "secondary" : "outline"} className={cn("text-[9px] font-semibold px-2 py-0.5 capitalize", isHeader ? "bg-muted text-muted-foreground border-border" : "bg-primary/10 text-primary border-primary/20")}>
               {row.original.header_item}
             </Badge>
           );
@@ -477,7 +477,7 @@ function TemplatesTable({ data, isLoading, onEdit }: TemplatesTableProps) {
         cell: ({ row }) => {
           const count = row.original.field_membership?.length || 0;
           return (
-            <Badge variant="secondary" className="text-[10px] px-2 py-0.5 bg-slate-50 text-slate-700 border border-slate-200">
+            <Badge variant="secondary" className="text-[10px] px-2 py-0.5 bg-muted text-muted-foreground border border-border">
               {count} {count === 1 ? "field" : "fields"}
             </Badge>
           );

@@ -118,7 +118,7 @@ export function ChangePasswordDialog({ open, onOpenChange }: ChangePasswordDialo
                   <button
                     type="button"
                     onClick={() => setShowCurrent(!showCurrent)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none cursor-pointer"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground focus:outline-none cursor-pointer"
                   >
                     {showCurrent ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
                   </button>
@@ -146,7 +146,7 @@ export function ChangePasswordDialog({ open, onOpenChange }: ChangePasswordDialo
                   <button
                     type="button"
                     onClick={() => setShowNew(!showNew)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none cursor-pointer"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground focus:outline-none cursor-pointer"
                   >
                     {showNew ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
                   </button>
@@ -174,7 +174,7 @@ export function ChangePasswordDialog({ open, onOpenChange }: ChangePasswordDialo
                   <button
                     type="button"
                     onClick={() => setShowConfirm(!showConfirm)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none cursor-pointer"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground focus:outline-none cursor-pointer"
                   >
                     {showConfirm ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
                   </button>
@@ -194,9 +194,9 @@ export function ChangePasswordDialog({ open, onOpenChange }: ChangePasswordDialo
                     {checks.length ? (
                       <Check className="size-3.5 text-emerald-500 stroke-[3px]" />
                     ) : (
-                      <span className="h-1.5 w-1.5 bg-slate-300 rounded-full ml-1.5 mr-1.5" />
+                      <span className="h-1.5 w-1.5 bg-muted-foreground/40 rounded-full ml-1.5 mr-1.5" />
                     )}
-                    <span className={checks.length ? "text-slate-500 font-medium" : "text-slate-400"}>
+                    <span className={checks.length ? "text-foreground font-medium" : "text-muted-foreground"}>
                       Minimum 8 characters
                     </span>
                   </li>
@@ -204,9 +204,9 @@ export function ChangePasswordDialog({ open, onOpenChange }: ChangePasswordDialo
                     {checks.uppercase ? (
                       <Check className="size-3.5 text-emerald-500 stroke-[3px]" />
                     ) : (
-                      <span className="h-1.5 w-1.5 bg-slate-300 rounded-full ml-1.5 mr-1.5" />
+                      <span className="h-1.5 w-1.5 bg-muted-foreground/40 rounded-full ml-1.5 mr-1.5" />
                     )}
-                    <span className={checks.uppercase ? "text-slate-500 font-medium" : "text-slate-400"}>
+                    <span className={checks.uppercase ? "text-foreground font-medium" : "text-muted-foreground"}>
                       One uppercase letter
                     </span>
                   </li>
@@ -214,9 +214,9 @@ export function ChangePasswordDialog({ open, onOpenChange }: ChangePasswordDialo
                     {checks.number ? (
                       <Check className="size-3.5 text-emerald-500 stroke-[3px]" />
                     ) : (
-                      <span className="h-1.5 w-1.5 bg-slate-300 rounded-full ml-1.5 mr-1.5" />
+                      <span className="h-1.5 w-1.5 bg-muted-foreground/40 rounded-full ml-1.5 mr-1.5" />
                     )}
-                    <span className={checks.number ? "text-slate-500 font-medium" : "text-slate-400"}>
+                    <span className={checks.number ? "text-foreground font-medium" : "text-muted-foreground"}>
                       One number
                     </span>
                   </li>
@@ -224,9 +224,9 @@ export function ChangePasswordDialog({ open, onOpenChange }: ChangePasswordDialo
                     {checks.special ? (
                       <Check className="size-3.5 text-emerald-500 stroke-[3px]" />
                     ) : (
-                      <span className="h-1.5 w-1.5 bg-slate-300 rounded-full ml-1.5 mr-1.5" />
+                      <span className="h-1.5 w-1.5 bg-muted-foreground/40 rounded-full ml-1.5 mr-1.5" />
                     )}
-                    <span className={checks.special ? "text-slate-500 font-medium" : "text-slate-400"}>
+                    <span className={checks.special ? "text-foreground font-medium" : "text-muted-foreground"}>
                       One special character
                     </span>
                   </li>

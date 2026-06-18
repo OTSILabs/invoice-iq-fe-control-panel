@@ -9,7 +9,7 @@ export function OrgCard({ org }: { org: Organization }) {
   return (
     <Link
       to={`/organizations/${org.id}`}
-      className="group relative flex flex-col justify-between overflow-hidden rounded-xl border border-border bg-card p-4 shadow-sm transition-all duration-300 ease-out hover:border-primary/40 hover:bg-slate-50/50 hover:shadow-md hover:-translate-y-0.5 dark:hover:bg-slate-900/10"
+      className="group relative flex flex-col justify-between overflow-hidden rounded-xl border border-border bg-card p-4 shadow-sm transition-all duration-300 ease-out hover:border-primary/40 hover:bg-accent/40 hover:shadow-md hover:-translate-y-0.5"
     >
       {/* Top gradient glow line */}
       <div className="absolute top-0 left-0 right-0 h-[2.5px] bg-linear-to-r from-primary/30 via-primary to-primary/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -19,7 +19,7 @@ export function OrgCard({ org }: { org: Organization }) {
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-3 min-w-0">
             {/* Initials (Alphabet) */}
-            <div className="h-8 w-8 rounded-lg flex items-center justify-center text-[10px] font-bold uppercase select-none border shrink-0 bg-slate-50 text-slate-700 border-slate-200/60 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700/50">
+            <div className="h-8 w-8 rounded-lg flex items-center justify-center text-[10px] font-bold uppercase select-none border shrink-0 bg-muted text-muted-foreground border-border">
               {initials}
             </div>
 
