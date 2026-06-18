@@ -6,7 +6,7 @@ export const referenceRegistrySchema = z.object({
     .min(1, "Registry Key is required")
     .regex(/^[a-zA-Z0-9_]+$/, "Registry Key must be alphanumeric with underscores"),
   display_label: z.string().min(1, "Display Label is required"),
-  description: z.string().optional().default(""),
+  description: z.string(),
   source_type: z.string().min(1, "Source Type is required"),
   sort_sequence: z.number().min(1, "Sort Sequence must be at least 1"),
 })
@@ -27,9 +27,9 @@ export const referenceValueSchema = z.object({
     .min(1, "Value Code is required")
     .regex(/^[a-zA-Z0-9_]+$/, "Value Code must be alphanumeric with underscores"),
   value_label: z.string().min(1, "Value Label is required"),
-  description: z.string().optional().default(""),
+  description: z.string(),
   sort_sequence: z.number().min(1, "Sort Sequence must be at least 1"),
-  attributes_raw: z.string().optional().default("").refine((val) => {
+  attributes_raw: z.string().refine((val) => {
     if (!val || !val.trim()) return true
     try {
       const parsed = JSON.parse(val)
