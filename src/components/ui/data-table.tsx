@@ -390,11 +390,7 @@ export function DataTable<TData, TValue = unknown>({
                       <TableCell
                         key={cell.id}
                         className={cn(
-<<<<<<< HEAD
-                          "px-4 py-3 text-muted-foreground font-normal transition-colors group-hover/row:text-foreground truncate",
-=======
-                          "px-4 py-3 text-slate-600 font-normal transition-colors group-hover/row:text-foreground",
->>>>>>> parent of b5151f1 (font & border & bg)
+                          "px-3 py-2 text-muted-foreground font-normal transition-colors group-hover/row:text-foreground truncate",
                           getPinnedColumnClassName(cell.column),
                           customColumnDef.rowClassName,
                         )}
