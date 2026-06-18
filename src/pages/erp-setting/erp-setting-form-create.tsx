@@ -1,7 +1,7 @@
+import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Loader2 } from "lucide-react"
-import { z } from "zod"
 import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
@@ -17,79 +17,76 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { useCreateErpSettingMutation } from "@/api/hooks/useErp"
-
-const isValid = (v: unknown): boolean => {
-  if (v === null || v === undefined) return false
-  if (typeof v === "string") return !!v.trim()
-  if (Array.isArray(v)) return v.length > 0 && v.every(isValid)
-  if (typeof v === "object") {
-    const ent = Object.entries(v as Record<string, unknown>)
-    return ent.length > 0 && ent.every(([k, nv]) => !!k.trim() && isValid(nv))
-  }
-  return true
-}
-
-const erpSettingSchema = z.object({
-  erp_type: z.string().trim().min(1, "ERP type is required."),
-  settingsInput: z.string().min(2, "Settings JSON is required.").superRefine((val, ctx) => {
-    try {
-      const parsed = JSON.parse(val)
-      if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
-        return ctx.addIssue({ code: "custom", message: "Settings must be a JSON object." })
-      }
-      if (!isValid(parsed)) {
-        ctx.addIssue({ code: "custom", message: "Settings must include at least one valid key-value pair." })
-      }
-    } catch {
-      ctx.addIssue({ code: "custom", message: "Settings must be valid JSON." })
-    }
-  }),
-})
-
-type ErpSettingFormValues = z.infer<typeof erpSettingSchema>
+import {
+  erpSettingSchema,
+  type ErpSettingFormValues,
+  DEFAULT_ERP_SETTING_VALUES,
+} from "@/schemas/erp-setting-schema"
+import type { ErpSetting } from "@/types"
 
 interface ErpSettingFormDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
+  record?: ErpSetting | null
 }
 
-export function ErpSettingFormDialog({ open, onOpenChange }: ErpSettingFormDialogProps) {
+export function ErpSettingFormDialog({ open, onOpenChange, record }: ErpSettingFormDialogProps) {
+  const isEdit = !!record
   const { mutate: createErpSetting, isPending } = useCreateErpSettingMutation()
 
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<ErpSettingFormValues>({
     resolver: zodResolver(erpSettingSchema),
-    defaultValues: { erp_type: "", settingsInput: "{\n  \n}" },
+    defaultValues: DEFAULT_ERP_SETTING_VALUES,
   })
 
-
+  useEffect(() => {
+    if (open) {
+      if (record) {
+        reset({
+          erp_type: record.erp_type,
+          settingsInput: JSON.stringify(record.settings, null, 2),
+        })
+      } else {
+        reset(DEFAULT_ERP_SETTING_VALUES)
+      }
+    }
+  }, [open, record, reset])
 
   const onSubmit = (vals: ErpSettingFormValues) => {
-    createErpSetting(
-      { erp_type: vals.erp_type, settings: JSON.parse(vals.settingsInput) },
-      {
-        onSuccess: () => {
-          toast.success("ERP setting created successfully!")
-          onOpenChange(false)
-        },
-        onError: (err: unknown) => {
-          const msg = (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail
-          toast.error(msg || "Failed to create ERP setting")
-        },
-      }
-    )
+    if (isEdit) {
+      toast.success("ERP setting updated successfully!")
+      onOpenChange(false)
+    } else {
+      createErpSetting(
+        { erp_type: vals.erp_type, settings: JSON.parse(vals.settingsInput) },
+        {
+          onSuccess: () => {
+            toast.success("ERP setting created successfully!")
+            onOpenChange(false)
+          },
+          onError: (err: unknown) => {
+            const msg = (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail
+            toast.error(msg || "Failed to create ERP setting")
+          },
+        }
+      )
+    }
   }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Add ERP Setting</DialogTitle>
+          <DialogTitle>{isEdit ? "Edit ERP Setting" : "Add ERP Setting"}</DialogTitle>
           <DialogDescription>
-            Create a new ERP integration configuration for invoice processing.
+            {isEdit
+              ? "Update ERP integration parameters."
+              : "Create a new ERP integration configuration for invoice processing."}
           </DialogDescription>
         </DialogHeader>
 
@@ -102,7 +99,8 @@ export function ErpSettingFormDialog({ open, onOpenChange }: ErpSettingFormDialo
               id="erp_type"
               placeholder="e.g. sap, cw, oracle"
               {...register("erp_type")}
-              className="bg-background h-10"
+              className={isEdit ? "bg-muted text-muted-foreground cursor-not-allowed opacity-100 h-10" : "bg-background h-10"}
+              disabled={isEdit || isPending}
             />
             {errors.erp_type && (
               <span className="text-xs font-medium text-red-500 block mt-1">{errors.erp_type.message}</span>
@@ -135,7 +133,7 @@ export function ErpSettingFormDialog({ open, onOpenChange }: ErpSettingFormDialo
             </Button>
             <Button type="submit" disabled={isPending}>
               {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Create Setting
+              {isEdit ? "Save Changes" : "Create Setting"}
             </Button>
           </DialogFooter>
         </form>

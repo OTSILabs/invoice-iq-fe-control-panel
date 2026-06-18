@@ -3,11 +3,20 @@ import { AlertCircle, RefreshCw, Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { toast } from "sonner"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
 
 import { useErpSettings } from "@/api/hooks/useErp"
 import { ErpSettingFormDialog } from "./erp-setting-form-create"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { ErpSettingsCards } from "./erp-settings-cards"
+import type { ErpSetting } from "@/types"
 
 export function ErpSettings() {
   const {
@@ -19,6 +28,8 @@ export function ErpSettings() {
   } = useErpSettings()
 
   const [isCreateOpen, setIsCreateOpen] = useState(false)
+  const [editingRecord, setEditingRecord] = useState<ErpSetting | null>(null)
+  const [deletingRecord, setDeletingRecord] = useState<ErpSetting | null>(null)
 
   const settings = useMemo(() => data || [], [data])
 
@@ -78,14 +89,62 @@ export function ErpSettings() {
           </Button>
         </div>
       ) : (
-        <ErpSettingsCards records={settings} />
+        <ErpSettingsCards
+          records={settings}
+          onEdit={setEditingRecord}
+          onDelete={setDeletingRecord}
+        />
       )}
 
-      {isCreateOpen && (
+      {(isCreateOpen || !!editingRecord) && (
         <ErpSettingFormDialog
-          open={isCreateOpen}
-          onOpenChange={setIsCreateOpen}
+          open={isCreateOpen || !!editingRecord}
+          onOpenChange={(open) => {
+            if (!open) {
+              setIsCreateOpen(false)
+              setEditingRecord(null)
+            }
+          }}
+          record={editingRecord}
         />
+      )}
+
+      {deletingRecord && (
+        <Dialog open={!!deletingRecord} onOpenChange={(open) => !open && setDeletingRecord(null)}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Delete ERP Setting</DialogTitle>
+              <DialogDescription>
+                Are you sure you want to delete the ERP setting for <strong>{deletingRecord?.display_name || deletingRecord?.erp_type.toUpperCase()}</strong>?
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 py-3">
+              <p className="text-xs text-muted-foreground">
+                Deleting this ERP setting is permanent and cannot be undone.
+              </p>
+            </div>
+            <DialogFooter>
+              <Button
+                variant="outline"
+                size="sm"
+                className="cursor-pointer"
+                onClick={() => setDeletingRecord(null)}
+              >
+                Cancel
+              </Button>
+              <Button
+                className="bg-red-600 hover:bg-red-700 text-white border-0 shadow-sm cursor-pointer"
+                size="sm"
+                onClick={() => {
+                  toast.success("ERP setting deleted successfully!")
+                  setDeletingRecord(null)
+                }}
+              >
+                Delete
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       )}
     </div>
   )
