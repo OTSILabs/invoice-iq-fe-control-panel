@@ -134,10 +134,10 @@ export function ReferenceLists() {
                   <MoreVertical className="h-4 w-4 text-muted-foreground" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-36">
+              <DropdownMenuContent align="end" className="w-45">
                 <DropdownMenuItem className="text-xs cursor-pointer" onClick={() => navigate(`/platform-standard-content/reference-lists/${row.original.registry_key}`)}>
                   <Eye className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
-                  View 
+                  View Details 
                 </DropdownMenuItem>
                 <DropdownMenuItem className="text-xs cursor-pointer" onClick={() => handleOpenEdit(row.original)}>
                   <Edit2 className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
