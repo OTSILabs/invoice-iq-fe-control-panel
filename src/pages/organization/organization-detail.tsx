@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom"
+import { useParams, useNavigate, useSearchParams } from "react-router-dom"
 
 import { ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -27,6 +27,8 @@ const formatDate = (dateStr?: string) => {
 export function OrganizationDetail() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const activeTab = searchParams.get("tab") || "tenants"
 
   const { data: organization, isLoading, isError } = useOrganizationDetail(id)
   const { data: tenants = [] } = useOrganizationTenants(id)
@@ -99,7 +101,7 @@ export function OrganizationDetail() {
       </div>
 
       {/* Tabs */}
-      <Tabs defaultValue="tenants" className="w-full">
+      <Tabs value={activeTab} onValueChange={(val) => setSearchParams({ tab: val })} className="w-full">
         <TabsList variant="line" className="mb-4 h-9 justify-start gap-6 [&>button]:flex-none border-b border-border w-full">
           <TabsTrigger value="tenants" className="cursor-pointer">Tenants</TabsTrigger>
           <TabsTrigger value="configuration" className="cursor-pointer">Configurations</TabsTrigger>

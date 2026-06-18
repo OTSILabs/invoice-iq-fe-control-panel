@@ -5,6 +5,7 @@ export interface EntityKeyMetadata {
   isBoolean: boolean
   isRequired: boolean
   label: string
+  description: string
   referenceKey?: string | null
 }
 
@@ -61,7 +62,8 @@ export function useEntityKeysMetadata(
       
       if (!isScopeCompatible) return
       
-      const label = isObj ? String(obj.label || obj.description || key) : key
+      const label = isObj ? String(obj.label || key) : key
+      const description = isObj ? String(obj.description || "") : ""
       const isRequired = isObj ? Boolean(obj.is_required || obj.required) : false
       
       let defaultValue = ""
@@ -97,7 +99,7 @@ export function useEntityKeysMetadata(
         }
       }
       
-      metadata[key] = { defaultValue, isBoolean, isRequired, label, referenceKey }
+      metadata[key] = { defaultValue, isBoolean, isRequired, label, description, referenceKey }
     })
     
     return metadata

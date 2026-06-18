@@ -1,4 +1,5 @@
-import { useReducer, useMemo, useCallback } from "react";
+import { useReducer, useMemo, useCallback, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { AlertCircle, RefreshCw, Plus, Edit2, FileText, LayoutGrid, Layers, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -77,7 +78,15 @@ const initialState: State = {
 };
 
 export function ExtractionManagement() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const urlTab = searchParams.get("tab") || "fields";
   const [state, dispatch] = useReducer(reducer, initialState);
+
+  useEffect(() => {
+    if (urlTab !== state.activeTab) {
+      dispatch({ type: "SET_ACTIVE_TAB", payload: urlTab });
+    }
+  }, [urlTab, state.activeTab]);
 
   // Loading TanStack query data
   const fieldsQuery = useExtractionFields();
@@ -120,8 +129,8 @@ export function ExtractionManagement() {
   }, [state.activeTab, fieldsQuery, templatesQuery, derivedQuery]);
 
   const handleTabChange = useCallback((tab: string) => {
-    dispatch({ type: "SET_ACTIVE_TAB", payload: tab });
-  }, []);
+    setSearchParams({ tab });
+  }, [setSearchParams]);
 
   const setSearchText = useCallback((text: string) => {
     dispatch({ type: "SET_SEARCH_TEXT", payload: text });

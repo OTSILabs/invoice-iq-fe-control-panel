@@ -1,22 +1,18 @@
-import { Info, Plus, Save, X } from "lucide-react"
+import { Info, Save } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 interface ConfigurationsTableHeaderProps {
   entityType: 'organization' | 'tenant'
-  isAdding: boolean
   isSaving: boolean
-  onAdd: () => void
+  hasChanges: boolean
   onSave: () => void
-  onCancel: () => void
 }
 
 export function ConfigurationsTableHeader({
   entityType,
-  isAdding,
   isSaving,
-  onAdd,
-  onSave,
-  onCancel
+  hasChanges,
+  onSave
 }: ConfigurationsTableHeaderProps) {
   return (
     <div className="flex items-center justify-between p-5 pb-4 border-b border-border/50">
@@ -29,35 +25,16 @@ export function ConfigurationsTableHeader({
           <p className="text-[12px] text-muted-foreground">Manage settings for this {entityType}.</p>
         </div>
       </div>
-      {!isAdding ? (
+      <div className="flex items-center gap-2">
         <Button
-          variant="outline"
           size="sm"
-          className="text-xs shadow-none cursor-pointer"
-          onClick={onAdd}
+          className="h-8 text-xs shadow-none cursor-pointer"
+          onClick={onSave}
+          disabled={isSaving || !hasChanges}
         >
-          <Plus className="size-3.5 mr-1.5" /> Add Configuration
+          <Save className="size-3.5 mr-1.5" /> {isSaving ? "Saving..." : "Save"}
         </Button>
-      ) : (
-        <div className="flex items-center gap-2">
-          <Button
-            size="sm"
-            className="h-8 text-xs shadow-none cursor-pointer"
-            onClick={onSave}
-            disabled={isSaving}
-          >
-            <Save className="size-3.5 mr-1.5" /> {isSaving ? "Saving..." : "Save"}
-          </Button>
-          <Button
-            size="sm"
-            variant="ghost"
-            className="h-8 text-xs cursor-pointer border border-border"
-            onClick={onCancel}
-          >
-            <X className="size-3.5 mr-1" /> Cancel
-          </Button>
-        </div>
-      )}
+      </div>
     </div>
   )
 }

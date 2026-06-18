@@ -25,7 +25,7 @@ import { FieldCategories } from "@/pages/platform-standard-content/field-categor
 import { ReferenceLists } from "@/pages/platform-standard-content/reference-lists/reference-lists"
 import { ValidationRules } from "@/pages/platform-standard-content/validation rule/validation-rules"
 import { NormalizationRules } from "@/pages/platform-standard-content/normalization-rules"
-import { ExtractionManagement } from "@/pages/platform-standard-content/extraction-management/extraction-management"
+import { ExtractionManagement } from "@/pages/platform-standard-content/extraction-management"
 
 export type AppSubRoute = {
   path: string;

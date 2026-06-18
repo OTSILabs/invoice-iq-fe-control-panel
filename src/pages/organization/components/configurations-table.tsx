@@ -12,7 +12,6 @@ interface ConfigurationsTableProps {
 }
 
 export function ConfigurationsTable({ entityId, entityType }: ConfigurationsTableProps) {
-  const [isAdding, setIsAdding] = useState(false)
   const [newValues, setNewValues] = useState<Record<string, string>>({})
 
   const { data: configurations = [], isLoading } = useEntityConfigurations(entityId, entityType)
@@ -22,29 +21,36 @@ export function ConfigurationsTable({ entityId, entityType }: ConfigurationsTabl
   const existingKeys = useMemo(() => new Set(configurations.map(c => c.key)), [configurations])
 
   // Extract metadata hook to separate file
-  const { apiKeysMetadata, newKeysToAdd } = useEntityKeysMetadata(
+  const { apiKeysMetadata } = useEntityKeysMetadata(
     configurationKeys,
     entityType,
     existingKeys,
-    isAdding
+    false
   )
+
+  const compatibleKeys = useMemo(() => {
+    return Object.keys(apiKeysMetadata)
+  }, [apiKeysMetadata])
+
+  const hasChanges = useMemo(() => {
+    return Object.keys(newValues).length > 0
+  }, [newValues])
 
   const handleSave = async () => {
     const payload: Record<string, string> = {}
     const missedFields: string[] = []
 
-    newKeysToAdd.forEach(key => {
+    Object.keys(newValues).forEach(key => {
       const metadata = apiKeysMetadata[key] || { defaultValue: "", isBoolean: false, isRequired: false, label: key }
-      const val = newValues[key] || ""
-      
-      let finalVal = val.trim()
-      
-      if (!finalVal && metadata.defaultValue) {
-        finalVal = metadata.defaultValue.trim()
-      }
-      
+      const val = newValues[key]
+      const finalVal = val.trim()
+
       if (!finalVal) {
-        missedFields.push(metadata.label)
+        if (metadata.isRequired) {
+          missedFields.push(metadata.label)
+        } else {
+          payload[key] = ""
+        }
       } else {
         payload[key] = finalVal
       }
@@ -55,11 +61,14 @@ export function ConfigurationsTable({ entityId, entityType }: ConfigurationsTabl
       return
     }
 
+    if (Object.keys(payload).length === 0) {
+      return
+    }
+
     try {
       await updateConfig(payload)
       toast.success("Configurations updated successfully")
       setNewValues({})
-      setIsAdding(false)
     } catch (error: unknown) {
       let errMsg = "Failed to save configurations"
       if (error && typeof error === "object" && "response" in error) {
@@ -77,11 +86,6 @@ export function ConfigurationsTable({ entityId, entityType }: ConfigurationsTabl
     }
   }
 
-  const handleCancel = () => {
-    setNewValues({})
-    setIsAdding(false)
-  }
-
   const handleValueChange = useCallback((key: string, value: string) => {
     setNewValues(prev => ({
       ...prev,
@@ -90,68 +94,33 @@ export function ConfigurationsTable({ entityId, entityType }: ConfigurationsTabl
   }, [])
 
   const tableData = useMemo(() => {
-    if (isAdding) {
-      const newRows = newKeysToAdd.map(key => ({
+    return compatibleKeys.map(key => {
+      const existingConfig = configurations.find(c => c.key === key)
+      const value = newValues[key] !== undefined
+        ? newValues[key]
+        : (existingConfig ? String(existingConfig.value) : "")
+        
+      return {
+        value,
         key,
-        value: newValues[key] || "",
-        is_active: true,
-        is_editable_by_tenant: true,
+        dbValue: existingConfig ? String(existingConfig.value) : "",
+        is_active: existingConfig ? existingConfig.is_active : true,
+        is_editable_by_tenant: existingConfig ? existingConfig.is_editable_by_tenant : true,
         isNewRow: true
-      }))
-      return [...newRows, ...configurations]
-    }
-    return configurations
-  }, [configurations, isAdding, newKeysToAdd, newValues])
+      }
+    })
+  }, [compatibleKeys, configurations, newValues])
 
   // Extract columns configuration into custom hook
   const columns = useConfigurationsTableColumns(isSaving, apiKeysMetadata, handleValueChange)
-
-  const handleAddConfiguration = () => {
-    const unconfigured: { key: string; defaultValue: string }[] = []
-    
-    for (const item of (configurationKeys as unknown[])) {
-      const isObj = typeof item === "object" && item !== null
-      const obj = item as Record<string, unknown>
-      const key = typeof item === "string" ? item : String(obj.key || obj.name || "")
-      
-      if (key && !existingKeys.has(key) && apiKeysMetadata[key]) {
-        let defaultValue = ""
-        if (isObj) {
-          const rawDefault = obj.default_value !== undefined ? obj.default_value :
-                             obj.defaultValue !== undefined ? obj.defaultValue :
-                             obj.default !== undefined ? obj.default : "";
-          if (rawDefault !== null && rawDefault !== undefined) {
-            defaultValue = String(rawDefault)
-          }
-        }
-        unconfigured.push({ key, defaultValue })
-      }
-    }
-
-    if (unconfigured.length === 0) {
-      toast.info("All available configurations have already been set.")
-      return
-    }
-
-    const initialValues: Record<string, string> = {}
-    unconfigured.forEach(item => {
-      const metadata = apiKeysMetadata[item.key] || { defaultValue: "", isBoolean: false, isRequired: false, label: item.key }
-      initialValues[item.key] = item.defaultValue || (metadata.isBoolean ? "false" : "")
-    })
-
-    setNewValues(initialValues)
-    setIsAdding(true)
-  }
 
   return (
     <div className="flex flex-col bg-card border border-border rounded-xl overflow-hidden min-h-[300px]">
       <ConfigurationsTableHeader
         entityType={entityType}
-        isAdding={isAdding}
         isSaving={isSaving}
-        onAdd={handleAddConfiguration}
+        hasChanges={hasChanges}
         onSave={handleSave}
-        onCancel={handleCancel}
       />
 
       <div className="relative">
@@ -166,8 +135,8 @@ export function ConfigurationsTable({ entityId, entityType }: ConfigurationsTabl
           tableContainerClassName="border-0 rounded-none bg-transparent"
           emptyState={
             <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
-              <h3 className="text-sm font-semibold text-foreground">No Configurations Yet</h3>
-              <p className="text-xs text-muted-foreground mt-1">Click "Add Configuration" above to create your first setting.</p>
+              <h3 className="text-sm font-semibold text-foreground">No Configurations Available</h3>
+              <p className="text-xs text-muted-foreground mt-1">There are no compatible configurations for this {entityType}.</p>
             </div>
           }
         />

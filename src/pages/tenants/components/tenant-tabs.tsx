@@ -1,3 +1,4 @@
+import { useSearchParams } from "react-router-dom"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { ConfigurationsTable } from "@/pages/organization/components/configurations-table"
 import { TenantEventsTable } from "@/pages/tenants/tenant-events-table"
@@ -33,8 +34,15 @@ export function TenantTabs({
   onMigrate,
   isPendingMigrate,
 }: TenantTabsProps) {
+  const [searchParams, setSearchParams] = useSearchParams()
+  const activeTab = searchParams.get("tab") || "overview"
+
+  const handleTabChange = (val: string) => {
+    setSearchParams({ tab: val })
+  }
+
   return (
-    <Tabs defaultValue="overview" className="w-full">
+    <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
       <TabsList
         variant="line"
         className="mb-6 w-full justify-start gap-6 border-b border-border [&>button]:flex-none"

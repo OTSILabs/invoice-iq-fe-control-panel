@@ -10,6 +10,7 @@ import { DataTypeDetail } from "./pages/platform-standard-content/data-type/data
 import { FieldCategoryDetails } from "./pages/platform-standard-content/field-categories/field-category-details"
 import { ReferenceListDetails } from "./pages/platform-standard-content/reference-lists/reference-list-details"
 import { ReferenceValueDetails } from "./pages/platform-standard-content/reference-lists/reference-value-details"
+import { ValidationRuleDetail } from "./pages/platform-standard-content/validation rule/validation-rule-detail"
 import { Layout } from "./components/layout/layout"
 
 function OrgRedirect() {
@@ -63,6 +64,26 @@ export function App() {
           <Route path="organizations/:id" element={<OrganizationDetail />} />
           <Route path="organizations/:id/tenants" element={<OrgRedirect />} />
           <Route path="organizations/:orgId/tenants/:tenantId" element={<TenantDetail />} />
+          <Route
+            path="platform-standard-content/data-types/:code"
+            element={<DataTypeDetail />}
+          />
+          <Route
+            path="platform-standard-content/field-categories/:code"
+            element={<FieldCategoryDetails />}
+          />
+          <Route
+            path="platform-standard-content/validation-rules/:code"
+            element={<ValidationRuleDetail />}
+          />
+          <Route
+            path="platform-standard-content/reference-lists/:key"
+            element={<ReferenceListDetails />}
+          />
+          <Route
+            path="platform-standard-content/reference-lists/:key/:valueCode"
+            element={<ReferenceValueDetails />}
+          />
         </Route>
 
         <Route path="*" element={<Navigate to="/organizations" replace />} />
