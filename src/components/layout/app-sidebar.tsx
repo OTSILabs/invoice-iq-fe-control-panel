@@ -1,6 +1,6 @@
 import * as React from "react"
 import { Link, useLocation } from "react-router-dom"
-import { FileCheck2, ChevronUp, User2, LogOut, PanelLeftClose, PanelLeftOpen } from "lucide-react"
+import { FileCheck2, ChevronUp, ChevronDown, ChevronRight, User2, LogOut, PanelLeftClose, PanelLeftOpen } from "lucide-react"
 import { getDecodedToken } from "@/lib/utils"
 import { APP_ROUTES } from "@/config/routes"
 import {
@@ -89,7 +89,7 @@ function SidebarLogoHeader() {
 // ── Main sidebar ─────────────────────────────────────────────────────────────
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const location = useLocation()
-  const { open, isMobile } = useSidebar()
+  const { toggleSidebar, open, isMobile } = useSidebar()
   const isCollapsed = !open && !isMobile
 
   const tokenData = React.useMemo(() => getDecodedToken(), [])
@@ -104,6 +104,23 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   const visibleRoutes = APP_ROUTES.filter((r) => r.showInSidebar)
 
+  const [expandedMenus, setExpandedMenus] = React.useState<Record<string, boolean>>(() => {
+    const initial: Record<string, boolean> = {}
+    APP_ROUTES.forEach((r) => {
+      if (r.children && location.pathname.startsWith(r.path)) {
+        initial[r.title] = true
+      }
+    })
+    return initial
+  })
+
+  const toggleMenu = (title: string) => {
+    setExpandedMenus((prev) => ({
+      ...prev,
+      [title]: !prev[title],
+    }))
+  }
+
   return (
     <Sidebar collapsible="icon" className="border-r border-sidebar-border" {...props}>
 
@@ -116,9 +133,98 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent className="py-3">
         <SidebarMenu className="px-2 gap-0.5">
           {visibleRoutes.map((route) => {
-            const isActive = location.pathname.startsWith(route.path)
             const Icon = route.icon
 
+            if (route.children) {
+              const isMenuExpanded = !!expandedMenus[route.title]
+              const hasActiveChild = route.children.some((child) => location.pathname === child.path)
+
+              const parentButton = (
+                <SidebarMenuButton
+                  onClick={() => {
+                    if (isCollapsed) {
+                      toggleSidebar()
+                      setExpandedMenus((prev) => ({ ...prev, [route.title]: true }))
+                    } else {
+                      toggleMenu(route.title)
+                    }
+                  }}
+                  className={cn(
+                    "h-9 rounded-lg text-sm font-medium transition-all duration-200 w-full justify-between cursor-pointer",
+                    hasActiveChild && !isCollapsed
+                      ? "bg-slate-50 text-slate-900"
+                      : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                  )}
+                >
+                  <div className="flex items-center gap-2">
+                    {Icon && (
+                      <Icon
+                        className={cn(
+                          "h-5 w-5 shrink-0",
+                          hasActiveChild ? "text-blue-600" : "text-slate-500"
+                        )}
+                      />
+                    )}
+                    <span className="truncate group-data-[collapsible=icon]:hidden">{route.title}</span>
+                  </div>
+                  {!isCollapsed && (
+                    isMenuExpanded ? (
+                      <ChevronDown className="h-4 w-4 text-slate-400 shrink-0" />
+                    ) : (
+                      <ChevronRight className="h-4 w-4 text-slate-400 shrink-0" />
+                    )
+                  )}
+                </SidebarMenuButton>
+              )
+
+              return (
+                <SidebarMenuItem key={route.title} className="flex flex-col">
+                  {isCollapsed ? (
+                    <Tooltip delayDuration={0}>
+                      <TooltipTrigger className="ml-1" asChild>{parentButton}</TooltipTrigger>
+                      <TooltipContent side="right" className="text-xs font-medium">
+                        {route.title}
+                      </TooltipContent>
+                    </Tooltip>
+                  ) : (
+                    <div className="ml-1.5">{parentButton}</div>
+                  )}
+
+                   {!isCollapsed && isMenuExpanded && (
+                    <div className="ml-6 mt-1 flex flex-col border-l border-slate-100 pl-2 gap-0.5 animate-in slide-in-from-top-1 duration-200">
+                      {route.children.map((child) => {
+                        const isChildActive = location.pathname === child.path
+                        const ChildIcon = child.icon
+                        return (
+                          <Link
+                            key={child.path}
+                            to={child.path}
+                            className={cn(
+                              "h-9 flex items-center text-sm font-medium transition-all duration-200 w-full gap-2",
+                              isChildActive
+                                ? "bg-blue-50 text-blue-700 hover:bg-blue-100 hover:text-blue-800 border-l-2 border-blue-600 rounded-r-lg rounded-l-none pl-2.5"
+                                : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 rounded-lg pl-3"
+                            )}
+                          >
+                            {ChildIcon && (
+                              <ChildIcon
+                                className={cn(
+                                  "h-4 w-4 shrink-0",
+                                  isChildActive ? "text-blue-600" : "text-slate-400"
+                                )}
+                              />
+                            )}
+                            <span>{child.title}</span>
+                          </Link>
+                        )
+                      })}
+                    </div>
+                  )}
+                </SidebarMenuItem>
+              )
+            }
+
+            const isActive = location.pathname.startsWith(route.path)
             const button = (
               <SidebarMenuButton
                 asChild
@@ -130,14 +236,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 rounded-lg"
                 )}
               >
-                <Link to={route.path} className="flex items-center gap-2">
+                <Link to={route.path || "#"} className="flex items-center gap-2">
                   {Icon && (
                     <Icon
                       className={cn(
                         "h-5 w-5 shrink-0 ",
-                        isActive ? "text-blue-600" : "text-slate-500",
-                        //  open && !isMobile ? "ml-1" : "ml-3"
-                        
+                        isActive ? "text-blue-600" : "text-slate-500"
                       )}
                     />
                   )}

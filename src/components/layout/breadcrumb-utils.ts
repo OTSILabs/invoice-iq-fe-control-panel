@@ -46,6 +46,20 @@ function resolveSegmentTitle(
     return cached?.name ?? `DYNAMIC_ORG_${segments[index]}`
   }
 
+  // Dynamic data type — resolve from cache, fallback to code
+  const isDataTypeChild = index > 0 && segments[index - 1] === "data-types"
+  if (isDataTypeChild) {
+    const cached = queryClient.getQueryData<{ display_label?: string }>(["data-type", segments[index]])
+    return cached?.display_label ?? segments[index]
+  }
+
+  // Dynamic validation rule — resolve from cache, fallback to code
+  const isValidationRuleChild = index > 0 && segments[index - 1] === "validation-rules"
+  if (isValidationRuleChild) {
+    const cached = queryClient.getQueryData<{ display_label?: string }>(["validation-rule", segments[index]])
+    return cached?.display_label ?? segments[index]
+  }
+
   // 3. UUID or long segment — collapse
   const raw = segments[index]
   if (/^[0-9a-fA-F-]{36}$/.test(raw) || raw.length > 20) return "View"
