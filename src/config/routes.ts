@@ -24,7 +24,7 @@ import { DataTypes } from "@/pages/platform-standard-content/data-type/data-type
 import { FieldCategories } from "@/pages/platform-standard-content/field-categories/field-categories"
 import { ReferenceLists } from "@/pages/platform-standard-content/reference-lists/reference-lists"
 import { ValidationRules } from "@/pages/platform-standard-content/validation rule/validation-rules"
-import { NormalizationRules } from "@/pages/platform-standard-content/normalization-rules"
+import { NormalizationRules } from "@/pages/platform-standard-content/normalization-rule/normalization-rules"
 import { ExtractionManagement } from "@/pages/platform-standard-content/extraction-management"
 
 export type AppSubRoute = {
