@@ -12,6 +12,11 @@ export const usersService = {
     return response.data;
   },
 
+  getPlatformUser: async (id: string): Promise<PlatformUser> => {
+    const response = await api.get<PlatformUser>(`/platform-users/${id}`);
+    return response.data;
+  },
+
   createPlatformUser: async (payload: CreatePlatformUserPayload): Promise<PlatformUser> => {
     const response = await api.post<PlatformUser>('/platform-users', payload);
     return response.data;
