@@ -570,10 +570,10 @@ function DerivedTable({ data, isLoading, onEdit, onDelete }: DerivedTableProps) 
                   <Plus className="h-4 w-4 rotate-45 text-muted-foreground" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-32">
+              <DropdownMenuContent align="end" className="w-45">
                 <DropdownMenuItem className="text-xs cursor-pointer" onClick={() => onEdit(row.original)}>
                   <Edit2 className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
-                  Edit Layout
+                  Edit
                 </DropdownMenuItem>
                 <DropdownMenuItem className="text-xs text-red-600 cursor-pointer focus:text-red-700" onClick={() => onDelete(row.original.derived_template_id)}>
                   <Trash2 className="h-3.5 w-3.5 mr-2" />

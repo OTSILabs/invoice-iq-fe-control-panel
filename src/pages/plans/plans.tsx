@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react"
 import { useNavigate } from "react-router-dom"
-import { Loader2, AlertCircle, RefreshCw, Plus, CreditCard } from "lucide-react"
+import { Loader2, AlertCircle, RefreshCw, Plus, CreditCard, MoreVertical, Eye, Edit, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -12,6 +12,12 @@ import { cn } from "@/lib/utils"
 import type { Plan } from "@/types"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { SearchInput } from "@/components/search-input"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 const normalizePlanType = (type: string) => {
   const lower = String(type).toLowerCase()
@@ -72,6 +78,38 @@ const columns: CustomColumnDef<Plan>[] = [
         {row.original.created_at ? new Date(row.original.created_at).toLocaleDateString() : "N/A"}
       </span>
     ),
+  },
+  {
+    id: "actions",
+    header: "Actions",
+    width: 80,
+    cell: () => {
+      return (
+        <div className="flex items-center" onClick={(e) => e.stopPropagation()}>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="sm" className="h-8 w-8 p-0 cursor-pointer">
+                <MoreVertical className="h-4 w-4 text-muted-foreground" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-45">
+              <DropdownMenuItem disabled className="text-xs cursor-not-allowed opacity-50 gap-1.5">
+                <Eye className="h-3.5 w-3.5 text-muted-foreground" />
+                View Details
+              </DropdownMenuItem>
+              <DropdownMenuItem disabled className="text-xs cursor-not-allowed opacity-50 gap-1.5">
+                <Edit className="h-3.5 w-3.5 text-muted-foreground" />
+                Edit
+              </DropdownMenuItem>
+              <DropdownMenuItem disabled className="text-xs cursor-not-allowed opacity-50 gap-1.5 text-red-600 focus:text-red-700">
+                <Trash2 className="h-3.5 w-3.5" />
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      )
+    },
   },
 ]
 

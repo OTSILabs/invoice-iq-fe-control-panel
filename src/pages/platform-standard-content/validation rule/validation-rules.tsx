@@ -151,13 +151,13 @@ export function ValidationRules() {
                   <MoreVertical className="h-4 w-4 text-muted-foreground" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-32">
+              <DropdownMenuContent align="end" className="w-45">
                 <DropdownMenuItem
                   className="cursor-pointer text-xs"
                   onClick={() => navigate(`/platform-standard-content/validation-rules/${row.original.rule_code}`)}
                 >
                   <Eye className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
-                  View
+                  View Details
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   className="cursor-pointer text-xs"

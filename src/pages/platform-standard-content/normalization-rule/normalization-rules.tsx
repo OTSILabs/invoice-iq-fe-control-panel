@@ -165,7 +165,7 @@ export function NormalizationRules() {
                   <MoreVertical className="h-4 w-4 text-muted-foreground" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-40 text-xs-fine">
+              <DropdownMenuContent align="end" className="w-45 text-xs-fine">
                 <DropdownMenuItem
                   onClick={() => navigate(`/platform-standard-content/normalization-rules/${row.original.rule_code}`)}
                   className="cursor-pointer gap-1.5"
@@ -178,14 +178,14 @@ export function NormalizationRules() {
                   className="cursor-pointer gap-1.5"
                 >
                   <Edit className="h-3.5 w-3.5 text-muted-foreground" />
-                  Edit Rule
+                  Edit
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => setDeletingRule(row.original)}
                   className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50 gap-1.5"
                 >
                   <Trash2 className="h-3.5 w-3.5" />
-                  Delete Rule
+                  Delete
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

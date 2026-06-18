@@ -28,7 +28,7 @@ export function TenantActionsDropdown({ tenant, orgId, setTenantAction }: Tenant
           <MoreVertical className="h-4 w-4 text-muted-foreground" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-[160px]">
+      <DropdownMenuContent align="end" className="w-45">
         <DropdownMenuItem 
           onClick={() => {
             const isFromTenantsTab = window.location.pathname.startsWith("/tenants")

@@ -152,15 +152,15 @@ export function Users() {
               <DropdownMenuContent align="end" className="w-45">
                 <DropdownMenuItem className="text-xs cursor-pointer gap-1.5" onClick={() => navigate(`/users/${row.original.id}`)}>
                   <Eye className="h-3.5 w-3.5 text-muted-foreground" />
-                  View User
+                  View Details
                 </DropdownMenuItem>
                 <DropdownMenuItem className="text-xs cursor-pointer gap-1.5" onClick={() => handleOpenEditDialog(row.original)}>
                   <Edit2 className="h-3.5 w-3.5 text-muted-foreground" />
-                  Edit Role
+                  Edit
                 </DropdownMenuItem>
                 <DropdownMenuItem disabled className="text-xs cursor-not-allowed opacity-50 gap-1.5 text-red-600 focus:text-red-600">
                   <Trash2 className="h-3.5 w-3.5" />
-                  Delete User
+                  Delete
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
