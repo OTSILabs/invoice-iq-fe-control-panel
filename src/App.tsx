@@ -11,6 +11,7 @@ import { FieldCategoryDetails } from "./pages/platform-standard-content/field-ca
 import { ReferenceListDetails } from "./pages/platform-standard-content/reference-lists/reference-list-details"
 import { ReferenceValueDetails } from "./pages/platform-standard-content/reference-lists/reference-value-details"
 import { ValidationRuleDetail } from "./pages/platform-standard-content/validation rule/validation-rule-detail"
+import { NormalizationRuleDetail } from "./pages/platform-standard-content/normalization-rule/normalization-rule-detail"
 import { Layout } from "./components/layout/layout"
 
 function OrgRedirect() {
@@ -75,6 +76,10 @@ export function App() {
           <Route
             path="platform-standard-content/validation-rules/:code"
             element={<ValidationRuleDetail />}
+          />
+          <Route
+            path="platform-standard-content/normalization-rules/:code"
+            element={<NormalizationRuleDetail />}
           />
           <Route
             path="platform-standard-content/reference-lists/:key"
