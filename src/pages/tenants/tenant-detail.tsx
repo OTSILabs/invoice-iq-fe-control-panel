@@ -1,10 +1,11 @@
 import { useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
 import { organizationsService } from "@/api/services/organizations.service"
+import { useTenantDetailById } from "@/api/hooks/useOrganizations"
 
 import { TenantActionDialog } from "@/pages/tenants/tenant-actions/tenant-action-dialog"
 import { AssignPlanDialog } from "@/pages/tenants/tenant-actions/assign-plan-dialog"
@@ -15,7 +16,7 @@ import { TenantOverviewCard } from "./components/tenant-overview-card"
 import { TenantTabs } from "./components/tenant-tabs"
 
 export function TenantDetail() {
-  const { orgId, tenantId } = useParams<{ orgId: string; tenantId: string }>()
+  const { orgId, tenantId } = useParams<{ orgId?: string; tenantId: string }>()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
 
@@ -24,18 +25,16 @@ export function TenantDetail() {
     tenant: Tenant
   } | null>(null)
 
-  const { data: tenants = [], isLoading, isError } = useQuery({
-    queryKey: ['organizations', orgId, 'tenants'],
-    queryFn: () => organizationsService.getTenants(orgId!),
-    enabled: !!orgId
-  })
+  // Fetch tenant details by slug or ID directly using the backend API
+  const { data: tenant, isLoading, isError } = useTenantDetailById(tenantId)
 
-  const tenant = tenants.find((t) => t.id === tenantId)
+  const activeOrgId = orgId || tenant?.organisation_id || ""
 
   const retryMutation = useMutation({
-    mutationFn: () => organizationsService.retryProvisioning(tenantId!),
+    mutationFn: () => organizationsService.retryProvisioning(tenant?.id || tenantId || ""),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['organizations', orgId, 'tenants'] });
+      queryClient.invalidateQueries({ queryKey: ['organizations', activeOrgId, 'tenants'] });
+      queryClient.invalidateQueries({ queryKey: ['tenants', tenantId] });
       toast.success("Provisioning retry initiated successfully");
     },
     onError: (error: any) => {
@@ -44,9 +43,10 @@ export function TenantDetail() {
   });
 
   const migrateMutation = useMutation({
-    mutationFn: () => organizationsService.migrateTenant(tenantId!),
+    mutationFn: () => organizationsService.migrateTenant(tenant?.id || tenantId || ""),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['organizations', orgId, 'tenants'] });
+      queryClient.invalidateQueries({ queryKey: ['organizations', activeOrgId, 'tenants'] });
+      queryClient.invalidateQueries({ queryKey: ['tenants', tenantId] });
       toast.success("Tenant migration initiated successfully");
     },
     onError: (error: any) => {
@@ -63,11 +63,15 @@ export function TenantDetail() {
   }
 
   if (isError || !tenant) {
+    const isFromTenantsTab = window.location.pathname.startsWith("/tenants")
+    const backUrl = isFromTenantsTab ? "/tenants" : `/organizations/${activeOrgId || 'list'}`
+    const backLabel = isFromTenantsTab ? "Back to Tenants" : "Back to Organization"
+
     return (
       <div className="flex h-full flex-col items-center justify-center gap-4">
         <p className="text-sm text-muted-foreground">Failed to load tenant data or tenant not found.</p>
-        <Button variant="outline" onClick={() => navigate(`/organizations/${orgId}`)}>
-          Back to Organization
+        <Button variant="outline" onClick={() => navigate(backUrl)}>
+          {backLabel}
         </Button>
       </div>
     )
@@ -79,7 +83,7 @@ export function TenantDetail() {
       {/* ── Action Header ── */}
       <TenantDetailHeader
         tenant={tenant}
-        orgId={orgId!}
+        orgId={activeOrgId}
         onAction={setTenantAction}
         onRetry={() => retryMutation.mutate()}
         isPendingRetry={retryMutation.isPending}
@@ -88,7 +92,7 @@ export function TenantDetail() {
       />
 
       {/* ── Details Card ── */}
-      <TenantOverviewCard tenant={tenant} orgId={orgId!} />
+      <TenantOverviewCard tenant={tenant} orgId={activeOrgId} />
 
       {/* ── Tabs Content (Profile, Configurations, Database, Events) ── */}
       <TenantTabs
@@ -103,10 +107,11 @@ export function TenantDetail() {
       <TenantActionDialog 
         action={tenantAction && tenantAction.type !== "assignPlan" ? (tenantAction as any) : null} 
         onClose={() => setTenantAction(null)} 
-        orgId={orgId} 
+        orgId={activeOrgId} 
         onSuccess={() => {
           if (tenantAction?.type === "delete") {
-            navigate(`/organizations/${orgId}`)
+            const isFromTenantsTab = window.location.pathname.startsWith("/tenants")
+            navigate(isFromTenantsTab ? "/tenants" : `/organizations/${activeOrgId}`)
           }
         }} 
       />
@@ -114,12 +119,10 @@ export function TenantDetail() {
         <AssignPlanDialog 
           tenant={tenantAction.tenant} 
           onClose={() => setTenantAction(null)} 
-          orgId={orgId} 
+          orgId={activeOrgId} 
         />
       )}
 
     </div>
   )
 }
-
-

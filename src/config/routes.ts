@@ -26,6 +26,7 @@ import { ReferenceLists } from "@/pages/platform-standard-content/reference-list
 import { ValidationRules } from "@/pages/platform-standard-content/validation rule/validation-rules"
 import { NormalizationRules } from "@/pages/platform-standard-content/normalization-rule/normalization-rules"
 import { ExtractionManagement } from "@/pages/platform-standard-content/extraction-management"
+import { TenantsPage } from "@/pages/tenants/tenants-page"
 
 export type AppSubRoute = {
   path: string;
@@ -59,6 +60,13 @@ export const APP_ROUTES: AppRoute[] = [
     component: Plans,
     showInSidebar: true,
   },
+  {
+    path: "/tenants",
+    title: "Tenants",
+    icon: UsersIcon,
+    component: TenantsPage,
+    showInSidebar: true,
+  },
   {
     path: "/users",
     title: "Users",

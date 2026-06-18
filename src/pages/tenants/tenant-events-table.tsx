@@ -21,7 +21,7 @@ const columns = useMemo<CustomColumnDef<any>[]>(() => [
   {
     accessorKey: "event_type",
     header: "Event Type",
-    width: 200,
+    width: "25%",
     cell: ({ row }) => (
       <span className="text-xs font-semibold text-foreground font-mono">
         {row.original.event_type || row.original.type || "Unknown"}
@@ -31,7 +31,7 @@ const columns = useMemo<CustomColumnDef<any>[]>(() => [
   {
     accessorKey: "message",
     header: "Message",
-    width: 100,
+    width: "45%",
     cell: ({ row }) => (
       <span className="text-xs text-muted-foreground">
         {row.original.message || row.original.detail || "-"}
@@ -41,7 +41,7 @@ const columns = useMemo<CustomColumnDef<any>[]>(() => [
   {
     accessorKey: "status",
     header: "Status",
-    width: 100,
+    width: "15%",
     cell: ({ row }) => {
       const status = row.original.status || "Completed"
       const isSuccess = status.toLowerCase() === 'completed' || status.toLowerCase() === 'success'
@@ -58,7 +58,7 @@ const columns = useMemo<CustomColumnDef<any>[]>(() => [
   {
     accessorKey: "created_at",
     header: "Created At",
-    width: 100,
+    width: "15%",
     cell: ({ row }) => (
       <span className="text-xs text-muted-foreground">
         {row.original.created_at || row.original.timestamp

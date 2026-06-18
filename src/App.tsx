@@ -46,6 +46,7 @@ export function App() {
                       <Route path="field-categories/:code" element={<FieldCategoryDetails />} />
                       <Route path="reference-lists/:key" element={<ReferenceListDetails />} />
                       <Route path="reference-lists/:key/:valueCode" element={<ReferenceValueDetails />} />
+                      <Route path="tenants/:tenantId" element={<TenantDetail />} />
                     </>
                   )}
                 </Route>

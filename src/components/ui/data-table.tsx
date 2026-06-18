@@ -263,10 +263,10 @@ export function DataTable<TData, TValue = unknown>({
           className
         )}
         containerClassName={cn(
-          "relative overflow-auto border border-border/60 rounded-xl bg-background/50 backdrop-blur-sm",
+          "relative overflow-x-auto overflow-y-hidden border border-border/60 rounded-xl bg-background/50 backdrop-blur-sm",
           tableContainerClassName,
-          fillAvailableHeight && "min-h-0 flex-1",
-          stickyHeader && "overflow-auto",
+          fillAvailableHeight && "min-h-0 flex-1 overflow-y-auto",
+          stickyHeader && "overflow-x-auto overflow-y-hidden",
           tableScrollClassName
         )}
       >

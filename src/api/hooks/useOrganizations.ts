@@ -149,6 +149,14 @@ export const useOrganizationTenants = (id?: string) => {
   })
 }
 
+export const useTenantDetailById = (tenantId?: string) => {
+  return useQuery({
+    queryKey: ["tenants", tenantId],
+    queryFn: () => organizationsService.getTenantById(tenantId!),
+    enabled: !!tenantId,
+  })
+}
+
 export const useEntityConfigurations = (entityId: string, entityType: 'organization' | 'tenant') => {
   return useQuery({
     queryKey: [entityType === 'organization' ? 'organizations' : 'tenants', entityId, 'configurations'],

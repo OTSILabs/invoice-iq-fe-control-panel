@@ -46,6 +46,11 @@ export const organizationsService = {
     return response.data
   },
 
+  getTenantById: async (tenantId: string): Promise<Tenant> => {
+    const response = await api.get<Tenant>(`/tenants/${tenantId}`)
+    return response.data
+  },
+
   getConfigurations: async (orgId: string): Promise<Configuration[]> => {
     const response = await api.get<Configuration[]>(
       `/organisations/${orgId}/configurations`

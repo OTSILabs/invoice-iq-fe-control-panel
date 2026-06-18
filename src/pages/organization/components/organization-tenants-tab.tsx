@@ -49,7 +49,8 @@ export function OrganizationTenantsTab({ orgId, organizationName }: Organization
     {
       accessorKey: "slug",
       header: "Slug",
-      width: "20%",
+      width: "15%",
+      minWidth: 100,
       cell: ({ row }) => {
         const slug = row.original.slug || "—"
         return (
@@ -66,6 +67,7 @@ export function OrganizationTenantsTab({ orgId, organizationName }: Organization
       accessorKey: "tenant_role",
       header: "Role",
       width: "15%",
+      minWidth: 80,
       cell: ({ row }) => (
         <span className="text-xs text-muted-foreground capitalize">
           {String(row.original.tenant_role || "").replace(/_/g, " ") || "—"}
@@ -76,6 +78,7 @@ export function OrganizationTenantsTab({ orgId, organizationName }: Organization
       accessorKey: "tenant_admin_full_name",
       header: "Admin",
       width: "20%",
+      minWidth: 100,
       cell: ({ row }) => (
         <span className="text-xs font-medium text-foreground truncate">{row.original.tenant_admin_full_name || "—"}</span>
       ),
@@ -84,6 +87,7 @@ export function OrganizationTenantsTab({ orgId, organizationName }: Organization
       accessorKey: "tenant_admin_email",
       header: "Email",
       width: "25%",
+      minWidth: 120,
       cell: ({ row }) => (
         <span className="text-xs text-muted-foreground truncate">{row.original.tenant_admin_email || "—"}</span>
       ),
@@ -92,14 +96,16 @@ export function OrganizationTenantsTab({ orgId, organizationName }: Organization
       accessorKey: "access_status",
       header: "Status",
       width: "15%",
+      minWidth: 80,
       cell: ({ row }) => <StatusBadge status={String(row.original.access_status || "inactive")} />,
     },
     {
       id: "actions",
-      header: "",
-      width: 60,
+      header: "Actions",
+      width: "10%",
+      minWidth: 80,
       cell: ({ row }) => (
-        <div className="flex justify-end" onClick={(e) => e.stopPropagation()}>
+        <div className="flex justify-start" onClick={(e) => e.stopPropagation()}>
           <TenantActionsDropdown tenant={row.original} orgId={orgId} setTenantAction={setTenantAction} />
         </div>
       ),

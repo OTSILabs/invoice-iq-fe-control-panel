@@ -29,7 +29,12 @@ export function TenantActionsDropdown({ tenant, orgId, setTenantAction }: Tenant
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem onClick={() => navigate(`/organizations/${orgId}/tenants/${tenant.id}`)}>
+        <DropdownMenuItem 
+          onClick={() => {
+            const isFromTenantsTab = window.location.pathname.startsWith("/tenants")
+            navigate(isFromTenantsTab ? `/tenants/${tenant.id}` : `/organizations/${orgId}/tenants/${tenant.id}`)
+          }}
+        >
           <Eye className="mr-2 h-4 w-4 text-primary" /> <span>View Details</span>
         </DropdownMenuItem>
         
