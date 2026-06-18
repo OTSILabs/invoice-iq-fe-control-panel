@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react"
-import { Loader2, AlertCircle, RefreshCw, Edit2, MoreVertical, Plus, Users as UsersIcon } from "lucide-react"
+import { useNavigate } from "react-router-dom"
+import { Loader2, AlertCircle, RefreshCw, Edit2, Eye, MoreVertical, Plus, Users as UsersIcon, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { DataTable } from "@/components/ui/data-table"
@@ -39,6 +40,7 @@ const getRoleBadgeVariant = (role: string) => {
 }
 
 export function Users() {
+  const navigate = useNavigate()
   const { data: users = [], isLoading: isLoadingUsers, isError: isErrorUsers, refetch: refetchUsers, isFetching: isFetchingUsers } = usePlatformUsers()
   const { data: roles = [], isLoading: isLoadingRoles, isError: isErrorRoles, refetch: refetchRoles } = usePlatformRoles()
 
@@ -140,7 +142,7 @@ export function Users() {
         width: "88px",
         minWidth: "88px",
         cell: ({ row }) => (
-          <div className="flex items-center ">
+          <div className="flex items-center" onClick={(e) => e.stopPropagation()}>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="sm" className="h-8 w-8 p-0 cursor-pointer">
@@ -148,9 +150,17 @@ export function Users() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-45">
-                <DropdownMenuItem className="text-xs cursor-pointer" onClick={() => handleOpenEditDialog(row.original)}>
-                  <Edit2 className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
+                <DropdownMenuItem className="text-xs cursor-pointer gap-1.5" onClick={() => navigate(`/users/${row.original.id}`)}>
+                  <Eye className="h-3.5 w-3.5 text-muted-foreground" />
+                  View User
+                </DropdownMenuItem>
+                <DropdownMenuItem className="text-xs cursor-pointer gap-1.5" onClick={() => handleOpenEditDialog(row.original)}>
+                  <Edit2 className="h-3.5 w-3.5 text-muted-foreground" />
                   Edit Role
+                </DropdownMenuItem>
+                <DropdownMenuItem disabled className="text-xs cursor-not-allowed opacity-50 gap-1.5 text-red-600 focus:text-red-600">
+                  <Trash2 className="h-3.5 w-3.5" />
+                  Delete User
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -158,7 +168,7 @@ export function Users() {
         ),
       },
     ],
-    []
+    [navigate]
   )
   const filteredUsers = useMemo(() => {
     const q = filters.searchText.trim().toLowerCase()
@@ -272,6 +282,7 @@ export function Users() {
             stickyHeader
             fillAvailableHeight
             tableContainerClassName="border-0 rounded-none bg-transparent"
+            onRowClick={(user) => navigate(`/users/${user.id}`)}
             emptyState={
               <div className="flex flex-col items-center justify-center px-4 py-10 text-center animate-in fade-in slide-in-from-bottom-2 duration-300">
                 <div className="bg-primary/5 p-4 rounded-full mb-3 text-primary/80 border border-primary/10">

@@ -12,6 +12,7 @@ import { ReferenceListDetails } from "./pages/platform-standard-content/referenc
 import { ReferenceValueDetails } from "./pages/platform-standard-content/reference-lists/reference-value-details"
 import { ValidationRuleDetail } from "./pages/platform-standard-content/validation rule/validation-rule-detail"
 import { NormalizationRuleDetail } from "./pages/platform-standard-content/normalization-rule/normalization-rule-detail"
+import { UserDetail } from "./pages/user/user-detail"
 import { Layout } from "./components/layout/layout"
 
 function OrgRedirect() {
@@ -66,6 +67,7 @@ export function App() {
           <Route path="organizations/:id" element={<OrganizationDetail />} />
           <Route path="organizations/:id/tenants" element={<OrgRedirect />} />
           <Route path="organizations/:orgId/tenants/:tenantId" element={<TenantDetail />} />
+          <Route path="users/:id" element={<UserDetail />} />
           <Route
             path="platform-standard-content/data-types/:code"
             element={<DataTypeDetail />}

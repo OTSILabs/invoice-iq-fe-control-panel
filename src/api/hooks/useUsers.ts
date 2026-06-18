@@ -16,6 +16,14 @@ export const usePlatformRoles = () => {
   });
 };
 
+export const usePlatformUser = (id: string, enabled = true) => {
+  return useQuery({
+    queryKey: ['platform-user', id],
+    queryFn: () => usersService.getPlatformUser(id),
+    enabled: !!id && enabled,
+  });
+};
+
 export const useCreatePlatformUserMutation = () => {
   const queryClient = useQueryClient();
   
