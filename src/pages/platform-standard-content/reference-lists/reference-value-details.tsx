@@ -2,7 +2,6 @@ import { useParams, useNavigate } from "react-router-dom"
 import { ArrowLeft, ListChecks, Loader2, AlertCircle, RefreshCw } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import { useReferenceValueDetail } from "@/api/hooks/useReferenceLists"
 
 const formatDate = (dateStr?: string) => {

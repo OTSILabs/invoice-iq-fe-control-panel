@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react"
 import { Database, Plus, RefreshCw, MoreVertical, Edit, Eye } from "lucide-react"
 import { useNavigate } from "react-router-dom"
+import { toast } from "sonner"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -29,6 +30,15 @@ export function DataTypes() {
   const [searchText, setSearchText] = useState("")
   const [createOpen, setCreateOpen] = useState(false)
   const [editingDataType, setEditingDataType] = useState<DataType | null>(null)
+
+  const handleRefetch = async () => {
+    try {
+      await refetch()
+      toast.success("Data types refreshed")
+    } catch {
+      toast.error("Failed to refresh data types")
+    }
+  }
 
   const columns = useMemo<CustomColumnDef<DataType>[]>(
     () => [
@@ -106,33 +116,35 @@ export function DataTypes() {
         header: "Action",
         width: 60,
         cell: ({ row }) => (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-8 w-8 cursor-pointer p-0"
-              >
-                <MoreVertical className="h-4 w-4 text-muted-foreground" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-32">
-              <DropdownMenuItem
-                className="cursor-pointer text-xs"
-                onClick={() => navigate(`/platform-standard-content/data-types/${row.original.data_type_code}`)}
-              >
-                <Eye className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
-                View
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className="cursor-pointer text-xs"
-                onClick={() => setEditingDataType(row.original)}
-              >
-                <Edit className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
-                Edit
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <div onClick={(e) => e.stopPropagation()}>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 w-8 cursor-pointer p-0"
+                >
+                  <MoreVertical className="h-4 w-4 text-muted-foreground" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-32">
+                <DropdownMenuItem
+                  className="cursor-pointer text-xs"
+                  onClick={() => navigate(`/platform-standard-content/data-types/${row.original.data_type_code}`)}
+                >
+                  <Eye className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
+                  View
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="cursor-pointer text-xs"
+                  onClick={() => setEditingDataType(row.original)}
+                >
+                  <Edit className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
+                  Edit
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         ),
       },
     ],
@@ -183,7 +195,7 @@ export function DataTypes() {
               <Button
                 variant="outline"
                 size="icon"
-                onClick={() => refetch()}
+                onClick={handleRefetch}
                 className="size-9 cursor-pointer"
                 disabled={isFetching}
               >
@@ -197,12 +209,13 @@ export function DataTypes() {
           <DataTable
             data={filteredData}
             columns={columns}
-            isLoading={isLoading}
+            isLoading={isLoading || isFetching}
             enablePagination
             pageSize={10}
             totalItems={filteredData.length}
             stickyHeader
             tableContainerClassName="border-0 rounded-none bg-transparent"
+            onRowClick={(dataType) => navigate(`/platform-standard-content/data-types/${dataType.data_type_code}`)}
             emptyState={
               <div className="flex animate-in flex-col items-center justify-center px-4 py-16 text-center duration-300 fade-in slide-in-from-bottom-2">
                 <div className="mb-3 rounded-full border border-primary/10 bg-primary/5 p-4 text-primary/80">

@@ -237,3 +237,36 @@ export interface ReferenceValueUpdateRequest {
   sort_sequence?: number | null;
 }
 
+export interface ValidationRule {
+  id?: string;
+  rule_code: string;
+  display_label: string;
+  description: string;
+  rule_mode: string;
+  engine_type: string | null;
+  implementation_key: string | null;
+  parameter_schema_json: Record<string, any>;
+  engine_config_json: Record<string, any>;
+  supported_data_types_json: string[];
+  supported_header_items_json: string[];
+  is_active: boolean;
+  sort_sequence: number;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface CreateValidationRulePayload {
+  rule_code: string;
+  display_label: string;
+  description: string;
+  rule_mode: string;
+  engine_type: string | null;
+  implementation_key: string | null;
+  parameter_schema_json: Record<string, any>;
+  engine_config_json: Record<string, any>;
+  supported_data_types_json: string[];
+  supported_header_items_json: string[];
+  is_active: boolean;
+  sort_sequence: number;
+}
+

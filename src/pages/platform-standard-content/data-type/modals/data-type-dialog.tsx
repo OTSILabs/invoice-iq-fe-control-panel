@@ -1,10 +1,13 @@
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Loader2 } from "lucide-react"
+import { Loader2, Database } from "lucide-react"
 import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
 import { InputField } from "@/components/ui/input-field"
+import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
+import { ScrollArea } from "@/components/ui/scroll-area"
 import {
   Dialog,
   DialogContent,
@@ -126,9 +129,10 @@ export function DataTypeDialog({
         }
       }}
     >
-      <DialogContent className="sm:max-w-[500px]">
-        <DialogHeader>
-          <DialogTitle>
+      <DialogContent className="max-h-[85vh] gap-0 overflow-hidden p-0 sm:max-w-lg">
+        <DialogHeader className="border-b border-border px-6 py-5">
+          <DialogTitle className="flex items-center gap-2 text-lg font-bold">
+            <Database className="size-5 text-primary" />
             {isEdit ? "Edit Data Type" : "Create Data Type"}
           </DialogTitle>
           <DialogDescription>
@@ -138,72 +142,86 @@ export function DataTypeDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 py-4">
-          <InputField
-            label={isEdit ? "Data Type Code (Read-only)" : "Data Type Code"}
-            placeholder="e.g. email_address"
-            disabled={isEdit || isPending}
-            error={errors.data_type_code?.message}
-            {...register("data_type_code")}
-            required
-            className={
-              isEdit
-                ? "cursor-not-allowed bg-muted text-muted-foreground opacity-100"
-                : ""
-            }
-          />
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col max-h-[calc(85vh-5.5rem)]" noValidate>
+          <ScrollArea className="flex-1 min-h-0">
+            <div className="px-6 py-5 space-y-4">
+              <InputField
+                label={isEdit ? "Data Type Code (Read-only)" : "Data Type Code"}
+                placeholder="e.g. email_address"
+                disabled={isEdit || isPending}
+                error={errors.data_type_code?.message}
+                {...register("data_type_code")}
+                required
+                className={
+                  isEdit
+                    ? "cursor-not-allowed bg-muted text-muted-foreground opacity-100"
+                    : ""
+                }
+              />
 
-          <InputField
-            label="Display Label"
-            placeholder="e.g. Email Address"
-            error={errors.display_label?.message}
-            disabled={isPending}
-            {...register("display_label")}
-            required
-          />
+              <InputField
+                label="Display Label"
+                placeholder="e.g. Email Address"
+                error={errors.display_label?.message}
+                disabled={isPending}
+                {...register("display_label")}
+                required
+              />
 
-          <InputField
-            label="Description"
-            placeholder="e.g. Standard format for electronic mail contact addresses"
-            error={errors.description?.message}
-            disabled={isPending}
-            {...register("description")}
-            required
-          />
+              <div className="space-y-1.5">
+                <Label htmlFor="description" className="text-sm font-medium text-foreground">
+                  Description <span className="text-destructive ml-0.5">*</span>
+                </Label>
+                <Textarea
+                  id="description"
+                  placeholder="e.g. Standard format for electronic mail contact addresses"
+                  disabled={isPending}
+                  {...register("description")}
+                  className="min-h-[80px] text-xs bg-inherit border border-input rounded-lg"
+                />
+                {errors.description && (
+                  <span className="px-1 text-[11px] font-medium text-destructive block">
+                    {errors.description.message}
+                  </span>
+                )}
+              </div>
 
-          <InputField
-            label="Sample Value"
-            placeholder="e.g. test@example.com"
-            error={errors.sample_value?.message}
-            disabled={isPending}
-            {...register("sample_value")}
-            required
-          />
+              <InputField
+                label="Sample Value"
+                placeholder="e.g. test@example.com"
+                error={errors.sample_value?.message}
+                disabled={isPending}
+                {...register("sample_value")}
+                required
+              />
 
-          <InputField
-            label="Sort Sequence"
-            type="number"
-            placeholder="e.g. 1"
-            error={errors.sort_sequence?.message}
-            disabled={isPending}
-            {...register("sort_sequence", { valueAsNumber: true })}
-            required
-          />
+              <InputField
+                label="Sort Sequence"
+                type="number"
+                placeholder="e.g. 1"
+                error={errors.sort_sequence?.message}
+                disabled={isPending}
+                {...register("sort_sequence", { valueAsNumber: true })}
+                required
+              />
+            </div>
+          </ScrollArea>
 
-          <DialogFooter className="pt-2">
+          {/* Dialog Footer Actions */}
+          <DialogFooter className="gap-3 border-t border-border bg-popover px-6 py-4 sm:flex-row sm:items-center sm:justify-end">
             <Button
               type="button"
               variant="outline"
+              className="transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px cursor-pointer text-xs"
               onClick={() => onOpenChange(false)}
               disabled={isPending}
-              className="text-xs"
             >
               Cancel
             </Button>
             <Button
               type="submit"
               disabled={isPending}
-              className="gap-1.5 text-xs"
+              className="transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px cursor-pointer text-xs gap-1.5"
             >
               {isPending && <Loader2 className="h-3 w-3 animate-spin" />}
               {isEdit ? "Save Changes" : "Create data type"}
