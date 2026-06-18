@@ -1,4 +1,3 @@
-import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Loader2 } from "lucide-react"
@@ -38,24 +37,15 @@ export function ErpSettingFormDialog({ open, onOpenChange, record }: ErpSettingF
     register,
     handleSubmit,
     formState: { errors },
-    reset,
   } = useForm<ErpSettingFormValues>({
     resolver: zodResolver(erpSettingSchema),
-    defaultValues: DEFAULT_ERP_SETTING_VALUES,
-  })
-
-  useEffect(() => {
-    if (open) {
-      if (record) {
-        reset({
+    values: record
+      ? {
           erp_type: record.erp_type,
           settingsInput: JSON.stringify(record.settings, null, 2),
-        })
-      } else {
-        reset(DEFAULT_ERP_SETTING_VALUES)
-      }
-    }
-  }, [open, record, reset])
+        }
+      : DEFAULT_ERP_SETTING_VALUES,
+  })
 
   const onSubmit = (vals: ErpSettingFormValues) => {
     if (isEdit) {
