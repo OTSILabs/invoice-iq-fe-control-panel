@@ -31,7 +31,7 @@ export function StatsCard({
           {value}
         </p>
       </div>
-      <div className="h-8 w-8 rounded-lg flex items-center justify-center border shrink-0 bg-slate-100/80 text-slate-700 border-slate-200/50 dark:bg-slate-800/80 dark:text-slate-300 dark:border-slate-700/50">
+      <div className="h-8 w-8 rounded-lg flex items-center justify-center border shrink-0 bg-muted text-muted-foreground border-border">
         <Icon className="h-4 w-4" />
       </div>
     </div>

@@ -145,7 +145,7 @@ export function NormalizationRuleDetail() {
               {
                 label: "Rule Mode",
                 content: (
-                  <Badge variant="outline" className="text-xxs px-2 py-0.5 font-mono uppercase bg-slate-50 border-slate-200">
+                  <Badge variant="outline" className="text-xxs px-2 py-0.5 font-mono uppercase bg-muted border-border">
                     {rule.rule_mode}
                   </Badge>
                 )
@@ -236,17 +236,17 @@ export function NormalizationRuleDetail() {
             </div>
           </div>
 
-          <div className="bg-card px-5 py-5 border-t border-border grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-50/30">
+          <div className="bg-card px-5 py-5 border-t border-border grid grid-cols-1 md:grid-cols-2 gap-6 bg-muted/10">
             <div className="flex flex-col gap-2 h-full">
               <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Parameter Schema</p>
-              <pre className="flex-1 p-3.5 bg-slate-900 text-slate-100 rounded-xl font-mono text-[10px] overflow-x-auto min-h-[120px] max-h-72 border border-slate-800 shadow-inner">
+              <pre className="flex-1 p-3.5 bg-muted/40 text-foreground rounded-xl font-mono text-[10px] overflow-x-auto min-h-[120px] max-h-72 border border-border shadow-inner">
                 {JSON.stringify(rule.parameter_schema_json, null, 2)}
               </pre>
             </div>
 
             <div className="flex flex-col gap-2 h-full">
               <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Engine Configuration</p>
-              <pre className="flex-1 p-3.5 bg-slate-900 text-slate-100 rounded-xl font-mono text-[10px] overflow-x-auto min-h-[120px] max-h-72 border border-slate-800 shadow-inner">
+              <pre className="flex-1 p-3.5 bg-muted/40 text-foreground rounded-xl font-mono text-[10px] overflow-x-auto min-h-[120px] max-h-72 border border-border shadow-inner">
                 {JSON.stringify(rule.engine_config_json, null, 2)}
               </pre>
             </div>

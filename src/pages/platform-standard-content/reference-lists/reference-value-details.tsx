@@ -108,7 +108,7 @@ export function ReferenceValueDetails() {
             <div className="col-span-1 sm:col-span-2 lg:col-span-3 bg-card px-4 py-3.5 hover:bg-muted/10 transition-colors flex flex-col justify-center border-t border-border/10">
               <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-2">Custom JSON Attributes</p>
               {detail.attributes && Object.keys(detail.attributes).length > 0 ? (
-                <pre className="text-xs font-mono bg-slate-50 dark:bg-black/20 p-4 rounded-xl border border-border/80 overflow-x-auto text-foreground whitespace-pre-wrap max-w-full">
+                <pre className="text-xs font-mono bg-muted/40 p-4 rounded-xl border border-border/80 overflow-x-auto text-foreground whitespace-pre-wrap max-w-full">
                   {JSON.stringify(detail.attributes, null, 2)}
                 </pre>
               ) : (
