@@ -117,7 +117,7 @@ export function ErpSettingFormDialog({ open, onOpenChange, record }: ErpSettingF
             )}
           </div>
 
-          <DialogFooter className="gap-2 sm:gap-0 border-t border-border pt-4">
+          <DialogFooter className="gap-2 sm:gap-0 border-t border-slate-100 pt-4">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={isPending}>
               Cancel
             </Button>

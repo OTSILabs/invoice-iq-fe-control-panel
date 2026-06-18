@@ -285,7 +285,7 @@ export function DataTable<TData, TValue = unknown>({
                       <TableHead
                         key={header.id}
                         className={cn(
-                          "px-4 py-3 bg-muted/30 font-semibold text-foreground/80",
+                          "px-4 py-3 bg-muted/30 font-semibold text-slate-700",
                           stickyHeader && "sticky top-0 z-10",
                           getPinnedColumnClassName(header.column),
                           customColumnDef.rowClassName,
@@ -390,7 +390,11 @@ export function DataTable<TData, TValue = unknown>({
                       <TableCell
                         key={cell.id}
                         className={cn(
+<<<<<<< HEAD
                           "px-4 py-3 text-muted-foreground font-normal transition-colors group-hover/row:text-foreground truncate",
+=======
+                          "px-4 py-3 text-slate-600 font-normal transition-colors group-hover/row:text-foreground",
+>>>>>>> parent of b5151f1 (font & border & bg)
                           getPinnedColumnClassName(cell.column),
                           customColumnDef.rowClassName,
                         )}
@@ -415,7 +419,7 @@ export function DataTable<TData, TValue = unknown>({
                     <div className="bg-muted/40 p-4 rounded-full mb-3 text-muted-foreground/75 scale-95 transition-transform duration-300 hover:scale-100">
                       <FileX2 className="size-8 animate-pulse" />
                     </div>
-                    <p className="text-sm font-semibold text-foreground">
+                    <p className="text-sm font-semibold text-slate-800">
                       {emptyMessage || "No records found"}
                     </p>
                     <p className="text-xs text-muted-foreground mt-1 max-w-70 mx-auto leading-relaxed">
@@ -461,7 +465,7 @@ function Filter({ filter, onChange, type, header }: FilterProps) {
         value={filter || ""}
         placeholder={`Filter ${header}...`}
         onChange={(e) => onChange(e.target.value)}
-        className="h-8 pl-8 text-xs bg-muted/40 border-border/80 focus:bg-background transition-all rounded-lg"
+        className="h-8 pl-8 text-xs bg-slate-50/50 border-border/80 focus:bg-background transition-all rounded-lg"
       />
     </div>
   );

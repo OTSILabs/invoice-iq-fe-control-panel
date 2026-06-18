@@ -58,7 +58,7 @@ export function FieldCategories() {
         header: "Category Code",
         width: "25%",
         minWidth: "150px",
-        cell: ({ row }) => <span className="font-mono text-xs font-semibold text-foreground/80">{row.original.field_category_code}</span>,
+        cell: ({ row }) => <span className="font-mono text-xs font-semibold text-slate-700">{row.original.field_category_code}</span>,
       },
       {
         accessorKey: "ui_label",
@@ -87,7 +87,7 @@ export function FieldCategories() {
         cell: ({ row }) => {
           const count = row.original.example_fields?.length || 0
           return (
-            <Badge variant="secondary" className="text-[11px] px-2 py-0.5 font-semibold bg-muted text-muted-foreground hover:bg-muted">
+            <Badge variant="secondary" className="text-[11px] px-2 py-0.5 font-semibold bg-slate-100 text-slate-700 hover:bg-slate-100">
               {count} {count === 1 ? "Field" : "Fields"}
             </Badge>
           )

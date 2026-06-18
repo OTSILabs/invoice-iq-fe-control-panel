@@ -85,7 +85,7 @@ export function FieldCategoryDetails() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-border/20 dark:bg-border/10 overflow-hidden">
             {[
               { label: "Sort Sequence", content: <p className="text-sm font-semibold text-foreground">{category.sort_sequence}</p> },
-              { label: "Fields Count", content: <Badge variant="outline" className="text-xxs px-2 py-0.5 font-semibold bg-muted text-muted-foreground border-border">{category.example_fields?.length || 0} Fields</Badge> },
+              { label: "Fields Count", content: <Badge variant="outline" className="text-xxs px-2 py-0.5 font-semibold bg-slate-50 text-slate-700 border-slate-200">{category.example_fields?.length || 0} Fields</Badge> },
               { label: "Version Number", content: <p className="text-xs font-mono font-bold text-foreground">v{category.version_no}</p> },
               { label: "Created At", content: <p className="text-xs font-semibold text-foreground">{formatDate(category.created_at || undefined)}</p> },
               { label: "Updated At", content: <p className="text-xs font-semibold text-foreground">{formatDate(category.updated_at || undefined)}</p> },
@@ -106,7 +106,7 @@ export function FieldCategoryDetails() {
                     <Badge
                       key={field}
                       variant="outline"
-                      className="font-mono text-xs px-2.5 py-1 bg-muted/40 border-border hover:bg-muted/80 text-muted-foreground transition-colors"
+                      className="font-mono text-xs px-2.5 py-1 bg-slate-50/50 border-slate-200 hover:bg-slate-100/50 text-slate-700 transition-colors"
                     >
                       {field}
                     </Badge>

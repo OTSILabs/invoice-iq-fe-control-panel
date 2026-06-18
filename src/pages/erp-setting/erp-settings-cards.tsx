@@ -75,7 +75,7 @@ function MetaDateItem({
 }
 
 const JSONRenderer = ({ value }: { value: unknown }) => (
-  <pre className="h-48 scrollbar-thin overflow-auto rounded-md border border-border bg-muted/40 p-4 font-mono text-[12px] text-foreground select-all">
+  <pre className="h-48 scrollbar-thin overflow-auto rounded-md border border-slate-800 bg-slate-950 p-4 font-mono text-[12px] text-emerald-400 select-all">
     <code>{JSON.stringify(value, null, 2)}</code>
   </pre>
 )
@@ -117,7 +117,7 @@ function ErpSettingCard({
             />
           </div>
         </div>
-        <div className="mt-3 flex items-start justify-between gap-4 border-t border-border/60 pt-2">
+        <div className="mt-3 flex items-start justify-between gap-4 border-t border-slate-100 pt-2">
           <MetaDateItem label="Created" value={record.created_at} />
           <MetaDateItem label="Updated" value={record.updated_at} align="right" />
         </div>

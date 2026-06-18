@@ -170,7 +170,7 @@ export function ValueDialog({ open, onOpenChange, registryKey, valueItem }: Valu
             </div>
           </ScrollArea>
 
-          <DialogFooter className="border-t border-border px-6 py-4 bg-muted/40 flex items-center justify-end gap-2">
+          <DialogFooter className="border-t border-border px-6 py-4 bg-slate-50 flex items-center justify-end gap-2">
             <Button
               type="button"
               variant="outline"
