@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { AuthAPI } from "../services/auth.service"
 import { toast } from "sonner"
 import type { LoginPayload, LoginResponse } from "../../types"
+import { setSession, clearSession } from "../../lib/auth-store"
 
 const useAuth = () => {
   const navigate = useNavigate()
@@ -13,8 +14,8 @@ const useAuth = () => {
       return AuthAPI.login(payload)
     },
     onSuccess: (data) => {
-      // Store the auth response in sessionStorage
-      sessionStorage.setItem("token:v1", JSON.stringify(data))
+      // Store the auth response in memory securely
+      setSession(data)
       queryClient.invalidateQueries({ queryKey: ["auth", "me"] })
       toast.success("Successfully logged in!")
       navigate("/organizations", { replace: true })
@@ -53,6 +54,7 @@ export const useChangePassword = () => {
       toast.success(
         data?.message || "Password changed successfully. Please login again."
       )
+      clearSession()
       sessionStorage.clear()
       navigate("/login")
     },

@@ -11,6 +11,8 @@ import { TopLoader } from "./TopLoader"
 import { resolveBreadcrumbs } from "@/components/layout/breadcrumb-utils"
 import { PoweredByFooter } from "@/components/poweredby"
 
+import { clearSession } from "@/lib/auth-store"
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Root layout — wraps every authenticated page.
 //
@@ -29,6 +31,7 @@ export function Layout() {
   // ── Auth logout listener ──────────────────────────────────────────────────
   useEffect(() => {
     const handleLogout = () => {
+      clearSession()
       sessionStorage.clear()
       navigate("/login", { replace: true })
     }

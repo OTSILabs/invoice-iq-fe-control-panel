@@ -1,15 +1,11 @@
 import axios from 'axios';
+import { getSession, setSession, clearSession } from './auth-store';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL || '/api',
   timeout: 10000,
   headers: { 'Content-Type': 'application/json' },
 });
-
-const getSession = () => {
-  try { return JSON.parse(sessionStorage.getItem('token:v1') || '{}'); } 
-  catch { return {}; }
-};
 
 const getAuthHeader = (session = getSession()) => {
   const token = session.access_token || session.token;
@@ -19,6 +15,7 @@ const getAuthHeader = (session = getSession()) => {
 };
 
 const logout = (err: any) => {
+  clearSession();
   sessionStorage.clear();
   window.dispatchEvent(new Event('auth:logout'));
   return Promise.reject(err);
@@ -42,7 +39,7 @@ api.interceptors.response.use((res) => res, async (error) => {
     try {
       const { data } = await axios.post(`${api.defaults.baseURL}/auth/refresh`, { refresh_token: session.refresh_token });
       const newSession = { ...session, ...data };
-      sessionStorage.setItem('token:v1', JSON.stringify(newSession));
+      setSession(newSession);
       
       config.headers.Authorization = getAuthHeader(newSession);
       return api(config);

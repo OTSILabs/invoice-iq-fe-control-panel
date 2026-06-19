@@ -25,11 +25,12 @@ function decodeJWT(token: string) {
   }
 }
 
+import { getSession } from "./auth-store"
+
 export function getDecodedToken(): any {
   try {
-    const stored = sessionStorage.getItem("token:v1")
-    if (stored) {
-      const session = JSON.parse(stored)
+    const session = getSession()
+    if (session) {
       const actualToken = session.access_token || session.token
       if (actualToken) return decodeJWT(actualToken)
     }

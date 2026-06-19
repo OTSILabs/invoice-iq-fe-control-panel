@@ -1,14 +1,10 @@
 import { Navigate, useLocation } from "react-router-dom";
+import { getSession } from "../auth-store";
 
 const isAuthenticated = (): boolean => {
-  const tokenStr = sessionStorage.getItem("token:v1");
-  if (!tokenStr) return false;
-  try {
-    const parsed = JSON.parse(tokenStr);
-    return !!(parsed.access_token || parsed.token);
-  } catch {
-    return true;
-  }
+  const session = getSession();
+  if (!session || (!session.access_token && !session.token)) return false;
+  return true;
 };
 
 export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {

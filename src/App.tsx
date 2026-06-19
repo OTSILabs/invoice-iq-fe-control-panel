@@ -47,7 +47,6 @@ export function App() {
                       <Route path="field-categories/:code" element={<FieldCategoryDetails />} />
                       <Route path="reference-lists/:key" element={<ReferenceListDetails />} />
                       <Route path="reference-lists/:key/:valueCode" element={<ReferenceValueDetails />} />
-                      <Route path="tenants/:tenantId" element={<TenantDetail />} />
                     </>
                   )}
                 </Route>
@@ -67,6 +66,7 @@ export function App() {
           <Route path="organizations/:id" element={<OrganizationDetail />} />
           <Route path="organizations/:id/tenants" element={<OrgRedirect />} />
           <Route path="organizations/:orgId/tenants/:tenantId" element={<TenantDetail />} />
+          <Route path="tenants/:tenantId" element={<TenantDetail />} />
           <Route path="users/:id" element={<UserDetail />} />
           <Route
             path="platform-standard-content/data-types/:code"
