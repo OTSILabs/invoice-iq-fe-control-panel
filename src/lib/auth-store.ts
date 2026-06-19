@@ -1,5 +1,16 @@
-let session: any = null;
+export const getSession = () => {
+  try {
+    const item = localStorage.getItem("auth-session:v1");
+    return item ? JSON.parse(item) : {};
+  } catch {
+    return {};
+  }
+};
 
-export const getSession = () => session || {};
-export const setSession = (data: any) => { session = data; };
-export const clearSession = () => { session = null; };
+export const setSession = (data: any) => {
+  localStorage.setItem("auth-session:v1", JSON.stringify(data));
+};
+
+export const clearSession = () => {
+  localStorage.removeItem("auth-session:v1");
+};
