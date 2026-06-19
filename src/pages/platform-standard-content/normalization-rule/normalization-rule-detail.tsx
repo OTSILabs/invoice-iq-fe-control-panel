@@ -45,8 +45,10 @@ export function NormalizationRuleDetail() {
       },
       onError: (err: unknown) => {
         let errMsg = "Failed to delete normalization rule."
-        const axiosErr = err as { response?: { data?: { message?: unknown } } }
-        if (axiosErr.response?.data?.message) {
+        const axiosErr = err as { response?: { data?: { detail?: unknown; message?: unknown } } }
+        if (axiosErr.response?.data?.detail) {
+          errMsg = String(axiosErr.response.data.detail)
+        } else if (axiosErr.response?.data?.message) {
           errMsg = String(axiosErr.response.data.message)
         } else if (err instanceof Error) {
           errMsg = err.message
