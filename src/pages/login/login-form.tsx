@@ -43,7 +43,7 @@ export function LoginForm({
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={isPending}
-                className="h-11 rounded-xl bg-slate-50/50 border-slate-200 text-slate-900 placeholder:text-slate-400 focus-visible:bg-white focus-visible:ring-4 focus-visible:ring-blue-500/10 focus-visible:border-blue-500 transition-all duration-200"
+                className="h-11 rounded-xl bg-slate-50/50 border-slate-200 text-slate-900 placeholder:text-slate-400 focus-visible:bg-white focus-visible:ring-1 focus-visible:ring-blue-500/10 focus-visible:border-blue-500 transition-all duration-200"
               />
             </div>
 
@@ -72,7 +72,7 @@ export function LoginForm({
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   disabled={isPending}
-                  className="h-11 rounded-xl border-slate-200 bg-slate-50/50 pr-10 font-mono text-slate-900 transition-all duration-200 placeholder:text-slate-400 focus-visible:border-blue-500 focus-visible:bg-white focus-visible:ring-4 focus-visible:ring-blue-500/10"
+                  className="h-11 rounded-xl border-slate-200 bg-slate-50/50 pr-10 font-mono text-slate-900 transition-all duration-200 placeholder:text-slate-400 focus-visible:border-blue-500 focus-visible:bg-white focus-visible:ring-1 focus-visible:ring-blue-500/10"
                 />
                 <button
                   type="button"
