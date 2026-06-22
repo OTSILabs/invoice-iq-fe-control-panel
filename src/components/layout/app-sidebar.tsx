@@ -161,7 +161,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       <Icon
                         className={cn(
                           "h-5 w-5 shrink-0",
-                          hasActiveChild ? "text-blue-600" : "text-slate-500"
+                          hasActiveChild ? "text-blue-600" : "text-slate-700"
                         )}
                       />
                     )}
@@ -169,9 +169,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   </div>
                   {!isCollapsed && (
                     isMenuExpanded ? (
-                      <ChevronDown className="h-4 w-4 text-slate-400 shrink-0" />
+                      <ChevronDown className="h-4 w-4 text-slate-700 shrink-0" />
                     ) : (
-                      <ChevronRight className="h-4 w-4 text-slate-400 shrink-0" />
+                      <ChevronRight className="h-4 w-4 text-slate-700 shrink-0" />
                     )
                   )}
                 </SidebarMenuButton>
@@ -210,7 +210,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                               <ChildIcon
                                 className={cn(
                                   "h-4 w-4 shrink-0",
-                                  isChildActive ? "text-blue-600" : "text-slate-400"
+                                  isChildActive ? "text-blue-600" : "text-slate-700"
                                 )}
                               />
                             )}
@@ -241,7 +241,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     <Icon
                       className={cn(
                         "h-5 w-5 shrink-0 ",
-                        isActive ? "text-blue-600" : "text-slate-500"
+                        isActive ? "text-blue-600" : "text-slate-700"
                       )}
                     />
                   )}
@@ -288,19 +288,19 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     <span className="text-sm font-medium text-slate-700 truncate w-full ">
                       {userName}
                     </span>
-                    <span className="text-[11px] text-slate-400 truncate w-full">
+                    <span className="text-[11px] text-slate-700 truncate w-full">
                       {userRole}
                     </span>
                   </div>
 
-                  <ChevronUp className="h-3.5 w-3.5 ml-auto shrink-0 text-slate-400 group-data-[collapsible=icon]:hidden" />
+                  <ChevronUp className="h-3.5 w-3.5 ml-auto shrink-0 text-slate-700 group-data-[collapsible=icon]:hidden" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
 
               <DropdownMenuContent side="top" className="w-[--radix-popper-anchor-width] text-xs-fine">
                 <DropdownMenuItem asChild className="gap-2 cursor-pointer">
                   <Link to="/profile" className="flex w-full items-center gap-2">
-                    <User2 className="h-3.5 w-3.5 text-slate-500" />
+                    <User2 className="h-3.5 w-3.5 text-slate-700" />
                     <span>Profile</span>
                   </Link>
                 </DropdownMenuItem>

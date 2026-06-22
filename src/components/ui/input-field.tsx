@@ -12,7 +12,7 @@ export interface InputFieldProps extends React.InputHTMLAttributes<HTMLInputElem
   ref?: React.Ref<any>
 }
 
-export function InputField({
+export const InputField = ({
   label,
   description,
   id,
@@ -25,7 +25,7 @@ export function InputField({
   error,
   ref,
   ...props
-}: InputFieldProps) {
+}: InputFieldProps) => {
   return (
     <Field className={containerClassName}>
       {label && (

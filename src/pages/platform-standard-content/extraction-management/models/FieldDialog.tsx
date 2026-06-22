@@ -1,16 +1,10 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, PlusCircle, Edit } from "lucide-react";
 import { toast } from "sonner";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/textarea";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { InputField } from "@/components/ui/input-field";
-import { Field, FieldLabel, FieldError } from "@/components/ui/field";
-import { NativeSelect } from "@/components/ui/native-select";
 
 import { useCreateExtractionField, useUpdateExtractionField } from "@/api/hooks/useExtractionFields";
 import { useDataTypes } from "@/api/hooks/data-types";
@@ -18,6 +12,39 @@ import { useFieldCategories } from "@/api/hooks/useFieldCategories";
 import { useReferenceLists } from "@/api/hooks/useReferenceLists";
 import type { StandardExtractionFieldResponse } from "@/types";
 import { extractionFieldSchema, type ExtractionFieldFormValues, DEFAULT_FIELD_VALUES } from "@/schemas/extraction-schema";
+
+import { FieldDialogDetailsStep, FieldDialogMeaningStep, FieldDialogRulesStep } from "./FieldDialogSteps";
+import { FieldDialogSidebar } from "./FieldDialogSidebar";
+import { FieldDialogFooterNav, FieldDialogFooterSubmit } from "./FieldDialogFooter";
+import { Button } from "@/components/ui/button";
+
+const FIELD_FORM_STEPS = [
+  {
+    title: "Field details",
+    description: "Category, name, type, and document section.",
+    fields: ["field_id", "field_category_code", "field_label", "data_type_code", "header_item"] as const,
+  },
+  {
+    title: "Field meaning",
+    description: "Short and long context for the extractor.",
+    fields: ["short_desc", "field_long_description"] as const,
+  },
+  {
+    title: "Extraction rules",
+    description: "Aliases, examples, allowed values, and guidance.",
+    fields: [
+      "labels_raw",
+      "extraction_instructions_raw",
+      "examples_raw",
+      "allowed_value_mode",
+      "allowed_static_list_raw",
+      "allowed_reference_registry_key",
+      "default_value",
+    ] as const,
+  },
+] as const;
+
+const FIELD_FORM_STEP_FIELDS = FIELD_FORM_STEPS.flatMap((step) => step.fields);
 
 interface FieldDialogProps {
   open: boolean;
@@ -31,13 +58,18 @@ export function FieldDialog({ open, onOpenChange, fieldItem }: FieldDialogProps)
   const updateMutation = useUpdateExtractionField();
   const isSaving = createMutation.isPending || updateMutation.isPending;
 
+  const [activeStepIndex, setActiveStepIndex] = useState(0);
+  const isFirstStep = activeStepIndex === 0;
+  const isLastStep = activeStepIndex === FIELD_FORM_STEPS.length - 1;
+
   // Load select option data
   const { data: dataTypes = [] } = useDataTypes();
   const { data: categories = [] } = useFieldCategories();
   const { data: referenceLists = [] } = useReferenceLists();
 
-  const { register, handleSubmit, watch, formState: { errors } } = useForm<ExtractionFieldFormValues>({
+  const { register, handleSubmit, watch, trigger, getFieldState, setFocus, clearErrors, formState: { errors } } = useForm<ExtractionFieldFormValues>({
     resolver: zodResolver(extractionFieldSchema),
+    mode: "onChange",
     defaultValues: fieldItem
       ? {
           field_id: fieldItem.field_id,
@@ -59,6 +91,68 @@ export function FieldDialog({ open, onOpenChange, fieldItem }: FieldDialogProps)
   });
 
   const valueMode = watch("allowed_value_mode");
+
+  const showStep = (stepIndex: number) => {
+    clearErrors();
+    setActiveStepIndex(stepIndex);
+  };
+
+  const validateStep = async (stepIndex: number) => {
+    const step = FIELD_FORM_STEPS[stepIndex];
+    // @ts-ignore
+    const fieldsToValidate = [...step.fields];
+    const isValid = await trigger(fieldsToValidate as any);
+
+    if (!isValid) {
+      // @ts-ignore
+      const firstField = step.fields.find((fieldName) => getFieldState(fieldName).invalid);
+      if (firstField) {
+        setFocus(firstField);
+      }
+    }
+    return isValid;
+  };
+
+  const handlePreviousStep = () => {
+    setActiveStepIndex((currentIndex) => Math.max(currentIndex - 1, 0));
+  };
+
+  const handleNextStep = async () => {
+    if (!(await validateStep(activeStepIndex))) {
+      return;
+    }
+    showStep(Math.min(activeStepIndex + 1, FIELD_FORM_STEPS.length - 1));
+  };
+
+  const handleStepChange = async (nextStepIndex: number) => {
+    if (isSaving) return;
+    if (nextStepIndex <= activeStepIndex) {
+      showStep(nextStepIndex);
+      return;
+    }
+    if (!(await validateStep(activeStepIndex))) {
+      return;
+    }
+    showStep(Math.min(nextStepIndex, activeStepIndex + 1));
+  };
+
+  const handleInvalidSubmit = (formErrors: any) => {
+    const firstErrorField = FIELD_FORM_STEP_FIELDS.find((fieldName) => formErrors[fieldName]);
+    const firstErrorStepIndex = FIELD_FORM_STEPS.findIndex((step) =>
+      // @ts-ignore
+      step.fields.includes(firstErrorField)
+    );
+    if (firstErrorStepIndex >= 0) {
+      showStep(firstErrorStepIndex);
+    }
+  };
+
+  const handleDialogOpenChange = (nextOpen: boolean) => {
+    if (nextOpen) {
+      setActiveStepIndex(0);
+    }
+    onOpenChange(nextOpen);
+  };
 
   const onSubmit = useCallback(async (values: ExtractionFieldFormValues) => {
     const labels = values.labels_raw
@@ -110,11 +204,13 @@ export function FieldDialog({ open, onOpenChange, fieldItem }: FieldDialogProps)
   }, [isEdit, fieldItem, createMutation, updateMutation, onOpenChange]);
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[90vh] gap-0 overflow-hidden p-0 sm:max-w-lg">
-        <DialogHeader className="border-b border-border px-6 py-5">
-          <DialogTitle className="flex items-center gap-2 text-lg font-bold">
-            {isEdit ? <Edit className="size-5 text-primary" /> : <PlusCircle className="size-5 text-primary" />}
+    <Dialog open={open} onOpenChange={handleDialogOpenChange}>
+      <DialogContent
+        className="grid h-[min(42rem,86vh)] grid-rows-[auto_minmax(0,1fr)_auto] gap-0 overflow-hidden p-0 sm:max-w-3xl"
+        onInteractOutside={(event) => event.preventDefault()}
+      >
+        <DialogHeader className="border-b px-5 py-4">
+          <DialogTitle>
             {isEdit ? "Edit Extraction Field" : "Add Extraction Field"}
           </DialogTitle>
           <DialogDescription>
@@ -124,197 +220,101 @@ export function FieldDialog({ open, onOpenChange, fieldItem }: FieldDialogProps)
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col max-h-[calc(90vh-6rem)]" noValidate>
-          <ScrollArea className="flex-1 min-h-0">
-            <div className="px-6 py-5 space-y-4">
-              <InputField
-                id="field_id"
-                label="Field ID / Code"
-                required
-                disabled={isEdit || isSaving}
-                error={errors.field_id?.message}
-                placeholder="e.g. invoice_total"
-                {...register("field_id")}
-              />
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            if (!isLastStep) {
+              void handleNextStep();
+            } else {
+              void handleSubmit(onSubmit, handleInvalidSubmit)(event);
+            }
+          }}
+          className="h-full min-h-0 overflow-hidden"
+          noValidate
+        >
+          <div className="grid h-full min-h-0 md:grid-cols-[16rem_minmax(0,1fr)]">
+            <FieldDialogSidebar
+              activeStepIndex={activeStepIndex}
+              handleStepChange={handleStepChange}
+              steps={FIELD_FORM_STEPS}
+            />
 
-              <InputField
-                id="field_label"
-                label="UI Label"
-                required
-                disabled={isSaving}
-                error={errors.field_label?.message}
-                placeholder="e.g. Invoice Total"
-                {...register("field_label")}
-              />
+            <ScrollArea className="h-full min-h-0 min-w-0">
+              <div className="px-5 py-5 pb-6 md:px-6 md:py-6 md:pb-8">
+                {activeStepIndex === 0 ? (
+                  <FieldDialogDetailsStep
+                    register={register}
+                    errors={errors}
+                    categories={categories}
+                    dataTypes={dataTypes}
+                    isEdit={isEdit}
+                    isSaving={isSaving}
+                  />
+                ) : null}
 
-              <div className="grid grid-cols-2 gap-4">
-                <Field>
-                  <FieldLabel>Data Type <span className="text-destructive">*</span></FieldLabel>
-                  <NativeSelect id="data_type_code" disabled={isSaving} {...register("data_type_code")}>
-                    <option value="">Select type...</option>
-                    {dataTypes.map((dt) => (
-                      <option key={dt.data_type_code} value={dt.data_type_code}>
-                        {dt.display_label || dt.data_type_code}
-                      </option>
-                    ))}
-                  </NativeSelect>
-                  {errors.data_type_code?.message && (
-                    <FieldError>{errors.data_type_code.message}</FieldError>
-                  )}
-                </Field>
+                {activeStepIndex === 1 ? (
+                  <FieldDialogMeaningStep
+                    register={register}
+                    errors={errors}
+                    isSaving={isSaving}
+                  />
+                ) : null}
 
-                <Field>
-                  <FieldLabel>Field Category <span className="text-destructive">*</span></FieldLabel>
-                  <NativeSelect id="field_category_code" disabled={isSaving} {...register("field_category_code")}>
-                    <option value="">Select category...</option>
-                    {categories.map((cat) => (
-                      <option key={cat.field_category_code} value={cat.field_category_code}>
-                        {cat.ui_label || cat.field_category_code}
-                      </option>
-                    ))}
-                  </NativeSelect>
-                  {errors.field_category_code?.message && (
-                    <FieldError>{errors.field_category_code.message}</FieldError>
-                  )}
-                </Field>
+                {activeStepIndex === 2 ? (
+                  <FieldDialogRulesStep
+                    register={register}
+                    errors={errors}
+                    valueMode={valueMode}
+                    referenceLists={referenceLists}
+                    isSaving={isSaving}
+                  />
+                ) : null}
               </div>
+            </ScrollArea>
+          </div>
+        </form>
 
-              <div className="grid grid-cols-2 gap-4">
-                <Field>
-                  <FieldLabel>Header or Line Item <span className="text-destructive">*</span></FieldLabel>
-                  <NativeSelect id="header_item" disabled={isSaving} {...register("header_item")}>
-                    <option value="header">Header Field</option>
-                    <option value="item">Line Item Field</option>
-                  </NativeSelect>
-                  {errors.header_item?.message && (
-                    <FieldError>{errors.header_item.message}</FieldError>
-                  )}
-                </Field>
-
-                <Field>
-                  <FieldLabel>Allowed Value Mode <span className="text-destructive">*</span></FieldLabel>
-                  <NativeSelect id="allowed_value_mode" disabled={isSaving} {...register("allowed_value_mode")}>
-                    <option value="any">Any (Unrestricted)</option>
-                    <option value="static_list">Static List</option>
-                    <option value="reference_list">Reference List</option>
-                  </NativeSelect>
-                  {errors.allowed_value_mode?.message && (
-                    <FieldError>{errors.allowed_value_mode.message}</FieldError>
-                  )}
-                </Field>
-              </div>
-
-              {valueMode === "static_list" && (
-                <InputField
-                  id="allowed_static_list_raw"
-                  label="Static Allowed Values (Comma-separated)"
-                  required
-                  disabled={isSaving}
-                  error={errors.allowed_static_list_raw?.message}
-                  placeholder="e.g. active, pending, suspended"
-                  {...register("allowed_static_list_raw")}
-                />
-              )}
-
-              {valueMode === "reference_list" && (
-                <Field>
-                  <FieldLabel>Allowed Reference List Key <span className="text-destructive">*</span></FieldLabel>
-                  <NativeSelect
-                    id="allowed_reference_registry_key"
-                    disabled={isSaving}
-                    {...register("allowed_reference_registry_key")}
-                  >
-                    <option value="">Select reference list...</option>
-                    {referenceLists.map((ref) => (
-                      <option key={ref.registry_key} value={ref.registry_key}>
-                        {ref.display_label || ref.registry_key}
-                      </option>
-                    ))}
-                  </NativeSelect>
-                  {errors.allowed_reference_registry_key?.message && (
-                    <FieldError>{errors.allowed_reference_registry_key.message}</FieldError>
-                  )}
-                </Field>
-              )}
-
-              <InputField
-                id="default_value"
-                label="Default Value"
-                disabled={isSaving}
-                error={errors.default_value?.message}
-                placeholder="e.g. 0.00"
-                {...register("default_value")}
-              />
-
-              <div className="space-y-1">
-                <FieldLabel>Short Description</FieldLabel>
-                <Textarea
-                  id="short_desc"
-                  disabled={isSaving}
-                  className="h-16 text-xs resize-none"
-                  placeholder="Brief summary of what this field extracts..."
-                  {...register("short_desc")}
-                />
-              </div>
-
-              <div className="space-y-1">
-                <FieldLabel>Detailed Description</FieldLabel>
-                <Textarea
-                  id="field_long_description"
-                  disabled={isSaving}
-                  className="h-20 text-xs"
-                  placeholder="Full description or markdown rules for parsing..."
-                  {...register("field_long_description")}
-                />
-              </div>
-
-              <InputField
-                id="labels_raw"
-                label="Alternate Labels (Comma-separated)"
-                disabled={isSaving}
-                error={errors.labels_raw?.message}
-                placeholder="e.g. Total Amt, Total, Gross Amount"
-                {...register("labels_raw")}
-              />
-
-              <InputField
-                id="examples_raw"
-                label="Examples (Comma-separated)"
-                disabled={isSaving}
-                error={errors.examples_raw?.message}
-                placeholder="e.g. $150.00, 105.20"
-                {...register("examples_raw")}
-              />
-
-              <InputField
-                id="extraction_instructions_raw"
-                label="Extraction Instructions (Comma-separated)"
-                disabled={isSaving}
-                error={errors.extraction_instructions_raw?.message}
-                placeholder="e.g. Extract the value next to 'TOTAL', strip currency symbols"
-                {...register("extraction_instructions_raw")}
-              />
-            </div>
-          </ScrollArea>
-
-          <DialogFooter className="border-t border-border px-6 py-4 bg-muted/30">
+        <DialogFooter className="relative z-10 border-t bg-card px-5 py-3.5 sm:justify-between">
+          <DialogClose asChild>
             <Button
               type="button"
-              variant="outline"
-              size="sm"
-              className="cursor-pointer"
-              disabled={isSaving}
-              onClick={() => onOpenChange(false)}
+              variant="ghost"
+              className="hidden text-muted-foreground hover:text-foreground sm:inline-flex"
             >
               Cancel
             </Button>
-            <Button type="submit" size="sm" className="cursor-pointer" disabled={isSaving}>
-              {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {isEdit ? "Save Changes" : "Add Field"}
-            </Button>
-          </DialogFooter>
-        </form>
+          </DialogClose>
+
+          <div className="flex w-full items-center justify-between gap-3 sm:w-auto sm:justify-start">
+            <DialogClose asChild>
+              <Button
+                type="button"
+                variant="ghost"
+                className="text-muted-foreground hover:text-foreground sm:hidden"
+              >
+                Cancel
+              </Button>
+            </DialogClose>
+
+            <div className="flex flex-1 items-center justify-end gap-3 sm:flex-initial">
+              <FieldDialogFooterNav
+                isFirstStep={isFirstStep}
+                isSaving={isSaving}
+                handlePreviousStep={handlePreviousStep}
+                handleNextStep={handleNextStep}
+              />
+
+              <FieldDialogFooterSubmit
+                isLastStep={isLastStep}
+                isSaving={isSaving}
+                isEdit={isEdit}
+                onSubmitClick={() => void handleSubmit(onSubmit, handleInvalidSubmit)()}
+              />
+            </div>
+          </div>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
 }
+

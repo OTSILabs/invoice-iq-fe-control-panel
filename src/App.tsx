@@ -1,4 +1,5 @@
 
+import * as React from "react"
 import { BrowserRouter, Routes, Route, Navigate, useParams } from "react-router-dom"
 
 import { LoginPage } from "./pages/login/login-page"
@@ -14,6 +15,14 @@ import { ValidationRuleDetail } from "./pages/platform-standard-content/validati
 import { NormalizationRuleDetail } from "./pages/platform-standard-content/normalization-rule/normalization-rule-detail"
 import { UserDetail } from "./pages/user/user-detail"
 import { Layout } from "./components/layout/layout"
+
+const TemplateCreatePage = React.lazy(() => import("./pages/platform-standard-content/extraction-management/templates/template-create.page"))
+const TemplateDetailsPage = React.lazy(() => import("./pages/platform-standard-content/extraction-management/templates/template-details.page"))
+const TemplateEditPage = React.lazy(() => import("./pages/platform-standard-content/extraction-management/templates/template-edit.page"))
+
+const DerivedTemplateCreatePage = React.lazy(() => import("./pages/platform-standard-content/extraction-management/derived/derived-template-create.page"))
+const DerivedTemplateEditPage = React.lazy(() => import("./pages/platform-standard-content/extraction-management/derived/derived-template-edit.page"))
+
 
 function OrgRedirect() {
   const { id } = useParams()
@@ -47,6 +56,14 @@ export function App() {
                       <Route path="field-categories/:code" element={<FieldCategoryDetails />} />
                       <Route path="reference-lists/:key" element={<ReferenceListDetails />} />
                       <Route path="reference-lists/:key/:valueCode" element={<ReferenceValueDetails />} />
+
+                        <Route path="extraction-management/templates/new" element={<React.Suspense fallback={null}><TemplateCreatePage /></React.Suspense>} />
+                        <Route path="extraction-management/templates/:templateCode" element={<React.Suspense fallback={null}><TemplateDetailsPage /></React.Suspense>} />
+                        <Route path="extraction-management/templates/:templateCode/edit" element={<React.Suspense fallback={null}><TemplateEditPage /></React.Suspense>} />
+
+                      <Route path="extraction-management/derived/new" element={<React.Suspense fallback={null}><DerivedTemplateCreatePage /></React.Suspense>} />
+                      <Route path="extraction-management/derived/:derivedTemplateId/edit" element={<React.Suspense fallback={null}><DerivedTemplateEditPage /></React.Suspense>} />
+
                     </>
                   )}
                 </Route>

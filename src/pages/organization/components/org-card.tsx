@@ -9,7 +9,7 @@ export function OrgCard({ org }: { org: Organization }) {
   return (
     <Link
       to={`/organizations/${org.id}`}
-      className="group relative flex flex-col justify-between overflow-hidden rounded-xl border border-border bg-card p-4 shadow-sm transition-all duration-300 ease-out hover:border-primary/40 hover:bg-slate-50/50 hover:shadow-md hover:-translate-y-0.5 dark:hover:bg-slate-900/10"
+      className="group relative flex flex-col justify-between overflow-hidden rounded-xl border border-border bg-card p-4  transition-all duration-300 ease-out hover:border-primary/40 hover:bg-slate-50/50 hover:shadow-md hover:-translate-y-0.5 dark:hover:bg-slate-900/10"
     >
       {/* Top gradient glow line */}
       <div className="absolute top-0 left-0 right-0 h-[2.5px] bg-linear-to-r from-primary/30 via-primary to-primary/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
