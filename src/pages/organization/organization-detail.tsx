@@ -101,12 +101,14 @@ export function OrganizationDetail() {
       </div>
 
       {/* Tabs */}
-      <Tabs value={activeTab} onValueChange={(val) => setSearchParams({ tab: val })} className="w-full">
-        <TabsList variant="line" className="mb-4 h-9 justify-start gap-6 [&>button]:flex-none border-b border-border w-full">
-          <TabsTrigger value="tenants" className="cursor-pointer">Tenants</TabsTrigger>
-          <TabsTrigger value="configuration" className="cursor-pointer">Configurations</TabsTrigger>
-          <TabsTrigger value="profile" className="cursor-pointer">Profile</TabsTrigger>
-        </TabsList>
+      <Tabs value={activeTab} onValueChange={(val) => setSearchParams({ tab: val })} className="w-full flex flex-col gap-5">
+        <div className="mb-4">
+          <TabsList variant="line">
+            <TabsTrigger value="tenants">Tenants</TabsTrigger>
+            <TabsTrigger value="configuration">Configurations</TabsTrigger>
+            <TabsTrigger value="profile">Profile</TabsTrigger>
+          </TabsList>
+        </div>
 
         <TabsContent value="tenants" className="m-0 animate-in fade-in duration-300">
           <OrganizationTenantsTab orgId={organization.id} organizationName={organization.name} />

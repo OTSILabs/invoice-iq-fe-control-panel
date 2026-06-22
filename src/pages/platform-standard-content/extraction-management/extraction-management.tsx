@@ -1,5 +1,5 @@
 import { useReducer, useMemo, useCallback, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, Link } from "react-router-dom";
 import { AlertCircle, RefreshCw, Plus, Edit2, FileText, LayoutGrid, Layers, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -25,15 +25,13 @@ import type {
 } from "@/types";
 
 import { FieldDialog } from "./models/FieldDialog";
-import { TemplateDialog } from "./models/TemplateDialog";
-import { DerivedTemplateDialog } from "./models/DerivedTemplateDialog";
+import { TemplateCards } from "@/components/invoice-ui/templates/template-cards";
 
 interface State {
   activeTab: string;
   searchText: string;
   fieldDialog: { open: boolean; item: StandardExtractionFieldResponse | null };
   templateDialog: { open: boolean; item: StandardExtractionTemplateResponse | null };
-  derivedDialog: { open: boolean; item: StandardDerivedTemplateResponse | null };
 }
 
 type Action =
@@ -42,9 +40,7 @@ type Action =
   | { type: "OPEN_FIELD_DIALOG"; payload: StandardExtractionFieldResponse | null }
   | { type: "CLOSE_FIELD_DIALOG" }
   | { type: "OPEN_TEMPLATE_DIALOG"; payload: StandardExtractionTemplateResponse | null }
-  | { type: "CLOSE_TEMPLATE_DIALOG" }
-  | { type: "OPEN_DERIVED_DIALOG"; payload: StandardDerivedTemplateResponse | null }
-  | { type: "CLOSE_DERIVED_DIALOG" };
+  | { type: "CLOSE_TEMPLATE_DIALOG" };
 
 function reducer(state: State, action: Action): State {
   switch (action.type) {
@@ -60,10 +56,6 @@ function reducer(state: State, action: Action): State {
       return { ...state, templateDialog: { open: true, item: action.payload } };
     case "CLOSE_TEMPLATE_DIALOG":
       return { ...state, templateDialog: { open: false, item: null } };
-    case "OPEN_DERIVED_DIALOG":
-      return { ...state, derivedDialog: { open: true, item: action.payload } };
-    case "CLOSE_DERIVED_DIALOG":
-      return { ...state, derivedDialog: { open: false, item: null } };
     default:
       return state;
   }
@@ -74,7 +66,6 @@ const initialState: State = {
   searchText: "",
   fieldDialog: { open: false, item: null },
   templateDialog: { open: false, item: null },
-  derivedDialog: { open: false, item: null },
 };
 
 export function ExtractionManagement() {
@@ -97,12 +88,6 @@ export function ExtractionManagement() {
   // Dialog triggers
   const handleOpenFieldCreate = useCallback(() => dispatch({ type: "OPEN_FIELD_DIALOG", payload: null }), []);
   const handleOpenFieldEdit = useCallback((item: StandardExtractionFieldResponse) => dispatch({ type: "OPEN_FIELD_DIALOG", payload: item }), []);
-
-  const handleOpenTemplateCreate = useCallback(() => dispatch({ type: "OPEN_TEMPLATE_DIALOG", payload: null }), []);
-  const handleOpenTemplateEdit = useCallback((item: StandardExtractionTemplateResponse) => dispatch({ type: "OPEN_TEMPLATE_DIALOG", payload: item }), []);
-
-  const handleOpenDerivedCreate = useCallback(() => dispatch({ type: "OPEN_DERIVED_DIALOG", payload: null }), []);
-  const handleOpenDerivedEdit = useCallback((item: StandardDerivedTemplateResponse) => dispatch({ type: "OPEN_DERIVED_DIALOG", payload: item }), []);
 
   // Deletion trigger
   const handleDeleteDerived = useCallback(async (id: string) => {
@@ -252,22 +237,24 @@ export function ExtractionManagement() {
               </Button>
             )}
             {state.activeTab === "templates" && (
-              <Button
-                size="sm"
-                onClick={handleOpenTemplateCreate}
-                className="font-medium px-3 gap-1 shadow-none transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px cursor-pointer shrink-0"
-              >
-                <Plus className="h-4 w-4" /> Add Template
-              </Button>
+              <Link to="/platform-standard-content/extraction-management/templates/new">
+                <Button
+                  size="sm"
+                  className="font-medium px-3 gap-1 shadow-none transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px cursor-pointer shrink-0"
+                >
+                  <Plus className="h-4 w-4" /> Add Template
+                </Button>
+              </Link>
             )}
             {state.activeTab === "derived" && (
-              <Button
-                size="sm"
-                onClick={handleOpenDerivedCreate}
-                className="font-medium px-3 gap-1 shadow-none transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px cursor-pointer shrink-0"
-              >
-                <Plus className="h-4 w-4" /> Derive Template
-              </Button>
+              <Link to="/platform-standard-content/extraction-management/derived/new">
+                <Button
+                  size="sm"
+                  className="font-medium px-3 gap-1 shadow-none transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px cursor-pointer shrink-0"
+                >
+                  <Plus className="h-4 w-4" /> Derive Template
+                </Button>
+              </Link>
             )}
           </div>
         </div>
@@ -293,18 +280,13 @@ export function ExtractionManagement() {
             </TabsContent>
 
             <TabsContent value="templates" className="m-0 focus:outline-none">
-              <TemplatesTable
-                data={filteredTemplates}
-                isLoading={isLoading || isFetching}
-                onEdit={handleOpenTemplateEdit}
-              />
+              <div className="mt-4"><TemplateCards templates={filteredTemplates as any} /></div>
             </TabsContent>
 
             <TabsContent value="derived" className="m-0 focus:outline-none">
               <DerivedTable
                 data={filteredDerived}
                 isLoading={isLoading || isFetching}
-                onEdit={handleOpenDerivedEdit}
                 onDelete={handleDeleteDerived}
               />
             </TabsContent>
@@ -322,23 +304,9 @@ export function ExtractionManagement() {
         />
       )}
 
-      {state.templateDialog.open && (
-        <TemplateDialog
-          key={state.templateDialog.item ? `edit-temp-${state.templateDialog.item.template_id}` : "create-temp"}
-          open={state.templateDialog.open}
-          onOpenChange={(open) => !open && dispatch({ type: "CLOSE_TEMPLATE_DIALOG" })}
-          templateItem={state.templateDialog.item}
-        />
-      )}
 
-      {state.derivedDialog.open && (
-        <DerivedTemplateDialog
-          key={state.derivedDialog.item ? `edit-derived-${state.derivedDialog.item.derived_template_id}` : "create-derived"}
-          open={state.derivedDialog.open}
-          onOpenChange={(open) => !open && dispatch({ type: "CLOSE_DERIVED_DIALOG" })}
-          derivedItem={state.derivedDialog.item}
-        />
-      )}
+
+
     </div>
   );
 }
@@ -439,94 +407,15 @@ function FieldsTable({ data, isLoading, onEdit }: FieldsTableProps) {
   );
 }
 
-interface TemplatesTableProps {
-  data: StandardExtractionTemplateResponse[];
-  isLoading: boolean;
-  onEdit: (item: StandardExtractionTemplateResponse) => void;
-}
 
-function TemplatesTable({ data, isLoading, onEdit }: TemplatesTableProps) {
-  const columns = useMemo<CustomColumnDef<StandardExtractionTemplateResponse>[]>(
-    () => [
-      {
-        accessorKey: "template_id",
-        header: "Template ID",
-        width: "25%",
-        minWidth: "140px",
-        cell: ({ row }) => <span className="font-mono text-xs font-semibold text-foreground truncate block">{row.original.template_id}</span>,
-      },
-      {
-        accessorKey: "name",
-        header: "Name",
-        width: "25%",
-        minWidth: "150px",
-        cell: ({ row }) => <span className="text-xs font-medium text-foreground">{row.original.name}</span>,
-      },
-      {
-        accessorKey: "description",
-        header: "Description",
-        width: "35%",
-        minWidth: "200px",
-        cell: ({ row }) => <span className="text-xs text-muted-foreground truncate block max-w-[350px]">{row.original.description || "—"}</span>,
-      },
-      {
-        accessorKey: "field_membership",
-        header: "Fields",
-        width: "100px",
-        minWidth: "80px",
-        cell: ({ row }) => {
-          const count = row.original.field_membership?.length || 0;
-          return (
-            <Badge variant="secondary" className="text-[10px] px-2 py-0.5 bg-slate-50 text-slate-700 border border-slate-200">
-              {count} {count === 1 ? "field" : "fields"}
-            </Badge>
-          );
-        },
-      },
-      {
-        id: "actions",
-        header: "Actions",
-        width: "80px",
-        minWidth: "80px",
-        cell: ({ row }) => (
-          <div className="flex items-center" onClick={(e) => e.stopPropagation()}>
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 cursor-pointer" onClick={() => onEdit(row.original)}>
-              <Edit2 className="h-3.5 w-3.5 text-muted-foreground" />
-            </Button>
-          </div>
-        ),
-      },
-    ],
-    [onEdit]
-  );
-
-  return (
-    <Card className="rounded-xl border border-border shadow-sm p-0 overflow-hidden">
-      <CardContent className="p-0">
-        <DataTable
-          data={data}
-          columns={columns}
-          isLoading={isLoading}
-          enablePagination
-          pageSize={10}
-          totalItems={data.length}
-          stickyHeader
-          fillAvailableHeight
-          tableContainerClassName="border-0 rounded-none bg-transparent"
-        />
-      </CardContent>
-    </Card>
-  );
-}
 
 interface DerivedTableProps {
   data: StandardDerivedTemplateResponse[];
   isLoading: boolean;
-  onEdit: (item: StandardDerivedTemplateResponse) => void;
   onDelete: (id: string) => void;
 }
 
-function DerivedTable({ data, isLoading, onEdit, onDelete }: DerivedTableProps) {
+function DerivedTable({ data, isLoading, onDelete }: DerivedTableProps) {
   const columns = useMemo<CustomColumnDef<StandardDerivedTemplateResponse>[]>(
     () => [
       {
@@ -571,9 +460,11 @@ function DerivedTable({ data, isLoading, onEdit, onDelete }: DerivedTableProps) 
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-45">
-                <DropdownMenuItem className="text-xs cursor-pointer" onClick={() => onEdit(row.original)}>
-                  <Edit2 className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
-                  Edit
+                <DropdownMenuItem asChild className="text-xs cursor-pointer">
+                  <Link to={`/platform-standard-content/extraction-management/derived/${row.original.derived_template_id}/edit`}>
+                    <Edit2 className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
+                    Edit
+                  </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem className="text-xs text-red-600 cursor-pointer focus:text-red-700" onClick={() => onDelete(row.original.derived_template_id)}>
                   <Trash2 className="h-3.5 w-3.5 mr-2" />
@@ -585,7 +476,7 @@ function DerivedTable({ data, isLoading, onEdit, onDelete }: DerivedTableProps) 
         ),
       },
     ],
-    [onEdit, onDelete]
+    [onDelete]
   );
 
   return (

@@ -262,7 +262,7 @@ export function Users() {
 
               <Button
                 variant="outline"
-                size="icon"
+                size="icon-xs"
                 onClick={handleRefetch}
                 className="h-9 w-9 cursor-pointer shrink-0 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px"
                 disabled={isFetchingUsers}

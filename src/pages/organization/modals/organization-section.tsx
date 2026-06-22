@@ -77,7 +77,7 @@ export function OrganizationSection({
             </InputField>
             <Button
               type="button"
-              variant="text"
+              variant="link"
               size="xs"
               className="text-primary hover:text-primary/80 mt-1"
               onClick={() => handleToggleCreatingOrg(true)}
@@ -99,15 +99,17 @@ export function OrganizationSection({
                 className="h-9 flex-1 rounded-lg border border-input bg-inherit px-3 text-sm text-foreground placeholder:text-muted-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:border-primary disabled:cursor-not-allowed disabled:opacity-50"
                 {...register("orgName")}
               />
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                className="h-9 shrink-0 text-xs text-muted-foreground hover:text-foreground cursor-pointer"
-                onClick={() => handleToggleCreatingOrg(false)}
-              >
-                Cancel
-              </Button>
+              {organizations.length > 0 && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="h-9 shrink-0 text-xs text-muted-foreground hover:text-foreground cursor-pointer"
+                  onClick={() => handleToggleCreatingOrg(false)}
+                >
+                  Select existing
+                </Button>
+              )}
             </div>
             {errors.orgName?.message && (
               <span className="px-1 text-[11px] font-medium text-destructive">

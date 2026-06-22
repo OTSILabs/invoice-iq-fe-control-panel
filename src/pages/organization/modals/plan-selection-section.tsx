@@ -43,10 +43,10 @@ export function PlanSelectionSection({
                 Select Plan
                 <span className="text-destructive ml-0.5">*</span>
               </span>
-              {isCreatingPlan ? (
+                {isCreatingPlan ? (
                 <Button
                   type="button"
-                  variant="text"
+                  variant="link"
                   size="xs"
                   className="text-primary hover:text-primary/80"
                   onClick={() => setIsCreatingPlan(false)}
@@ -56,7 +56,7 @@ export function PlanSelectionSection({
               ) : (
                 <Button
                   type="button"
-                  variant="text"
+                  variant="link"
                   size="xs"
                   className="text-primary hover:text-primary/80"
                   onClick={() => {

@@ -1,5 +1,7 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
+import { format } from "date-fns"
+import { getSession } from "./auth-store"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -25,8 +27,6 @@ function decodeJWT(token: string) {
   }
 }
 
-import { getSession } from "./auth-store"
-
 export function getDecodedToken(): any {
   try {
     const session = getSession()
@@ -40,8 +40,6 @@ export function getDecodedToken(): any {
   return null
 }
 
-
-
 export function formatRole(role?: string | string[]): string {
   if (!role) return "User"
   const roleStr = Array.isArray(role) ? role[0] : role
@@ -52,8 +50,8 @@ export function formatRole(role?: string | string[]): string {
     .join(" ")
 }
 
-
 export function getInitials(name: string): string {
+  if (!name) return ""
   return name
     .split(" ")
     .map((w) => w[0])
@@ -85,3 +83,16 @@ export function formatDate(dateStr?: string | number): string {
   }
 }
 
+export function humanizeDateTime(
+  date: string | number | Date | null | undefined,
+  dateFormat = "dd MMM yy, h:mm a",
+): string | null {
+  if (!date) return null;
+  try {
+    const d = new Date(date);
+    if (isNaN(d.getTime())) return null;
+    return format(d, dateFormat);
+  } catch {
+    return null;
+  }
+}

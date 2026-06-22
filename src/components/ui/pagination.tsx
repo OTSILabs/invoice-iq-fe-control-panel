@@ -22,7 +22,7 @@ function PaginationContent({
   return (
     <ul
       data-slot="pagination-content"
-      className={cn("flex items-center gap-0.5", className)}
+      className={cn("flex items-center gap-1", className)}
       {...props}
     />
   )
@@ -40,22 +40,16 @@ type PaginationLinkProps = {
 function PaginationLink({
   className,
   isActive,
-  size = "icon-sm",
+  size = "icon",
   children,
   ...props
 }: PaginationLinkProps) {
   return (
     <Button
       asChild
-      variant={isActive ? "default" : "outline"}
+      variant={isActive ? "outline" : "ghost"}
       size={size}
-      className={cn(
-        "h-8 text-xs font-semibold rounded-md transition-all shadow-none shrink-0",
-        (size === "icon-sm" || size === "icon") && "w-8",
-        isActive && "bg-primary text-primary-foreground border-primary pointer-events-none",
-        !isActive && "border-border/60 hover:bg-muted/50 text-muted-foreground hover:text-foreground",
-        className
-      )}
+      className={cn(className)}
     >
       <a
         aria-current={isActive ? "page" : undefined}
@@ -77,11 +71,11 @@ function PaginationPrevious({
   return (
     <PaginationLink
       aria-label="Go to previous page"
-      size="sm"
-      className={cn("h-8 px-3 text-xs gap-1.5 shadow-none border-border/60 hover:bg-muted/50 text-muted-foreground hover:text-foreground", className)}
+      size="default"
+      className={cn("pl-2!", className)}
       {...props}
     >
-      <ChevronLeftIcon className="h-3.5 w-3.5" />
+      <ChevronLeftIcon data-icon="inline-start" />
       <span className="hidden sm:block">{text}</span>
     </PaginationLink>
   )
@@ -95,12 +89,12 @@ function PaginationNext({
   return (
     <PaginationLink
       aria-label="Go to next page"
-      size="sm"
-      className={cn("h-8 px-3 text-xs gap-1.5 shadow-none border-border/60 hover:bg-muted/50 text-muted-foreground hover:text-foreground", className)}
+      size="default"
+      className={cn("pr-2!", className)}
       {...props}
     >
       <span className="hidden sm:block">{text}</span>
-      <ChevronRightIcon className="h-3.5 w-3.5" />
+      <ChevronRightIcon data-icon="inline-end" />
     </PaginationLink>
   )
 }
@@ -114,7 +108,7 @@ function PaginationEllipsis({
       aria-hidden
       data-slot="pagination-ellipsis"
       className={cn(
-        "flex size-7 items-center justify-center [&_svg:not([class*='size-'])]:size-3.5",
+        "flex size-9 items-center justify-center [&_svg:not([class*='size-'])]:size-4",
         className
       )}
       {...props}

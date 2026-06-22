@@ -44,3 +44,13 @@ export const useDeleteDerivedTemplate = () => {
     },
   });
 };
+
+export const useDerivedTemplate = (derivedTemplateId: string, options = {}) => {
+  return useQuery({
+    queryKey: ['derived-templates', derivedTemplateId],
+    queryFn: () => derivedTemplatesService.get(derivedTemplateId),
+    enabled: !!derivedTemplateId,
+    ...options,
+  });
+};
+

@@ -1,5 +1,5 @@
 {
-  "style": "radix-mira",
+  "style": "radix-maia",
   "rsc": false,
   "tsx": true,
   "tailwind": {
@@ -19,6 +19,6 @@
     "hooks": "@/hooks"
   },
   "menuColor": "default",
-  "menuAccent": "subtle",
+  "menuAccent": "bold",
   "registries": {}
 }
