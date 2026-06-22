@@ -34,6 +34,7 @@ export function Organizations() {
       <PageHeader
         title="Organizations"
         description="Manage and onboard organizations within your control panel."
+        className="pb-3"
       >
         {hasOrgs && (
           <SearchInput
@@ -49,6 +50,8 @@ export function Organizations() {
           </Button>
         </CreateOrganizationModal>
       </PageHeader>
+
+  
 
       {/* Stats */}
       {hasOrgs && (
@@ -85,7 +88,9 @@ export function Organizations() {
         </div>
       ) : filtered.length > 0 ? (
         <div className="flex flex-col gap-4">
-          <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">All organizations</h2>
+          <h2 className="text-sm font-medium text-foreground text-muted-foreground">
+            All organizations
+          </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3.5">
             {filtered.map(org => <OrgCard key={org.id} org={org} />)}
           </div>

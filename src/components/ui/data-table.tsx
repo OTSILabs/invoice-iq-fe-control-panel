@@ -96,18 +96,8 @@ function getPinnedColumnStyle<TData, TValue>(column: Column<TData, TValue>): Rea
 
   if (!pinnedSide) return undefined;
 
-  const isLastLeftPinnedColumn =
-    pinnedSide === "left" && column.getIsLastColumn("left");
-  const isFirstRightPinnedColumn =
-    pinnedSide === "right" && column.getIsFirstColumn("right");
-
   return {
-    boxShadow:
-      isLastLeftPinnedColumn
-        ? "-4px 0 4px -4px hsl(var(--foreground) / 0.15) inset"
-        : isFirstRightPinnedColumn
-          ? "4px 0 4px -4px hsl(var(--foreground) / 0.15) inset"
-          : undefined,
+    // removed boxShadow to avoid visible inset shadows on pinned columns
     opacity: 0.99,
     position: "sticky",
     left:
@@ -283,7 +273,7 @@ export function DataTable<TData, TValue = unknown>({
                       <TableHead
                         key={header.id}
                         className={cn(
-                          "px-4 py-3 bg-muted/30 font-semibold text-slate-700",
+                          "px-4 py-3.5 bg-slate-50/50 dark:bg-slate-900/10 font-bold text-[10px] uppercase tracking-wider text-muted-foreground border-b border-border/60",
                           stickyHeader && "sticky top-0 z-10",
                           getPinnedColumnClassName(header.column),
                           customColumnDef.rowClassName,
@@ -437,7 +427,7 @@ export function DataTable<TData, TValue = unknown>({
         }}
         onPageSizeChange={onPageSizeChange}
         enablePagination={enablePagination}
-        className="justify-end border-t border-border/40 bg-card py-3 px-4"
+        className="justify-end border-t border-border/40 bg-card py-3 px-4 "
       />
     </div>
   );

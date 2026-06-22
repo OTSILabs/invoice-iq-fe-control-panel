@@ -31,7 +31,7 @@ export function useConfigurationsTableColumns(
       header: "Key",
       width: 150,
       cell: ({ row }) => (
-        <span className="font-mono text-xs text-foreground">
+        <span className="text-xs text-foreground">
           {row.original.key}
         </span>
       )
@@ -65,7 +65,7 @@ export function useConfigurationsTableColumns(
             <div className="flex items-center">
               <Link
                 to={`/platform-standard-content/reference-lists/${metadata.referenceKey}/${row.original.value}`}
-                className="font-mono text-xs font-semibold text-foreground hover:underline bg-muted/50 hover:bg-muted px-2 py-0.5 rounded border border-border transition-colors cursor-pointer text-left"
+                className="text-xs font-semibold text-foreground hover:underline bg-muted/50 hover:bg-muted px-2 py-0.5 rounded border border-border transition-colors cursor-pointer text-left"
                 title="Click to view reference item details"
               >
                 {String(row.original.value)}

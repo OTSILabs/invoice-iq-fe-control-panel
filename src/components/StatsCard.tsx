@@ -18,7 +18,7 @@ export function StatsCard({
   return (
     <div
       className={cn(
-        "relative overflow-hidden bg-card border border-border rounded-xl p-4  flex items-center justify-between gap-4 transition-all duration-300 hover:border-primary/30 hover:shadow-xs",
+        "relative overflow-hidden bg-card border border-border rounded-xl p-4 flex items-center justify-between gap-4 transition-transform duration-200 transform-gpu will-change-transform hover:border-primary/40",
         className
       )}
       {...props}

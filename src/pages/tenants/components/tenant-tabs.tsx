@@ -42,7 +42,7 @@ export function TenantTabs({
   }
 
   return (
-    <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
+    <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full sadcnx">
       <TabsList
         variant="line"
         className="mb-6 w-full justify-start gap-6 border-b border-border [&>button]:flex-none"

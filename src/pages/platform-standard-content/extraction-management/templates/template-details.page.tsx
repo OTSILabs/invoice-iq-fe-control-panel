@@ -733,7 +733,7 @@ function TemplateDetailsContent({
       ) : null}
 
       <Card className="gap-0 py-0 ring-foreground/5">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="gap-0">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="gap-0 sadcnx">
           <CardHeader className="border-b border-border/50 px-6 pb-0 pt-2">
             <CardTitle className="flex min-w-0 flex-col gap-3 md:flex-row md:items-center md:justify-between">
               <TabsList

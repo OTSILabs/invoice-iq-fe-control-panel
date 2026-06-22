@@ -15,7 +15,7 @@ export function useProfileTableColumns(
       header: "Key",
       width: 150,
       cell: ({ row }) => (
-        <span className="font-mono text-xs text-foreground">
+        <span className="text-xs text-foreground">
           {row.original.key}
         </span>
       )

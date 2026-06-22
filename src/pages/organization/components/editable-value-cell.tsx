@@ -37,6 +37,7 @@ export function EditableValueCell({
         value={localValue || "false"}
         onChange={(e) => handleChange(e.target.value)}
         className="w-[180px]"
+        selectClassName="bg-card border-border/80 rounded-md h-8 text-xs hover:border-slate-200 transition-colors shadow-2xs"
         disabled={isSaving}
       >
         <option value="true">true</option>
@@ -60,6 +61,7 @@ export function EditableValueCell({
         value={localValue}
         onChange={(e) => handleChange(e.target.value)}
         className="w-[180px]"
+        selectClassName="bg-card border-border/80 rounded-md h-8 text-xs hover:border-slate-200 transition-colors shadow-2xs"
         disabled={isSaving}
       >
         <option value="">Select value...</option>
@@ -77,7 +79,7 @@ export function EditableValueCell({
       placeholder="Enter value"
       value={localValue}
       onChange={(e) => handleChange(e.target.value)}
-      className="h-8 text-xs w-[180px]"
+      className="h-8 text-xs w-[180px] bg-card border-border/80 rounded-md hover:border-slate-50 transition-colors "
       disabled={isSaving}
     />
   )

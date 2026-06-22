@@ -17,7 +17,7 @@ export function TenantOverviewTab({ tenant, onAction }: TenantOverviewTabProps) 
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {/* Card 1: Profile Details */}
-        <div className="bg-card border border-border rounded-xl p-5 shadow-sm flex flex-col justify-between min-h-[240px]">
+        <div className="bg-card border border-border rounded-xl p-5 flex flex-col justify-between min-h-[240px]">
           <div className="space-y-4">
             <div className="flex items-center gap-2 border-b border-border pb-3">
               <User className="h-4 w-4 text-primary" />
@@ -55,7 +55,7 @@ export function TenantOverviewTab({ tenant, onAction }: TenantOverviewTabProps) 
         </div>
 
         {/* Card 2: Subscription Plan */}
-        <div className="bg-card border border-border rounded-xl p-5 shadow-sm flex flex-col justify-between min-h-[240px]">
+        <div className="bg-card border border-border rounded-xl p-5 flex flex-col justify-between min-h-[240px]">
           <div className="space-y-4">
             <div className="flex items-center gap-2 border-b border-border pb-3">
               <FileText className="h-4 w-4 text-primary" />
@@ -89,7 +89,7 @@ export function TenantOverviewTab({ tenant, onAction }: TenantOverviewTabProps) 
         </div>
 
         {/* Card 3: Governance & Compliance */}
-        <div className="bg-card border border-border rounded-xl p-5 shadow-sm flex flex-col justify-between min-h-[240px]">
+        <div className="bg-card border border-border rounded-xl p-5 flex flex-col justify-between min-h-[240px]">
           <div className="space-y-4">
             <div className="flex items-center gap-2 border-b border-border pb-3">
               <Building2 className="h-4 w-4 text-primary" />

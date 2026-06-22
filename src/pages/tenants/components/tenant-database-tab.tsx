@@ -19,7 +19,7 @@ export function TenantDatabaseTab({
   isPendingMigrate,
 }: TenantDatabaseTabProps) {
   return (
-    <div className="bg-card border border-border rounded-xl p-6 shadow-sm space-y-6">
+    <div className="bg-card border border-border rounded-xl p-6  space-y-6">
       <div>
         <h3 className="text-base font-bold text-foreground mb-1">Database Configurations</h3>
         <p className="text-xs text-muted-foreground">

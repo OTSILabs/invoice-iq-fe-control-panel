@@ -22,11 +22,11 @@ export function PageHeader({
       {...props}
     >
       <div>
-        <h1 className="text-lg font-semibold tracking-tight text-foreground">
+        <h1 className="text-lg font-semibold  tracking-tight text-foreground">
           {title}
         </h1>
         {description && (
-          <p className="text-xs text-muted-foreground mt-1">
+          <p className="text-xs text-muted-foreground mt-1 ">
             {description}
           </p>
         )}
