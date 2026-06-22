@@ -1,6 +1,5 @@
-
 import type { ApiRecord } from "@/api/api.helpers";
-import { getFieldLabel } from "@/components/invoice-ui/templates/template-data";
+import { getTemplateIsActive, getTemplateName } from "@/components/invoice-ui/templates/template-data";
 import {
   Dialog,
   DialogClose,
@@ -11,31 +10,33 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Loader2, Trash2 } from "lucide-react";
+import { Loader2, PowerOff, RefreshCcw } from "lucide-react";
 
-export function RemoveFieldDialog({
-  field,
+export function TemplateActiveStateDialog({
+  template,
   open,
   onOpenChange,
   onConfirm,
   isPending,
 }: {
-  field?: ApiRecord | null;
+  template?: ApiRecord | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onConfirm: () => void;
   isPending?: boolean;
 }) {
-  const fieldName = field ? getFieldLabel(field) : "this field";
+  const nextIsActive = template ? !getTemplateIsActive(template) : false;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Remove field from template?</DialogTitle>
+          <DialogTitle>
+            {nextIsActive ? "Reactivate template?" : "Disable template?"}
+          </DialogTitle>
           <DialogDescription>
-            This removes {fieldName} from this template only. The reusable field
-            remains available for other templates.
+            This will mark {template ? getTemplateName(template) : "this template"} as{" "}
+            {nextIsActive ? "active" : "inactive"}.
           </DialogDescription>
         </DialogHeader>
 
@@ -47,7 +48,7 @@ export function RemoveFieldDialog({
           </DialogClose>
           <Button
             type="button"
-            variant="destructive"
+            variant={nextIsActive ? "default" : "destructive"}
             disabled={isPending}
             onClick={onConfirm}
           >
@@ -56,10 +57,12 @@ export function RemoveFieldDialog({
                 className="size-4 animate-spin"
                 data-icon="inline-start"
               />
+            ) : nextIsActive ? (
+              <RefreshCcw className="size-4" data-icon="inline-start" />
             ) : (
-              <Trash2 className="size-4" data-icon="inline-start" />
+              <PowerOff className="size-4" data-icon="inline-start" />
             )}
-            Remove Field
+            {nextIsActive ? "Reactivate Template" : "Disable Template"}
           </Button>
         </DialogFooter>
       </DialogContent>

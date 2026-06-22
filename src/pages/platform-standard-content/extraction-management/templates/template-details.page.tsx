@@ -258,7 +258,7 @@ function TemplateDetailsHeader({
                 className="text-destructive hover:bg-destructive/10 hover:text-destructive"
                 onClick={() => setDialogs((prev: any) => ({ ...prev, deleteOpen: true }))}
               >
-                <Trash2 className="size-4" data-icon="inline-start" />
+                <Trash2 className="size-3.5" />
                 Delete
               </Button>
             </>
@@ -408,9 +408,6 @@ function TemplateFieldsSection({
 }
 
 
-
-
-
 export default function TemplateDetailsPage() {
   const { templateCode = "" } = useParams();
   const navigate = useNavigate();
@@ -517,8 +514,6 @@ export default function TemplateDetailsPage() {
         onSuccess: (response) => {
           const clonedTemplate = normalizeTemplateDetail(response);
           const clonedTemplateCode = getTemplateCode(clonedTemplate);
-
-          // setIsCloneTemplateDialogOpen(false);
 
           if (clonedTemplateCode) {
             navigate(
@@ -638,23 +633,19 @@ export default function TemplateDetailsPage() {
     <PageContainers>
       <TemplateDetailsContent
         template={template}
-        isStandardTemplate={isStandardTemplate}
         dialogs={dialogs}
         setDialogs={setDialogs}
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         editHref={editHref}
-        showHeaderCloneAction={showHeaderCloneAction}
         fieldFilterGroups={fieldFilterGroups}
         fieldFilters={fieldFilters}
         setFieldFilters={setFieldFilters}
         fieldSearch={fieldSearch}
         setFieldSearch={setFieldSearch}
         filteredTemplateFields={filteredTemplateFields}
-        isFieldFilterActive={isFieldFilterActive}
         displayedFieldCount={displayedFieldCount}
         saveSortOrder={saveSortOrder}
-        canManageTemplate={canManageTemplate}
         editField={editField}
         removeField={removeField}
         updateTemplateSortOrderMutation={updateTemplateSortOrderMutation}
@@ -666,6 +657,12 @@ export default function TemplateDetailsPage() {
         deleteTemplate={deleteTemplate}
         setTemplateActiveMutation={setTemplateActiveMutation}
         updateTemplateActiveState={updateTemplateActiveState}
+        options={{
+          isStandardTemplate,
+          showHeaderCloneAction,
+          isFieldFilterActive,
+          canManageTemplate,
+        }}
       />
     </PageContainers>
   );
@@ -673,23 +670,19 @@ export default function TemplateDetailsPage() {
 
 function TemplateDetailsContent({
   template,
-  isStandardTemplate,
   dialogs,
   setDialogs,
   activeTab,
   setActiveTab,
   editHref,
-  showHeaderCloneAction,
   fieldFilterGroups,
   fieldFilters,
   setFieldFilters,
   fieldSearch,
   setFieldSearch,
   filteredTemplateFields,
-  isFieldFilterActive,
   displayedFieldCount,
   saveSortOrder,
-  canManageTemplate,
   editField,
   removeField,
   updateTemplateSortOrderMutation,
@@ -701,7 +694,14 @@ function TemplateDetailsContent({
   deleteTemplate,
   setTemplateActiveMutation,
   updateTemplateActiveState,
+  options,
 }: any) {
+  const {
+    isStandardTemplate = false,
+    showHeaderCloneAction = false,
+    isFieldFilterActive = false,
+    canManageTemplate = false,
+  } = options || {};
   return (
     <>
       <TemplateDetailsHeader

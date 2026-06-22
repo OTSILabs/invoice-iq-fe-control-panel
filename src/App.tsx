@@ -16,12 +16,12 @@ import { NormalizationRuleDetail } from "./pages/platform-standard-content/norma
 import { UserDetail } from "./pages/user/user-detail"
 import { Layout } from "./components/layout/layout"
 
-const TemplateCreatePage = React.lazy(() => import("./pages/platform-standard-content/extraction-management/pages/templates/template-create.page"))
-const TemplateDetailsPage = React.lazy(() => import("./pages/platform-standard-content/extraction-management/pages/templates/template-details.page"))
-const TemplateEditPage = React.lazy(() => import("./pages/platform-standard-content/extraction-management/pages/templates/template-edit.page"))
+const TemplateCreatePage = React.lazy(() => import("./pages/platform-standard-content/extraction-management/templates/template-create.page"))
+const TemplateDetailsPage = React.lazy(() => import("./pages/platform-standard-content/extraction-management/templates/template-details.page"))
+const TemplateEditPage = React.lazy(() => import("./pages/platform-standard-content/extraction-management/templates/template-edit.page"))
 
-const DerivedTemplateCreatePage = React.lazy(() => import("./pages/platform-standard-content/extraction-management/pages/derived/derived-template-create.page"))
-const DerivedTemplateEditPage = React.lazy(() => import("./pages/platform-standard-content/extraction-management/pages/derived/derived-template-edit.page"))
+const DerivedTemplateCreatePage = React.lazy(() => import("./pages/platform-standard-content/extraction-management/derived/derived-template-create.page"))
+const DerivedTemplateEditPage = React.lazy(() => import("./pages/platform-standard-content/extraction-management/derived/derived-template-edit.page"))
 
 
 function OrgRedirect() {

@@ -1,10 +1,7 @@
-
 import type { ApiRecord } from "@/api/api.helpers";
 import { Switch } from "@/components/ui/switch";
 import { IqActiveStatusBadge, IqContentTypeBadge } from "@/components/invoice-ui/iq-status-badges";
-import {
-  TemplateDetailGrid,
-} from "../template-details.parts";
+
 import {
   getTrimmedValue,
   getOptionalDisplayValue,
@@ -12,6 +9,7 @@ import {
   getTagBadges,
   type TemplateDetailRow,
 } from "../template-details.helpers";
+import { TemplateDetailGrid } from "../template-details.parts";
 import { getTemplateCode, getTemplateContentType, getTemplateIsActive } from "@/components/invoice-ui/templates/template-data";
 
 export function TemplateInformation({

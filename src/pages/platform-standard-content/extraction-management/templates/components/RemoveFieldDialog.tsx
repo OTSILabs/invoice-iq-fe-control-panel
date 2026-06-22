@@ -1,6 +1,5 @@
-
 import type { ApiRecord } from "@/api/api.helpers";
-import { getTemplateIsActive, getTemplateName } from "@/components/invoice-ui/templates/template-data";
+import { getFieldLabel } from "@/components/invoice-ui/templates/template-data";
 import {
   Dialog,
   DialogClose,
@@ -11,33 +10,31 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Loader2, PowerOff, RefreshCcw } from "lucide-react";
+import { Loader2, Trash2 } from "lucide-react";
 
-export function TemplateActiveStateDialog({
-  template,
+export function RemoveFieldDialog({
+  field,
   open,
   onOpenChange,
   onConfirm,
   isPending,
 }: {
-  template?: ApiRecord | null;
+  field?: ApiRecord | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onConfirm: () => void;
   isPending?: boolean;
 }) {
-  const nextIsActive = template ? !getTemplateIsActive(template) : false;
+  const fieldName = field ? getFieldLabel(field) : "this field";
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>
-            {nextIsActive ? "Reactivate template?" : "Disable template?"}
-          </DialogTitle>
+          <DialogTitle>Remove field from template?</DialogTitle>
           <DialogDescription>
-            This will mark {template ? getTemplateName(template) : "this template"} as{" "}
-            {nextIsActive ? "active" : "inactive"}.
+            This removes {fieldName} from this template only. The reusable field
+            remains available for other templates.
           </DialogDescription>
         </DialogHeader>
 
@@ -49,7 +46,7 @@ export function TemplateActiveStateDialog({
           </DialogClose>
           <Button
             type="button"
-            variant={nextIsActive ? "default" : "destructive"}
+            variant="destructive"
             disabled={isPending}
             onClick={onConfirm}
           >
@@ -58,12 +55,10 @@ export function TemplateActiveStateDialog({
                 className="size-4 animate-spin"
                 data-icon="inline-start"
               />
-            ) : nextIsActive ? (
-              <RefreshCcw className="size-4" data-icon="inline-start" />
             ) : (
-              <PowerOff className="size-4" data-icon="inline-start" />
+              <Trash2 className="size-4" data-icon="inline-start" />
             )}
-            {nextIsActive ? "Reactivate Template" : "Disable Template"}
+            Remove Field
           </Button>
         </DialogFooter>
       </DialogContent>
