@@ -3,74 +3,43 @@ import { useQueries } from "@tanstack/react-query"
 import { useOrganizations } from "@/api/hooks/useOrganizations"
 import { organizationsService } from "@/api/services/organizations.service"
 import { PageHeader } from "@/components/layout/PageHeader"
-import { Badge } from "@/components/ui/badge"
-import { DataTable, type CustomColumnDef } from "@/components/ui/data-table"
-import { getInitials } from "@/lib/utils"
+import { DataTable } from "@/components/ui/data-table"
 import { Loader2, Users, Building, ChevronDown, Plus } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import type { Tenant, TenantActionType } from "@/types"
 import { Button } from "@/components/ui/button"
 import { CreateOrganizationModal } from "@/pages/organization/modals/create-organization-modal"
-import { TenantActionsDropdown } from "@/pages/organization/modals/tenant-actions-dropdown"
 import { TenantActionDialog } from "./tenant-actions/tenant-action-dialog"
-
-type StatusKey = "active" | "inactive" | "blocked" | "expired" | "pending"
-
-const STATUS_CFG: Record<StatusKey, { label: string; dot: string; badge: string }> = {
-  active: { label: "Active", dot: "bg-emerald-500", badge: "bg-emerald-50 text-emerald-700 border-emerald-300 dark:bg-emerald-950 dark:text-emerald-400 dark:border-emerald-800" },
-  inactive: { label: "Inactive", dot: "bg-muted-foreground", badge: "bg-muted text-muted-foreground border-border" },
-  blocked: { label: "Blocked", dot: "bg-red-500", badge: "bg-red-50 text-red-700 border-red-300 dark:bg-red-950 dark:text-red-400 dark:border-red-800" },
-  expired: { label: "Expired", dot: "bg-rose-500", badge: "bg-rose-50 text-rose-700 border-rose-300 dark:bg-rose-950 dark:text-rose-400 dark:border-rose-800" },
-  pending: { label: "Pending", dot: "bg-blue-500", badge: "bg-blue-50 text-blue-700 border-blue-300 dark:bg-blue-950 dark:text-blue-400 dark:border-blue-800" },
-}
-
-function StatusBadge({ status }: { status: string }) {
-  const cfg = STATUS_CFG[status.toLowerCase() as StatusKey] || STATUS_CFG.inactive
-  return (
-    <Badge variant="outline" className={`text-[11px] px-2 py-0.5 font-medium border inline-flex items-center gap-1.5 ${cfg.badge}`}>
-      <span className={`h-1.5 w-1.5 rounded-full flex-shrink-0 ${cfg.dot}`} />
-      {cfg.label}
-    </Badge>
-  )
-}
+import { getTenantColumns } from "@/columns"
 
 export function TenantsPage() {
   const navigate = useNavigate()
   const { data: organizations = [], isLoading: isOrgsLoading } = useOrganizations()
   const [selectedOrgId, setSelectedOrgId] = useState<string>("")
-  
-  // Derive active organization ID: default to first organization if no selection is made
-  const activeOrgId = selectedOrgId || organizations[0]?.id || ""
-  
-  // Organization Search Dropdown State
-  const [orgSearch, setOrgSearch] = useState("")
+  const [orgSearch, setOrgSearch] = useState<string>("")
   const [isOrgDropdownOpen, setIsOrgDropdownOpen] = useState(false)
   const [tenantAction, setTenantAction] = useState<{ type: TenantActionType; tenant: Tenant } | null>(null)
 
-  // Fetch tenants for all organizations in parallel
-  const tenantQueries = useQueries({
-    queries: organizations.map((org) => ({
-      queryKey: ["organizations", org.id, "tenants"],
-      queryFn: () => organizationsService.getTenants(org.id),
-      enabled: !!org.id,
-    })),
+  // Derive active organization ID: default to first organization if no selection is made
+  const activeOrgId = selectedOrgId || organizations[0]?.id || ""
+  
+  // Fetch tenants for the active organization
+  const [tenantsQuery] = useQueries({
+    queries: [
+      {
+        queryKey: ["organizations", activeOrgId, "tenants"],
+        queryFn: () => organizationsService.getTenants(activeOrgId),
+        enabled: !!activeOrgId,
+      },
+    ],
   })
 
-  // Check if any query is loading
-  const isTenantsLoading = tenantQueries.some((q) => q.isLoading)
-
-
+  const { data: tenants = [], isLoading: isTenantsLoading } = tenantsQuery
 
   // Get selected organization details
   const selectedOrg = useMemo(() => {
     return organizations.find((o) => o.id === activeOrgId)
   }, [organizations, activeOrgId])
-
-  // Get tenants of the currently selected organization
-  const tenantsForSelectedOrg = useMemo(() => {
-    const orgIndex = organizations.findIndex((org) => org.id === activeOrgId)
-    return tenantQueries[orgIndex]?.data || []
-  }, [organizations, activeOrgId, tenantQueries])
 
   // Filtered organizations for search dropdown
   const filteredOrgs = useMemo(() => {
@@ -80,76 +49,7 @@ export function TenantsPage() {
   }, [organizations, orgSearch])
 
   // Columns for the Tenant list table
-  const columns = useMemo<CustomColumnDef<Tenant>[]>(() => [
-    {
-      accessorKey: "slug",
-      header: "Slug",
-      width: "15%",
-      minWidth: 100,
-      cell: ({ row }) => {
-        const slug = row.original.slug || "—"
-        return (
-          <div className="flex items-center gap-2.5 py-0.5">
-            <div className="h-6 w-6 rounded-md flex items-center justify-center text-[10px] leading-none font-semibold flex-shrink-0 border bg-primary/10 text-primary border-primary/20">
-              {getInitials(slug)}
-            </div>
-            <span className="text-xs font-semibold truncate text-foreground">{slug}</span>
-          </div>
-        )
-      },
-    },
-    {
-      accessorKey: "tenant_role",
-      header: "Role",
-      width: "15%",
-      minWidth: 80,
-      cell: ({ row }) => (
-        <span className="text-xs text-muted-foreground capitalize">
-          {String(row.original.tenant_role || "").replace(/_/g, " ") || "—"}
-        </span>
-      ),
-    },
-    {
-      accessorKey: "tenant_admin_full_name",
-      header: "Admin",
-      width: "20%",
-      minWidth: 100,
-      cell: ({ row }) => (
-        <span className="text-xs font-medium text-foreground truncate">{row.original.tenant_admin_full_name || "—"}</span>
-      ),
-    },
-    {
-      accessorKey: "tenant_admin_email",
-      header: "Email",
-      width: "25%",
-      minWidth: 120,
-      cell: ({ row }) => (
-        <span className="text-xs text-muted-foreground truncate">{row.original.tenant_admin_email || "—"}</span>
-      ),
-    },
-    {
-      accessorKey: "access_status",
-      header: "Status",
-      width: "15%",
-      minWidth: 80,
-      cell: ({ row }) => <StatusBadge status={String(row.original.access_status || "inactive")} />,
-    },
-    {
-      id: "actions",
-      header: "Actions",
-      width: "10%",
-      minWidth: 80,
-      cell: ({ row }) => (
-        <div className="flex justify-start" onClick={(e) => e.stopPropagation()}>
-          <TenantActionsDropdown
-            tenant={row.original}
-            orgId={row.original.organisation_id || activeOrgId}
-            setTenantAction={setTenantAction}
-          />
-        </div>
-      ),
-    },
-  ], [activeOrgId])
+  const columns = useMemo(() => getTenantColumns(activeOrgId, setTenantAction), [activeOrgId])
 
   // Loading state
   if (isOrgsLoading || isTenantsLoading) {
@@ -272,12 +172,12 @@ export function TenantsPage() {
         </div>
 
         <DataTable
-          data={tenantsForSelectedOrg}
+          data={tenants}
           columns={columns}
           isLoading={isTenantsLoading}
           enablePagination
           pageSize={5}
-          totalItems={tenantsForSelectedOrg.length}
+          totalItems={tenants.length}
           stickyHeader
           tableContainerClassName="border-0 rounded-none bg-transparent"
           containerClassName="rounded-b-xl"

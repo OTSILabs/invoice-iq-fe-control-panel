@@ -1,14 +1,11 @@
 import { useState, useMemo } from "react"
-import { Loader2, AlertCircle, RefreshCw, Edit2, MoreVertical, Plus, ListChecks, Eye } from "lucide-react"
+import { Loader2, AlertCircle, RefreshCw, Plus, ListChecks } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import { DataTable } from "@/components/ui/data-table"
-import type { CustomColumnDef } from "@/components/ui/data-table"
 import { Card, CardContent } from "@/components/ui/card"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { cn } from "@/lib/utils"
 
 import { PageHeader } from "@/components/layout/PageHeader"
@@ -16,6 +13,7 @@ import { SearchInput } from "@/components/search-input"
 import { useReferenceLists, useReferenceListPublications } from "@/api/hooks/useReferenceLists"
 import type { ReferenceListRegistryResponse } from "@/types"
 import { RegistryDialog } from "./components/RegistryDialog"
+import { getReferenceListsColumns } from "@/columns"
 
 export function ReferenceLists() {
   const navigate = useNavigate()
@@ -65,92 +63,7 @@ export function ReferenceLists() {
     )
   }, [registries, searchText])
 
-  const columns: CustomColumnDef<ReferenceListRegistryResponse>[] = useMemo(
-    () => [
-      {
-        accessorKey: "registry_key",
-        header: "Registry Key",
-        width: "25%",
-        minWidth: "150px",
-        cell: ({ row }) => (
-          <span className="font-mono text-xs font-semibold text-foreground truncate block">
-            {row.original.registry_key}
-          </span>
-        ),
-      },
-      {
-        accessorKey: "display_label",
-        header: "Display Label",
-        width: "25%",
-        minWidth: "150px",
-        cell: ({ row }) => <span className="text-xs font-medium text-foreground">{row.original.display_label}</span>,
-      },
-      {
-        accessorKey: "source_type",
-        header: "Source",
-        width: "100px",
-        minWidth: "90px",
-        maxWidth: "100px",
-        cell: ({ row }) => {
-          const type = row.original.source_type || "custom"
-          const variant = type === "system" ? "default" : type === "standard" ? "secondary" : "outline"
-          return (
-            <Badge variant={variant} className="text-[10px] px-2 py-0.5 capitalize font-semibold">
-              {type}
-            </Badge>
-          )
-        },
-      },
-      {
-        accessorKey: "description",
-        header: "Description",
-        width: "40%",
-        minWidth: "200px",
-        cell: ({ row }) => (
-          <span className="block truncate text-xs text-muted-foreground max-w-[450px]" title={row.original.description || ""}>
-            {row.original.description || "—"}
-          </span>
-        ),
-      },
-      {
-        accessorKey: "sort_sequence",
-        header: "Sort",
-        width: "70px",
-        minWidth: "60px",
-        maxWidth: "70px",
-        cell: ({ row }) => <span className="text-xs text-muted-foreground font-semibold">{row.original.sort_sequence}</span>,
-      },
-      {
-        id: "actions",
-        header: "Actions",
-        width: "80px",
-        minWidth: "80px",
-        maxWidth: "80px",
-        cell: ({ row }) => (
-          <div className="flex items-center" onClick={(e) => e.stopPropagation()}>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="h-8 w-8 p-0 cursor-pointer">
-                  <MoreVertical className="h-4 w-4 text-muted-foreground" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-45">
-                <DropdownMenuItem className="text-xs cursor-pointer" onClick={() => navigate(`/platform-standard-content/reference-lists/${row.original.registry_key}`)}>
-                  <Eye className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
-                  View Details 
-                </DropdownMenuItem>
-                <DropdownMenuItem className="text-xs cursor-pointer" onClick={() => handleOpenEdit(row.original)}>
-                  <Edit2 className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
-                  Edit
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-        ),
-      },
-    ],
-    [navigate]
-  )
+  const columns = useMemo(() => getReferenceListsColumns(navigate, handleOpenEdit), [navigate])
 
   if (isLoading) return (
     <div className="flex min-h-[50vh] flex-col items-center justify-center gap-3">

@@ -2,11 +2,8 @@ import type { TenantEventsTableProps } from "@/types";
 import { useQuery } from "@tanstack/react-query"
 import { Activity } from "lucide-react"
 import { DataTable } from "@/components/ui/data-table"
-import type { CustomColumnDef } from "@/components/ui/data-table"
 import { organizationsService } from "@/api/services/organizations.service"
-import { useMemo } from "react"
-import { Badge } from "@/components/ui/badge"
-
+import { tenantEventsTableColumns } from "@/columns"
 
 
 export function TenantEventsTable({ tenantId }: TenantEventsTableProps) {
@@ -16,57 +13,7 @@ export function TenantEventsTable({ tenantId }: TenantEventsTableProps) {
     enabled: !!tenantId
   })
 
-const columns = useMemo<CustomColumnDef<any>[]>(() => [
-  {
-    accessorKey: "event_type",
-    header: "Event Type",
-    width: "25%",
-    cell: ({ row }) => (
-      <span className="text-xs font-semibold text-foreground font-mono">
-        {row.original.event_type || row.original.type || "Unknown"}
-      </span>
-    ),
-  },
-  {
-    accessorKey: "message",
-    header: "Message",
-    width: "45%",
-    cell: ({ row }) => (
-      <span className="text-xs text-muted-foreground">
-        {row.original.message || row.original.detail || "-"}
-      </span>
-    ),
-  },
-  {
-    accessorKey: "status",
-    header: "Status",
-    width: "15%",
-    cell: ({ row }) => {
-      const status = row.original.status || "Completed"
-      const isSuccess = status.toLowerCase() === 'completed' || status.toLowerCase() === 'success'
-      return (
-        <Badge
-          variant={isSuccess ? "secondary" : "outline"}
-          className={isSuccess ? "border-emerald-200 bg-emerald-50 text-emerald-700" : "text-muted-foreground"}
-        >
-          {status}
-        </Badge>
-      )
-    },
-  },
-  {
-    accessorKey: "created_at",
-    header: "Created At",
-    width: "15%",
-    cell: ({ row }) => (
-      <span className="text-xs text-muted-foreground">
-        {row.original.created_at || row.original.timestamp
-          ? new Date(row.original.created_at || row.original.timestamp).toLocaleDateString()
-          : "N/A"}
-      </span>
-    ),
-  },
-], [])
+  const columns = tenantEventsTableColumns
 
   return (
     <div className="flex flex-col bg-card border border-border rounded-xl overflow-hidden min-h-[300px]">

@@ -5,7 +5,7 @@ import { useEntityProfile, useUpdateEntityProfile, useProfileKeys } from "@/api/
 import { toast } from "sonner"
 import { ProfileTableHeader } from "./profile-table-header"
 import { useEntityKeysMetadata } from "./use-entity-keys-metadata"
-import { useProfileTableColumns } from "./use-profile-table-columns"
+import { getProfileColumns } from "@/columns"
 
 
 
@@ -119,8 +119,7 @@ export function ProfileTable({ entityId, entityType }: ProfileTableProps) {
     })
   }, [compatibleKeys, profileEntries, newValues])
 
-  // Extract columns configuration into custom hook
-  const columns = useProfileTableColumns(isSaving, apiKeysMetadata, handleValueChange)
+  const columns = useMemo(() => getProfileColumns(isSaving, apiKeysMetadata, handleValueChange), [isSaving, apiKeysMetadata, handleValueChange])
 
   return (
     <div className="flex flex-col bg-card border border-border rounded-xl overflow-hidden min-h-[300px]">

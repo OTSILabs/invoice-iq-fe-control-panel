@@ -1,115 +1,20 @@
 import { useState, useMemo } from "react"
 import { useNavigate } from "react-router-dom"
-import { Loader2, AlertCircle, RefreshCw, Plus, CreditCard, MoreVertical, Eye, Edit, Trash2, Layers, Sparkles, CheckCircle2 } from "lucide-react"
+import { Loader2, AlertCircle, RefreshCw, Plus, Layers, Sparkles, CheckCircle2, CreditCard } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { DataTable, type CustomColumnDef } from "@/components/ui/data-table"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { DataTable } from "@/components/ui/data-table"
 import { usePlans } from "@/api/hooks/usePlans"
 import { cn } from "@/lib/utils"
-import type { Plan } from "@/types"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { SearchInput } from "@/components/search-input"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+import { planColumns as columns } from "@/columns"
+
+import { Select,SelectContent,SelectItem,SelectTrigger, SelectValue } from "@/components/ui/select"
 
 const normalizePlanType = (type: string) => {
   const lower = String(type).toLowerCase()
   return lower === "free trail" ? "free trial" : lower
 }
-
-const columns: CustomColumnDef<Plan>[] = [
-  {
-    accessorKey: "plan_type",
-    header: "Plan Type",
-    width: 140,
-    cell: ({ row }) => <span className="text-xs font-semibold text-foreground">{row.original.plan_type}</span>,
-  },
-  {
-    accessorKey: "price_per_invoice_amount",
-    header: "Price",
-    width: 140,
-    cell: ({ row }) => (
-      <span className="text-xs font-medium text-foreground">
-        {row.original.price_per_invoice_currency} {row.original.price_per_invoice_amount}
-      </span>
-    ),
-  },
-  {
-    accessorKey: "plan_interval",
-    header: "Interval",
-    width: 120,
-    cell: ({ row }) => <span className="text-xs text-muted-foreground">{row.original.plan_interval}</span>,
-  },
-  {
-    accessorKey: "is_active",
-    header: "Status",
-    width: 100,
-    cell: ({ row }) => {
-      const active = row.original.is_active
-      return (
-        <Badge
-          variant={active ? "secondary" : "outline"}
-          className={active ? "border-emerald-200 bg-emerald-50 text-emerald-700" : "text-muted-foreground"}
-        >
-          {active ? "Active" : "Inactive"}
-        </Badge>
-      )
-    },
-  },
-  {
-    accessorKey: "description",
-    header: "Description",
-    width: 120,
-    cell: ({ row }) => <span className="block truncate text-xs text-muted-foreground">{row.original.description}</span>,
-  },
-  {
-    accessorKey: "created_at",
-    header: "Created At",
-    width: 140,
-    cell: ({ row }) => (
-      <span className="text-xs text-muted-foreground">
-        {row.original.created_at ? new Date(row.original.created_at).toLocaleDateString() : "N/A"}
-      </span>
-    ),
-  },
-  {
-    id: "actions",
-    header: "Actions",
-    width: 80,
-    cell: () => {
-      return (
-        <div className="flex items-center" onClick={(e) => e.stopPropagation()}>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="h-8 w-8 p-0 cursor-pointer">
-                <MoreVertical className="h-4 w-4 text-muted-foreground" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-45">
-              <DropdownMenuItem disabled className="text-xs cursor-not-allowed opacity-50 gap-1.5">
-                <Eye className="h-3.5 w-3.5 text-muted-foreground" />
-                View Details
-              </DropdownMenuItem>
-              <DropdownMenuItem disabled className="text-xs cursor-not-allowed opacity-50 gap-1.5">
-                <Edit className="h-3.5 w-3.5 text-muted-foreground" />
-                Edit
-              </DropdownMenuItem>
-              <DropdownMenuItem disabled className="text-xs cursor-not-allowed opacity-50 gap-1.5 text-red-600 focus:text-red-700">
-                <Trash2 className="h-3.5 w-3.5" />
-                Delete
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      )
-    },
-  },
-]
 
 export function Plans() {
   const { data: plans = [], isLoading, isError, refetch, isFetching } = usePlans()

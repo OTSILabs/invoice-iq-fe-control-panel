@@ -1,20 +1,19 @@
 import { useParams, useNavigate } from "react-router-dom"
 import { useState, useMemo, useCallback } from "react"
-import { ArrowLeft, ListChecks, Loader2, AlertCircle, RefreshCw, Plus, Edit2, MoreVertical, Eye } from "lucide-react"
+import { ArrowLeft, ListChecks, Loader2, AlertCircle, RefreshCw, Plus } from "lucide-react"
 import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { DataTable } from "@/components/ui/data-table"
-import type { CustomColumnDef } from "@/components/ui/data-table"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { SearchInput } from "@/components/search-input"
 import { cn } from "@/lib/utils"
 
 import { useReferenceListDetail, useReferenceValues } from "@/api/hooks/useReferenceLists"
 import type { ReferenceValueResponse, RegistryDetailsCardProps } from "@/types";
 import { ValueDialog } from "./components/ValueDialog"
+import { getReferenceListDetailsColumns } from "@/columns"
 
 const formatDate = (dateStr?: string) => {
   if (!dateStr) return "—"
@@ -121,96 +120,7 @@ export function ReferenceListDetails() {
     )
   }, [values, searchText])
 
-  const columns: CustomColumnDef<ReferenceValueResponse>[] = useMemo(
-    () => [
-      {
-        accessorKey: "value_code",
-        header: "Value Code",
-        width: "25%",
-        minWidth: "130px",
-        cell: ({ row }) => (
-          <span className="font-mono text-xs font-semibold text-foreground truncate block">
-            {row.original.value_code}
-          </span>
-        ),
-      },
-      {
-        accessorKey: "value_label",
-        header: "Display Label",
-        width: "25%",
-        minWidth: "150px",
-        cell: ({ row }) => <span className="text-xs font-medium text-foreground">{row.original.value_label}</span>,
-      },
-      {
-        accessorKey: "description",
-        header: "Description",
-        width: "30%",
-        minWidth: "200px",
-        cell: ({ row }) => (
-          <span className="block truncate text-xs text-muted-foreground max-w-[350px]" title={row.original.description || ""}>
-            {row.original.description || "—"}
-          </span>
-        ),
-      },
-      {
-        accessorKey: "attributes",
-        header: "Attributes",
-        width: "150px",
-        minWidth: "120px",
-        cell: ({ row }) => {
-          if (!row.original.attributes) return <span className="text-xs text-muted-foreground">—</span>
-          const keys = Object.keys(row.original.attributes)
-          const count = keys.length
-          if (count === 0) return <span className="text-xs text-muted-foreground">—</span>
-          return (
-            <div className="flex items-center gap-1.5 flex-wrap">
-              <span className="text-[10px] font-bold text-muted-foreground bg-muted px-1.5 py-0.5 rounded-full shrink-0" title={`${count} attributes`}>
-                {count}
-              </span>
-            
-            </div>
-          )
-        },
-      },
-      {
-        accessorKey: "sort_sequence",
-        header: "Sort",
-        width: "70px",
-        minWidth: "60px",
-        maxWidth: "70px",
-        cell: ({ row }) => <span className="text-xs text-muted-foreground font-semibold">{row.original.sort_sequence}</span>,
-      },
-      {
-        id: "actions",
-        header: "Actions",
-        width: "80px",
-        minWidth: "80px",
-        maxWidth: "80px",
-        cell: ({ row }) => (
-          <div className="flex items-center" onClick={(e) => e.stopPropagation()}>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="h-8 w-8 p-0 cursor-pointer">
-                  <MoreVertical className="h-4 w-4 text-muted-foreground" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-45">
-                <DropdownMenuItem className="text-xs cursor-pointer" onClick={() => navigate(`/platform-standard-content/reference-lists/${key}/${row.original.value_code}`)}>
-                  <Eye className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
-                  View Details
-                </DropdownMenuItem>
-                <DropdownMenuItem className="text-xs cursor-pointer" onClick={() => handleOpenEdit(row.original)}>
-                  <Edit2 className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
-                  Edit
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-        ),
-      },
-    ],
-    [navigate, key, handleOpenEdit]
-  )
+  const columns = useMemo(() => getReferenceListDetailsColumns(navigate, key, handleOpenEdit), [navigate, key, handleOpenEdit])
 
   const isLoading = isRegistryLoading || isValuesLoading
   const isError = isRegistryError || isValuesError

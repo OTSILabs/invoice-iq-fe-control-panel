@@ -1,23 +1,17 @@
 import { useState, useMemo } from "react"
-import { ShieldCheck, Plus, RefreshCw, MoreVertical, Edit, Eye, Trash2, Loader2 } from "lucide-react"
+import { ShieldCheck, Plus, RefreshCw, Loader2 } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { toast } from "sonner"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { DataTable } from "@/components/ui/data-table"
-import type { CustomColumnDef } from "@/components/ui/data-table"
 import { SearchInput } from "@/components/search-input"
 import { useValidationRules, useDeleteValidationRuleMutation } from "@/api/hooks/validation-rules"
 import type { ValidationRule, DeleteValidationRuleDialogProps } from "@/types";
 import { ValidationRuleDialog } from "./modals/validation-rule-dialog"
 import { cn } from "@/lib/utils"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+import { getValidationRuleColumns } from "@/columns"
 import {
   Dialog,
   DialogContent,
@@ -68,121 +62,7 @@ export function ValidationRules() {
     })
   }
 
-  const columns = useMemo<CustomColumnDef<ValidationRule>[]>(
-    () => [
-      {
-        accessorKey: "rule_code",
-        header: "Code",
-        width: 120,
-        cell: ({ row }) => (
-          <span className="font-mono text-xs font-semibold text-foreground">
-            {row.original.rule_code}
-          </span>
-        ),
-      },
-      {
-        accessorKey: "display_label",
-        header: "Display Label",
-        width: 140,
-        cell: ({ row }) => (
-          <span className="text-xs font-medium text-foreground">
-            {row.original.display_label}
-          </span>
-        ),
-      },
-      {
-        accessorKey: "description",
-        header: "Description",
-        width: 180,
-        rowClassName: "hidden md:table-cell",
-        cell: ({ row }) => (
-          <span
-            className="block max-w-[170px] truncate text-xs text-muted-foreground"
-            title={row.original.description}
-          >
-            {row.original.description}
-          </span>
-        ),
-      },
-      {
-        accessorKey: "rule_mode",
-        header: "Mode",
-        width: 100,
-        rowClassName: "hidden lg:table-cell",
-        cell: ({ row }) => (
-          <span className="text-xs text-foreground font-mono uppercase">
-            {row.original.rule_mode || "DECLARATIVE"}
-          </span>
-        ),
-      },
-      {
-        accessorKey: "engine_type",
-        header: "Engine Type",
-        width: 110,
-        rowClassName: "hidden lg:table-cell",
-        cell: ({ row }) => (
-          <span className="text-xs text-muted-foreground font-mono">
-            {row.original.engine_type}
-          </span>
-        ),
-      },
-      {
-        accessorKey: "sort_sequence",
-        header: "Sort Sequence",
-        width: 80,
-        rowClassName: "hidden lg:table-cell",
-        cell: ({ row }) => (
-          <span className="text-xs font-medium text-foreground">
-            {row.original.sort_sequence ?? "—"}
-          </span>
-        ),
-      },
-      {
-        id: "actions",
-        header: "Action",
-        width: 60,
-        cell: ({ row }) => (
-          <div onClick={(e) => e.stopPropagation()}>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-8 w-8 cursor-pointer p-0"
-                >
-                  <MoreVertical className="h-4 w-4 text-muted-foreground" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-45">
-                <DropdownMenuItem
-                  className="cursor-pointer text-xs"
-                  onClick={() => navigate(`/platform-standard-content/validation-rules/${row.original.rule_code}`)}
-                >
-                  <Eye className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
-                  View Details
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className="cursor-pointer text-xs"
-                  onClick={() => setEditingRule(row.original)}
-                >
-                  <Edit className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
-                  Edit
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className="cursor-pointer text-xs text-red-600 focus:text-red-600 focus:bg-red-50"
-                  onClick={() => setDeletingRule(row.original)}
-                >
-                  <Trash2 className="mr-2 h-3.5 w-3.5" />
-                  Delete
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-        ),
-      },
-    ],
-    [navigate]
-  )
+  const columns = useMemo(() => getValidationRuleColumns(navigate, setEditingRule, setDeletingRule), [navigate])
 
   const filteredData = useMemo(() => {
     const q = searchText.trim().toLowerCase()

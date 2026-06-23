@@ -1,43 +1,20 @@
 import { useState, useMemo } from "react"
 import { useNavigate } from "react-router-dom"
-import { Loader2, AlertCircle, RefreshCw, Edit2, Eye, MoreVertical, Plus, Users as UsersIcon, Trash2 } from "lucide-react"
+import { Loader2, AlertCircle, RefreshCw, Plus, Users as UsersIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import { DataTable } from "@/components/ui/data-table"
-import type { CustomColumnDef } from "@/components/ui/data-table"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { cn, getInitials } from "@/lib/utils"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { cn } from "@/lib/utils"
 import { toast } from "sonner"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { usePlatformUsers, usePlatformRoles } from "@/api/hooks/useUsers"
 import type { PlatformUser } from "@/types"
 import { CreateUserDialog } from "./modals/create-user-dialog"
 import { EditUserDialog } from "./modals/edit-user-dialog"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { SearchInput } from "@/components/search-input"
-
-const getRolesList = (u: PlatformUser | null | undefined): string[] => {
-  if (!u) return []
-  const raw = Array.isArray(u.roles) ? u.roles : Array.isArray(u.role_names) ? u.role_names : [u.role, u.role_name]
-  return raw.reduce<string[]>((acc, r: unknown) => {
-    if (r) {
-      const name = typeof r === "string" ? r : (r as { name?: string })?.name || ""
-      if (name) acc.push(name)
-    }
-    return acc
-  }, [])
-}
-
-const getRoleBadgeVariant = (role: string) => {
-  const r = role?.toLowerCase()
-  const base = "font-semibold text-[10px] px-1.5 py-0.5"
-  if (r === "admin") return { variant: "outline" as const, className: `${base} border-primary text-primary` }
-  if (r === "user" || r === "standard user") return { variant: "secondary" as const, className: `${base} bg-slate-100 text-foreground hover:bg-slate-200` }
-  return { variant: "outline" as const, className: base }
-}
+import { getUsersColumns, getRolesList } from "@/columns"
 
 export function Users() {
   const navigate = useNavigate()
@@ -72,104 +49,7 @@ export function Users() {
     await Promise.all([refetchUsers(), refetchRoles()])
     toast.success("Users refreshed")
   }
-  const columns = useMemo<CustomColumnDef<PlatformUser>[]>(
-    () => [
-      {
-        accessorKey: "name",
-        header: "Name",
-        width: "28%",
-        minWidth: "220px",
-        cell: ({ row }) => (
-          <div className="flex items-center gap-3">
-            <Avatar className="h-8 w-8 rounded-md border bg-background">
-              <AvatarFallback className="rounded-md bg-primary/8 text-[11px] font-semibold text-primary uppercase">
-                {getInitials(row.original.full_name) || "U"}
-              </AvatarFallback>
-            </Avatar>
-            <div className="min-w-0">
-              <p className="truncate text-xs font-medium text-foreground">{row.original.full_name}</p>
-            </div>
-          </div>
-        ),
-      },
-      {
-        accessorKey: "email",
-        header: "Email",
-        width: "30%",
-        minWidth: "220px",
-        cell: ({ row }) => <span className="block truncate text-xs text-muted-foreground">{row.original.email}</span>,
-      },
-      {
-        accessorKey: "roles",
-        header: "Role(s)",
-        width: "22%",
-        minWidth: "180px",
-        cell: ({ row }) => (
-          <div className="flex flex-wrap items-center gap-2">
-            {getRolesList(row.original).map((role) => {
-              const badge = getRoleBadgeVariant(role)
-              return (
-                <Badge key={role} variant={badge.variant} className={badge.className}>
-                  {String(role).toUpperCase()}
-                </Badge>
-              )
-            })}
-          </div>
-        ),
-      },
-      {
-        accessorKey: "status",
-        header: "Status",
-        width: "140px",
-        minWidth: "140px",
-        rowClassName: "w-40",
-        cell: ({ row }) => {
-          const s = row.original.status || "ACTIVE"
-          const active = s === "ACTIVE"
-          return (
-            <Badge
-              variant={active ? "secondary" : "outline"}
-              className={active ? "border-emerald-200 bg-emerald-50 text-emerald-700" : "text-muted-foreground"}
-            >
-              {s}
-            </Badge>
-          )
-        },
-      },
-      {
-        id: "actions",
-        header: "Actions",
-        width: "88px",
-        minWidth: "88px",
-        cell: ({ row }) => (
-          <div className="flex items-center" onClick={(e) => e.stopPropagation()}>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="h-8 w-8 p-0 cursor-pointer">
-                  <MoreVertical className="h-4 w-4 text-muted-foreground" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-45">
-                <DropdownMenuItem className="text-xs cursor-pointer gap-1.5" onClick={() => navigate(`/users/${row.original.id}`)}>
-                  <Eye className="h-3.5 w-3.5 text-muted-foreground" />
-                  View Details
-                </DropdownMenuItem>
-                <DropdownMenuItem className="text-xs cursor-pointer gap-1.5" onClick={() => handleOpenEditDialog(row.original)}>
-                  <Edit2 className="h-3.5 w-3.5 text-muted-foreground" />
-                  Edit
-                </DropdownMenuItem>
-                <DropdownMenuItem disabled className="text-xs cursor-not-allowed opacity-50 gap-1.5 text-red-600 focus:text-red-600">
-                  <Trash2 className="h-3.5 w-3.5" />
-                  Delete
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-        ),
-      },
-    ],
-    [navigate]
-  )
+  const columns = useMemo(() => getUsersColumns(navigate, handleOpenEditDialog), [navigate])
   const filteredUsers = useMemo(() => {
     const q = filters.searchText.trim().toLowerCase()
     return users.filter((u) => {

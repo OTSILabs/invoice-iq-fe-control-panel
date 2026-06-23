@@ -5,7 +5,7 @@ import { useEntityConfigurations, useUpdateEntityConfigurations, useConfiguratio
 import { toast } from "sonner"
 import { ConfigurationsTableHeader } from "./configurations-table-header"
 import { useEntityKeysMetadata } from "./use-entity-keys-metadata"
-import { useConfigurationsTableColumns } from "./use-configurations-table-columns"
+import { getConfigurationsColumns } from "@/columns"
 
 
 
@@ -109,8 +109,7 @@ export function ConfigurationsTable({ entityId, entityType }: ConfigurationsTabl
     })
   }, [compatibleKeys, configurations, newValues])
 
-  // Extract columns configuration into custom hook
-  const columns = useConfigurationsTableColumns(isSaving, apiKeysMetadata, handleValueChange)
+  const columns = useMemo(() => getConfigurationsColumns(isSaving, apiKeysMetadata, handleValueChange), [isSaving, apiKeysMetadata, handleValueChange])
 
   return (
     <div className="flex flex-col bg-card border border-border rounded-xl overflow-hidden min-h-[300px]">
