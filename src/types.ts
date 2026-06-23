@@ -512,12 +512,6 @@ export interface FieldDialogSidebarProps {
   }[];
 }
 
-export interface ErpSettingFormDialogProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  record?: ErpSetting | null
-}
-
 export interface ConfigurationsTableHeaderProps {
   entityType: 'organization' | 'tenant'
   isSaving: boolean
@@ -710,18 +704,6 @@ export interface TenantActionDialogProps {
 
 export interface TenantEventsTableProps {
   tenantId: string;
-}
-
-export interface CreateUserDialogProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  roles: PlatformRole[]
-}
-
-export interface EditUserDialogProps {
-  user: PlatformUser | null
-  open: boolean
-  onOpenChange: (open: boolean) => void
 }
 
 export type TenantActionType = "deactivate" | "activate" | "block" | "unblock" | "expire" | "delete";
