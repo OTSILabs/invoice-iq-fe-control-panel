@@ -1,15 +1,10 @@
 import { useReducer, useMemo, useCallback, useEffect } from "react";
 import { useSearchParams, Link } from "react-router-dom";
-import { AlertCircle, RefreshCw, Plus, Edit2, FileText, LayoutGrid, Layers, Trash2 } from "lucide-react";
+import { AlertCircle, RefreshCw, Plus, FileText, LayoutGrid, Layers } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
-import { DataTable } from "@/components/ui/data-table";
-import type { CustomColumnDef } from "@/components/ui/data-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { SearchInput } from "@/components/search-input";
 import { cn } from "@/lib/utils";
 
@@ -21,11 +16,12 @@ import { useDerivedTemplates, useDeleteDerivedTemplate } from "@/api/hooks/useDe
 import type {
   StandardExtractionFieldResponse,
   StandardExtractionTemplateResponse,
-  StandardDerivedTemplateResponse
 } from "@/types";
 
 import { FieldDialog } from "./models/FieldDialog";
 import { TemplateCards } from "@/components/invoice-ui/templates/template-cards";
+import { FieldsTable } from "./components/fields-table";
+import { DerivedTable } from "./components/derived-table";
 
 interface State {
   activeTab: string;
@@ -177,87 +173,59 @@ export function ExtractionManagement() {
 
   return (
     <div className="flex w-full flex-col gap-6 pb-12 animate-in fade-in duration-300">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <PageHeader
-          title="Extraction Management"
-          description="Configure document layout mappings, extraction fields, and derived templates globally."
-        />
-      </div>
-
-      <Tabs value={state.activeTab} onValueChange={handleTabChange} className="w-full flex flex-col gap-5">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border pb-1">
-          <TabsList className="bg-transparent h-auto p-0 gap-6 border-0 justify-start">
-            <TabsTrigger
-              value="fields"
-              className="px-0 py-2 border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent rounded-none shadow-none font-semibold text-xs cursor-pointer gap-2 transition-all duration-200"
-            >
-              <FileText className="size-4" />
-              Extraction Fields
-            </TabsTrigger>
-            <TabsTrigger
-              value="templates"
-              className="px-0 py-2 border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent rounded-none shadow-none font-semibold text-xs cursor-pointer gap-2 transition-all duration-200"
-            >
-              <LayoutGrid className="size-4" />
-              Base Templates
-            </TabsTrigger>
-            <TabsTrigger
-              value="derived"
-              className="px-0 py-2 border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent rounded-none shadow-none font-semibold text-xs cursor-pointer gap-2 transition-all duration-200"
-            >
-              <Layers className="size-4" />
-              Derived Templates
-            </TabsTrigger>
-          </TabsList>
-
-          <div className="flex items-center gap-2 self-end md:self-auto">
-            <SearchInput
-              value={state.searchText}
-              onChange={setSearchText}
-              disabled={isLoading}
-              placeholder={`Search ${state.activeTab}...`}
-              className="w-full sm:w-64"
-            />
+      <PageHeader
+        title="Extraction Management"
+        description="Configure document layout mappings, extraction fields, and derived templates globally."
+      >
+        {state.activeTab === "fields" && (
+          <Button
+            size="sm"
+            onClick={handleOpenFieldCreate}
+            className="font-medium px-3 gap-1  transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px cursor-pointer shrink-0"
+          >
+            <Plus className="h-4 w-4" /> Add Field
+          </Button>
+        )}
+        {state.activeTab === "templates" && (
+          <Link to="/platform-standard-content/extraction-management/templates/new">
             <Button
-              variant="outline"
-              size="icon"
-              onClick={handleRefetch}
-              className="h-9 w-9 shrink-0 cursor-pointer transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px"
-              disabled={isFetching}
+              size="sm"
+              className="font-medium px-3 gap-1  transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px cursor-pointer shrink-0"
             >
-              <RefreshCw className={cn("size-4", isFetching && "animate-spin")} />
+              <Plus className="h-4 w-4" /> Add Template
             </Button>
-            {state.activeTab === "fields" && (
-              <Button
-                size="sm"
-                onClick={handleOpenFieldCreate}
-                className="font-medium px-3 gap-1 shadow-none transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px cursor-pointer shrink-0"
-              >
-                <Plus className="h-4 w-4" /> Add Field
-              </Button>
-            )}
-            {state.activeTab === "templates" && (
-              <Link to="/platform-standard-content/extraction-management/templates/new">
-                <Button
-                  size="sm"
-                  className="font-medium px-3 gap-1 shadow-none transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px cursor-pointer shrink-0"
-                >
-                  <Plus className="h-4 w-4" /> Add Template
-                </Button>
-              </Link>
-            )}
-            {state.activeTab === "derived" && (
-              <Link to="/platform-standard-content/extraction-management/derived/new">
-                <Button
-                  size="sm"
-                  className="font-medium px-3 gap-1 shadow-none transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px cursor-pointer shrink-0"
-                >
-                  <Plus className="h-4 w-4" /> Derive Template
-                </Button>
-              </Link>
-            )}
-          </div>
-        </div>
+          </Link>
+        )}
+        {state.activeTab === "derived" && (
+          <Link to="/platform-standard-content/extraction-management/derived/new">
+            <Button
+              size="sm"
+              className="font-medium px-3 gap-1  transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px cursor-pointer shrink-0"
+            >
+              <Plus className="h-4 w-4" /> Derive Template
+            </Button>
+          </Link>
+        )}
+      </PageHeader>
+
+      <Tabs value={state.activeTab} onValueChange={handleTabChange} className="w-full flex flex-col gap-5 sadcnx">
+        <TabsList
+          variant="line"
+          className="mb-2 w-full justify-start gap-6 border-b border-border [&>button]:flex-none"
+        >
+          <TabsTrigger value="fields" className="cursor-pointer gap-1.5">
+            <FileText className="size-4" />
+            Extraction Fields
+          </TabsTrigger>
+          <TabsTrigger value="templates" className="cursor-pointer gap-1.5">
+            <LayoutGrid className="size-4" />
+            Base Templates
+          </TabsTrigger>
+          <TabsTrigger value="derived" className="cursor-pointer gap-1.5">
+            <Layers className="size-4" />
+            Derived Templates
+          </TabsTrigger>
+        </TabsList>
 
         {isError ? (
           <div className="flex h-96 flex-col items-center justify-center gap-4">
@@ -275,19 +243,50 @@ export function ExtractionManagement() {
               <FieldsTable
                 data={filteredFields}
                 isLoading={isLoading || isFetching}
+                isFetching={isFetching}
                 onEdit={handleOpenFieldEdit}
+                searchText={state.searchText}
+                onSearchChange={setSearchText}
+                onRefresh={handleRefetch}
               />
             </TabsContent>
 
-            <TabsContent value="templates" className="m-0 focus:outline-none">
-              <div className="mt-4"><TemplateCards templates={filteredTemplates as any} /></div>
+            <TabsContent value="templates" className="m-0 focus:outline-none flex flex-col gap-4">
+              <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between px-1">
+                <h3 className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+                  Base Templates ({filteredTemplates.length})
+                </h3>
+                <div className="flex items-center gap-2">
+                  <SearchInput
+                    value={state.searchText}
+                    onChange={setSearchText}
+                    disabled={isLoading}
+                    placeholder="Search templates..."
+                    className="w-full sm:w-64"
+                  />
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={handleRefetch}
+                    className="h-9 w-9 shrink-0 cursor-pointer"
+                    disabled={isFetching}
+                  >
+                    <RefreshCw className={cn("size-4", isFetching && "animate-spin")} />
+                  </Button>
+                </div>
+              </div>
+              <TemplateCards templates={filteredTemplates as any} />
             </TabsContent>
 
             <TabsContent value="derived" className="m-0 focus:outline-none">
               <DerivedTable
                 data={filteredDerived}
                 isLoading={isLoading || isFetching}
+                isFetching={isFetching}
                 onDelete={handleDeleteDerived}
+                searchText={state.searchText}
+                onSearchChange={setSearchText}
+                onRefresh={handleRefetch}
               />
             </TabsContent>
           </>
@@ -311,189 +310,4 @@ export function ExtractionManagement() {
   );
 }
 
-// ── Sub-components for Tables ──
 
-interface FieldsTableProps {
-  data: StandardExtractionFieldResponse[];
-  isLoading: boolean;
-  onEdit: (item: StandardExtractionFieldResponse) => void;
-}
-
-function FieldsTable({ data, isLoading, onEdit }: FieldsTableProps) {
-  const columns = useMemo<CustomColumnDef<StandardExtractionFieldResponse>[]>(
-    () => [
-      {
-        accessorKey: "field_id",
-        header: "Field ID",
-        width: "20%",
-        minWidth: "120px",
-        cell: ({ row }) => <span className="font-mono text-xs font-semibold text-foreground truncate block">{row.original.field_id}</span>,
-      },
-      {
-        accessorKey: "field_label",
-        header: "Label",
-        width: "20%",
-        minWidth: "130px",
-        cell: ({ row }) => <span className="text-xs font-medium text-foreground">{row.original.field_label}</span>,
-      },
-      {
-        accessorKey: "data_type_code",
-        header: "Type",
-        width: "120px",
-        minWidth: "100px",
-        cell: ({ row }) => <Badge variant="outline" className="text-[10px] uppercase font-bold">{row.original.data_type_code}</Badge>,
-      },
-      {
-        accessorKey: "field_category_code",
-        header: "Category",
-        width: "150px",
-        minWidth: "120px",
-        cell: ({ row }) => <span className="text-xs text-muted-foreground truncate block">{row.original.field_category_code}</span>,
-      },
-      {
-        accessorKey: "header_item",
-        header: "Scope",
-        width: "100px",
-        minWidth: "80px",
-        cell: ({ row }) => {
-          const isHeader = row.original.header_item === "header";
-          return (
-            <Badge variant={isHeader ? "secondary" : "outline"} className={cn("text-[9px] font-semibold px-2 py-0.5 capitalize", isHeader ? "bg-slate-50 text-slate-700 border-slate-200" : "bg-blue-50/50 text-blue-700 border-blue-200")}>
-              {row.original.header_item}
-            </Badge>
-          );
-        },
-      },
-      {
-        accessorKey: "allowed_value_mode",
-        header: "Value Mode",
-        width: "130px",
-        minWidth: "110px",
-        cell: ({ row }) => <span className="text-xs text-muted-foreground capitalize">{row.original.allowed_value_mode.replace("_", " ")}</span>,
-      },
-      {
-        id: "actions",
-        header: "Actions",
-        width: "80px",
-        minWidth: "80px",
-        cell: ({ row }) => (
-          <div className="flex items-center" onClick={(e) => e.stopPropagation()}>
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 cursor-pointer" onClick={() => onEdit(row.original)}>
-              <Edit2 className="h-3.5 w-3.5 text-muted-foreground" />
-            </Button>
-          </div>
-        ),
-      },
-    ],
-    [onEdit]
-  );
-
-  return (
-    <Card className="rounded-xl border border-border shadow-sm p-0 overflow-hidden">
-      <CardContent className="p-0">
-        <DataTable
-          data={data}
-          columns={columns}
-          isLoading={isLoading}
-          enablePagination
-          pageSize={10}
-          totalItems={data.length}
-          stickyHeader
-          fillAvailableHeight
-          tableContainerClassName="border-0 rounded-none bg-transparent"
-        />
-      </CardContent>
-    </Card>
-  );
-}
-
-
-
-interface DerivedTableProps {
-  data: StandardDerivedTemplateResponse[];
-  isLoading: boolean;
-  onDelete: (id: string) => void;
-}
-
-function DerivedTable({ data, isLoading, onDelete }: DerivedTableProps) {
-  const columns = useMemo<CustomColumnDef<StandardDerivedTemplateResponse>[]>(
-    () => [
-      {
-        accessorKey: "derived_template_id",
-        header: "Derived ID",
-        width: "25%",
-        minWidth: "140px",
-        cell: ({ row }) => <span className="font-mono text-xs font-semibold text-foreground truncate block">{row.original.derived_template_id}</span>,
-      },
-      {
-        accessorKey: "template_id",
-        header: "Base Template ID",
-        width: "20%",
-        minWidth: "120px",
-        cell: ({ row }) => <span className="font-mono text-xs text-muted-foreground truncate block">{row.original.template_id}</span>,
-      },
-      {
-        accessorKey: "name",
-        header: "Name",
-        width: "25%",
-        minWidth: "150px",
-        cell: ({ row }) => <span className="text-xs font-medium text-foreground">{row.original.name}</span>,
-      },
-      {
-        accessorKey: "description",
-        header: "Description",
-        width: "25%",
-        minWidth: "200px",
-        cell: ({ row }) => <span className="text-xs text-muted-foreground truncate block max-w-[300px]">{row.original.description || "—"}</span>,
-      },
-      {
-        id: "actions",
-        header: "Actions",
-        width: "100px",
-        minWidth: "100px",
-        cell: ({ row }) => (
-          <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="h-8 w-8 p-0 cursor-pointer">
-                  <Plus className="h-4 w-4 rotate-45 text-muted-foreground" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-45">
-                <DropdownMenuItem asChild className="text-xs cursor-pointer">
-                  <Link to={`/platform-standard-content/extraction-management/derived/${row.original.derived_template_id}/edit`}>
-                    <Edit2 className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
-                    Edit
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem className="text-xs text-red-600 cursor-pointer focus:text-red-700" onClick={() => onDelete(row.original.derived_template_id)}>
-                  <Trash2 className="h-3.5 w-3.5 mr-2" />
-                  Delete
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-        ),
-      },
-    ],
-    [onDelete]
-  );
-
-  return (
-    <Card className="rounded-xl border border-border shadow-sm p-0 overflow-hidden">
-      <CardContent className="p-0">
-        <DataTable
-          data={data}
-          columns={columns}
-          isLoading={isLoading}
-          enablePagination
-          pageSize={10}
-          totalItems={data.length}
-          stickyHeader
-          fillAvailableHeight
-          tableContainerClassName="border-0 rounded-none bg-transparent"
-        />
-      </CardContent>
-    </Card>
-  );
-}

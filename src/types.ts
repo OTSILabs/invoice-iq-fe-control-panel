@@ -439,3 +439,25 @@ export interface StandardDerivedTemplateUpdateRequest {
   name?: string
   description?: string | null
 }
+
+// --- Component UI Props ---
+export interface FieldsTableProps {
+  data: StandardExtractionFieldResponse[]
+  isLoading: boolean
+  isFetching: boolean
+  onEdit: (item: StandardExtractionFieldResponse) => void
+  searchText: string
+  onSearchChange: (value: string) => void
+  onRefresh: () => void
+}
+
+export interface DerivedTableProps {
+  data: StandardDerivedTemplateResponse[]
+  isLoading: boolean
+  isFetching: boolean
+  onDelete: (id: string) => void
+  searchText: string
+  onSearchChange: (value: string) => void
+  onRefresh: () => void
+}
+
