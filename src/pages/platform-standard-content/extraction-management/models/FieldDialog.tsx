@@ -268,7 +268,7 @@ export function FieldDialog({ open, onOpenChange, fieldItem }: FieldDialogProps)
           </div>
         </form>
 
-        <DialogFooter className="relative z-10 border-t bg-card px-5 py-3.5 sm:justify-between">
+        <DialogFooter className="dialog-form-footer relative z-10 sm:justify-between">
           <DialogClose asChild>
             <Button
               type="button"
@@ -311,4 +311,3 @@ export function FieldDialog({ open, onOpenChange, fieldItem }: FieldDialogProps)
     </Dialog>
   );
 }
-

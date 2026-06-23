@@ -1,6 +1,6 @@
 import type { ExtractionManagementState } from "@/types";
 import { useReducer, useMemo, useCallback, useEffect } from "react";
-import { useSearchParams, Link } from "react-router-dom";
+import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import { AlertCircle, RefreshCw, Plus, FileText, LayoutGrid, Layers } from "lucide-react";
 import { toast } from "sonner";
 
@@ -16,11 +16,9 @@ import { useExtractionTemplates } from "@/api/hooks/useExtractionTemplates";
 import { useDerivedTemplates, useDeleteDerivedTemplate } from "@/api/hooks/useDerivedTemplates";
 
 import type {
-  StandardExtractionFieldResponse,
   StandardExtractionTemplateResponse,
 } from "@/types";
 
-import { FieldDialog } from "./models/FieldDialog";
 import { TemplateCards } from "@/components/invoice-ui/templates/template-cards";
 import { FieldsTable } from "./components/fields-table";
 import { DerivedTable } from "./components/derived-table";
@@ -30,8 +28,6 @@ import { DerivedTable } from "./components/derived-table";
 type Action =
   | { type: "SET_ACTIVE_TAB"; payload: string }
   | { type: "SET_SEARCH_TEXT"; payload: string }
-  | { type: "OPEN_FIELD_DIALOG"; payload: StandardExtractionFieldResponse | null }
-  | { type: "CLOSE_FIELD_DIALOG" }
   | { type: "OPEN_TEMPLATE_DIALOG"; payload: StandardExtractionTemplateResponse | null }
   | { type: "CLOSE_TEMPLATE_DIALOG" };
 
@@ -41,10 +37,6 @@ function reducer(state: ExtractionManagementState, action: Action): ExtractionMa
       return { ...state, activeTab: action.payload, searchText: "" };
     case "SET_SEARCH_TEXT":
       return { ...state, searchText: action.payload };
-    case "OPEN_FIELD_DIALOG":
-      return { ...state, fieldDialog: { open: true, item: action.payload } };
-    case "CLOSE_FIELD_DIALOG":
-      return { ...state, fieldDialog: { open: false, item: null } };
     case "OPEN_TEMPLATE_DIALOG":
       return { ...state, templateDialog: { open: true, item: action.payload } };
     case "CLOSE_TEMPLATE_DIALOG":
@@ -57,11 +49,11 @@ function reducer(state: ExtractionManagementState, action: Action): ExtractionMa
 const initialState: ExtractionManagementState = {
   activeTab: "fields",
   searchText: "",
-  fieldDialog: { open: false, item: null },
   templateDialog: { open: false, item: null },
 };
 
 export function ExtractionManagement() {
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const urlTab = searchParams.get("tab") || "fields";
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -77,10 +69,6 @@ export function ExtractionManagement() {
   const templatesQuery = useExtractionTemplates();
   const derivedQuery = useDerivedTemplates();
   const deleteMutation = useDeleteDerivedTemplate();
-
-  // Dialog triggers
-  const handleOpenFieldCreate = useCallback(() => dispatch({ type: "OPEN_FIELD_DIALOG", payload: null }), []);
-  const handleOpenFieldEdit = useCallback((item: StandardExtractionFieldResponse) => dispatch({ type: "OPEN_FIELD_DIALOG", payload: item }), []);
 
   // Deletion trigger
   const handleDeleteDerived = useCallback(async (id: string) => {
@@ -177,7 +165,7 @@ export function ExtractionManagement() {
         {state.activeTab === "fields" && (
           <Button
             size="sm"
-            onClick={handleOpenFieldCreate}
+            onClick={() => navigate("/platform-standard-content/extraction-management/fields/create")}
             className="font-medium px-3 gap-1  transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px cursor-pointer shrink-0"
           >
             <Plus className="h-4 w-4" /> Add Field
@@ -206,9 +194,7 @@ export function ExtractionManagement() {
       </PageHeader>
 
       <Tabs value={state.activeTab} onValueChange={handleTabChange} className="w-full">
-        <TabsList
-          className="w-full justify-start overflow-x-auto [&>button]:flex-none"
-        >
+        <TabsList className="w-full justify-start overflow-x-auto [&>button]:flex-none">
           <TabsTrigger value="fields" className="cursor-pointer gap-1.5">
             <FileText className="size-4" />
             Extraction Fields
@@ -240,7 +226,7 @@ export function ExtractionManagement() {
                 data={filteredFields}
                 isLoading={isLoading || isFetching}
                 isFetching={isFetching}
-                onEdit={handleOpenFieldEdit}
+                onEdit={(field) => navigate(`/platform-standard-content/extraction-management/fields/${field.field_id}/edit`)}
                 searchText={state.searchText}
                 onSearchChange={setSearchText}
                 onRefresh={handleRefetch}
@@ -288,21 +274,6 @@ export function ExtractionManagement() {
           </>
         )}
       </Tabs>
-
-      {/* Dialog Modals */}
-      {state.fieldDialog.open && (
-        <FieldDialog
-          key={state.fieldDialog.item ? `edit-field-${state.fieldDialog.item.field_id}` : "create-field"}
-          open={state.fieldDialog.open}
-          onOpenChange={(open) => !open && dispatch({ type: "CLOSE_FIELD_DIALOG" })}
-          fieldItem={state.fieldDialog.item}
-        />
-      )}
-
-
-
-
     </PageShell>
   );
 }
-

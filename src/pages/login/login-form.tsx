@@ -24,14 +24,14 @@ export function LoginForm({
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card className="border-slate-200 bg-white shadow-sm overflow-hidden rounded-xl">
+      <Card className="surface-card overflow-hidden p-0">
         <CardContent className="p-6">
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Email Field */}
             <div className="space-y-2">
               <label
                 htmlFor="email"
-                className="text-sm font-medium text-slate-900"
+                className="text-sm font-medium text-foreground"
               >
                 Email
               </label>
@@ -43,7 +43,7 @@ export function LoginForm({
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={isPending}
-                className="h-11 rounded-xl bg-slate-50/50 border-slate-200 text-slate-900 placeholder:text-slate-400 focus-visible:bg-white focus-visible:ring-1 focus-visible:ring-blue-500/10 focus-visible:border-blue-500 transition-all duration-200"
+                className="h-11 rounded-lg bg-background/60 transition-all duration-200 focus-visible:bg-background"
               />
             </div>
 
@@ -52,13 +52,13 @@ export function LoginForm({
               <div className="flex items-center justify-between">
                 <label
                   htmlFor="password"
-                  className="text-sm font-medium text-slate-700"
+                  className="text-sm font-medium text-foreground"
                 >
                   Password
                 </label>
                 <button
                   type="button"
-                  className="text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors focus:outline-none"
+                  className="text-sm font-medium text-primary transition-colors hover:text-primary/80 focus:outline-none"
                 >
                   Forgot password?
                 </button>
@@ -72,12 +72,12 @@ export function LoginForm({
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   disabled={isPending}
-                  className="h-11 rounded-xl border-slate-200 bg-slate-50/50 pr-10 font-mono text-slate-900 transition-all duration-200 placeholder:text-slate-400 focus-visible:border-blue-500 focus-visible:bg-white focus-visible:ring-1 focus-visible:ring-blue-500/10"
+                  className="h-11 rounded-lg bg-background/60 pr-10 font-mono transition-all duration-200 focus-visible:bg-background"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer text-slate-400 hover:text-slate-600 focus:outline-none"
+                  className="absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer text-muted-foreground transition-colors hover:text-foreground focus:outline-none"
                 >
                   {showPassword ? (
                     <EyeOff className="size-4" />
@@ -90,8 +90,8 @@ export function LoginForm({
 
             {/* Error Message */}
             {error && (
-              <div className="p-3 mt-2 rounded-xl bg-red-50 border border-red-100 animate-in fade-in zoom-in-95 duration-200">
-                <p className="text-sm text-red-600 font-medium text-center">
+              <div className="mt-2 rounded-lg border border-destructive/20 bg-destructive/10 p-3 animate-in fade-in zoom-in-95 duration-200">
+                <p className="text-center text-sm font-medium text-destructive">
                   Invalid credentials. Please try again.
                 </p>
               </div>
@@ -102,7 +102,7 @@ export function LoginForm({
               <Button
                 type="submit"
                 disabled={isPending}
-                className="w-full h-11 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-medium shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 active:translate-y-0 active:shadow-sm"
+                className="h-11 w-full rounded-lg font-medium shadow-md transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 active:shadow-sm"
               >
                 {isPending ? (
                   <>
@@ -117,7 +117,7 @@ export function LoginForm({
           </form>
         </CardContent>
       </Card>     
-      <p className="text-center text-xs text-slate-500 font-medium">
+      <p className="text-center text-xs font-medium text-muted-foreground">
         Secured by Invoice IQ Authentication
       </p>
     </div>

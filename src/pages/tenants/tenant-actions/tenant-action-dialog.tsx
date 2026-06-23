@@ -74,37 +74,43 @@ export function TenantActionDialog({ action, onClose, orgId, onSuccess }: Tenant
   const config = {
     activate: { 
       title: "Activate Tenant", 
-      btnClass: "bg-emerald-600 hover:bg-emerald-700 text-white border-0 shadow-sm cursor-pointer", 
+      variant: "default" as const,
+      btnClass: "cursor-pointer",
       text: "Activating this tenant will restore their access to the system immediately.", 
       actionLabel: "Activate" 
     },
     deactivate: { 
       title: "Deactivate Tenant", 
-      btnClass: "bg-amber-600 hover:bg-amber-700 text-white border-0 shadow-sm cursor-pointer", 
+      variant: "outline" as const,
+      btnClass: "cursor-pointer border-amber-300/70 text-amber-700 hover:bg-amber-50 dark:border-amber-900/50 dark:text-amber-300 dark:hover:bg-amber-950/25",
       text: "Deactivating this tenant will temporarily suspend their access to the system.", 
       actionLabel: "Deactivate" 
     },
     block: { 
       title: "Block Tenant", 
-      btnClass: "bg-red-600 hover:bg-red-700 text-white border-0 shadow-sm cursor-pointer", 
+      variant: "destructive" as const,
+      btnClass: "cursor-pointer",
       text: "Blocking this tenant will suspend all their services immediately.", 
       actionLabel: "Block" 
     },
     unblock: { 
       title: "Unblock Tenant", 
-      btnClass: "bg-emerald-600 hover:bg-emerald-700 text-white border-0 shadow-sm cursor-pointer", 
+      variant: "default" as const,
+      btnClass: "cursor-pointer",
       text: "Unblocking this tenant will restore their access.", 
       actionLabel: "Unblock" 
     },
     expire: { 
       title: "Expire Tenant", 
-      btnClass: "bg-orange-600 hover:bg-orange-700 text-white border-0 shadow-sm cursor-pointer", 
+      variant: "outline" as const,
+      btnClass: "cursor-pointer border-orange-300/70 text-orange-700 hover:bg-orange-50 dark:border-orange-900/50 dark:text-orange-300 dark:hover:bg-orange-950/25",
       text: "Expiring this tenant will mark their subscription as expired.", 
       actionLabel: "Expire" 
     },
     delete: { 
       title: "Delete Tenant", 
-      btnClass: "bg-red-600 hover:bg-red-700 text-white border-0 shadow-sm cursor-pointer", 
+      variant: "destructive" as const,
+      btnClass: "cursor-pointer",
       text: "Deleting this tenant is permanent and cannot be undone. All database and user records will be deleted.", 
       actionLabel: "Delete" 
     }
@@ -134,11 +140,12 @@ export function TenantActionDialog({ action, onClose, orgId, onSuccess }: Tenant
             </div>
           )}
         </div>
-        <DialogFooter>
+        <DialogFooter className="dialog-form-footer">
           <Button variant="outline" size="sm" onClick={onClose} disabled={mutation.isPending} className="cursor-pointer">
             Cancel
           </Button>
           <Button 
+            variant={config.variant}
             className={config.btnClass}
             size="sm"
             onClick={() => mutation.mutate(tenant.id)}

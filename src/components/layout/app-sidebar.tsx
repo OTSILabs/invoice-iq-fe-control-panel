@@ -26,6 +26,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { cn } from "@/lib/utils"
+import { PoweredByFooter } from "@/components/poweredby"
 
 // ── Logo + collapse trigger ──────────────────────────────────────────────────
 function SidebarLogoHeader() {
@@ -37,7 +38,7 @@ function SidebarLogoHeader() {
     <button
       type="button"
       className={cn(
-        "relative flex h-16 w-full cursor-pointer select-none items-center border-b border-sidebar-border/60 bg-transparent p-0 text-left outline-none transition-all duration-200",
+        "relative flex h-14 w-full cursor-pointer select-none items-center border-b border-sidebar-border/60 bg-transparent p-0 text-left outline-none transition-all duration-200",
         isCollapsed ? "justify-center" : "px-4"
       )}
       onMouseEnter={() => setHovered(true)}
@@ -124,7 +125,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar
       collapsible="icon"
-      className="border-r border-sidebar-border/55 bg-[linear-gradient(180deg,color-mix(in_oklch,var(--sidebar)_96%,white)_0%,var(--sidebar)_45%,color-mix(in_oklch,var(--sidebar)_94%,var(--background))_100%)]"
+      className="border-r border-sidebar-border/70 bg-[linear-gradient(180deg,color-mix(in_oklch,var(--sidebar)_92%,white)_0%,var(--sidebar)_44%,color-mix(in_oklch,var(--sidebar)_88%,black)_100%)]"
       {...props}
     >
 
@@ -141,7 +142,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
             if (route.children) {
               const isMenuExpanded = !!expandedMenus[route.title]
-              const hasActiveChild = route.children.some((child) => location.pathname === child.path)
+              const hasActiveChild = route.children.some((child) => location.pathname.startsWith(child.path))
 
               const parentButton = (
                 <SidebarMenuButton
@@ -156,8 +157,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   className={cn(
                     "h-9 w-full cursor-pointer justify-between rounded-lg text-sm font-medium transition-all duration-200",
                     hasActiveChild && !isCollapsed
-                      ? "bg-background/85 text-sidebar-accent-foreground shadow-sm ring-1 ring-sidebar-border/70"
-                      : "text-sidebar-foreground/72 hover:bg-background/55 hover:text-sidebar-accent-foreground"
+                      ? "bg-sidebar-accent text-sidebar-accent-foreground shadow-sm ring-1 ring-sidebar-border"
+                      : "text-sidebar-foreground/72 hover:bg-sidebar-accent/65 hover:text-sidebar-accent-foreground"
                   )}
                 >
                   <div className="flex items-center gap-2">
@@ -185,7 +186,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <SidebarMenuItem key={route.title} className="flex flex-col">
                   {isCollapsed ? (
                     <Tooltip delayDuration={0}>
-                      <TooltipTrigger className="ml-1" asChild>{parentButton}</TooltipTrigger>
+                      <TooltipTrigger asChild>{parentButton}</TooltipTrigger>
                       <TooltipContent side="right" className="text-xs font-medium">
                         {route.title}
                       </TooltipContent>
@@ -194,31 +195,32 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     <div className="ml-1.5">{parentButton}</div>
                   )}
 
-                   {!isCollapsed && isMenuExpanded && (
-                    <div className="ml-6 mt-1 flex animate-in flex-col gap-0.5 border-l border-sidebar-border/55 pl-2 duration-200 slide-in-from-top-1">
+                  {!isCollapsed && isMenuExpanded && (
+                    <div className="ml-3 mt-1 flex animate-in flex-col gap-0.5 border-l border-sidebar-border/70 pl-2 duration-200 slide-in-from-top-1">
                       {route.children.map((child) => {
-                        const isChildActive = location.pathname === child.path
+                        const isChildActive = location.pathname.startsWith(child.path)
                         const ChildIcon = child.icon
                         return (
                           <Link
                             key={child.path}
                             to={child.path}
                             className={cn(
-                              "h-9 flex items-center text-sm font-medium transition-all duration-200 w-full gap-2",
+                              "flex h-8 min-w-0 items-center gap-2 rounded-md px-2 text-xs font-medium transition-all duration-200",
                               isChildActive
-                                ? "rounded-lg bg-background/85 text-sidebar-accent-foreground shadow-sm ring-1 ring-sidebar-border/70"
-                                : "rounded-lg pl-3 text-sidebar-foreground/70 hover:bg-background/55 hover:text-sidebar-accent-foreground"
+                                ? "bg-sidebar-accent text-sidebar-accent-foreground shadow-sm ring-1 ring-sidebar-border/80"
+                                : "text-sidebar-foreground/68 hover:bg-sidebar-accent/65 hover:text-sidebar-accent-foreground"
                             )}
+                            title={child.title}
                           >
                             {ChildIcon && (
                               <ChildIcon
                                 className={cn(
-                                  "h-4 w-4 shrink-0",
+                                  "h-3.5 w-3.5 shrink-0",
                                   isChildActive ? "text-sidebar-primary" : "text-sidebar-foreground/60"
                                 )}
                               />
                             )}
-                            <span>{child.title}</span>
+                            <span className="min-w-0 truncate">{child.title}</span>
                           </Link>
                         )
                       })}
@@ -236,8 +238,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 className={cn(
                   "h-9 rounded-lg text-sm font-medium transition-all duration-200 data-active:bg-sidebar-accent! data-active:text-sidebar-accent-foreground! group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-0!",
                   isActive
-                    ? "bg-background/85 text-sidebar-accent-foreground shadow-sm ring-1 ring-sidebar-border/70"
-                    : "rounded-lg text-sidebar-foreground/72 hover:bg-background/55 hover:text-sidebar-accent-foreground"
+                    ? "bg-sidebar-accent text-sidebar-accent-foreground shadow-sm ring-1 ring-sidebar-border"
+                    : "rounded-lg text-sidebar-foreground/72 hover:bg-sidebar-accent/65 hover:text-sidebar-accent-foreground"
                 )}
               >
                 <Link to={route.path || "#"} className="flex items-center gap-2">
@@ -258,7 +260,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               <SidebarMenuItem key={route.title}>
                 {isCollapsed ? (
                   <Tooltip delayDuration={0}>
-                    <TooltipTrigger className="ml-1" asChild>{button}</TooltipTrigger>
+                    <TooltipTrigger asChild>{button}</TooltipTrigger>
                     <TooltipContent side="right" className="text-xs font-medium">
                       {route.title}
                     </TooltipContent>
@@ -280,7 +282,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton
                   size="lg"
-                  className="ml-1.5 h-10 rounded-lg hover:bg-sidebar-accent data-[state=open]:bg-sidebar-accent group-data-[collapsible=icon]:justify-center"
+                  className="ml-1.5 h-10 rounded-lg hover:bg-sidebar-accent/65 data-[state=open]:bg-sidebar-accent group-data-[collapsible=icon]:ml-0 group-data-[collapsible=icon]:justify-center"
                 >
                   {/* Avatar */}
                   <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-sidebar-primary/12 text-sidebar-primary text-xs font-semibold group-data-[collapsible=icon]:mx-auto">
@@ -322,6 +324,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </DropdownMenu>
           </SidebarMenuItem>
         </SidebarMenu>
+        <PoweredByFooter
+          variant="sidebar"
+          className="mx-1.5 mt-1 group-data-[collapsible=icon]:hidden"
+        />
       </SidebarFooter>
 
       <SidebarRail />

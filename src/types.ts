@@ -470,7 +470,6 @@ export interface DerivedTableProps {
 export interface ExtractionManagementState {
   activeTab: string;
   searchText: string;
-  fieldDialog: { open: boolean; item: StandardExtractionFieldResponse | null };
   templateDialog: { open: boolean; item: StandardExtractionTemplateResponse | null };
 }
 
@@ -566,31 +565,6 @@ export interface ProfileTableProps {
   entityType: 'organization' | 'tenant'
 }
 
-export interface CreateOrganizationModalProps {
-  children?: React.ReactNode
-  existingOrganization?: { id: string; name: string }
-}
-
-export interface OnboardingFormStepProps {
-  existingOrganization?: { id: string; name: string }
-  organizations: Organization[]
-  plans?: Plan[]
-  selectedOrgId: string
-  setIsCreatingPlan: (value: boolean) => void
-  handleToggleCreatingOrg: (value: boolean) => void
-  handleOrgChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
-  onSubmitForm: (e: React.FormEvent) => void
-  handleInlinePlanSuccess: (newPlan?: { id?: string } | null) => void
-  flags: {
-    isOrgsLoading: boolean
-    isPlansLoading: boolean
-    isCreatingOrg: boolean
-    isCreatingPlan: boolean
-    isPending: boolean
-    isFormReadyToSubmit: boolean
-  }
-}
-
 export interface OrganizationSectionProps {
   existingOrganization?: { id: string; name: string }
   organizations: Organization[]
@@ -624,7 +598,7 @@ export interface TenantActionsDropdownProps {
   setTenantAction: (action: { type: "deactivate" | "activate" | "block" | "unblock" | "expire" | "delete", tenant: Tenant } | null) => void;
 }
 
-export interface PlanFormDialogProps {
+export interface PlanFormProps {
   onSuccess?: (data?: Plan) => void
   onCancel?: () => void
   mode?: "create" | "edit"

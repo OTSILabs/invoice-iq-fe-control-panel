@@ -94,18 +94,18 @@ export function AssignPlanDialog({ tenant, onClose, onSuccess, orgId }: AssignPl
     <Dialog open={!!tenant} onOpenChange={(open) => {
       if (!open) onClose();
     }}>
-      <DialogContent className="sm:max-w-[425px]">
-        <form onSubmit={handleSubmit}>
-          <DialogHeader>
+      <DialogContent className="gap-0 overflow-hidden p-0 sm:max-w-[425px]">
+        <form onSubmit={handleSubmit} className="dialog-form">
+          <DialogHeader className="border-b border-border px-6 py-5">
             <DialogTitle>Assign Subscription Plan</DialogTitle>
             <DialogDescription>
               Assign or change the billing plan for tenant <strong>{tenant?.profile?.display_name || tenant?.slug || tenant?.id}</strong>.
             </DialogDescription>
           </DialogHeader>
 
-          <div className="py-4 space-y-4">
+          <div className="dialog-form-body">
             <div className="space-y-2 flex flex-col">
-              <Label htmlFor="plan-select">Select Plan <span className="text-red-500">*</span></Label>
+              <Label htmlFor="plan-select">Select Plan <span className="text-destructive">*</span></Label>
               {isPlansLoading ? (
                 <div className="flex items-center gap-2 text-xs text-muted-foreground h-9">
                   <Loader2 className="h-3.5 w-3.5 animate-spin" /> Loading plans...
@@ -133,7 +133,7 @@ export function AssignPlanDialog({ tenant, onClose, onSuccess, orgId }: AssignPl
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="reason-input">Reason for Assignment <span className="text-red-500">*</span></Label>
+              <Label htmlFor="reason-input">Reason for Assignment <span className="text-destructive">*</span></Label>
               <Input
                 id="reason-input"
                 placeholder="e.g. Upgraded to premium, renewal, etc."
@@ -143,9 +143,9 @@ export function AssignPlanDialog({ tenant, onClose, onSuccess, orgId }: AssignPl
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="dialog-field-grid">
               <div className="space-y-2">
-                <Label htmlFor="valid-from">Valid From <span className="text-red-500">*</span></Label>
+                <Label htmlFor="valid-from">Valid From <span className="text-destructive">*</span></Label>
                 <Input
                   id="valid-from"
                   type="date"
@@ -155,7 +155,7 @@ export function AssignPlanDialog({ tenant, onClose, onSuccess, orgId }: AssignPl
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="valid-to">Valid To <span className="text-red-500">*</span></Label>
+                <Label htmlFor="valid-to">Valid To <span className="text-destructive">*</span></Label>
                 <Input
                   id="valid-to"
                   type="date"
@@ -167,7 +167,7 @@ export function AssignPlanDialog({ tenant, onClose, onSuccess, orgId }: AssignPl
             </div>
           </div>
 
-          <DialogFooter>
+          <DialogFooter className="dialog-form-footer">
             <Button
               type="button"
               variant="outline"

@@ -80,11 +80,11 @@ export function CreateUserDialog({ open, onOpenChange, roles }: CreateUserDialog
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(onCreateUserSubmit)} className="flex flex-col max-h-[calc(85vh-5.5rem)]" noValidate>
+        <form onSubmit={handleSubmit(onCreateUserSubmit)} className="dialog-form" noValidate>
           <ScrollArea className="flex-1 min-h-0">
-            <div className="px-6 py-5 space-y-4">
+            <div className="dialog-form-body">
               {/* Full Name & Email — side by side */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="dialog-field-grid">
                 <InputField
                   id="full_name"
                   label="Full Name"
@@ -120,7 +120,7 @@ export function CreateUserDialog({ open, onOpenChange, roles }: CreateUserDialog
                 <button
                   type="button"
                   onClick={() => setShowPassword((prev) => !prev)}
-                  className="absolute right-3 top-[32px] text-muted-foreground hover:text-slate-600 focus:outline-none cursor-pointer z-10"
+                  className="absolute right-3 top-[32px] z-10 cursor-pointer text-muted-foreground transition-colors hover:text-foreground focus:outline-none"
                 >
                   {showPassword ? (
                     <EyeOff className="h-4 w-4" />
@@ -148,7 +148,7 @@ export function CreateUserDialog({ open, onOpenChange, roles }: CreateUserDialog
               </InputField>
 
               {/* Is Active Toggle */}
-              <div className="flex items-center justify-between rounded-lg border border-border bg-muted/30 px-4 py-3">
+              <div className="dialog-toggle-row">
                 <div>
                   <Label htmlFor="is_active" className="font-medium text-foreground">Is Active</Label>
                   <p className="text-xs text-muted-foreground mt-0.5">Toggle user account status</p>
@@ -170,7 +170,7 @@ export function CreateUserDialog({ open, onOpenChange, roles }: CreateUserDialog
           </ScrollArea>
 
           {/* Dialog Footer Actions */}
-          <DialogFooter className="gap-3 border-t border-border bg-popover px-6 py-4 sm:flex-row sm:items-center sm:justify-end">
+          <DialogFooter className="dialog-form-footer">
             <Button
               type="button"
               variant="outline"

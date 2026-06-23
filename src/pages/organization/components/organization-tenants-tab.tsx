@@ -4,7 +4,6 @@ import { Plus, Users } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { DataTable } from "@/components/ui/data-table"
 import type { Tenant, OrganizationTenantsTabProps, TenantActionType } from "@/types";
-import { CreateOrganizationModal } from "@/pages/organization/modals/create-organization-modal"
 import { TenantActionDialog } from "@/pages/tenants/tenant-actions/tenant-action-dialog"
 import { useOrganizationTenants } from "@/api/hooks/useOrganizations"
 import { getTenantColumns } from "@/columns"
@@ -33,11 +32,14 @@ export function OrganizationTenantsTab({ orgId, organizationName }: Organization
               <p className="text-[12px] text-muted-foreground">Manage tenants for this organization.</p>
             </div>
           </div>
-          <CreateOrganizationModal existingOrganization={{ id: orgId, name: organizationName }}>
-            <Button variant="outline" size="sm" className="text-xs shadow-none">
-              <Plus className="size-3.5 mr-1.5" /> Add Tenant
-            </Button>
-          </CreateOrganizationModal>
+          <Button
+            variant="outline"
+            size="sm"
+            className="text-xs shadow-none"
+            onClick={() => navigate(`/organizations/${orgId}/tenants/create`)}
+          >
+            <Plus className="size-3.5 mr-1.5" /> Add Tenant
+          </Button>
         </FilterBar>
 
         {/* Table */}
@@ -59,11 +61,14 @@ export function OrganizationTenantsTab({ orgId, organizationName }: Organization
                 description="Add a tenant to get started with this organization."
                 className="min-h-0 border-0 bg-transparent py-6"
                 actions={
-                  <CreateOrganizationModal existingOrganization={{ id: orgId, name: organizationName }}>
-                    <Button variant="outline" size="sm" className="text-xs shadow-none gap-1">
-                      <Plus className="h-3.5 w-3.5" /> Add tenant
-                    </Button>
-                  </CreateOrganizationModal>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="text-xs shadow-none gap-1"
+                    onClick={() => navigate(`/organizations/${orgId}/tenants/create`)}
+                  >
+                    <Plus className="h-3.5 w-3.5" /> Add tenant
+                  </Button>
                 }
               />
             </div>

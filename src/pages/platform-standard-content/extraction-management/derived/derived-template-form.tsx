@@ -89,7 +89,7 @@ export function DerivedTemplateForm({ mode, template, onCancel, onSuccess }: Der
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6" noValidate>
-      <Card className="rounded-xl border border-border shadow-xs max-w-2xl bg-white p-6">
+      <Card className="surface-card max-w-2xl p-6">
         <CardContent className="space-y-4 p-0">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Field>
@@ -149,7 +149,7 @@ export function DerivedTemplateForm({ mode, template, onCancel, onSuccess }: Der
           </Field>
         </CardContent>
 
-        <CardFooter className="flex items-center justify-end gap-3 mt-6 border-t pt-4 px-0 pb-0 bg-transparent">
+        <CardFooter className="mt-6 flex items-center justify-end gap-3 border-t border-border/45 bg-transparent px-0 pt-4 pb-0">
           <Button
             type="button"
             variant="outline"

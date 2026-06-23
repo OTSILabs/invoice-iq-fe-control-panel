@@ -8,7 +8,6 @@ import { Loader2, Users, Building, ChevronDown, Plus } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import type { Tenant, TenantActionType } from "@/types"
 import { Button } from "@/components/ui/button"
-import { CreateOrganizationModal } from "@/pages/organization/modals/create-organization-modal"
 import { TenantActionDialog } from "./tenant-actions/tenant-action-dialog"
 import { getTenantColumns } from "@/columns"
 import { EmptyState, FilterBar, PageShell } from "@/components/invoice-ui/design-system"
@@ -164,11 +163,14 @@ export function TenantsPage() {
             </div>
 
             {/* Add Tenant Button */}
-            <CreateOrganizationModal existingOrganization={activeOrgId ? { id: activeOrgId, name: selectedOrg?.name || "" } : undefined}>
-              <Button size="sm" variant="outline" className="h-9 text-xs font-semibold cursor-pointer shadow-sm inline-flex items-center gap-1.5 border-border">
-                <Plus className="h-3.5 w-3.5" /> Add Tenant
-              </Button>
-            </CreateOrganizationModal>
+            <Button
+              size="sm"
+              variant="outline"
+              className="h-9 text-xs font-semibold cursor-pointer shadow-sm inline-flex items-center gap-1.5 border-border"
+              onClick={() => navigate(activeOrgId ? `/organizations/${activeOrgId}/tenants/create` : "/organizations/create")}
+            >
+              <Plus className="h-3.5 w-3.5" /> Add Tenant
+            </Button>
           </div>
         </FilterBar>
 

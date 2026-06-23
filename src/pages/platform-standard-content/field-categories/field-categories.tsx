@@ -10,8 +10,6 @@ import { cn } from "@/lib/utils"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { SearchInput } from "@/components/search-input"
 import { useFieldCategories } from "@/api/hooks/useFieldCategories"
-import type { FieldCategoryResponse } from "@/types"
-import { CategoryDialog } from "./models/CategoryDialog"
 import { getFieldCategoriesColumns } from "@/columns"
 import { FilterBar, PageShell } from "@/components/invoice-ui/design-system"
 
@@ -19,24 +17,6 @@ export function FieldCategories() {
   const navigate = useNavigate()
   const { data: categories = [], isLoading, isError, refetch, isFetching } = useFieldCategories()
   const [searchText, setSearchText] = useState("")
-  const [dialogState, setDialogState] = useState<{
-    open: boolean;
-    mode: "create" | "edit";
-    category: FieldCategoryResponse | null;
-  }>({
-    open: false,
-    mode: "create",
-    category: null,
-  })
-
-  const handleOpenCreate = () => {
-    setDialogState({ open: true, mode: "create", category: null })
-  }
-
-  const handleOpenEdit = (category: FieldCategoryResponse) => {
-    setDialogState({ open: true, mode: "edit", category })
-  }
-
   const handleRefetch = async () => {
     await refetch()
     toast.success("Field categories refreshed")
@@ -49,7 +29,7 @@ export function FieldCategories() {
     })
   }, [categories, searchText])
 
-  const columns = useMemo(() => getFieldCategoriesColumns(navigate, handleOpenEdit), [navigate])
+  const columns = useMemo(() => getFieldCategoriesColumns(navigate, (category) => navigate(`/platform-standard-content/field-categories/${category.field_category_code}/edit`)), [navigate])
 
   if (isLoading) return (
     <PageShell className="min-h-[60vh] items-center justify-center">
@@ -81,7 +61,7 @@ export function FieldCategories() {
       >
         <Button
           size="sm"
-          onClick={handleOpenCreate}
+          onClick={() => navigate("/platform-standard-content/field-categories/create")}
           className="w-full sm:w-auto font-medium px-3 shadow-none gap-1.5 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px cursor-pointer"
           disabled={isFetching}
         >
@@ -140,7 +120,7 @@ export function FieldCategories() {
                 </p>
                 {categories.length === 0 && (
                   <Button
-                    onClick={handleOpenCreate}
+                    onClick={() => navigate("/platform-standard-content/field-categories/create")}
                     className="mt-4 gap-1.5 rounded-lg px-4 py-2 text-xs font-semibold cursor-pointer"
                     disabled={isFetching}
                   >
@@ -152,15 +132,6 @@ export function FieldCategories() {
           />
         </div>
       </div>
-
-      {dialogState.open && (dialogState.mode === "create" || dialogState.mode === "edit") && (
-        <CategoryDialog
-          key={dialogState.category ? `edit-${dialogState.category.field_category_code}` : "create"}
-          open={dialogState.open}
-          onOpenChange={(open) => setDialogState((s) => ({ ...s, open }))}
-          category={dialogState.category}
-        />
-      )}
     </PageShell>
   )
 }

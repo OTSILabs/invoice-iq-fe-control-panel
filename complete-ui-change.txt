@@ -1,0 +1,148 @@
+You are a Senior Staff Product Designer and Senior Frontend Engineer specializing in shadcn/ui, Tailwind CSS v4, SaaS admin dashboards, and enterprise UX.
+
+Analyze the entire application and perform a complete visual design system refactor.
+
+Current problems:
+
+* UI feels flat and outdated.
+* Excessive borders everywhere.
+* Insufficient visual hierarchy.
+* Tables dominate the page.
+* Components appear cramped.
+* Spacing is inconsistent.
+* Sidebar feels disconnected from content.
+* Cards look like containers instead of surfaces.
+* Screens resemble generated CRUD pages rather than a premium SaaS product.
+* Typography lacks hierarchy.
+* Actions do not stand out.
+
+Design goals:
+
+* Modern SaaS dashboard quality comparable to Linear, Stripe Dashboard, Vercel, Notion, Clerk, Resend, or Supabase.
+* Clean enterprise appearance.
+* Professional and trustworthy.
+* High information density without feeling crowded.
+* Consistent component language across all screens.
+* Excellent light and dark mode support.
+
+Global requirements:
+
+PAGE LAYOUT
+
+* Create a reusable PageShell component.
+* Use max-width constraints.
+* Add generous horizontal and vertical breathing room.
+* Standardize page spacing across all modules.
+* Use section spacing instead of excessive borders.
+
+SURFACES
+
+* Convert flat white containers into layered surfaces.
+* Use cards as visual grouping mechanisms.
+* Prefer subtle shadows and reduced border contrast.
+* Remove decorative top borders and heavy dividers.
+
+TYPOGRAPHY
+
+* Establish consistent hierarchy:
+
+  * Page title
+  * Section title
+  * Card title
+  * Body text
+  * Caption text
+* Improve readability and scanning.
+* Use muted text correctly.
+
+TABLES
+
+* Refactor all data tables.
+* Improve row height.
+* Improve header styling.
+* Add hover feedback.
+* Add empty states.
+* Improve pagination alignment.
+* Improve action menu visibility.
+* Ensure tables feel modern and lightweight.
+
+FORMS
+
+* Increase spacing between fields.
+* Improve grouping.
+* Improve labels and helper text.
+* Ensure consistent field sizing.
+
+SIDEBAR
+
+* Modernize navigation.
+* Improve active states.
+* Improve spacing and icon alignment.
+* Add better visual hierarchy between groups.
+* Sidebar should feel like part of the product, not a separate panel.
+
+BUTTONS
+
+* Standardize variants.
+* Standardize heights.
+* Improve visual weight.
+* Ensure primary actions are obvious.
+
+TABS
+
+* Redesign tabs using modern SaaS patterns.
+* Improve selected state visibility.
+* Reduce visual clutter.
+
+STATUS BADGES
+
+* Standardize all badges.
+* Use semantic colors.
+* Improve readability.
+
+IMPLEMENTATION REQUIREMENTS
+
+Create reusable primitives:
+
+* PageShell
+* PageHeader
+* SectionCard
+* DataTable
+* EmptyState
+* StatCard
+* FilterBar
+
+Create reusable Tailwind utility patterns:
+
+* page-container
+* page-section
+* surface-card
+* table-container
+* filter-toolbar
+
+Remove duplicated styling throughout the application.
+
+Refactor screens incrementally:
+
+1. Organizations
+2. Plans
+3. Tenants
+4. Users
+5. ERP Settings
+6. Platform Content
+7. All remaining CRUD screens
+
+For every screen:
+
+* Before changing code, identify visual issues.
+* Apply the design system.
+* Keep functionality unchanged.
+* Improve only UX, layout, spacing, hierarchy, accessibility, and visual polish.
+
+Output:
+
+* Design system structure.
+* New reusable components.
+* Refactored Tailwind classes.
+* Updated layouts.
+* Specific code changes made per screen.
+* Explanation of design decisions.

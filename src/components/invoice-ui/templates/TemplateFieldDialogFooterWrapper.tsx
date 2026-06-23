@@ -5,5 +5,5 @@ export default function TemplateFieldDialogFooterWrapper({
 }: {
   children: React.ReactNode;
 }) {
-  return <DialogFooter className="relative z-10 border-t bg-card px-5 py-3.5">{children}</DialogFooter>;
+  return <DialogFooter className="dialog-form-footer relative z-10 sm:justify-between">{children}</DialogFooter>;
 }

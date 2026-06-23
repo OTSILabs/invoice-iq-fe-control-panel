@@ -10,8 +10,6 @@ import { cn } from "@/lib/utils"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { SearchInput } from "@/components/search-input"
 import { useReferenceLists, useReferenceListPublications } from "@/api/hooks/useReferenceLists"
-import type { ReferenceListRegistryResponse } from "@/types"
-import { RegistryDialog } from "./components/RegistryDialog"
 import { getReferenceListsColumns } from "@/columns"
 import { FilterBar, PageShell } from "@/components/invoice-ui/design-system"
 
@@ -25,23 +23,6 @@ export function ReferenceLists() {
   }
 
   const [searchText, setSearchText] = useState("")
-  const [dialogState, setDialogState] = useState<{
-    open: boolean;
-    mode: "create" | "edit";
-    registry: ReferenceListRegistryResponse | null;
-  }>({
-    open: false,
-    mode: "create",
-    registry: null,
-  })
-
-  const handleOpenCreate = () => {
-    setDialogState({ open: true, mode: "create", registry: null })
-  }
-
-  const handleOpenEdit = (registry: ReferenceListRegistryResponse) => {
-    setDialogState({ open: true, mode: "edit", registry })
-  }
 
   const handleRefetch = async () => {
     try {
@@ -63,7 +44,10 @@ export function ReferenceLists() {
     )
   }, [registries, searchText])
 
-  const columns = useMemo(() => getReferenceListsColumns(navigate, handleOpenEdit), [navigate])
+  const columns = useMemo(
+    () => getReferenceListsColumns(navigate, (registry) => navigate(`/platform-standard-content/reference-lists/${registry.registry_key}/edit`)),
+    [navigate]
+  )
 
   if (isLoading) return (
     <PageShell className="min-h-[60vh] items-center justify-center">
@@ -95,7 +79,7 @@ export function ReferenceLists() {
       >
         <Button
           size="sm"
-          onClick={handleOpenCreate}
+          onClick={() => navigate("/platform-standard-content/reference-lists/create")}
           className="w-full sm:w-auto font-medium px-3 shadow-none gap-1.5 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px cursor-pointer"
           disabled={isFetching}
         >
@@ -154,7 +138,7 @@ export function ReferenceLists() {
                 </p>
                 {registries.length === 0 && (
                   <Button
-                    onClick={handleOpenCreate}
+                    onClick={() => navigate("/platform-standard-content/reference-lists/create")}
                     className="mt-4 gap-1.5 rounded-lg px-4 py-2 text-xs font-semibold cursor-pointer"
                     disabled={isFetching}
                   >
@@ -166,15 +150,6 @@ export function ReferenceLists() {
           />
         </div>
       </div>
-
-      {dialogState.open && (dialogState.mode === "create" || dialogState.mode === "edit") && (
-        <RegistryDialog
-          key={dialogState.registry ? `edit-${dialogState.registry.registry_key}` : "create"}
-          open={dialogState.open}
-          onOpenChange={(open) => setDialogState((s) => ({ ...s, open }))}
-          registry={dialogState.registry}
-        />
-      )}
     </PageShell>
   )
 }

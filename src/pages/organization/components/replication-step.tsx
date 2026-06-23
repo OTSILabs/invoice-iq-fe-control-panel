@@ -1,8 +1,8 @@
-import type { ReplicationStepProps } from "@/types";
+import { ArrowRight, Loader2, RefreshCw } from "lucide-react"
+
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
-import { DialogTitle, DialogDescription } from "@/components/ui/dialog"
-import { Loader2, RefreshCw, ArrowRight } from "lucide-react"
+import type { ReplicationStepProps } from "@/types"
 
 const replicationOptions = [
   { key: "extraction_fields", label: "Extraction Fields" },
@@ -12,8 +12,6 @@ const replicationOptions = [
   { key: "tenant_profiles", label: "Tenant Profiles" },
   { key: "organisation_profiles", label: "Organisation Profiles" },
 ] as const
-
-
 
 export function ReplicationStep({
   createdTenant,
@@ -25,34 +23,33 @@ export function ReplicationStep({
 }: ReplicationStepProps) {
   return (
     <>
-      <div className="flex flex-col items-center text-center space-y-3 pt-2">
-        <div className="flex size-14 items-center justify-center rounded-full border border-blue-500/20 bg-blue-500/10 text-blue-600 shadow-sm animate-pulse duration-1500">
-          <RefreshCw className="size-6 text-blue-600 animate-in zoom-in duration-300" />
+      <div className="flex flex-col items-center space-y-3 pt-2 text-center">
+        <div className="flex size-14 animate-pulse items-center justify-center rounded-full border border-primary/20 bg-primary/10 text-primary shadow-sm duration-1500">
+          <RefreshCw className="size-6 animate-in text-primary duration-300 zoom-in" />
         </div>
         <div className="space-y-1">
-          <DialogTitle className="text-lg font-bold tracking-tight text-foreground">
-            Confirm Replication
-          </DialogTitle>
-          <DialogDescription className="text-xs text-muted-foreground">
-            Do you want to replicate master data for tenant <span className="font-semibold text-foreground">{createdTenant.slug}</span> now?
-          </DialogDescription>
+          <h2 className="text-lg font-bold tracking-tight text-foreground">Confirm Replication</h2>
+          <p className="text-xs text-muted-foreground">
+            Do you want to replicate master data for tenant{" "}
+            <span className="font-semibold text-foreground">{createdTenant.slug}</span> now?
+          </p>
         </div>
       </div>
 
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <span className="text-[11px] font-bold tracking-wider text-muted-foreground uppercase">
+          <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
             Replication Items
           </span>
-          <span className="text-[10px] font-medium text-emerald-600 bg-emerald-500/10 px-2 py-0.5 rounded-full">
+          <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-medium text-emerald-600">
             Recommended
           </span>
         </div>
-        <div className="grid gap-2 rounded-lg border border-border bg-background p-4 grid-cols-1">
+        <div className="grid grid-cols-1 gap-2 rounded-lg border border-border bg-background p-4">
           {replicationOptions.map((option) => (
             <div
               key={option.key}
-              className="flex items-center gap-2.5 rounded-md p-1.5 hover:bg-background/50 transition-colors"
+              className="flex items-center gap-2.5 rounded-md p-1.5 transition-colors hover:bg-background/50"
             >
               <Checkbox
                 id={`replicate-${option.key}`}
@@ -68,7 +65,7 @@ export function ReplicationStep({
               />
               <label
                 htmlFor={`replicate-${option.key}`}
-                className="text-xs font-medium leading-none text-foreground/80 cursor-pointer select-none"
+                className="cursor-pointer select-none text-xs font-medium leading-none text-foreground/80"
               >
                 {option.label}
               </label>
@@ -77,12 +74,12 @@ export function ReplicationStep({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 pt-2">
+      <div className="grid grid-cols-1 gap-3 pt-2 sm:grid-cols-2">
         <Button
           type="button"
           variant="outline"
           size="sm"
-          className="w-full font-medium flex items-center justify-center gap-1.5 cursor-pointer"
+          className="flex w-full cursor-pointer items-center justify-center gap-1.5 font-medium"
           disabled={isReplicating}
           onClick={onSkip}
         >
@@ -92,7 +89,7 @@ export function ReplicationStep({
         <Button
           type="button"
           size="sm"
-          className="w-full font-medium bg-primary hover:bg-primary/90 text-white flex items-center justify-center gap-1.5 cursor-pointer"
+          className="flex w-full cursor-pointer items-center justify-center gap-1.5 font-medium"
           disabled={isReplicating}
           onClick={onReplicate}
         >

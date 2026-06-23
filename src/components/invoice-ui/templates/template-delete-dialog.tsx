@@ -40,7 +40,7 @@ export function TemplateDeleteDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <DialogFooter>
+        <DialogFooter className="dialog-form-footer">
           <DialogClose asChild>
             <Button type="button" variant="outline" disabled={isPending}>
               Cancel

@@ -8,7 +8,6 @@ import { DataTable } from "@/components/ui/data-table"
 import { SearchInput } from "@/components/search-input"
 import { useNormalizationRules, useDeleteNormalizationRuleMutation } from "@/api/hooks/normalization-rules"
 import type { NormalizationRule, DeleteNormalizationRuleDialogProps } from "@/types";
-import { NormalizationRuleDialog } from "./modals/normalization-rule-dialog"
 import { cn } from "@/lib/utils"
 import { getNormalizationRuleColumns } from "@/columns"
 import {
@@ -25,8 +24,6 @@ export function NormalizationRules() {
   const navigate = useNavigate()
   const { data: rules = [], isLoading, refetch, isFetching } = useNormalizationRules()
   const [searchText, setSearchText] = useState("")
-  const [createOpen, setCreateOpen] = useState(false)
-  const [editingRule, setEditingRule] = useState<NormalizationRule | null>(null)
   const [deletingRule, setDeletingRule] = useState<NormalizationRule | null>(null)
 
   const { mutate: deleteRule, isPending: isDeleting } = useDeleteNormalizationRuleMutation()
@@ -62,7 +59,10 @@ export function NormalizationRules() {
     })
   }
 
-  const columns = useMemo(() => getNormalizationRuleColumns(navigate, setEditingRule, setDeletingRule), [navigate])
+  const columns = useMemo(
+    () => getNormalizationRuleColumns(navigate, (rule) => navigate(`/platform-standard-content/normalization-rules/${rule.rule_code}/edit`), setDeletingRule),
+    [navigate]
+  )
 
   const filteredData = useMemo(() => {
     const q = searchText.trim().toLowerCase()
@@ -82,7 +82,7 @@ export function NormalizationRules() {
       >
         <Button
           size="sm"
-          onClick={() => setCreateOpen(true)}
+          onClick={() => navigate("/platform-standard-content/normalization-rules/create")}
           className="w-full gap-1.5 px-3 sm:w-auto cursor-pointer"
         >
           <Plus className="size-4" /> Create Normalization Rule
@@ -132,31 +132,12 @@ export function NormalizationRules() {
               <NormalizationRulesEmptyState
                 searchText={searchText}
                 rulesLength={rules.length}
-                onCreateClick={() => setCreateOpen(true)}
+                onCreateClick={() => navigate("/platform-standard-content/normalization-rules/create")}
               />
             }
           />
         </div>
       </div>
-
-      {/* Creation Dialog */}
-      {createOpen && (
-        <NormalizationRuleDialog
-          open={createOpen}
-          onOpenChange={setCreateOpen}
-        />
-      )}
-
-      {/* Edition Dialog */}
-      {editingRule && (
-        <NormalizationRuleDialog
-          open={!!editingRule}
-          onOpenChange={(open) => {
-            if (!open) setEditingRule(null)
-          }}
-          normalizationRule={editingRule}
-        />
-      )}
 
       {/* Deletion confirmation dialog */}
       <DeleteNormalizationRuleDialog
@@ -228,7 +209,7 @@ function DeleteNormalizationRuleDialog({
             Deleting this normalization rule is permanent and cannot be undone.
           </p>
         </div>
-        <DialogFooter>
+        <DialogFooter className="dialog-form-footer">
           <Button
             variant="outline"
             size="sm"
@@ -239,7 +220,8 @@ function DeleteNormalizationRuleDialog({
             Cancel
           </Button>
           <Button
-            className="bg-red-600 hover:bg-red-700 text-white border-0 shadow-sm cursor-pointer gap-1.5"
+            variant="destructive"
+            className="cursor-pointer gap-1.5"
             size="sm"
             onClick={onConfirm}
             disabled={isDeleting}

@@ -13,7 +13,7 @@ import { cn, getInitials } from "@/lib/utils"
 import { MaskedValue } from "@/components/ui/copyable-field"
 import { EditableValueCell } from "@/pages/organization/components/editable-value-cell"
 import { EditableValueCell as ProfileEditableValueCell } from "@/pages/organization/components/profile-editable-value-cell"
-import { TenantActionsDropdown } from "@/pages/organization/modals/tenant-actions-dropdown"
+import { TenantActionsDropdown } from "@/pages/organization/components/tenant-actions-dropdown"
 import {
   MoreVertical,
   Eye,
@@ -48,7 +48,7 @@ const STATUS_CFG: Record<StatusKey, { label: string; dot: string; badge: string 
   inactive: { label: "Inactive", dot: "bg-muted-foreground", badge: "bg-muted text-muted-foreground border-border" },
   blocked: { label: "Blocked", dot: "bg-red-500", badge: "bg-red-50 text-red-700 border-red-300 dark:bg-red-950 dark:text-red-400 dark:border-red-800" },
   expired: { label: "Expired", dot: "bg-rose-500", badge: "bg-rose-50 text-rose-700 border-rose-300 dark:bg-rose-950 dark:text-rose-400 dark:border-rose-800" },
-  pending: { label: "Pending", dot: "bg-blue-500", badge: "bg-blue-50 text-blue-700 border-blue-300 dark:bg-blue-950 dark:text-blue-400 dark:border-blue-800" },
+  pending: { label: "Pending", dot: "bg-primary", badge: "bg-primary/8 text-primary border-primary/25" },
   warning: { label: "Warning", dot: "bg-amber-500", badge: "bg-amber-50 text-amber-700 border-amber-300 dark:bg-amber-950/30 dark:text-amber-400 dark:border-amber-900/40" },
 }
 
@@ -635,7 +635,7 @@ export const getFieldsTableColumns = (
     cell: ({ row }) => {
       const isHeader = row.original.header_item === "header";
       return (
-        <Badge variant={isHeader ? "secondary" : "outline"} className={cn("text-[9px] font-semibold px-2 py-0.5 capitalize", isHeader ? "bg-slate-50 text-slate-700 border-slate-200" : "bg-blue-50/50 text-blue-700 border-blue-200")}>
+        <Badge variant={isHeader ? "secondary" : "outline"} className={cn("text-[9px] font-semibold px-2 py-0.5 capitalize", isHeader ? "bg-muted text-foreground border-border" : "bg-primary/8 text-primary border-primary/25")}>
           {row.original.header_item}
         </Badge>
       );

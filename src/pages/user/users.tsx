@@ -8,9 +8,6 @@ import { cn } from "@/lib/utils"
 import { toast } from "sonner"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { usePlatformUsers, usePlatformRoles } from "@/api/hooks/useUsers"
-import type { PlatformUser } from "@/types"
-import { CreateUserDialog } from "./modals/create-user-dialog"
-import { EditUserDialog } from "./modals/edit-user-dialog"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { SearchInput } from "@/components/search-input"
 import { getUsersColumns, getRolesList } from "@/columns"
@@ -26,8 +23,6 @@ export function Users() {
     status: "all",
     roleFilter: "all",
   })
-  const [isCreateOpen, setIsCreateOpen] = useState(false)
-  const [editingUser, setEditingUser] = useState<PlatformUser | null>(null)
 
   const roleCounts = useMemo(() => {
     const counts: Record<string, number> = { all: users.length }
@@ -41,15 +36,11 @@ export function Users() {
     return counts
   }, [users, roles])
 
-  const handleOpenEditDialog = (u: PlatformUser) => {
-    setEditingUser(u)
-  }
-
   const handleRefetch = async () => {
     await Promise.all([refetchUsers(), refetchRoles()])
     toast.success("Users refreshed")
   }
-  const columns = useMemo(() => getUsersColumns(navigate, handleOpenEditDialog), [navigate])
+  const columns = useMemo(() => getUsersColumns(navigate, (user) => navigate(`/users/${user.id}/edit`)), [navigate])
   const filteredUsers = useMemo(() => {
     const q = filters.searchText.trim().toLowerCase()
     return users.filter((u) => {
@@ -94,7 +85,7 @@ export function Users() {
       >
         <Button
           size="sm"
-          onClick={() => setIsCreateOpen(true)}
+          onClick={() => navigate("/users/create")}
           className="w-full sm:w-auto font-medium px-3 shadow-none gap-1.5 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px cursor-pointer"
           disabled={isFetchingUsers}
         >
@@ -171,7 +162,7 @@ export function Users() {
                   description={filters.searchText || filters.status !== "all" || filters.roleFilter !== "all" ? "We couldn't find any users matching your search or filters. Try adjusting your search query or filters." : "Add your first platform user to manage system access accounts and user permissions."}
                   className="min-h-0 border-0 bg-transparent py-6"
                   actions={users.length === 0 ? (
-                    <Button onClick={() => setIsCreateOpen(true)} size="sm" disabled={isFetchingUsers}>
+                    <Button onClick={() => navigate("/users/create")} size="sm" disabled={isFetchingUsers}>
                       <Plus className="size-3.5" /> Add User
                     </Button>
                   ) : undefined}
@@ -182,12 +173,6 @@ export function Users() {
         </div>
       </div>
 
-      {isCreateOpen && (
-        <CreateUserDialog open={isCreateOpen} onOpenChange={setIsCreateOpen} roles={roles} />
-      )}
-      {editingUser && (
-        <EditUserDialog user={editingUser} open={true} onOpenChange={(open) => { if (!open) setEditingUser(null) }} />
-      )}
     </PageShell>
   )
 }

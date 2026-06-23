@@ -97,9 +97,9 @@ export function ChangePasswordDialog({ open, onOpenChange }: ChangePasswordDialo
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(onSubmitPassword)} className="flex flex-col max-h-[calc(85vh-5.5rem)]" noValidate>
+        <form onSubmit={handleSubmit(onSubmitPassword)} className="dialog-form" noValidate>
           <ScrollArea className="flex-1 min-h-0">
-            <div className="px-6 py-5 space-y-4">
+            <div className="dialog-form-body">
               {/* Current Password */}
               <div className="space-y-1.5 w-full">
                 <Label htmlFor="current_password" className="text-sm font-medium text-foreground">
@@ -116,7 +116,7 @@ export function ChangePasswordDialog({ open, onOpenChange }: ChangePasswordDialo
                   <button
                     type="button"
                     onClick={() => setShowCurrent(!showCurrent)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none cursor-pointer"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-muted-foreground transition-colors hover:text-foreground focus:outline-none"
                   >
                     {showCurrent ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
                   </button>
@@ -144,7 +144,7 @@ export function ChangePasswordDialog({ open, onOpenChange }: ChangePasswordDialo
                   <button
                     type="button"
                     onClick={() => setShowNew(!showNew)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none cursor-pointer"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-muted-foreground transition-colors hover:text-foreground focus:outline-none"
                   >
                     {showNew ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
                   </button>
@@ -172,7 +172,7 @@ export function ChangePasswordDialog({ open, onOpenChange }: ChangePasswordDialo
                   <button
                     type="button"
                     onClick={() => setShowConfirm(!showConfirm)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none cursor-pointer"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-muted-foreground transition-colors hover:text-foreground focus:outline-none"
                   >
                     {showConfirm ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
                   </button>
@@ -192,9 +192,9 @@ export function ChangePasswordDialog({ open, onOpenChange }: ChangePasswordDialo
                     {checks.length ? (
                       <Check className="size-3.5 text-emerald-500 stroke-[3px]" />
                     ) : (
-                      <span className="h-1.5 w-1.5 bg-slate-300 rounded-full ml-1.5 mr-1.5" />
+                      <span className="ml-1.5 mr-1.5 h-1.5 w-1.5 rounded-full bg-muted-foreground/35" />
                     )}
-                    <span className={checks.length ? "text-slate-500 font-medium" : "text-slate-400"}>
+                    <span className={checks.length ? "font-medium text-muted-foreground" : "text-muted-foreground/65"}>
                       Minimum 8 characters
                     </span>
                   </li>
@@ -202,9 +202,9 @@ export function ChangePasswordDialog({ open, onOpenChange }: ChangePasswordDialo
                     {checks.uppercase ? (
                       <Check className="size-3.5 text-emerald-500 stroke-[3px]" />
                     ) : (
-                      <span className="h-1.5 w-1.5 bg-slate-300 rounded-full ml-1.5 mr-1.5" />
+                      <span className="ml-1.5 mr-1.5 h-1.5 w-1.5 rounded-full bg-muted-foreground/35" />
                     )}
-                    <span className={checks.uppercase ? "text-slate-500 font-medium" : "text-slate-400"}>
+                    <span className={checks.uppercase ? "font-medium text-muted-foreground" : "text-muted-foreground/65"}>
                       One uppercase letter
                     </span>
                   </li>
@@ -212,9 +212,9 @@ export function ChangePasswordDialog({ open, onOpenChange }: ChangePasswordDialo
                     {checks.number ? (
                       <Check className="size-3.5 text-emerald-500 stroke-[3px]" />
                     ) : (
-                      <span className="h-1.5 w-1.5 bg-slate-300 rounded-full ml-1.5 mr-1.5" />
+                      <span className="ml-1.5 mr-1.5 h-1.5 w-1.5 rounded-full bg-muted-foreground/35" />
                     )}
-                    <span className={checks.number ? "text-slate-500 font-medium" : "text-slate-400"}>
+                    <span className={checks.number ? "font-medium text-muted-foreground" : "text-muted-foreground/65"}>
                       One number
                     </span>
                   </li>
@@ -222,9 +222,9 @@ export function ChangePasswordDialog({ open, onOpenChange }: ChangePasswordDialo
                     {checks.special ? (
                       <Check className="size-3.5 text-emerald-500 stroke-[3px]" />
                     ) : (
-                      <span className="h-1.5 w-1.5 bg-slate-300 rounded-full ml-1.5 mr-1.5" />
+                      <span className="ml-1.5 mr-1.5 h-1.5 w-1.5 rounded-full bg-muted-foreground/35" />
                     )}
-                    <span className={checks.special ? "text-slate-500 font-medium" : "text-slate-400"}>
+                    <span className={checks.special ? "font-medium text-muted-foreground" : "text-muted-foreground/65"}>
                       One special character
                     </span>
                   </li>
@@ -234,7 +234,7 @@ export function ChangePasswordDialog({ open, onOpenChange }: ChangePasswordDialo
           </ScrollArea>
 
           {/* Dialog Footer Actions */}
-          <DialogFooter className="gap-3 border-t border-border bg-popover px-6 py-4 sm:flex-row sm:items-center sm:justify-end">
+          <DialogFooter className="dialog-form-footer">
             <Button
               type="button"
               variant="outline"

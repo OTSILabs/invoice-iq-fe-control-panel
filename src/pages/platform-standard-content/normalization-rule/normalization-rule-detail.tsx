@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { useNormalizationRule, useDeleteNormalizationRuleMutation } from "@/api/hooks/normalization-rules"
 import { ActiveStatusBadge } from "@/columns"
+import { PageHeader } from "@/components/layout/PageHeader"
+import { PageShell } from "@/components/invoice-ui/design-system"
 import { toast } from "sonner"
 import {
   Dialog,
@@ -61,15 +63,15 @@ export function NormalizationRuleDetail() {
 
   if (isLoading) {
     return (
-      <div className="flex h-96 items-center justify-center">
+      <PageShell className="min-h-[60vh] items-center justify-center">
         <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-      </div>
+      </PageShell>
     )
   }
 
   if (isError || !rule) {
     return (
-      <div className="flex h-96 flex-col items-center justify-center gap-4 animate-in fade-in duration-300">
+      <PageShell className="min-h-[60vh] items-center justify-center">
         <p className="text-sm text-muted-foreground">Failed to load normalization rule details.</p>
         <Button
           variant="outline"
@@ -78,19 +80,17 @@ export function NormalizationRuleDetail() {
         >
           Back to Normalization Rules
         </Button>
-      </div>
+      </PageShell>
     )
   }
 
   return (
-    <div className="flex w-full flex-col gap-6 pb-12 animate-in fade-in duration-300">
+    <PageShell>
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="space-y-1">
-          <h1 className="text-lg font-semibold tracking-tight text-foreground">Normalization Rule Details</h1>
-          <p className="text-xs text-muted-foreground">View details, target scopes, and schema configurations for this normalization rule</p>
-        </div>
-        <div className="flex items-center gap-2">
+      <PageHeader
+        title="Normalization Rule Details"
+        description="View details, target scopes, and schema configurations for this normalization rule."
+      >
           <Button
             variant="outline"
             size="sm"
@@ -107,21 +107,17 @@ export function NormalizationRuleDetail() {
           >
             <Trash2 className="h-4 w-4" /> Delete
           </Button>
-        </div>
-      </div>
+      </PageHeader>
 
       {/* Details Card */}
-      <div className="w-full">
-        <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm flex flex-col justify-between">
-          <div className="h-[3px] w-full bg-gradient-to-r from-primary to-chart-1" />
-          
-          <div className="flex flex-col gap-3 px-5 py-4 border-b border-border">
+      <div className="surface-card w-full overflow-hidden">
+          <div className="flex flex-col gap-3 border-b border-border/45 px-5 py-4">
             <div className="flex items-center gap-3">
-              <div className="h-10 w-10 flex-shrink-0 rounded-lg bg-primary text-primary-foreground flex items-center justify-center">
+              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary ring-1 ring-primary/15">
                 <ShieldCheck className="h-5 w-5" />
               </div>
               <div className="min-w-0">
-                <p className="text-sm font-medium text-foreground leading-snug truncate" title={rule.display_label}>
+                <p className="truncate text-sm font-semibold leading-snug text-foreground" title={rule.display_label}>
                   {rule.display_label}
                 </p>
                 <p className="font-mono text-xs text-muted-foreground mt-0.5 truncate">
@@ -131,7 +127,7 @@ export function NormalizationRuleDetail() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-border/20 dark:bg-border/10 overflow-hidden">
+          <div className="grid grid-cols-1 gap-3 p-4 sm:grid-cols-2 lg:grid-cols-3">
             {[
               {
                 label: "Code",
@@ -148,7 +144,7 @@ export function NormalizationRuleDetail() {
               {
                 label: "Rule Mode",
                 content: (
-                  <Badge variant="outline" className="text-xxs px-2 py-0.5 font-mono uppercase bg-slate-50 border-slate-200">
+                  <Badge variant="outline" className="text-xxs px-2 py-0.5 font-mono uppercase">
                     {rule.rule_mode}
                   </Badge>
                 )
@@ -188,21 +184,21 @@ export function NormalizationRuleDetail() {
                 content: <p className="text-xs font-semibold text-foreground">{formatDate(rule.updated_at)}</p>
               }
             ].map((item) => (
-              <div key={item.label} className="bg-card px-5 py-4 hover:bg-muted/10 transition-colors flex flex-col justify-center">
-                <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1">{item.label}</p>
+              <div key={item.label} className="flex min-h-20 flex-col justify-center rounded-lg bg-muted/30 px-4 py-3 transition-colors hover:bg-muted/45">
+                <p className="mb-1 text-xs font-semibold text-muted-foreground">{item.label}</p>
                 {item.content}
               </div>
             ))}
           </div>
 
-          <div className="bg-card px-5 py-4 border-t border-border flex flex-col gap-1.5">
+          <div className="flex flex-col gap-1.5 border-t border-border/45 bg-card px-5 py-4">
             <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Description</p>
             <p className="text-xs text-foreground leading-relaxed whitespace-pre-wrap">
               {rule.description || "No description provided."}
             </p>
           </div>
 
-          <div className="bg-card px-5 py-5 border-t border-border grid grid-cols-1 md:grid-cols-2 gap-6 md:divide-x md:divide-border">
+          <div className="grid grid-cols-1 gap-4 border-t border-border/45 bg-card px-5 py-5 md:grid-cols-2">
             <div className="flex flex-col gap-2 pb-2 md:pb-0">
               <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Supported Data Types</p>
               <div className="flex flex-wrap gap-1.5">
@@ -218,7 +214,7 @@ export function NormalizationRuleDetail() {
               </div>
             </div>
 
-            <div className="flex flex-col gap-2 md:pl-6">
+            <div className="flex flex-col gap-2">
               <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Supported Header Items</p>
               <div className="flex flex-wrap gap-1.5">
                 {rule.supported_header_items_json && rule.supported_header_items_json.length > 0 ? (
@@ -234,22 +230,21 @@ export function NormalizationRuleDetail() {
             </div>
           </div>
 
-          <div className="bg-card px-5 py-5 border-t border-border grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-50/30">
+          <div className="grid grid-cols-1 gap-6 border-t border-border/45 bg-muted/20 px-5 py-5 md:grid-cols-2">
             <div className="flex flex-col gap-2 h-full">
               <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Parameter Schema</p>
-              <pre className="flex-1 p-3.5 bg-slate-900 text-slate-100 rounded-xl font-mono text-[10px] overflow-x-auto min-h-[120px] max-h-72 border border-slate-800 shadow-inner">
+              <pre className="min-h-[120px] max-h-72 flex-1 overflow-x-auto rounded-xl border border-slate-800 bg-slate-950 p-3.5 font-mono text-[10px] text-slate-100 shadow-inner">
                 {JSON.stringify(rule.parameter_schema_json, null, 2)}
               </pre>
             </div>
 
             <div className="flex flex-col gap-2 h-full">
               <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Engine Configuration</p>
-              <pre className="flex-1 p-3.5 bg-slate-900 text-slate-100 rounded-xl font-mono text-[10px] overflow-x-auto min-h-[120px] max-h-72 border border-slate-800 shadow-inner">
+              <pre className="min-h-[120px] max-h-72 flex-1 overflow-x-auto rounded-xl border border-slate-800 bg-slate-950 p-3.5 font-mono text-[10px] text-slate-100 shadow-inner">
                 {JSON.stringify(rule.engine_config_json, null, 2)}
               </pre>
             </div>
           </div>
-        </div>
       </div>
 
       {confirmDeleteOpen && (
@@ -266,7 +261,7 @@ export function NormalizationRuleDetail() {
                 Deleting this normalization rule is permanent and cannot be undone.
               </p>
             </div>
-            <DialogFooter>
+            <DialogFooter className="dialog-form-footer">
               <Button
                 variant="outline"
                 size="sm"
@@ -277,7 +272,8 @@ export function NormalizationRuleDetail() {
                 Cancel
               </Button>
               <Button
-                className="bg-red-600 hover:bg-red-700 text-white border-0 shadow-sm cursor-pointer"
+                variant="destructive"
+                className="cursor-pointer"
                 size="sm"
                 onClick={handleDelete}
                 disabled={isDeleting}
@@ -289,6 +285,6 @@ export function NormalizationRuleDetail() {
           </DialogContent>
         </Dialog>
       )}
-    </div>
+    </PageShell>
   )
 }

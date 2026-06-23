@@ -2,6 +2,8 @@ import { useParams, useNavigate } from "react-router-dom"
 import { ArrowLeft, Database } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useDataType } from "@/api/hooks/data-types"
+import { PageHeader } from "@/components/layout/PageHeader"
+import { PageShell } from "@/components/invoice-ui/design-system"
 
 const formatDate = (dateStr?: string) => {
   if (!dateStr) return "—"
@@ -24,15 +26,15 @@ export function DataTypeDetail() {
 
   if (isLoading) {
     return (
-      <div className="flex h-96 items-center justify-center">
+      <PageShell className="min-h-[60vh] items-center justify-center">
         <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-      </div>
+      </PageShell>
     )
   }
 
   if (isError || !dataType) {
     return (
-      <div className="flex h-96 flex-col items-center justify-center gap-4 animate-in fade-in duration-300">
+      <PageShell className="min-h-[60vh] items-center justify-center">
         <p className="text-sm text-muted-foreground">Failed to load data type details.</p>
         <Button
           variant="outline"
@@ -41,18 +43,17 @@ export function DataTypeDetail() {
         >
           Back to Data Types
         </Button>
-      </div>
+      </PageShell>
     )
   }
 
   return (
-    <div className="flex w-full flex-col gap-6 pb-12 animate-in fade-in duration-300">
+    <PageShell>
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="space-y-1">
-          <h1 className="text-lg font-semibold tracking-tight text-foreground">Data Type Details</h1>
-          <p className="text-xs text-muted-foreground">View details and configuration for this standard data type</p>
-        </div>
+      <PageHeader
+        title="Data Type Details"
+        description="View details and configuration for this standard data type."
+      >
         <Button
           variant="outline"
           size="sm"
@@ -61,20 +62,17 @@ export function DataTypeDetail() {
         >
           <ArrowLeft className="h-4 w-4" /> Back
         </Button>
-      </div>
+      </PageHeader>
 
       {/* Details Card */}
-      <div className="w-full">
-        <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm flex flex-col justify-between">
-          <div className="h-[3px] w-full bg-gradient-to-r from-primary to-chart-1" />
-          
-          <div className="flex flex-col gap-3 px-5 py-4 border-b border-border">
+      <div className="surface-card w-full overflow-hidden">
+          <div className="flex flex-col gap-3 border-b border-border/45 px-5 py-4">
             <div className="flex items-center gap-3">
-              <div className="h-10 w-10 flex-shrink-0 rounded-lg bg-primary text-primary-foreground flex items-center justify-center">
+              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary ring-1 ring-primary/15">
                 <Database className="h-5 w-5" />
               </div>
               <div className="min-w-0">
-                <p className="text-sm font-medium text-foreground leading-snug truncate" title={dataType.display_label}>
+                <p className="truncate text-sm font-semibold leading-snug text-foreground" title={dataType.display_label}>
                   {dataType.display_label}
                 </p>
                 <p className="font-mono text-xs text-muted-foreground mt-0.5 truncate">
@@ -84,7 +82,7 @@ export function DataTypeDetail() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-border/20 dark:bg-border/10 overflow-hidden">
+          <div className="grid grid-cols-1 gap-3 p-4 sm:grid-cols-2 lg:grid-cols-3">
             {[
               {
                 label: "Code",
@@ -119,21 +117,20 @@ export function DataTypeDetail() {
                 content: <p className="text-xs font-semibold text-foreground">{formatDate(dataType.updated_at)}</p>
               }
             ].map((item) => (
-              <div key={item.label} className="bg-card px-5 py-4 hover:bg-muted/10 transition-colors flex flex-col justify-center">
-                <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1">{item.label}</p>
+              <div key={item.label} className="flex min-h-20 flex-col justify-center rounded-lg bg-muted/30 px-4 py-3 transition-colors hover:bg-muted/45">
+                <p className="mb-1 text-xs font-semibold text-muted-foreground">{item.label}</p>
                 {item.content}
               </div>
             ))}
           </div>
 
-          <div className="bg-card px-5 py-4 border-t border-border flex flex-col gap-1.5">
+          <div className="flex flex-col gap-1.5 border-t border-border/45 bg-card px-5 py-4">
             <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Description</p>
             <p className="text-xs text-foreground leading-relaxed whitespace-pre-wrap">
               {dataType.description || "No description provided."}
             </p>
           </div>
-        </div>
       </div>
-    </div>
+    </PageShell>
   )
 }

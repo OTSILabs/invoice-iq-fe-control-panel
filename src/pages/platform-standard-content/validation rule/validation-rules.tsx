@@ -8,7 +8,6 @@ import { DataTable } from "@/components/ui/data-table"
 import { SearchInput } from "@/components/search-input"
 import { useValidationRules, useDeleteValidationRuleMutation } from "@/api/hooks/validation-rules"
 import type { ValidationRule, DeleteValidationRuleDialogProps } from "@/types";
-import { ValidationRuleDialog } from "./modals/validation-rule-dialog"
 import { cn } from "@/lib/utils"
 import { getValidationRuleColumns } from "@/columns"
 import {
@@ -25,8 +24,6 @@ export function ValidationRules() {
   const navigate = useNavigate()
   const { data: rules = [], isLoading, refetch, isFetching } = useValidationRules()
   const [searchText, setSearchText] = useState("")
-  const [createOpen, setCreateOpen] = useState(false)
-  const [editingRule, setEditingRule] = useState<ValidationRule | null>(null)
   const [deletingRule, setDeletingRule] = useState<ValidationRule | null>(null)
 
   const { mutate: deleteRule, isPending: isDeleting } = useDeleteValidationRuleMutation()
@@ -62,7 +59,10 @@ export function ValidationRules() {
     })
   }
 
-  const columns = useMemo(() => getValidationRuleColumns(navigate, setEditingRule, setDeletingRule), [navigate])
+  const columns = useMemo(
+    () => getValidationRuleColumns(navigate, (rule) => navigate(`/platform-standard-content/validation-rules/${rule.rule_code}/edit`), setDeletingRule),
+    [navigate]
+  )
 
   const filteredData = useMemo(() => {
     const q = searchText.trim().toLowerCase()
@@ -83,7 +83,7 @@ export function ValidationRules() {
       >
         <Button
           size="sm"
-          onClick={() => setCreateOpen(true)}
+          onClick={() => navigate("/platform-standard-content/validation-rules/create")}
           className="w-full gap-1.5 px-3 sm:w-auto"
         >
           <Plus className="size-4" /> Create Validation Rule
@@ -133,25 +133,12 @@ export function ValidationRules() {
               <ValidationRulesEmptyState
                 searchText={searchText}
                 rulesLength={rules.length}
-                onCreateClick={() => setCreateOpen(true)}
+                onCreateClick={() => navigate("/platform-standard-content/validation-rules/create")}
               />
             }
           />
         </div>
       </div>
-
-      {(createOpen || !!editingRule) && (
-        <ValidationRuleDialog
-          open={createOpen || !!editingRule}
-          validationRule={editingRule}
-          onOpenChange={(open) => {
-            if (!open) {
-              setCreateOpen(false)
-              setEditingRule(null)
-            }
-          }}
-        />
-      )}
 
       <DeleteValidationRuleDialog
         deletingRule={deletingRule}
@@ -224,7 +211,7 @@ function DeleteValidationRuleDialog({
             Deleting this validation rule is permanent and cannot be undone.
           </p>
         </div>
-        <DialogFooter>
+        <DialogFooter className="dialog-form-footer">
           <Button
             variant="outline"
             size="sm"
@@ -235,7 +222,8 @@ function DeleteValidationRuleDialog({
             Cancel
           </Button>
           <Button
-            className="bg-red-600 hover:bg-red-700 text-white border-0 shadow-sm cursor-pointer"
+            variant="destructive"
+            className="cursor-pointer"
             size="sm"
             onClick={onConfirm}
             disabled={isDeleting}

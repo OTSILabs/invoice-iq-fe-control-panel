@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react"
 import { AlertCircle, RefreshCw, Plus } from "lucide-react"
+import { useNavigate } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { toast } from "sonner"
@@ -13,13 +14,13 @@ import {
 } from "@/components/ui/dialog"
 
 import { useErpSettings } from "@/api/hooks/useErp"
-import { ErpSettingFormDialog } from "./erp-setting-form-create"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { ErpSettingsCards } from "./erp-settings-cards"
 import type { ErpSetting } from "@/types"
 import { PageShell } from "@/components/invoice-ui/design-system"
 
 export function ErpSettings() {
+  const navigate = useNavigate()
   const {
     data = [],
     isLoading,
@@ -28,8 +29,6 @@ export function ErpSettings() {
     refetch,
   } = useErpSettings()
 
-  const [isCreateOpen, setIsCreateOpen] = useState(false)
-  const [editingRecord, setEditingRecord] = useState<ErpSetting | null>(null)
   const [deletingRecord, setDeletingRecord] = useState<ErpSetting | null>(null)
 
   const settings = useMemo(() => data || [], [data])
@@ -59,7 +58,7 @@ export function ErpSettings() {
 
         <Button
           size="sm"
-          onClick={() => setIsCreateOpen(true)}
+          onClick={() => navigate("/erp-settings/create")}
           className="w-full sm:w-auto font-medium px-3 shadow-none shrink-0 gap-1.5 animate-in"
           disabled={isFetching}
         >
@@ -92,21 +91,8 @@ export function ErpSettings() {
       ) : (
         <ErpSettingsCards
           records={settings}
-          onEdit={setEditingRecord}
+          onEdit={(record) => navigate(`/erp-settings/${record.erp_id}/edit`)}
           onDelete={setDeletingRecord}
-        />
-      )}
-
-      {(isCreateOpen || !!editingRecord) && (
-        <ErpSettingFormDialog
-          open={isCreateOpen || !!editingRecord}
-          onOpenChange={(open) => {
-            if (!open) {
-              setIsCreateOpen(false)
-              setEditingRecord(null)
-            }
-          }}
-          record={editingRecord}
         />
       )}
 
@@ -124,7 +110,7 @@ export function ErpSettings() {
                 Deleting this ERP setting is permanent and cannot be undone.
               </p>
             </div>
-            <DialogFooter>
+            <DialogFooter className="dialog-form-footer">
               <Button
                 variant="outline"
                 size="sm"
@@ -134,7 +120,8 @@ export function ErpSettings() {
                 Cancel
               </Button>
               <Button
-                className="bg-red-600 hover:bg-red-700 text-white border-0 shadow-sm cursor-pointer"
+                variant="destructive"
+                className="cursor-pointer"
                 size="sm"
                 onClick={() => {
                   toast.success("ERP setting deleted successfully!")

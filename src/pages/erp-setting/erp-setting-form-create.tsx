@@ -66,8 +66,8 @@ export function ErpSettingFormDialog({ open, onOpenChange, record }: ErpSettingF
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
+      <DialogContent className="gap-0 overflow-hidden p-0 sm:max-w-md">
+        <DialogHeader className="border-b border-border px-6 py-5">
           <DialogTitle>{isEdit ? "Edit ERP Setting" : "Add ERP Setting"}</DialogTitle>
           <DialogDescription>
             {isEdit
@@ -76,44 +76,47 @@ export function ErpSettingFormDialog({ open, onOpenChange, record }: ErpSettingF
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-          <div className="space-y-1.5">
-            <Label htmlFor="erp_type" className="text-foreground/90 font-medium">
-              ERP Type <span className="text-destructive ml-0.5">*</span>
-            </Label>
-            <Input
-              id="erp_type"
-              placeholder="e.g. sap, cw, oracle"
-              {...register("erp_type")}
-              className={isEdit ? "bg-muted text-muted-foreground cursor-not-allowed opacity-100 h-10" : "bg-background h-10"}
-              disabled={isEdit || isPending}
-            />
-            {errors.erp_type && (
-              <span className="text-xs font-medium text-red-500 block mt-1">{errors.erp_type.message}</span>
-            )}
+        <form onSubmit={handleSubmit(onSubmit)} className="dialog-form">
+          <div className="dialog-form-body">
+            <div className="space-y-1.5">
+              <Label htmlFor="erp_type" className="text-foreground/90 font-medium">
+                ERP Type <span className="text-destructive ml-0.5">*</span>
+              </Label>
+              <Input
+                id="erp_type"
+                placeholder="e.g. sap, cw, oracle"
+                {...register("erp_type")}
+                className={isEdit ? "bg-muted text-muted-foreground cursor-not-allowed opacity-100 h-10" : "bg-background h-10"}
+                disabled={isEdit || isPending}
+              />
+              {errors.erp_type && (
+                <span className="mt-1 block text-xs font-medium text-destructive">{errors.erp_type.message}</span>
+              )}
+            </div>
+
+            <div className="space-y-1.5">
+              <Label htmlFor="settingsInput" className="text-foreground/90 font-medium">
+                Settings (JSON) <span className="text-destructive ml-0.5">*</span>
+              </Label>
+              <Textarea
+                id="settingsInput"
+                rows={8}
+                placeholder='{"url":"https://example.com","username":"..."}'
+                {...register("settingsInput")}
+                className="font-mono text-xs bg-background border border-input rounded-md h-48 resize-none"
+              />
+              {errors.settingsInput ? (
+                <span className="mt-1 block text-xs font-medium text-destructive">{errors.settingsInput.message}</span>
+              ) : (
+                <span className="text-[10px] text-muted-foreground block">
+                  Provide integration parameters as a valid JSON object.
+                </span>
+              )}
+            </div>
+
           </div>
 
-          <div className="space-y-1.5">
-            <Label htmlFor="settingsInput" className="text-foreground/90 font-medium">
-              Settings (JSON) <span className="text-destructive ml-0.5">*</span>
-            </Label>
-            <Textarea
-              id="settingsInput"
-              rows={8}
-              placeholder='{"url":"https://example.com","username":"..."}'
-              {...register("settingsInput")}
-              className="font-mono text-xs bg-background border border-input rounded-md h-48 resize-none"
-            />
-            {errors.settingsInput ? (
-              <span className="text-xs font-medium text-red-500 block mt-1">{errors.settingsInput.message}</span>
-            ) : (
-              <span className="text-[10px] text-muted-foreground block">
-                Provide integration parameters as a valid JSON object.
-              </span>
-            )}
-          </div>
-
-          <DialogFooter className="gap-2 sm:gap-0 border-t border-slate-100 pt-4">
+          <DialogFooter className="dialog-form-footer">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={isPending}>
               Cancel
             </Button>

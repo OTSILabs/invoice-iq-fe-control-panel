@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import type { Tenant } from "@/types"
 import { MigrateButton } from "./migrate-button"
 import { RetryButton } from "./retry-button"
+import { PageHeader } from "@/components/layout/PageHeader"
 
 interface TenantDetailHeaderProps {
   tenant: Tenant
@@ -30,14 +31,10 @@ export function TenantDetailHeader({
   const navigate = useNavigate()
 
   return (
-    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-      <div className="space-y-1">
-        <h1 className="text-xl font-bold tracking-tight text-foreground">Tenant Details</h1>
-        <p className="text-sm text-muted-foreground">
-          View and manage tenant parameters, overview and events log
-        </p>
-      </div>
-
+    <PageHeader
+      title="Tenant Details"
+      description="View and manage tenant parameters, profile, configurations, database status, and events."
+    >
       <div className="flex flex-wrap items-center gap-2">
         {/* Retry Provisioning (Conditional: if provisioning is Failed or there is a last_error) */}
         {(tenant.provisioning_status?.toLowerCase() === "failed" || tenant.last_error) && (
@@ -89,10 +86,10 @@ export function TenantDetailHeader({
 
         {/* Delete Tenant */}
         <Button
-          variant="outline"
+          variant="destructive"
           size="sm"
           onClick={() => onAction({ type: "delete", tenant })}
-          className="text-xs font-semibold text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950/20 border-red-200/50 dark:border-red-900/30 cursor-pointer"
+          className="cursor-pointer text-xs font-semibold"
         >
           <Trash2 className="size-3.5 mr-1" />
           Delete
@@ -108,6 +105,6 @@ export function TenantDetailHeader({
           Back
         </Button>
       </div>
-    </div>
+    </PageHeader>
   )
 }

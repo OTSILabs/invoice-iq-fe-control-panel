@@ -75,9 +75,9 @@ export function RegistryDialog({ open, onOpenChange, registry }: RegistryDialogP
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col max-h-[calc(85vh-5.5rem)]" noValidate>
+        <form onSubmit={handleSubmit(onSubmit)} className="dialog-form" noValidate>
           <ScrollArea className="flex-1 min-h-0">
-            <div className="px-6 py-5 space-y-4">
+            <div className="dialog-form-body">
               <InputField
                 id="registry_key"
                 label="Registry Key"
@@ -137,7 +137,7 @@ export function RegistryDialog({ open, onOpenChange, registry }: RegistryDialogP
             </div>
           </ScrollArea>
 
-          <DialogFooter className="border-t border-border px-6 py-4 bg-slate-50 flex items-center justify-end gap-2">
+          <DialogFooter className="dialog-form-footer">
             <Button
               type="button"
               variant="outline"

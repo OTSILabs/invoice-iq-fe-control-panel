@@ -38,7 +38,7 @@ export function RemoveFieldDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <DialogFooter>
+        <DialogFooter className="dialog-form-footer">
           <DialogClose asChild>
             <Button type="button" variant="outline" disabled={isPending}>
               Cancel

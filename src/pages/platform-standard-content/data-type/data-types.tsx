@@ -7,8 +7,6 @@ import { Button } from "@/components/ui/button"
 import { DataTable } from "@/components/ui/data-table"
 import { SearchInput } from "@/components/search-input"
 import { useDataTypes } from "@/api/hooks/data-types"
-import type { DataType } from "@/types"
-import { DataTypeDialog } from "./modals/data-type-dialog"
 import { cn } from "@/lib/utils"
 import { getDataTypeColumns } from "@/columns"
 import { FilterBar, PageShell } from "@/components/invoice-ui/design-system"
@@ -22,8 +20,6 @@ export function DataTypes() {
     isFetching,
   } = useDataTypes()
   const [searchText, setSearchText] = useState("")
-  const [createOpen, setCreateOpen] = useState(false)
-  const [editingDataType, setEditingDataType] = useState<DataType | null>(null)
 
   const handleRefetch = async () => {
     try {
@@ -34,7 +30,7 @@ export function DataTypes() {
     }
   }
 
-  const columns = useMemo(() => getDataTypeColumns(navigate, setEditingDataType), [navigate])
+  const columns = useMemo(() => getDataTypeColumns(navigate, (dataType) => navigate(`/platform-standard-content/data-types/${dataType.data_type_code}/edit`)), [navigate])
 
   const filteredData = useMemo(() => {
     const q = searchText.trim().toLowerCase()
@@ -55,7 +51,7 @@ export function DataTypes() {
       >
         <Button
           size="sm"
-          onClick={() => setCreateOpen(true)}
+          onClick={() => navigate("/platform-standard-content/data-types/create")}
           className="w-full gap-1.5 px-3 sm:w-auto"
         >
           <Plus className="size-4" /> Create Data Type
@@ -118,7 +114,7 @@ export function DataTypes() {
                 </p>
                 {!searchText && dataTypes.length === 0 && (
                   <Button
-                    onClick={() => setCreateOpen(true)}
+                    onClick={() => navigate("/platform-standard-content/data-types/create")}
                     className="mt-4 cursor-pointer gap-1.5 rounded-lg px-4 py-2 text-xs font-semibold"
                   >
                     <Plus className="size-3.5" /> Create Data Type
@@ -129,19 +125,6 @@ export function DataTypes() {
           />
         </div>
       </div>
-
-      {(createOpen || !!editingDataType) && (
-        <DataTypeDialog
-          open={createOpen || !!editingDataType}
-          dataType={editingDataType}
-          onOpenChange={(open) => {
-            if (!open) {
-              setCreateOpen(false)
-              setEditingDataType(null)
-            }
-          }}
-        />
-      )}
     </PageShell>
   )
 }

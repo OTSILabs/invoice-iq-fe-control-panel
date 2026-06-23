@@ -9,7 +9,6 @@ import { AppSidebar } from "./app-sidebar"
 import { AppBreadcrumb } from "./AppBreadcrumb"
 import { TopLoader } from "./TopLoader"
 import { resolveBreadcrumbs } from "@/components/layout/breadcrumb-utils"
-import { PoweredByFooter } from "@/components/poweredby"
 
 import { clearSession } from "@/lib/auth-store"
 
@@ -20,7 +19,6 @@ import { clearSession } from "@/lib/auth-store"
 //   <AppSidebar>      collapsible nav
 //   <header>          sticky breadcrumb bar + top loader
 //   <main>            page content via <Outlet>
-//   <footer>          branding strip
 // ─────────────────────────────────────────────────────────────────────────────
 
 export function Layout() {
@@ -80,9 +78,6 @@ export function Layout() {
             <main className="flex-1 overflow-auto bg-background">
               <Outlet />
             </main>
-
-            {/* ── Footer ── */}
-            <PoweredByFooter className="h-10 border-t border-border/45 bg-footer text-footer-foreground" />
 
           </SidebarInset>
         </SidebarProvider>

@@ -1,0 +1,167 @@
+# Invoice IQ Control Panel Agent Guide
+
+## Agent Role
+
+Act as a senior frontend engineer and senior product designer for a premium enterprise SaaS admin dashboard. Preserve existing behavior and API contracts, but raise visual quality, layout consistency, accessibility, and maintainability with every change.
+
+Default to implementing requested changes. Read the relevant code first, follow existing patterns, and verify with `pnpm typecheck` before handing work back when TypeScript files are touched.
+
+## Product Context
+
+This app is the Invoice IQ frontend control panel. It manages organizations, tenants, users, plans, ERP settings, and platform standard content such as data types, field categories, reference lists, validation rules, normalization rules, and extraction management.
+
+The app uses:
+
+- React + Vite
+- TypeScript
+- Tailwind CSS v4
+- shadcn/ui style primitives
+- React Router
+- TanStack Query
+- react-hook-form + zod
+- lucide-react icons
+
+Global CSS lives in `src/index.css`. Do not recreate or rely on `src/globals.css`.
+
+## Design Direction
+
+The target quality is a modern SaaS dashboard comparable to Linear, Stripe Dashboard, Vercel, Notion, Clerk, Resend, and Supabase:
+
+- Clean enterprise appearance
+- High information density without crowding
+- Strong hierarchy through spacing, type, and surface layering
+- Lightweight tables with clear scan paths
+- Professional dark sidebar integrated with the main product shell
+- Excellent light and dark mode behavior
+
+Avoid generated CRUD-page aesthetics, heavy borders, cramped controls, decorative top borders, and flat white containers.
+
+## Design System Primitives
+
+Prefer reusable primitives before page-local styling:
+
+- `PageShell` for every routed screen body
+- `PageHeader` for title, description, and page-level actions
+- `SectionCard` for grouped form/detail content
+- `DataTable` for tabular data
+- `EmptyState` for no-data and no-results states
+- `StatCard` or existing stats card patterns for KPIs
+- `FilterBar` for search, filters, refresh, and table actions
+
+Current shared primitives live primarily in:
+
+- `src/components/invoice-ui/design-system.tsx`
+- `src/components/layout/PageHeader.tsx`
+- `src/components/ui/data-table.tsx`
+
+## Tailwind Utility Standards
+
+Use the shared utility classes from `src/index.css`:
+
+- `page-container`
+- `page-section`
+- `surface-card`
+- `table-container`
+- `filter-toolbar`
+- `dialog-form`
+- `dialog-form-body`
+- `dialog-form-footer`
+- `dialog-field-grid`
+- `dialog-toggle-row`
+- `text-page-title`
+- `text-section-title`
+- `text-caption`
+
+Do not use `@apply` for a custom utility unless that utility is defined in `src/index.css`. Tailwind v4 will fail on unknown utilities.
+
+## Color System
+
+Primary color should align with the dark sidebar style, not saturated blue. Use semantic tokens instead of hard-coded color families:
+
+- Prefer `bg-primary`, `text-primary`, `ring-primary/15`, `border-border`, `text-muted-foreground`.
+- Sidebar styling should use `bg-sidebar`, `text-sidebar-foreground`, `bg-sidebar-accent`, `text-sidebar-accent-foreground`, `text-sidebar-primary`.
+- Avoid hard-coded blue/purple for primary actions unless a specific semantic state requires it.
+
+Semantic status colors are allowed for badges and destructive/success states, but keep them restrained and readable in both themes.
+
+## Layout Rules
+
+- Use max-width constrained content via `PageShell`.
+- Keep page sections spaced with gaps, not excessive dividers.
+- Tables and large lists should sit in `table-container`.
+- Search/filter/action rows should use `FilterBar` or `filter-toolbar`.
+- Do not nest cards inside cards unless the inner card is a repeated item or a genuinely independent surface.
+- Do not add sticky footer bars for product credits or secondary metadata.
+
+## Typography
+
+Use a consistent hierarchy:
+
+- Page title: compact, strong, not oversized
+- Section title: small and scannable
+- Card title: medium weight with optional icon
+- Body text: readable, restrained
+- Caption text: muted and concise
+
+Avoid hero-scale headings inside dashboards, forms, cards, toolbars, and tables.
+
+## Tables
+
+Tables should be modern and lightweight:
+
+- Use `DataTable`.
+- Keep row height comfortable.
+- Use subtle header backgrounds and muted uppercase labels.
+- Keep action menus visible enough to discover.
+- Provide empty states for no records and no search results.
+- Align pagination and table footer controls cleanly.
+
+Do not let tables dominate the page without KPI, filter, or section context.
+
+## Forms And Create/Edit Flows
+
+Create and edit flows should be full routed pages, not modal dialogs.
+
+Use routes like:
+
+- `/users/create`
+- `/users/:id/edit`
+- `/erp-settings/create`
+- `/organizations/create`
+- `/organizations/:orgId/tenants/create`
+- `/platform-standard-content/data-types/create`
+- `/platform-standard-content/data-types/:code/edit`
+
+Use `PageShell`, `PageHeader`, and `SectionCard` for form pages. Keep submit/cancel actions in the shared `dialog-form-footer` styling when appropriate, even though the form is on a page.
+
+Keep dialogs for confirmations, destructive actions, short status changes, and non-CRUD transient actions.
+
+## Sidebar
+
+The sidebar is the primary navigation product frame:
+
+- Keep it dark and visually connected to the app shell.
+- Preserve collapsed icon alignment.
+- Use sidebar tokens, not generic primary colors, for sidebar states.
+- Active states should be visible but not loud.
+- Nested items must have enough width and indentation to avoid wrapping awkwardly.
+
+## Implementation Discipline
+
+- Preserve functionality unless explicitly asked to change behavior.
+- Keep edits scoped to the feature or design surface being improved.
+- Prefer existing hooks, schemas, services, and form patterns.
+- Use `rg` for searching.
+- Use `apply_patch` for manual edits.
+- Do not revert user changes or recreate deleted files.
+- Do not delete legacy dialog files unless they are confirmed unused and cleanup is part of the task.
+
+## Verification
+
+Run:
+
+```bash
+pnpm typecheck
+```
+
+Known caveat: `pnpm build` may be blocked by local dependency/environment issues such as read-only `node_modules/.tmp` or missing packages. Do not claim build success unless it actually passes in the current environment.

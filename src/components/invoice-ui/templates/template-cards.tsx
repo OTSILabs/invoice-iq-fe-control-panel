@@ -74,7 +74,7 @@ function TemplateStatusBadges({ template }: { template: ApiRecord }) {
       {!isEditable ? (
         <Tooltip>
           <TooltipTrigger asChild>
-            <span className="inline-flex h-6 shrink-0 cursor-help items-center gap-2 rounded-full border border-slate-200 bg-white px-2 text-xs font-semibold text-slate-600">
+            <span className="inline-flex h-6 shrink-0 cursor-help items-center gap-2 rounded-full border border-border/70 bg-background px-2 text-xs font-semibold text-muted-foreground">
               <LockKeyhole className="size-3.5" />
               Read-only
             </span>
@@ -155,19 +155,19 @@ export function TemplateCards({
                     templateName={templateName}
                   />
 
-                  <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-xs text-slate-500">
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-xs text-muted-foreground">
                     <div className="flex items-center gap-2">
-                      <ListChecks className="size-3.5 text-slate-500" />
+                      <ListChecks className="size-3.5 text-muted-foreground" />
                       <span>
-                        <span className="font-semibold text-slate-950">
+                        <span className="font-semibold text-foreground">
                           {fieldCount}
                         </span>{" "}
                         Fields
                       </span>
                     </div>
-                    <span className="hidden h-5 w-px bg-slate-200 sm:block" />
+                    <span className="hidden h-5 w-px bg-border sm:block" />
                     <div className="flex items-center gap-2">
-                      <CalendarDays className="size-3.5 text-slate-500" />
+                      <CalendarDays className="size-3.5 text-muted-foreground" />
                       <span>Updated {updatedAt}</span>
                     </div>
                   </div>
@@ -190,7 +190,7 @@ export function TemplateCards({
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="size-7 rounded-md bg-transparent p-0 text-slate-500 shadow-none hover:bg-slate-100 hover:text-slate-700"
+                          className="size-7 rounded-md bg-transparent p-0 text-muted-foreground shadow-none hover:bg-muted hover:text-foreground"
                           aria-label="Template actions"
                         >
                           <MoreVertical className="size-4" />
@@ -257,7 +257,7 @@ export function TemplateCards({
               {templateCode ? (
                 <Link
                   to={href}
-                  className="flex min-h-12 w-full items-center justify-between px-4 text-xs font-semibold text-blue-700 outline-none transition-colors hover:bg-blue-50 focus-visible:ring-2 focus-visible:ring-ring"
+                  className="flex min-h-12 w-full items-center justify-between px-4 text-xs font-semibold text-primary outline-none transition-colors hover:bg-primary/8 focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   <span>View Details</span>
                   <ChevronRight className="size-4" />

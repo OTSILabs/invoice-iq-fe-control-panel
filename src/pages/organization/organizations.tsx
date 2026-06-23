@@ -1,15 +1,16 @@
 import { useState, useMemo } from "react"
 import { Button } from "@/components/ui/button"
-import { CreateOrganizationModal } from "@/pages/organization/modals/create-organization-modal"
 import { useOrganizations } from "@/api/hooks/useOrganizations"
 import { Plus, Building2, Users, BarChart3, Search } from "lucide-react"
+import { useNavigate } from "react-router-dom"
 import { OrgCard } from "./components/org-card"
 import { SearchInput } from "@/components/search-input"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { StatsCard } from "@/components/StatsCard"
-import { EmptyState, PageShell } from "@/components/invoice-ui/design-system"
+import { EmptyState, FilterBar, PageShell } from "@/components/invoice-ui/design-system"
 
 export function Organizations() {
+  const navigate = useNavigate()
   const { data: organizations = [], isLoading } = useOrganizations()
   const [searchQuery, setSearchQuery] = useState("")
 
@@ -65,11 +66,9 @@ export function Organizations() {
           title="No organizations yet"
           description="Get started by onboarding your first organization into the platform control panel."
           actions={
-            <CreateOrganizationModal>
-              <Button variant="outline" size="sm" className="gap-1.5">
-                <Plus className="h-3.5 w-3.5" /> Onboard Organization
-              </Button>
-            </CreateOrganizationModal>
+            <Button variant="outline" size="sm" className="gap-1.5" onClick={() => navigate("/organizations/create")}>
+              <Plus className="h-3.5 w-3.5" /> Onboard Organization
+            </Button>
           }
         />
       ) : (
@@ -77,19 +76,21 @@ export function Organizations() {
           <h2 className="text-section-title">
             All organizations
           </h2>
-          <div className="flex flex-col gap-3 rounded-xl bg-card sm:flex-row sm:items-center sm:justify-between shadow-md p-4">
+          <FilterBar className="surface-card border-b-0 p-3.5 sm:flex-row sm:items-center sm:justify-between">
             <SearchInput
               value={searchQuery}
               onChange={setSearchQuery}
               placeholder="Search organizations..."
               className="w-full sm:w-80"
             />
-            <CreateOrganizationModal>
-              <Button size="sm" className="w-full sm:w-auto font-medium shadow-sm gap-1.5 shrink-0">
-                <Plus className="h-4 w-4" /> Start onboarding
-              </Button>
-            </CreateOrganizationModal>
-          </div>
+            <Button
+              size="sm"
+              className="w-full sm:w-auto font-medium shadow-sm gap-1.5 shrink-0"
+              onClick={() => navigate("/organizations/create")}
+            >
+              <Plus className="h-4 w-4" /> Start onboarding
+            </Button>
+          </FilterBar>
           {filtered.length > 0 ? (
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
               {filtered.map(org => <OrgCard key={org.id} org={org} />)}

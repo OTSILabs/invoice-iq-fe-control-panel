@@ -182,7 +182,7 @@ export function ValidationRuleDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col max-h-[calc(85vh-5.5rem)]" noValidate>
+        <form onSubmit={handleSubmit(onSubmit)} className="dialog-form" noValidate>
           <ScrollArea className="flex-1 min-h-0">
             <ValidationRuleFormFields
               register={register}
@@ -195,7 +195,7 @@ export function ValidationRuleDialog({
           </ScrollArea>
 
           {/* Dialog Footer Actions */}
-          <DialogFooter className="gap-3 border-t border-border bg-popover px-6 py-4 sm:flex-row sm:items-center sm:justify-end">
+          <DialogFooter className="dialog-form-footer">
             <Button
               type="button"
               variant="outline"
@@ -231,8 +231,8 @@ function ValidationRuleFormFields({
   formatJSONField,
 }: ValidationRuleFormFieldsProps) {
   return (
-    <div className="px-6 py-5 space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="dialog-form-body">
+      <div className="dialog-field-grid">
         <InputField
           label={isEdit ? "Rule Code (Read-only)" : "Rule Code"}
           placeholder="e.g. valid_email"

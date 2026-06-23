@@ -784,7 +784,7 @@ function TemplateFormContent({
 					</form>
 				</CardContent>
 
-				<CardFooter className="flex justify-end gap-2 border-t bg-muted/25 p-4">
+				<CardFooter className="dialog-form-footer">
 					<Button type="button" variant="outline" disabled={isPending} onClick={onCancel}>
 						<X className="size-4" data-icon="inline-start" />
 						Cancel
@@ -806,4 +806,3 @@ function TemplateFormContent({
 		</>
 	);
 }
-
