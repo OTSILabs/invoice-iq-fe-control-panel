@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { usePlatformUser } from "@/api/hooks/useUsers"
 import { getInitials } from "@/lib/utils"
 import type { PlatformUser } from "@/types"
+import { ActiveStatusBadge } from "@/columns"
 
 const formatDate = (dateStr?: string) => {
   if (!dateStr) return "—"
@@ -145,12 +146,7 @@ export function UserDetail() {
               {
                 label: "Status",
                 content: (
-                  <Badge
-                    variant={user.status === "ACTIVE" ? "secondary" : "outline"}
-                    className={user.status === "ACTIVE" ? "text-xxs px-2 py-0.5 border-emerald-200 bg-emerald-50 text-emerald-700 font-semibold" : "text-xxs px-2 py-0.5 text-muted-foreground"}
-                  >
-                    {user.status || "ACTIVE"}
-                  </Badge>
+                  <ActiveStatusBadge status={user.status || "ACTIVE"} className="text-xxs px-2 py-0.5 font-semibold" />
                 )
               },
               {

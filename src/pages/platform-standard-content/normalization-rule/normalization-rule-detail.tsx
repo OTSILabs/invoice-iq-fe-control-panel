@@ -4,6 +4,7 @@ import { ArrowLeft, ShieldCheck, Trash2, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { useNormalizationRule, useDeleteNormalizationRuleMutation } from "@/api/hooks/normalization-rules"
+import { ActiveStatusBadge } from "@/columns"
 import { toast } from "sonner"
 import {
   Dialog,
@@ -175,12 +176,7 @@ export function NormalizationRuleDetail() {
               {
                 label: "Status",
                 content: (
-                  <Badge
-                    variant={rule.is_active ? "secondary" : "outline"}
-                    className={rule.is_active ? "text-xxs px-2 py-0.5 border-emerald-200 bg-emerald-50 text-emerald-700" : "text-xxs px-2 py-0.5 text-muted-foreground"}
-                  >
-                    {rule.is_active ? "Active" : "Inactive"}
-                  </Badge>
+                  <ActiveStatusBadge active={rule.is_active} className="text-xxs px-2 py-0.5" />
                 )
               },
               {

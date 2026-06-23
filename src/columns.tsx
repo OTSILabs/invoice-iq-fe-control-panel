@@ -41,7 +41,7 @@ import type {
 import type { EntityKeyMetadata } from "@/pages/organization/components/use-entity-keys-metadata"
 
 // Shared Tenant Status Badge
-type StatusKey = "active" | "inactive" | "blocked" | "expired" | "pending"
+type StatusKey = "active" | "inactive" | "blocked" | "expired" | "pending" | "warning"
 
 const STATUS_CFG: Record<StatusKey, { label: string; dot: string; badge: string }> = {
   active: { label: "Active", dot: "bg-emerald-500", badge: "bg-emerald-50 text-emerald-700 border-emerald-300 dark:bg-emerald-950 dark:text-emerald-400 dark:border-emerald-800" },
@@ -49,14 +49,72 @@ const STATUS_CFG: Record<StatusKey, { label: string; dot: string; badge: string 
   blocked: { label: "Blocked", dot: "bg-red-500", badge: "bg-red-50 text-red-700 border-red-300 dark:bg-red-950 dark:text-red-400 dark:border-red-800" },
   expired: { label: "Expired", dot: "bg-rose-500", badge: "bg-rose-50 text-rose-700 border-rose-300 dark:bg-rose-950 dark:text-rose-400 dark:border-rose-800" },
   pending: { label: "Pending", dot: "bg-blue-500", badge: "bg-blue-50 text-blue-700 border-blue-300 dark:bg-blue-950 dark:text-blue-400 dark:border-blue-800" },
+  warning: { label: "Warning", dot: "bg-amber-500", badge: "bg-amber-50 text-amber-700 border-amber-300 dark:bg-amber-950/30 dark:text-amber-400 dark:border-amber-900/40" },
 }
 
-function StatusBadge({ status }: { status: string }) {
+export function StatusBadge({ status }: { status: string }) {
   const cfg = STATUS_CFG[status.toLowerCase() as StatusKey] || STATUS_CFG.inactive
   return (
     <Badge variant="outline" className={cn("inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xxs font-semibold", cfg.badge)}>
       <span className={cn("h-1.5 w-1.5 rounded-full", cfg.dot)} />
       {cfg.label}
+    </Badge>
+  )
+}
+
+export function ActiveStatusBadge({
+  status,
+  active,
+  color,
+  className
+}: {
+  status?: string | null
+  active?: boolean | null
+  color?: "green" | "blue" | "red" | "yellow" | "gray" | "rose"
+  className?: string
+}) {
+  const normalized = status ? status.toLowerCase().trim() : (active ?? true ? "active" : "inactive")
+  
+  let key: StatusKey = "inactive"
+  if (color) {
+    key = color === "green"
+      ? "active"
+      : color === "blue"
+      ? "pending"
+      : color === "red"
+      ? "blocked"
+      : color === "yellow"
+      ? "warning"
+      : color === "rose"
+      ? "expired"
+      : "inactive"
+  } else {
+    key = ["success", "active", "complete", "completed"].includes(normalized)
+      ? "active"
+      : ["blocked", "deactivated", "failed"].includes(normalized)
+      ? "blocked"
+      : ["expired"].includes(normalized)
+      ? "expired"
+      : ["in_progress", "inprogress"].includes(normalized)
+      ? "pending"
+      : ["pending"].includes(normalized)
+      ? "warning"
+      : "inactive"
+  }
+
+  const displayLabel = status || (key === "active" ? "Active" : "Inactive")
+  const cfg = STATUS_CFG[key] || STATUS_CFG.inactive
+
+  return (
+    <Badge
+      variant={key === "active" ? "secondary" : "outline"}
+      className={cn(
+        "text-xxs px-2 py-0.5 font-semibold",
+        cfg.badge,
+        className
+      )}
+    >
+      {displayLabel}
     </Badge>
   )
 }
@@ -110,17 +168,7 @@ export const planColumns: CustomColumnDef<Plan>[] = [
     accessorKey: "is_active",
     header: "Status",
     width: 100,
-    cell: ({ row }) => {
-      const active = row.original.is_active
-      return (
-        <Badge
-          variant={active ? "secondary" : "outline"}
-          className={active ? "border-emerald-200 bg-emerald-50 text-emerald-700" : "text-muted-foreground"}
-        >
-          {active ? "Active" : "Inactive"}
-        </Badge>
-      )
-    },
+    cell: ({ row }) => <ActiveStatusBadge active={row.original.is_active} />,
   },
   {
     accessorKey: "description",
@@ -775,18 +823,7 @@ export const getNormalizationRuleColumns = (
     accessorKey: "status",
     header: "Status",
     width: 90,
-    cell: ({ row }) => (
-      <Badge
-        variant={row.original.is_active ? "secondary" : "outline"}
-        className={
-          row.original.is_active
-            ? "text-xxs px-2 py-0.5 border-emerald-200 bg-emerald-50 text-emerald-700 font-semibold"
-            : "text-xxs px-2 py-0.5 text-muted-foreground"
-        }
-      >
-        {row.original.is_active ? "Active" : "Inactive"}
-      </Badge>
-    ),
+    cell: ({ row }) => <ActiveStatusBadge active={row.original.is_active} className="text-xxs px-2 py-0.5 font-semibold" />,
   },
   {
     id: "actions",
@@ -906,18 +943,7 @@ export const getValidationRuleColumns = (
     accessorKey: "status",
     header: "Status",
     width: 90,
-    cell: ({ row }) => (
-      <Badge
-        variant={row.original.is_active ? "secondary" : "outline"}
-        className={
-          row.original.is_active
-            ? "text-xxs px-2 py-0.5 border-emerald-200 bg-emerald-50 text-emerald-700 font-semibold"
-            : "text-xxs px-2 py-0.5 text-muted-foreground"
-        }
-      >
-        {row.original.is_active ? "Active" : "Inactive"}
-      </Badge>
-    ),
+    cell: ({ row }) => <ActiveStatusBadge active={row.original.is_active} className="text-xxs px-2 py-0.5 font-semibold" />,
   },
   {
     id: "actions",
@@ -1166,18 +1192,7 @@ export const tenantEventsTableColumns: CustomColumnDef<any>[] = [
     accessorKey: "status",
     header: "Status",
     width: "15%",
-    cell: ({ row }) => {
-      const status = row.original.status || "Completed"
-      const isSuccess = status.toLowerCase() === 'completed' || status.toLowerCase() === 'success'
-      return (
-        <Badge
-          variant={isSuccess ? "secondary" : "outline"}
-          className={isSuccess ? "border-emerald-200 bg-emerald-50 text-emerald-700" : "text-muted-foreground"}
-        >
-          {status}
-        </Badge>
-      )
-    },
+    cell: ({ row }) => <ActiveStatusBadge status={row.original.status || "Completed"} />,
   },
   {
     accessorKey: "created_at",
@@ -1247,18 +1262,7 @@ export const getUsersColumns = (
     width: "140px",
     minWidth: "140px",
     rowClassName: "w-40",
-    cell: ({ row }) => {
-      const s = row.original.status || "ACTIVE"
-      const active = s === "ACTIVE"
-      return (
-        <Badge
-          variant={active ? "secondary" : "outline"}
-          className={active ? "border-emerald-200 bg-emerald-50 text-emerald-700" : "text-muted-foreground"}
-        >
-          {s}
-        </Badge>
-      )
-    },
+    cell: ({ row }) => <ActiveStatusBadge status={row.original.status || "ACTIVE"} />,
   },
   {
     id: "actions",

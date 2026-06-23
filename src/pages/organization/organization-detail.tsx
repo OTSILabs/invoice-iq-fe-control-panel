@@ -2,7 +2,7 @@ import { useParams, useNavigate, useSearchParams } from "react-router-dom"
 
 import { ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
+import { ActiveStatusBadge } from "@/columns"
 import { getInitials } from "@/lib/utils"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { useOrganizationDetail, useOrganizationTenants } from "@/api/hooks/useOrganizations"
@@ -47,11 +47,7 @@ export function OrganizationDetail() {
 
   if (isLoading || !organization) return null
 
-  const onboardingCfg = {
-    complete: { label: "Complete", className: "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-400 dark:border-emerald-900" },
-    pending: { label: "Pending", className: "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950 dark:text-amber-400 dark:border-amber-900" },
-    in_progress: { label: "In progress", className: "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-400 dark:border-blue-900" },
-  }[organization.onboarding_status?.toLowerCase() || "complete"] || { label: "Complete", className: "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-400" }
+
 
   return (
     <div className="flex w-full flex-col gap-6 pb-12 animate-in fade-in duration-300">
@@ -84,7 +80,7 @@ export function OrganizationDetail() {
 
            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-border/20 dark:bg-border/10 overflow-hidden">
             {[
-              { label: "Onboarding Status", content: <Badge variant="outline" className={`text-xxs px-2 py-0.5 font-medium border w-fit ${onboardingCfg.className}`}>{onboardingCfg.label}</Badge> },
+              { label: "Onboarding Status", content: <ActiveStatusBadge status={organization.onboarding_status || "Complete"} className="text-xxs px-2 py-0.5 font-medium border w-fit" /> },
               { label: "Tenants", content: <p className="text-sm font-semibold text-foreground">{organization.tenant_count ?? tenants.length}</p> },
               { label: "Slug / Domain", content: <p className="text-xs font-bold text-foreground truncate" title={organization.slug}>{organization.slug || "—"}</p> },
               { label: "Created At", content: <p className="text-xs font-semibold text-foreground">{formatDate(organization.created_at)}</p> },

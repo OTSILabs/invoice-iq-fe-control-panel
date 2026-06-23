@@ -1,12 +1,12 @@
 import { useState, useMemo } from "react"
 import { Key, LogIn, Edit2, Shield, Mail, User, Clock, Calendar } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { useAuthMe } from "@/api/hooks/useAuth"
 import { getInitials, formatDate, getDecodedToken, formatRole } from "@/lib/utils"
 import { ChangePasswordDialog } from "./change-password-dialog"
+import { ActiveStatusBadge } from "@/columns"
 
 import { PageHeader } from "@/components/layout/PageHeader"
 
@@ -60,7 +60,7 @@ export function Profile() {
                 <div className="flex-1 min-w-0 sm:pb-2">
                   <div className="flex items-center gap-2 flex-wrap">
                     <h2 className="text-lg font-bold text-slate-900 truncate">{user.name}</h2>
-                    <Badge className="bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100/50 text-[10px] font-semibold px-2 py-0.5 rounded-md capitalize shadow-none">{user.status.toLowerCase()}</Badge>
+                    <ActiveStatusBadge status={user.status} className="hover:bg-emerald-100/50 text-[10px] font-semibold px-2 py-0.5 rounded-md capitalize shadow-none" />
                   </div>
                   <p className="text-xs text-muted-foreground truncate">{user.email}</p>
                 </div>

@@ -2,17 +2,12 @@ import { Link } from "react-router-dom"
 import { Users, ArrowRight, Calendar, Globe, Tag } from "lucide-react"
 import { getInitials } from "@/lib/utils"
 import type { Organization } from "@/types"
-import { cn } from "@/lib/utils"
+import { ActiveStatusBadge } from "@/columns"
 
 export function OrgCard({ org }: { org: Organization }) {
   const initials = org.name ? getInitials(org.name) : "OR"
 
-  // Onboarding status config
-  const statusCfg = {
-    complete: { label: "Complete", className: "bg-emerald-50 text-emerald-700 border-emerald-200/80 dark:bg-emerald-950/30 dark:text-emerald-400 dark:border-emerald-900/40" },
-    pending: { label: "Pending", className: "bg-amber-50 text-amber-700 border-amber-200/80 dark:bg-amber-950/30 dark:text-amber-400 dark:border-amber-900/40" },
-    in_progress: { label: "In Progress", className: "bg-blue-50 text-blue-700 border-blue-200/80 dark:bg-blue-950/30 dark:text-blue-400 dark:border-blue-900/40" },
-  }[org.onboarding_status?.toLowerCase() || "complete"] || { label: "Complete", className: "bg-emerald-50 text-emerald-700 border-emerald-200/80 dark:bg-emerald-950/30 dark:text-emerald-400 dark:border-emerald-900/40" }
+
 
   const formattedDate = org.created_at
     ? new Date(org.created_at).toLocaleDateString("en-US", {
@@ -51,10 +46,7 @@ export function OrgCard({ org }: { org: Organization }) {
             </div>
           </div>
 
-          {/* Onboarding Status Badge */}
-          <span className={cn("text-[9px] font-bold px-1.5 py-0.5 rounded border uppercase tracking-wider shrink-0 select-none", statusCfg.className)}>
-            {statusCfg.label}
-          </span>
+          <ActiveStatusBadge status={org.onboarding_status || "Complete"} className="text-[9px] px-1.5 py-0.5 uppercase tracking-wider shrink-0 select-none border" />
         </div>
 
         {/* Middle details grid */}

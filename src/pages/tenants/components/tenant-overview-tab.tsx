@@ -1,8 +1,8 @@
 import { User, FileText, Building2, Info } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { cn, formatDate } from "@/lib/utils"
+import { formatDate } from "@/lib/utils"
 import type { Tenant } from "@/types"
+import { ActiveStatusBadge } from "@/columns"
 
 interface TenantOverviewTabProps {
   tenant: Tenant
@@ -98,17 +98,7 @@ export function TenantOverviewTab({ tenant, onAction }: TenantOverviewTabProps) 
             <div className="space-y-3">
               <div className="flex flex-col gap-0.5">
                 <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Governance Blocked</span>
-                <Badge
-                  variant="outline"
-                  className={cn(
-                    "text-[10px] font-semibold px-2 py-0.5 w-fit mt-0.5",
-                    tenant.governance_blocked
-                      ? "border-red-200 bg-red-50 text-red-700 dark:border-red-900/30 dark:bg-red-950/20 dark:text-red-400"
-                      : "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900/30 dark:bg-emerald-950/20 dark:text-emerald-400"
-                  )}
-                >
-                  {tenant.governance_blocked ? "Blocked" : "Active / Unblocked"}
-                </Badge>
+                <ActiveStatusBadge status={tenant.governance_blocked ? "Blocked" : "Active / Unblocked"} className="text-[10px] w-fit mt-0.5" />
               </div>
               <div className="flex flex-col gap-0.5">
                 <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Governance Outcome</span>

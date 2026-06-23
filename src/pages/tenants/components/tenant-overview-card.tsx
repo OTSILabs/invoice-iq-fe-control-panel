@@ -1,4 +1,4 @@
-import { Badge } from "@/components/ui/badge"
+import { StatusBadge, ActiveStatusBadge } from "@/columns"
 import { CopyButton } from "@/components/ui/copyable-field"
 import { formatDate, getInitials } from "@/lib/utils"
 import type { Tenant } from "@/types"
@@ -45,17 +45,13 @@ export function TenantOverviewCard({ tenant, orgId }: TenantOverviewCardProps) {
     {
       label: "Access Status",
       content: (
-        <Badge variant="outline" className="text-[11px] px-2 py-0.5 font-medium border border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900 dark:bg-emerald-950 dark:text-emerald-400 w-fit">
-          {tenant.access_status || "Active"}
-        </Badge>
+        <ActiveStatusBadge status={tenant.access_status || "Active"} className="text-[11px] px-2 py-0.5 font-medium border w-fit" />
       )
     },
     {
       label: "Provisioning Status",
       content: (
-        <Badge variant="outline" className="text-[11px] px-2 py-0.5 font-medium border border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-900 dark:bg-blue-950 dark:text-blue-400 w-fit">
-          {tenant.provisioning_status || "Completed"}
-        </Badge>
+        <ActiveStatusBadge status={tenant.provisioning_status || "Completed"} color="blue" className="text-[11px] px-2 py-0.5 font-medium border w-fit" />
       )
     },
     {
@@ -85,10 +81,7 @@ export function TenantOverviewCard({ tenant, orgId }: TenantOverviewCardProps) {
                 <p className="text-sm font-medium text-foreground leading-snug truncate" title={tenant.tenant_admin_full_name}>
                   {tenant.tenant_admin_full_name || tenant.id}
                 </p>
-                <Badge variant="outline" className="text-[10px] font-semibold px-2 py-0.5 border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900 dark:bg-emerald-950 dark:text-emerald-400 flex items-center gap-1">
-                  <span className="h-1 w-1 rounded-full bg-emerald-500 animate-pulse" />
-                  {tenant.access_status || "Active"}
-                </Badge>
+                <StatusBadge status={tenant.access_status || "active"} />
               </div>
               <p className="font-mono text-[10px] text-muted-foreground mt-0.5 truncate">{tenant.id}</p>
             </div>
