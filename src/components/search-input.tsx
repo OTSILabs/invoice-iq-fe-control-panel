@@ -18,14 +18,14 @@ export function SearchInput({
   disabled,
 }: SearchInputProps) {
   return (
-    <div className={cn("relative flex items-center w-full sm:w-auto", className)}>
-      <Search className="absolute left-3 size-4 text-muted-foreground pointer-events-none" />
+    <div className={cn("relative flex w-full items-center sm:w-auto", className)}>
+      <Search className="pointer-events-none absolute left-3 size-4 text-muted-foreground" />
       <Input
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="pl-9 h-9 bg-inherit w-full"
+        className="h-9 w-full bg-background/70 pl-9 shadow-xs"
         disabled={disabled}
       />
     </div>

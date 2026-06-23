@@ -42,11 +42,8 @@ export function TenantTabs({
   }
 
   return (
-    <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full sadcnx">
-      <TabsList
-        variant="line"
-        className="mb-6 w-full justify-start gap-6 border-b border-border [&>button]:flex-none"
-      >
+    <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
+      <TabsList className="w-full justify-start overflow-x-auto [&>button]:flex-none">
         <TabsTrigger value="overview" className="cursor-pointer">
           Overview
         </TabsTrigger>

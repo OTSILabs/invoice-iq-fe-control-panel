@@ -7,6 +7,7 @@ import { OrgCard } from "./components/org-card"
 import { SearchInput } from "@/components/search-input"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { StatsCard } from "@/components/StatsCard"
+import { EmptyState, PageShell } from "@/components/invoice-ui/design-system"
 
 export function Organizations() {
   const { data: organizations = [], isLoading } = useOrganizations()
@@ -22,40 +23,23 @@ export function Organizations() {
     )
   }, [organizations, searchQuery])
 
-  const totalTenants = useMemo(() => 
+  const totalTenants = useMemo(() =>
     organizations.reduce((sum, org) => sum + (org.tenant_count ?? 0), 0)
-  , [organizations])
+    , [organizations])
 
   const hasOrgs = organizations.length > 0
 
   return (
-    <div className="flex w-full animate-in flex-col gap-6 pb-12 duration-200 fade-in">
+    <PageShell>
       {/* Header */}
       <PageHeader
         title="Organizations"
         description="Manage and onboard organizations within your control panel."
-        className="pb-3"
-      >
-        {hasOrgs && (
-          <SearchInput
-            value={searchQuery}
-            onChange={setSearchQuery}
-            placeholder="Search organizations..."
-            className="w-full sm:w-64"
-          />
-        )}
-        <CreateOrganizationModal>
-          <Button size="sm" className="w-full sm:w-auto font-medium shadow-sm gap-1.5 shrink-0">
-            <Plus className="h-4 w-4" /> Start onboarding
-          </Button>
-        </CreateOrganizationModal>
-      </PageHeader>
-
-  
+      />
 
       {/* Stats */}
       {hasOrgs && (
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <StatsCard
             label="Total organizations"
             value={organizations.length}
@@ -76,32 +60,49 @@ export function Organizations() {
 
       {/* Content */}
       {isLoading ? null : !hasOrgs ? (
-        <div className="flex flex-col items-center justify-center py-20 border border-dashed border-border rounded-xl bg-card/50">
-          <Building2 className="h-8 w-8 text-muted-foreground/60 mb-3" />
-          <h3 className="font-medium text-sm text-foreground mb-1">No organizations yet</h3>
-          <p className="text-xs text-muted-foreground max-w-sm text-center mb-5">Get started by onboarding your first organization into the platform control panel.</p>
-          <CreateOrganizationModal>
-            <Button variant="outline" size="sm" className="gap-1.5">
-              <Plus className="h-3.5 w-3.5" /> Onboard Organization
-            </Button>
-          </CreateOrganizationModal>
-        </div>
-      ) : filtered.length > 0 ? (
-        <div className="flex flex-col gap-4">
-          <h2 className="text-sm font-medium text-foreground text-muted-foreground">
+        <EmptyState
+          icon={Building2}
+          title="No organizations yet"
+          description="Get started by onboarding your first organization into the platform control panel."
+          actions={
+            <CreateOrganizationModal>
+              <Button variant="outline" size="sm" className="gap-1.5">
+                <Plus className="h-3.5 w-3.5" /> Onboard Organization
+              </Button>
+            </CreateOrganizationModal>
+          }
+        />
+      ) : (
+        <div className="page-section">
+          <h2 className="text-section-title">
             All organizations
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3.5">
-            {filtered.map(org => <OrgCard key={org.id} org={org} />)}
+          <div className="flex flex-col gap-3 rounded-xl bg-card sm:flex-row sm:items-center sm:justify-between shadow-md p-4">
+            <SearchInput
+              value={searchQuery}
+              onChange={setSearchQuery}
+              placeholder="Search organizations..."
+              className="w-full sm:w-80"
+            />
+            <CreateOrganizationModal>
+              <Button size="sm" className="w-full sm:w-auto font-medium shadow-sm gap-1.5 shrink-0">
+                <Plus className="h-4 w-4" /> Start onboarding
+              </Button>
+            </CreateOrganizationModal>
           </div>
-        </div>
-      ) : (
-        <div className="flex flex-col items-center justify-center py-20 border border-dashed border-border rounded-xl bg-card/50">
-          <Search className="h-8 w-8 text-muted-foreground/60 mb-3" />
-          <h3 className="font-medium text-sm text-foreground mb-1">No organizations found</h3>
-          <p className="text-xs text-muted-foreground max-w-sm text-center">No organizations match "{searchQuery}". Try a different search term.</p>
+          {filtered.length > 0 ? (
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+              {filtered.map(org => <OrgCard key={org.id} org={org} />)}
+            </div>
+          ) : (
+            <EmptyState
+              icon={Search}
+              title="No organizations found"
+              description={`No organizations match "${searchQuery}". Try a different search term.`}
+            />
+          )}
         </div>
       )}
-    </div>
+    </PageShell>
   )
 }

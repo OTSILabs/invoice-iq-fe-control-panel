@@ -14,6 +14,7 @@ import type { Tenant } from "@/types"
 import { TenantDetailHeader } from "./components/tenant-detail-header"
 import { TenantOverviewCard } from "./components/tenant-overview-card"
 import { TenantTabs } from "./components/tenant-tabs"
+import { PageShell } from "@/components/invoice-ui/design-system"
 
 export function TenantDetail() {
   const { orgId, tenantId } = useParams<{ orgId?: string; tenantId: string }>()
@@ -56,9 +57,9 @@ export function TenantDetail() {
 
   if (isLoading) {
     return (
-      <div className="flex h-full items-center justify-center">
+      <PageShell className="min-h-[60vh] items-center justify-center">
         <Loader2 className="h-6 w-6 animate-spin text-primary" />
-      </div>
+      </PageShell>
     )
   }
 
@@ -68,17 +69,17 @@ export function TenantDetail() {
     const backLabel = isFromTenantsTab ? "Back to Tenants" : "Back to Organization"
 
     return (
-      <div className="flex h-full flex-col items-center justify-center gap-4">
+      <PageShell className="min-h-[60vh] items-center justify-center">
         <p className="text-sm text-muted-foreground">Failed to load tenant data or tenant not found.</p>
         <Button variant="outline" onClick={() => navigate(backUrl)}>
           {backLabel}
         </Button>
-      </div>
+      </PageShell>
     )
   }
 
   return (
-    <div className="flex w-full flex-col gap-6 pb-12 animate-in fade-in duration-300">
+    <PageShell>
       
       {/* ── Action Header ── */}
       <TenantDetailHeader
@@ -123,6 +124,6 @@ export function TenantDetail() {
         />
       )}
 
-    </div>
+    </PageShell>
   )
 }

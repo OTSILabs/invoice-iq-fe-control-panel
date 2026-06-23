@@ -1,7 +1,7 @@
 import { SearchInput } from "@/components/search-input"
 import { Button } from "@/components/ui/button"
-import { CardContent } from "@/components/ui/card"
 import { DataTable } from "@/components/ui/data-table"
+import { FilterBar } from "@/components/invoice-ui/design-system"
 import { cn } from "@/lib/utils"
 import type { FieldsTableProps } from "@/types"
 import { RefreshCw } from "lucide-react"
@@ -20,8 +20,8 @@ export function FieldsTable({
   const columns = useMemo(() => getFieldsTableColumns(onEdit), [onEdit]);
 
   return (
-    <div className="rounded-xl border border-border p-0 overflow-hidden">
-      <div className="flex flex-col gap-3 border-b bg-card p-3 lg:flex-row lg:items-center lg:justify-between">
+    <div className="table-container">
+      <FilterBar>
         <h3 className="text-xs font-semibold tracking-wider text-muted-foreground">
           Extraction Fields ({data.length})
         </h3>
@@ -43,8 +43,8 @@ export function FieldsTable({
             <RefreshCw className={cn("size-4", isFetching && "animate-spin")} />
           </Button>
         </div>
-      </div>
-      <CardContent className="p-0">
+      </FilterBar>
+      <div className="p-0">
         <DataTable
           data={data}
           columns={columns}
@@ -56,7 +56,7 @@ export function FieldsTable({
           fillAvailableHeight
           tableContainerClassName="border-0 rounded-none bg-transparent"
         />
-      </CardContent>
+      </div>
     </div>
   );
 }

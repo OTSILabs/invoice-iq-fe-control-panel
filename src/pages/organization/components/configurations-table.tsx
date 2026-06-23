@@ -112,7 +112,7 @@ export function ConfigurationsTable({ entityId, entityType }: ConfigurationsTabl
   const columns = useMemo(() => getConfigurationsColumns(isSaving, apiKeysMetadata, handleValueChange), [isSaving, apiKeysMetadata, handleValueChange])
 
   return (
-    <div className="flex flex-col bg-card border border-border rounded-xl overflow-hidden min-h-[300px]">
+    <div className="table-container min-h-[300px]">
       <ConfigurationsTableHeader
         entityType={entityType}
         isSaving={isSaving}

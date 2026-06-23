@@ -116,8 +116,8 @@ function getPinnedColumnClassName<TData, TValue>(column: Column<TData, TValue>):
 
   return cn(
     "bg-card",
-    pinnedSide === "right" && column.getIsFirstColumn("right") && "border-l border-border/80",
-    pinnedSide === "left" && column.getIsLastColumn("left") && "border-r border-border/80",
+    pinnedSide === "right" && column.getIsFirstColumn("right") && "border-l border-border/45",
+    pinnedSide === "left" && column.getIsLastColumn("left") && "border-r border-border/45",
   );
 }
 
@@ -239,7 +239,7 @@ export function DataTable<TData, TValue = unknown>({
     <div
       ref={tableContainerRef}
       className={cn(
-        "bg-card text-card-foreground flex flex-col min-w-full overflow-hidden transition-all duration-200",
+        "min-w-full overflow-hidden text-card-foreground flex flex-col transition-all duration-200",
         fillAvailableHeight && "flex-1 min-h-0",
         containerClassName,
       )}
@@ -251,14 +251,14 @@ export function DataTable<TData, TValue = unknown>({
           className
         )}
         containerClassName={cn(
-          "relative overflow-x-auto overflow-y-hidden border border-border/60 rounded-xl bg-background/50 backdrop-blur-sm",
+          "relative overflow-x-auto overflow-y-hidden rounded-xl bg-card",
           tableContainerClassName,
           fillAvailableHeight && "min-h-0 flex-1 overflow-y-auto",
           stickyHeader && "overflow-x-auto overflow-y-hidden",
           tableScrollClassName
         )}
       >
-        <TableHeader className="bg-muted/40 hover:bg-muted/50 border-b border-border/80 transition-colors">
+        <TableHeader className="border-b border-border/45 bg-muted/35 transition-colors">
           {table.getHeaderGroups().map((headerGroup) => {
             const isFilterable = headerGroup.headers.some((header) =>
               header.column.getCanFilter(),
@@ -273,7 +273,7 @@ export function DataTable<TData, TValue = unknown>({
                       <TableHead
                         key={header.id}
                         className={cn(
-                          "px-4 py-3.5 bg-slate-50/50 dark:bg-slate-900/10 font-bold text-[10px] uppercase tracking-wider text-muted-foreground border-b border-border/60",
+                          "h-10 bg-transparent px-4 py-3 text-[0.68rem] font-semibold uppercase tracking-[0.13em] text-muted-foreground",
                           stickyHeader && "sticky top-0 z-10",
                           getPinnedColumnClassName(header.column),
                           customColumnDef.rowClassName,
@@ -354,7 +354,7 @@ export function DataTable<TData, TValue = unknown>({
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                   className={cn(
-                    "group/row border-b border-border/40 transition-colors hover:bg-muted/20",
+                    "group/row border-b border-border/35 transition-colors hover:bg-muted/35 data-[state=selected]:bg-muted/45",
                     customOriginal?.rowClassName,
                     isClickable && "cursor-pointer focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring",
                   )}
@@ -378,7 +378,7 @@ export function DataTable<TData, TValue = unknown>({
                       <TableCell
                         key={cell.id}
                         className={cn(
-                          "px-3 py-2 text-muted-foreground font-normal transition-colors group-hover/row:text-foreground truncate",
+                          "px-4 py-3.5 text-sm text-muted-foreground font-normal transition-colors group-hover/row:text-foreground truncate",
                           getPinnedColumnClassName(cell.column),
                           customColumnDef.rowClassName,
                         )}
@@ -400,10 +400,10 @@ export function DataTable<TData, TValue = unknown>({
               <TableCell colSpan={columns.length} className="h-48 text-center p-0">
                 {emptyState || (
                   <div className="flex flex-col items-center justify-center py-12 px-4 text-center animate-in fade-in slide-in-from-bottom-2 duration-300">
-                    <div className="bg-muted/40 p-4 rounded-full mb-3 text-muted-foreground/75 scale-95 transition-transform duration-300 hover:scale-100">
-                      <FileX2 className="size-8 animate-pulse" />
+                    <div className="mb-3 rounded-xl bg-background p-3 text-muted-foreground/75 shadow-sm ring-1 ring-border/60">
+                      <FileX2 className="size-6" />
                     </div>
-                    <p className="text-sm font-semibold text-slate-800">
+                    <p className="text-sm font-semibold text-foreground">
                       {emptyMessage || "No records found"}
                     </p>
                     <p className="text-xs text-muted-foreground mt-1 max-w-70 mx-auto leading-relaxed">
@@ -427,7 +427,7 @@ export function DataTable<TData, TValue = unknown>({
         }}
         onPageSizeChange={onPageSizeChange}
         enablePagination={enablePagination}
-        className="justify-end border-t border-border/40 bg-card py-3 px-4 "
+        className="justify-end border-t border-border/40 bg-card/80 px-4 py-3"
       />
     </div>
   );
@@ -449,7 +449,7 @@ function Filter({ filter, onChange, type, header }: FilterProps) {
         value={filter || ""}
         placeholder={`Filter ${header}...`}
         onChange={(e) => onChange(e.target.value)}
-        className="h-8 pl-8 text-xs bg-slate-50/50 border-border/80 focus:bg-background transition-all rounded-lg"
+        className="h-8 rounded-md bg-background/70 pl-8 text-xs transition-all"
       />
     </div>
   );
@@ -467,14 +467,14 @@ function ColumnHeader<TData, TValue>({ header }: ColumnHeaderProps<TData, TValue
   const customColumnDef = header.column.columnDef as CustomColumnDef<TData, TValue>;
 
   if (!canSort) {
-    return <span className="text-xs font-semibold tracking-wider text-muted-foreground">{content}</span>;
+    return <span className="text-[0.68rem] font-semibold tracking-[0.13em] text-muted-foreground">{content}</span>;
   }
 
   return (
     <button
       type="button"
       className={cn(
-        "flex w-full items-center gap-1.5 text-left text-xs font-semibold tracking-wider transition-colors cursor-pointer group/btn",
+        "group/btn flex w-full cursor-pointer items-center gap-1.5 text-left text-[0.68rem] font-semibold tracking-[0.13em] transition-colors",
         sorted ? "text-primary font-bold" : "text-muted-foreground hover:text-foreground",
         customColumnDef.rowClassName === "text-center" && "justify-center text-center"
       )}

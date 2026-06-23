@@ -11,9 +11,9 @@ export function ProfileTableHeader({
   onSave
 }: ProfileTableHeaderProps) {
   return (
-    <div className="flex items-center justify-between p-5 pb-4 border-b border-border/50">
+    <div className="filter-toolbar p-5">
       <div className="flex items-center gap-3">
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/20">
+        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary ring-1 ring-primary/15">
           <Info className="h-4 w-4" />
         </div>
         <div>

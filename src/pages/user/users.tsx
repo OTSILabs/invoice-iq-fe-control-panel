@@ -6,7 +6,6 @@ import { DataTable } from "@/components/ui/data-table"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { cn } from "@/lib/utils"
 import { toast } from "sonner"
-import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { usePlatformUsers, usePlatformRoles } from "@/api/hooks/useUsers"
 import type { PlatformUser } from "@/types"
@@ -15,6 +14,7 @@ import { EditUserDialog } from "./modals/edit-user-dialog"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { SearchInput } from "@/components/search-input"
 import { getUsersColumns, getRolesList } from "@/columns"
+import { EmptyState, FilterBar, PageShell } from "@/components/invoice-ui/design-system"
 
 export function Users() {
   const navigate = useNavigate()
@@ -65,16 +65,16 @@ export function Users() {
   }, [users, filters])
 
   if (isLoadingUsers || isLoadingRoles) return (
-    <div className="flex min-h-[50vh] flex-col items-center justify-center gap-3">
+    <PageShell className="min-h-[60vh] items-center justify-center">
       <Loader2 className="h-10 w-10 animate-spin text-primary" />
       <p className="font-medium text-muted-foreground">Loading platform users...</p>
-    </div>
+    </PageShell>
   )
 
   if (isErrorUsers || isErrorRoles) return (
-    <div className="mx-auto flex min-h-[50vh] max-w-md flex-col items-center justify-center gap-4 text-center">
-      <div className="rounded-full bg-red-100 p-3">
-        <AlertCircle className="h-8 w-8 text-red-600" />
+    <PageShell className="min-h-[60vh] max-w-md items-center justify-center text-center">
+      <div className="rounded-full bg-destructive/10 p-3">
+        <AlertCircle className="h-8 w-8 text-destructive" />
       </div>
       <div>
         <h2 className="text-xl font-bold">Failed to load platform data</h2>
@@ -83,11 +83,11 @@ export function Users() {
       <Button onClick={handleRefetch} variant="outline" className="gap-2" disabled={isFetchingUsers}>
         <RefreshCw className="h-4 w-4" /> Try Again
       </Button>
-    </div>
+    </PageShell>
   )
 
   return (
-    <div className="flex w-full animate-in flex-col gap-6 pb-12 duration-200 fade-in">
+    <PageShell>
       <PageHeader
         title="Users"
         description="Manage system access accounts and user permissions."
@@ -102,18 +102,18 @@ export function Users() {
         </Button>
       </PageHeader>
 
-      <Card className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border-border p-0">
-        <CardContent className="flex min-h-0 flex-1 flex-col p-0">
-          <div className="flex flex-col gap-3 border-b bg-card p-3 lg:flex-row lg:items-center lg:justify-between">
+      <div className="table-container">
+        <div className="flex min-h-0 flex-1 flex-col p-0">
+          <FilterBar>
             <Tabs value={filters.roleFilter} onValueChange={(val) => setFilters((s) => ({ ...s, roleFilter: val }))}>
-              <TabsList className="h-9 rounded-md p-0.5">
-                <TabsTrigger value="all" className="h-7 cursor-pointer rounded-sm px-2.5 text-xs">
+              <TabsList>
+                <TabsTrigger value="all" className="cursor-pointer text-xs">
                   All ({roleCounts.all})
                 </TabsTrigger>
                 {roles.map((r) => {
                   const val = r.name.toLowerCase()
                   return (
-                    <TabsTrigger key={r.id || val} value={val} className="h-7 cursor-pointer rounded-sm px-2.5 text-xs capitalize">
+                    <TabsTrigger key={r.id || val} value={val} className="cursor-pointer text-xs capitalize">
                       {r.name} ({roleCounts[val] || 0})
                     </TabsTrigger>
                   )
@@ -142,15 +142,15 @@ export function Users() {
 
               <Button
                 variant="outline"
-                size="icon-xs"
+                size="icon"
                 onClick={handleRefetch}
-                className="h-9 w-9 cursor-pointer shrink-0 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px"
+                className="h-9 w-9 cursor-pointer shrink-0"
                 disabled={isFetchingUsers}
               >
                 <RefreshCw className={cn("size-4", isFetchingUsers && "animate-spin")} />
               </Button>
             </div>
-          </div>
+          </FilterBar>
 
           <DataTable
             data={filteredUsers}
@@ -165,33 +165,22 @@ export function Users() {
             onRowClick={(user) => navigate(`/users/${user.id}`)}
             emptyState={
               <div className="flex flex-col items-center justify-center px-4 py-10 text-center animate-in fade-in slide-in-from-bottom-2 duration-300">
-                <div className="bg-primary/5 p-4 rounded-full mb-3 text-primary/80 border border-primary/10">
-                  <UsersIcon className="size-8 stroke-[1.5]" />
-                </div>
-                <h3 className="text-sm font-semibold text-foreground">
-                  {filters.searchText || filters.status !== "all" || filters.roleFilter !== "all"
-                    ? "No users match filters"
-                    : "No platform users"}
-                </h3>
-                <p className="text-xs text-muted-foreground mt-1.5 max-w-sm leading-relaxed">
-                  {filters.searchText || filters.status !== "all" || filters.roleFilter !== "all"
-                    ? "We couldn't find any users matching your search or filters. Try adjusting your search query or filters."
-                    : "Add your first platform user to manage system access accounts and user permissions."}
-                </p>
-                {users.length === 0 && (
-                  <Button
-                    onClick={() => setIsCreateOpen(true)}
-                    className="mt-4 gap-1.5 rounded-lg px-4 py-2 text-xs font-semibold cursor-pointer"
-                    disabled={isFetchingUsers}
-                  >
-                    <Plus className="size-3.5" /> Add User
-                  </Button>
-                )}
+                <EmptyState
+                  icon={UsersIcon}
+                  title={filters.searchText || filters.status !== "all" || filters.roleFilter !== "all" ? "No users match filters" : "No platform users"}
+                  description={filters.searchText || filters.status !== "all" || filters.roleFilter !== "all" ? "We couldn't find any users matching your search or filters. Try adjusting your search query or filters." : "Add your first platform user to manage system access accounts and user permissions."}
+                  className="min-h-0 border-0 bg-transparent py-6"
+                  actions={users.length === 0 ? (
+                    <Button onClick={() => setIsCreateOpen(true)} size="sm" disabled={isFetchingUsers}>
+                      <Plus className="size-3.5" /> Add User
+                    </Button>
+                  ) : undefined}
+                />
               </div>
             }
           />
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {isCreateOpen && (
         <CreateUserDialog open={isCreateOpen} onOpenChange={setIsCreateOpen} roles={roles} />
@@ -199,6 +188,6 @@ export function Users() {
       {editingUser && (
         <EditUserDialog user={editingUser} open={true} onOpenChange={(open) => { if (!open) setEditingUser(null) }} />
       )}
-    </div>
+    </PageShell>
   )
 }

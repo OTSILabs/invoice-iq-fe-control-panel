@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { SearchInput } from "@/components/search-input"
 import { planColumns as columns } from "@/columns"
+import { EmptyState, FilterBar, PageShell } from "@/components/invoice-ui/design-system"
 
 import { Select,SelectContent,SelectItem,SelectTrigger, SelectValue } from "@/components/ui/select"
 
@@ -51,14 +52,14 @@ export function Plans() {
   [planTypeFilter, statusFiltered])
 
   if (isLoading) return (
-    <div className="flex min-h-[50vh] flex-col items-center justify-center gap-3">
+    <PageShell className="min-h-[60vh] items-center justify-center">
       <Loader2 className="size-10 animate-spin text-primary" />
       <p className="font-medium text-muted-foreground">Fetching subscription plans...</p>
-    </div>
+    </PageShell>
   )
 
   if (isError) return (
-    <div className="mx-auto flex min-h-[50vh] max-w-md flex-col items-center justify-center gap-4 text-center">
+    <PageShell className="min-h-[60vh] max-w-md items-center justify-center text-center">
       <div className="rounded-full bg-destructive/10 p-3">
         <AlertCircle className="size-8 text-destructive" />
       </div>
@@ -69,11 +70,11 @@ export function Plans() {
       <Button onClick={() => refetch()} variant="outline" className="gap-2" disabled={isFetching}>
         <RefreshCw className="size-4" /> Try Again
       </Button>
-    </div>
+    </PageShell>
   )
 
   return (
-    <div className="flex w-full animate-in flex-col gap-6 pb-12 duration-200 fade-in">
+    <PageShell>
       <PageHeader
         title="Plans & Pricing"
         description="Manage your subscription configurations, features, and pricing tiers."
@@ -83,10 +84,10 @@ export function Plans() {
         </Button>
       </PageHeader>
 
-      <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border border-border bg-card">
+      <div className="table-container">
         <div className="flex min-h-0 flex-1 flex-col p-0">
-          <div className="flex flex-col gap-3 border-b bg-card/60 backdrop-blur-xs p-3 lg:flex-row lg:items-center lg:justify-between">
-            <div className="flex items-center gap-1.5 bg-slate-100/60 dark:bg-slate-900/40 p-1 rounded-xl border border-slate-200/50 dark:border-slate-800/40 w-fit select-none">
+          <FilterBar>
+            <div className="flex w-fit items-center gap-1.5 rounded-lg bg-muted/70 p-1 ring-1 ring-border/50 select-none">
               {[
                 { value: "all", label: "All Plans", count: typeCounts.all, icon: Layers },
                 { value: "basic", label: "Basic", count: typeCounts.basic, icon: CheckCircle2 },
@@ -99,10 +100,10 @@ export function Plans() {
                     type="button"
                     onClick={() => setPlanTypeFilter(value)}
                     className={cn(
-                      "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-150 cursor-pointer select-none border border-transparent",
+                      "inline-flex items-center gap-1.5 rounded-md border border-transparent px-3 py-1.5 text-xs font-semibold transition-all duration-150 cursor-pointer select-none",
                       isActive 
-                        ? "bg-primary/10 text-primary-700 border-primary/20 dark:bg-primary/20 dark:text-primary-300 dark:border-primary-900/50 "
-                        : "text-muted-foreground hover:text-foreground hover:bg-slate-50/50 dark:hover:bg-slate-900/20"
+                        ? "bg-card text-foreground shadow-sm ring-1 ring-border/50"
+                        : "text-muted-foreground hover:bg-background/60 hover:text-foreground"
                     )}
                   >
                     <Icon className="size-3.5" />
@@ -110,8 +111,8 @@ export function Plans() {
                     <span className={cn(
                       "flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[10px] font-bold leading-none",
                       isActive 
-                        ? "bg-primary/20 text-primary-800 dark:bg-primary-900/40 dark:text-primary-300"
-                        : "bg-slate-200/60 text-slate-600 dark:bg-slate-800/60 dark:text-slate-400"
+                        ? "bg-primary/12 text-primary"
+                        : "bg-background/70 text-muted-foreground"
                     )}>
                       {count}
                     </span>
@@ -126,23 +127,23 @@ export function Plans() {
                 onChange={setSearchText} 
                 disabled={isFetching} 
                 placeholder="Search plans..." 
-                className="w-full sm:w-72 [&_input]:rounded-lg [&_input]:bg-background [&_input]:border-border/80 [&_input]:hover:border-slate-300 [&_input]:transition-colors s" 
+                className="w-full sm:w-72" 
               />
               <Select value={status} onValueChange={setStatus} disabled={isFetching}>
-                <SelectTrigger className="h-9 w-full sm:w-44 border border-border/80 rounded-lg bg-background hover:bg-slate-50 dark:hover:bg-slate-900/50 hover:border-slate-300 transition-colors text-xs font-medium cursor-pointer ">
+                <SelectTrigger className="h-9 w-full text-xs font-medium sm:w-44">
                   <SelectValue placeholder="All Statuses" />
                 </SelectTrigger>
-                <SelectContent align="end" className="rounded-xl border border-border/80 shadow-md">
+                <SelectContent align="end">
                   {[["all", "All Statuses"], ["active", "Active"], ["inactive", "Inactive"]].map(([v, l]) => (
                     <SelectItem key={v} value={v} className="cursor-pointer text-xs">{l}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
-              <Button variant="outline" size="icon" onClick={() => refetch()} className="size-9 rounded-lg border-border/80 bg-background hover:bg-slate-50 dark:hover:bg-slate-900/50 hover:border-slate-300 cursor-pointer shadow-xs transition-colors shrink-0" disabled={isFetching}>
+              <Button variant="outline" size="icon" onClick={() => refetch()} className="size-9 shrink-0 cursor-pointer" disabled={isFetching}>
                 <RefreshCw className={cn("size-4", isFetching && "animate-spin")} />
               </Button>
             </div>
-          </div>
+          </FilterBar>
 
           <DataTable
             data={filteredPlans}
@@ -156,33 +157,22 @@ export function Plans() {
             tableContainerClassName="border-0 rounded-none bg-transparent"
             emptyState={
               <div className="flex flex-col items-center justify-center px-4 py-10 text-center animate-in fade-in slide-in-from-bottom-2 duration-300">
-                <div className="bg-primary/5 p-4 rounded-full mb-3 text-primary/80 border border-primary/10">
-                  <CreditCard className="size-8 stroke-[1.5]" />
-                </div>
-                <h3 className="text-sm font-semibold text-foreground">
-                  {searchText || status !== "all" || planTypeFilter !== "all"
-                    ? "No plans match filters"
-                    : "No subscription plans"}
-                </h3>
-                <p className="text-xs text-muted-foreground mt-1.5 max-w-sm leading-relaxed">
-                  {searchText || status !== "all" || planTypeFilter !== "all"
-                    ? "We couldn't find any plans matching your search or filters. Try clearing them to see all plans."
-                    : "Create your first billing plan to manage subscription configurations."}
-                </p>
-                {plans.length === 0 && (
-                  <Button
-                    onClick={() => navigate("/plan/create")}
-                    className="mt-4 gap-1.5 rounded-lg px-4 py-2 text-xs font-semibold cursor-pointer"
-                    disabled={isFetching}
-                  >
-                    <Plus className="size-3.5" /> Create Plan
-                  </Button>
-                )}
+                <EmptyState
+                  icon={CreditCard}
+                  title={searchText || status !== "all" || planTypeFilter !== "all" ? "No plans match filters" : "No subscription plans"}
+                  description={searchText || status !== "all" || planTypeFilter !== "all" ? "We couldn't find any plans matching your search or filters. Try clearing them to see all plans." : "Create your first billing plan to manage subscription configurations."}
+                  className="min-h-0 border-0 bg-transparent py-6"
+                  actions={plans.length === 0 ? (
+                    <Button onClick={() => navigate("/plan/create")} size="sm" disabled={isFetching}>
+                      <Plus className="size-3.5" /> Create Plan
+                    </Button>
+                  ) : undefined}
+                />
               </div>
             }
           />
         </div>
       </div>
-    </div>
+    </PageShell>
   )
 }

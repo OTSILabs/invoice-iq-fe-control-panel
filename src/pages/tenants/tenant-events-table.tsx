@@ -4,6 +4,7 @@ import { Activity } from "lucide-react"
 import { DataTable } from "@/components/ui/data-table"
 import { organizationsService } from "@/api/services/organizations.service"
 import { tenantEventsTableColumns } from "@/columns"
+import { EmptyState, FilterBar } from "@/components/invoice-ui/design-system"
 
 
 export function TenantEventsTable({ tenantId }: TenantEventsTableProps) {
@@ -16,16 +17,16 @@ export function TenantEventsTable({ tenantId }: TenantEventsTableProps) {
   const columns = tenantEventsTableColumns
 
   return (
-    <div className="flex flex-col bg-card border border-border rounded-xl overflow-hidden min-h-[300px]">
-      <div className="flex items-center gap-3 p-5 pb-4 border-b border-border/50">
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/20">
+    <div className="table-container min-h-[300px]">
+      <FilterBar className="justify-start p-5">
+        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary ring-1 ring-primary/15">
           <Activity className="h-4 w-4" />
         </div>
         <div>
           <h3 className="text-sm font-semibold text-foreground">Tenant Events</h3>
           <p className="text-[12px] text-muted-foreground">Audit logs and activity history for this tenant.</p>
         </div>
-      </div>
+      </FilterBar>
 
       <div className="relative">
         <DataTable
@@ -39,10 +40,12 @@ export function TenantEventsTable({ tenantId }: TenantEventsTableProps) {
           tableContainerClassName="border-0 rounded-none bg-transparent"
           emptyState={
             <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
-              <h3 className="text-sm font-semibold text-foreground">No Events Found</h3>
-              <p className="text-xs text-muted-foreground mt-1">
-                No activity history recorded for this tenant yet.
-              </p>
+              <EmptyState
+                icon={Activity}
+                title="No events found"
+                description="No activity history recorded for this tenant yet."
+                className="min-h-0 border-0 bg-transparent py-6"
+              />
             </div>
           }
         />

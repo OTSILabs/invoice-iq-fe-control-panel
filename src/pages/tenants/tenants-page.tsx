@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button"
 import { CreateOrganizationModal } from "@/pages/organization/modals/create-organization-modal"
 import { TenantActionDialog } from "./tenant-actions/tenant-action-dialog"
 import { getTenantColumns } from "@/columns"
+import { EmptyState, FilterBar, PageShell } from "@/components/invoice-ui/design-system"
 
 export function TenantsPage() {
   const navigate = useNavigate()
@@ -54,39 +55,39 @@ export function TenantsPage() {
   // Loading state
   if (isOrgsLoading || isTenantsLoading) {
     return (
-      <div className="flex h-96 items-center justify-center">
+      <PageShell className="min-h-[60vh] items-center justify-center">
         <div className="flex flex-col items-center gap-2">
           <Loader2 className="h-6 w-6 animate-spin text-primary" />
           <p className="text-xs text-muted-foreground">Loading tenants and organizations...</p>
         </div>
-      </div>
+      </PageShell>
     )
   }
 
   // If no organizations exist
   if (organizations.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 border border-dashed border-border rounded-xl bg-card/50">
-        <Building className="h-8 w-8 text-muted-foreground/60 mb-3" />
-        <h3 className="font-medium text-sm text-foreground mb-1">No Organizations Found</h3>
-        <p className="text-xs text-muted-foreground max-w-sm text-center">
-          Onboard your first organization to get started.
-        </p>
-      </div>
+      <PageShell>
+        <EmptyState
+          icon={Building}
+          title="No organizations found"
+          description="Onboard your first organization to get started."
+        />
+      </PageShell>
     )
   }
 
   return (
-    <div className="flex w-full animate-in flex-col gap-6 pb-12 duration-200 fade-in">
+    <PageShell>
       <PageHeader
         title="Tenants Management"
         description="Search organizations and view tenant details."
       />
 
       {/* Tenants list table - tabular format followed everywhere */}
-      <div className="flex flex-col border border-border rounded-xl bg-card">
+      <div className="table-container">
         {/* Header - Put the select dropdown inside the table card header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between p-5 pb-4 border-b border-border/50 gap-4">
+        <FilterBar className="p-5">
           <div className="flex items-center gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/20">
               <Users className="h-4 w-4" />
@@ -106,7 +107,7 @@ export function TenantsPage() {
               <button
                 type="button"
                 onClick={() => setIsOrgDropdownOpen(!isOrgDropdownOpen)}
-                className="h-9 px-3 rounded-lg border border-border bg-card text-xs font-semibold hover:bg-muted/50 transition-colors inline-flex items-center gap-2 cursor-pointer text-foreground w-full sm:w-56 justify-between"
+                className="inline-flex h-9 w-full cursor-pointer items-center justify-between gap-2 rounded-lg border border-input bg-background/70 px-3 text-xs font-semibold text-foreground shadow-xs transition-colors hover:border-ring/35 sm:w-56"
               >
                 <span className="flex items-center gap-2 truncate">
                   <Building className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
@@ -123,7 +124,7 @@ export function TenantsPage() {
                     onClick={() => setIsOrgDropdownOpen(false)}
                     aria-label="Close dropdown"
                   />
-                  <div className="absolute right-0 mt-1 w-64 rounded-lg border border-border bg-popover shadow-lg z-40 p-2 animate-in fade-in slide-in-from-top-1 duration-150">
+                  <div className="absolute right-0 z-40 mt-1 w-64 animate-in rounded-xl bg-popover p-2 text-popover-foreground shadow-2xl ring-1 ring-border/70 duration-150 fade-in slide-in-from-top-1">
                     <input
                       type="text"
                       value={orgSearch}
@@ -169,7 +170,7 @@ export function TenantsPage() {
               </Button>
             </CreateOrganizationModal>
           </div>
-        </div>
+        </FilterBar>
 
         <DataTable
           data={tenants}
@@ -184,8 +185,12 @@ export function TenantsPage() {
           onRowClick={(tenant) => navigate(`/tenants/${tenant.id}`)}
           emptyState={
             <div className="flex flex-col items-center justify-center py-12 text-center">
-              <p className="text-sm font-medium text-foreground mb-1">No tenants yet</p>
-              <p className="text-xs text-muted-foreground">There are no tenants configured under this organization.</p>
+              <EmptyState
+                icon={Users}
+                title="No tenants yet"
+                description="There are no tenants configured under this organization."
+                className="min-h-0 border-0 bg-transparent"
+              />
             </div>
           }
         />
@@ -196,6 +201,6 @@ export function TenantsPage() {
         onClose={() => setTenantAction(null)}
         orgId={tenantAction?.tenant?.organisation_id || activeOrgId}
       />
-    </div>
+    </PageShell>
   )
 }

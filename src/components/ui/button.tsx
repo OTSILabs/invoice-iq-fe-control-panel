@@ -5,24 +5,24 @@ import { cn } from "@/lib/utils"
 import { cva, type VariantProps } from "class-variance-authority"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50 disabled:pointer-events-none",
+  "inline-flex items-center justify-center gap-1.5 rounded-lg text-sm font-medium transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90",
-        outline: "border border-input bg-background hover:bg-muted",
-        ghost: "bg-transparent hover:bg-muted",
+        default: "bg-primary text-primary-foreground shadow-sm shadow-primary/15 hover:bg-primary/92 hover:shadow-md hover:shadow-primary/15 active:translate-y-px",
+        outline: "border border-border/70 bg-background/80 shadow-xs hover:bg-muted/60 hover:text-foreground",
+        ghost: "bg-transparent hover:bg-muted/65",
         link: "text-primary underline-offset-4 hover:underline",
-        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+        destructive: "bg-destructive text-white shadow-sm shadow-destructive/15 hover:bg-destructive/90",
       },
       size: {
         default: "h-10 px-4",
-        sm: "h-8 px-3 text-sm",
-        lg: "h-12 px-6 text-base",
-        xs: "h-6 px-2 text-sm",
+        sm: "h-9 px-3 text-sm",
+        lg: "h-11 px-5 text-sm",
+        xs: "h-7 px-2.5 text-xs",
         icon: "h-9 w-9 p-0",
         "icon-sm": "h-8 w-8 p-0",
-        "icon-xs": "h-6 w-6 p-0",
+        "icon-xs": "h-7 w-7 p-0",
       },
     },
     defaultVariants: {

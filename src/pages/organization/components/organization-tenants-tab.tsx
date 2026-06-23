@@ -8,6 +8,7 @@ import { CreateOrganizationModal } from "@/pages/organization/modals/create-orga
 import { TenantActionDialog } from "@/pages/tenants/tenant-actions/tenant-action-dialog"
 import { useOrganizationTenants } from "@/api/hooks/useOrganizations"
 import { getTenantColumns } from "@/columns"
+import { EmptyState, FilterBar } from "@/components/invoice-ui/design-system"
 
 export function OrganizationTenantsTab({ orgId, organizationName }: OrganizationTenantsTabProps) {
   const navigate = useNavigate()
@@ -20,11 +21,11 @@ export function OrganizationTenantsTab({ orgId, organizationName }: Organization
 
   return (
     <>
-      <div className="flex flex-col border border-border rounded-xl overflow-hidden bg-card">
+      <div className="table-container">
         {/* Header */}
-        <div className="flex items-center justify-between p-5 pb-4 border-b border-border/50">
+        <FilterBar className="p-5">
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/20">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary ring-1 ring-primary/15">
               <Users className="h-4 w-4" />
             </div>
             <div>
@@ -37,7 +38,7 @@ export function OrganizationTenantsTab({ orgId, organizationName }: Organization
               <Plus className="size-3.5 mr-1.5" /> Add Tenant
             </Button>
           </CreateOrganizationModal>
-        </div>
+        </FilterBar>
 
         {/* Table */}
         <DataTable
@@ -52,13 +53,19 @@ export function OrganizationTenantsTab({ orgId, organizationName }: Organization
           onRowClick={(tenant) => navigate(`/organizations/${orgId}/tenants/${tenant.id}`)}
           emptyState={
             <div className="flex flex-col items-center justify-center py-12 text-center">
-              <p className="text-sm font-medium text-foreground mb-1">No tenants yet</p>
-              <p className="text-xs text-muted-foreground mb-4">Add a tenant to get started with this organization.</p>
-              <CreateOrganizationModal existingOrganization={{ id: orgId, name: organizationName }}>
-                <Button variant="outline" size="sm" className="text-xs shadow-none gap-1">
-                  <Plus className="h-3.5 w-3.5" /> Add tenant
-                </Button>
-              </CreateOrganizationModal>
+              <EmptyState
+                icon={Users}
+                title="No tenants yet"
+                description="Add a tenant to get started with this organization."
+                className="min-h-0 border-0 bg-transparent py-6"
+                actions={
+                  <CreateOrganizationModal existingOrganization={{ id: orgId, name: organizationName }}>
+                    <Button variant="outline" size="sm" className="text-xs shadow-none gap-1">
+                      <Plus className="h-3.5 w-3.5" /> Add tenant
+                    </Button>
+                  </CreateOrganizationModal>
+                }
+              />
             </div>
           }
         />

@@ -10,6 +10,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { ConfigurationsTable } from "@/pages/organization/components/configurations-table"
 import { OrganizationTenantsTab } from "@/pages/organization/components/organization-tenants-tab"
 import { ProfileTable } from "@/pages/organization/components/profile-table"
+import { PageShell } from "@/components/invoice-ui/design-system"
 
 
 const formatDate = (dateStr?: string) => {
@@ -36,12 +37,12 @@ export function OrganizationDetail() {
 
   if (isError || (!isLoading && !organization)) {
     return (
-      <div className="flex h-96 flex-col items-center justify-center gap-4">
+      <PageShell className="min-h-[60vh] items-center justify-center">
         <p className="text-sm text-muted-foreground">Failed to load organization data.</p>
         <Button variant="outline" size="sm" onClick={() => navigate("/organizations")}>
           Back to organizations
         </Button>
-      </div>
+      </PageShell>
     )
   }
 
@@ -50,7 +51,7 @@ export function OrganizationDetail() {
 
 
   return (
-    <div className="flex w-full flex-col gap-6 pb-12 animate-in fade-in duration-300">
+    <PageShell>
       {/* Header */}
       <PageHeader
         title="Organization Details"
@@ -62,23 +63,20 @@ export function OrganizationDetail() {
       </PageHeader>
 
       {/* Details Card */}
-      <div className="w-full">
-        <div className="bg-card border border-border rounded-xl overflow-hidden flex flex-col justify-between">
- <div className="h-[3px] w-full bg-gradient-to-r from-primary to-chart-1" />
-          
-          <div className="flex flex-col gap-3 px-5 py-4 border-b border-border">
+      <div className="surface-card w-full overflow-hidden">
+          <div className="flex flex-col gap-3 border-b border-border/45 px-5 py-4">
             <div className="flex items-center gap-3">
-              <div className="h-10 w-10 flex-shrink-0 rounded-lg bg-primary text-primary-foreground flex items-center justify-center text-sm font-semibold ">
+              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary/10 text-sm font-semibold text-primary ring-1 ring-primary/15">
                 {getInitials(organization.name || "OR")}
               </div>
               <div className="min-w-0">
-<p className="text-sm font-medium text-foreground leading-snug truncate" title={organization.name}>{organization.name}</p>
+                <p className="truncate text-sm font-semibold leading-snug text-foreground" title={organization.name}>{organization.name}</p>
                 <p className="font-mono text-xs text-muted-foreground mt-0.5 truncate">{organization.id}</p>
               </div>
             </div>
           </div>
 
-           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-border/20 dark:bg-border/10 overflow-hidden">
+           <div className="grid grid-cols-1 gap-3 p-4 sm:grid-cols-2 lg:grid-cols-3">
             {[
               { label: "Onboarding Status", content: <ActiveStatusBadge status={organization.onboarding_status || "Complete"} className="text-xxs px-2 py-0.5 font-medium border w-fit" /> },
               { label: "Tenants", content: <p className="text-sm font-semibold text-foreground">{organization.tenant_count ?? tenants.length}</p> },
@@ -87,19 +85,18 @@ export function OrganizationDetail() {
               { label: "Updated At", content: <p className="text-xs font-semibold text-foreground">{formatDate(organization.updated_at)}</p> },
               { label: "Organization ID", content: <p className="font-mono text-xs font-medium text-foreground truncate" title={organization.id}>{organization.id}</p> }
             ].map((item) => (
-              <div key={item.label} className="bg-card px-4 py-3.5 hover:bg-muted/10 transition-colors flex flex-col justify-center">
-                <p className="text-xs font-bold text-foreground text-muted-foreground mb-1">{item.label}</p>
+              <div key={item.label} className="flex min-h-20 flex-col justify-center rounded-lg bg-muted/30 px-4 py-3 transition-colors hover:bg-muted/45">
+                <p className="mb-1 text-xs font-semibold text-muted-foreground">{item.label}</p>
                 {item.content}
               </div>
             ))}
           </div>
-        </div>
       </div>
 
       {/* Tabs */}
-      <Tabs value={activeTab} onValueChange={(val) => setSearchParams({ tab: val })} className="w-full flex flex-col gap-5 sadcnx">
-        <div className="mb-4">
-          <TabsList variant="line">
+      <Tabs value={activeTab} onValueChange={(val) => setSearchParams({ tab: val })} className="w-full">
+        <div>
+          <TabsList>
             <TabsTrigger value="tenants">Tenants</TabsTrigger>
             <TabsTrigger value="configuration">Configurations</TabsTrigger>
             <TabsTrigger value="profile">Profile</TabsTrigger>
@@ -118,8 +115,7 @@ export function OrganizationDetail() {
           <ProfileTable entityId={organization.id} entityType="organization" />
         </TabsContent>
       </Tabs>
-    </div>
+    </PageShell>
   )
 }
-
 

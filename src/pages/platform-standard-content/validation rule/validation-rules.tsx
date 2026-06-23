@@ -3,7 +3,6 @@ import { ShieldCheck, Plus, RefreshCw, Loader2 } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { toast } from "sonner"
 import { PageHeader } from "@/components/layout/PageHeader"
-import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { DataTable } from "@/components/ui/data-table"
 import { SearchInput } from "@/components/search-input"
@@ -20,6 +19,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog"
+import { FilterBar, PageShell } from "@/components/invoice-ui/design-system"
 
 export function ValidationRules() {
   const navigate = useNavigate()
@@ -76,7 +76,7 @@ export function ValidationRules() {
   }, [rules, searchText])
 
   return (
-    <div className="flex w-full animate-in flex-col gap-6 pb-12 duration-200 fade-in">
+    <PageShell>
       <PageHeader
         title="Validation Rules"
         description="Define and manage declarative rules for data validation."
@@ -90,9 +90,9 @@ export function ValidationRules() {
         </Button>
       </PageHeader>
 
-      <Card className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border-border p-0">
-        <CardContent className="flex min-h-0 flex-1 flex-col p-0">
-          <div className="flex flex-col gap-3 border-b bg-card p-3 lg:flex-row lg:items-center lg:justify-between">
+      <div className="table-container">
+        <div className="flex min-h-0 flex-1 flex-col p-0">
+          <FilterBar>
             <h3 className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
               Validation Rules ({filteredData.length})
             </h3>
@@ -117,7 +117,7 @@ export function ValidationRules() {
                 />
               </Button>
             </div>
-          </div>
+          </FilterBar>
 
           <DataTable
             data={filteredData}
@@ -137,8 +137,8 @@ export function ValidationRules() {
               />
             }
           />
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {(createOpen || !!editingRule) && (
         <ValidationRuleDialog
@@ -159,7 +159,7 @@ export function ValidationRules() {
         onConfirm={handleDeleteConfirm}
         isDeleting={isDeleting}
       />
-    </div>
+    </PageShell>
   )
 }
 

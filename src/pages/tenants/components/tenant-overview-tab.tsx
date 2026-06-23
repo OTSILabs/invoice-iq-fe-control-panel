@@ -17,9 +17,9 @@ export function TenantOverviewTab({ tenant, onAction }: TenantOverviewTabProps) 
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {/* Card 1: Profile Details */}
-        <div className="bg-card border border-border rounded-xl p-5 flex flex-col justify-between min-h-[240px]">
+        <div className="surface-card flex min-h-[240px] flex-col justify-between p-5">
           <div className="space-y-4">
-            <div className="flex items-center gap-2 border-b border-border pb-3">
+            <div className="flex items-center gap-2 border-b border-border/45 pb-3">
               <User className="h-4 w-4 text-primary" />
               <h3 className="text-sm font-bold text-foreground">Tenant Profile</h3>
             </div>
@@ -55,9 +55,9 @@ export function TenantOverviewTab({ tenant, onAction }: TenantOverviewTabProps) 
         </div>
 
         {/* Card 2: Subscription Plan */}
-        <div className="bg-card border border-border rounded-xl p-5 flex flex-col justify-between min-h-[240px]">
+        <div className="surface-card flex min-h-[240px] flex-col justify-between p-5">
           <div className="space-y-4">
-            <div className="flex items-center gap-2 border-b border-border pb-3">
+            <div className="flex items-center gap-2 border-b border-border/45 pb-3">
               <FileText className="h-4 w-4 text-primary" />
               <h3 className="text-sm font-bold text-foreground">Subscription Plan</h3>
             </div>
@@ -76,7 +76,7 @@ export function TenantOverviewTab({ tenant, onAction }: TenantOverviewTabProps) 
               </div>
             </div>
           </div>
-          <div className="pt-4 border-t border-border mt-auto">
+          <div className="mt-auto border-t border-border/45 pt-4">
             <Button
               variant="outline"
               size="sm"
@@ -89,9 +89,9 @@ export function TenantOverviewTab({ tenant, onAction }: TenantOverviewTabProps) 
         </div>
 
         {/* Card 3: Governance & Compliance */}
-        <div className="bg-card border border-border rounded-xl p-5 flex flex-col justify-between min-h-[240px]">
+        <div className="surface-card flex min-h-[240px] flex-col justify-between p-5">
           <div className="space-y-4">
-            <div className="flex items-center gap-2 border-b border-border pb-3">
+            <div className="flex items-center gap-2 border-b border-border/45 pb-3">
               <Building2 className="h-4 w-4 text-primary" />
               <h3 className="text-sm font-bold text-foreground">Governance & Compliance</h3>
             </div>
@@ -112,7 +112,7 @@ export function TenantOverviewTab({ tenant, onAction }: TenantOverviewTabProps) 
               </div>
             </div>
           </div>
-          <div className="pt-4 border-t border-border mt-auto">
+          <div className="mt-auto border-t border-border/45 pt-4">
             <Button
               variant="outline"
               size="sm"

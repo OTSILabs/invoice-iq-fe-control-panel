@@ -13,6 +13,7 @@ import {
 import { Switch } from "@/components/ui/switch"
 import { Button } from "@/components/ui/button"
 import type { ErpSetting } from "@/types"
+import { EmptyState } from "@/components/invoice-ui/design-system"
 
 const SENSITIVE_KEYS = [
   "password", "pass", "pwd", "secret", "token", "access_token", "refresh_token",
@@ -75,7 +76,7 @@ function MetaDateItem({
 }
 
 const JSONRenderer = ({ value }: { value: unknown }) => (
-  <pre className="h-48 scrollbar-thin overflow-auto rounded-md border border-slate-800 bg-slate-950 p-4 font-mono text-[12px] text-emerald-400 select-all">
+  <pre className="scrollbar-thin h-48 overflow-auto rounded-lg bg-slate-950 p-4 font-mono text-[12px] text-emerald-300 shadow-inner ring-1 ring-white/10 select-all">
     <code>{JSON.stringify(value, null, 2)}</code>
   </pre>
 )
@@ -92,8 +93,8 @@ function ErpSettingCard({
   const [isEnabled, setIsEnabled] = useState(Boolean(record.is_enabled ?? true))
 
   return (
-    <Card className="flex h-full flex-col overflow-hidden border-border/80 shadow-sm">
-      <CardHeader className="border-b bg-muted/10 pb-4">
+    <Card className="flex h-full flex-col overflow-hidden">
+      <CardHeader className="pb-4">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
             <CardTitle className="truncate text-base font-semibold text-foreground">
@@ -117,7 +118,7 @@ function ErpSettingCard({
             />
           </div>
         </div>
-        <div className="mt-3 flex items-start justify-between gap-4 border-t border-slate-100 pt-2">
+        <div className="mt-3 flex items-start justify-between gap-4 rounded-lg bg-muted/35 p-3">
           <MetaDateItem label="Created" value={record.created_at} />
           <MetaDateItem label="Updated" value={record.updated_at} align="right" />
         </div>
@@ -129,7 +130,7 @@ function ErpSettingCard({
         </div>
       </CardContent>
 
-      <CardFooter className="border-t bg-muted/5 p-4 flex items-center justify-end gap-2">
+      <CardFooter className="flex items-center justify-end gap-2 border-t border-border/45 bg-muted/20 p-4">
         <Button variant="outline" size="sm" onClick={() => onEdit(record)} className="gap-1.5 text-xs" disabled>
           <Edit2 className="size-3.5" />
           Edit
@@ -154,14 +155,10 @@ export function ErpSettingsCards({
 }) {
   if (!records.length) {
     return (
-      <Card className="w-full border border-border p-6 text-center">
-        <CardHeader>
-          <CardTitle>No ERP settings found</CardTitle>
-          <CardDescription>
-            Create your first ERP integration config to get started.
-          </CardDescription>
-        </CardHeader>
-      </Card>
+      <EmptyState
+        title="No ERP settings found"
+        description="Create your first ERP integration config to get started."
+      />
     )
   }
 

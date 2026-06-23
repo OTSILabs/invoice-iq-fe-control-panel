@@ -16,23 +16,23 @@ export function PageHeader({
   return (
     <div
       className={cn(
-        "flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2",
+        "flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between",
         className
       )}
       {...props}
     >
-      <div>
-        <h1 className="text-lg font-semibold  tracking-tight text-foreground">
+      <div className="min-w-0">
+        <h1 className="text-page-title">
           {title}
         </h1>
         {description && (
-          <p className="text-xs text-muted-foreground mt-1 ">
+          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">
             {description}
           </p>
         )}
       </div>
       {children && (
-        <div className="flex flex-col sm:flex-row items-center gap-2.5 w-full sm:w-auto">
+        <div className="flex w-full flex-col items-stretch gap-2.5 sm:w-auto sm:flex-row sm:items-center">
           {children}
         </div>
       )}

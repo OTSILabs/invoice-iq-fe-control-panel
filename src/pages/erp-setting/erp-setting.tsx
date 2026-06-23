@@ -17,6 +17,7 @@ import { ErpSettingFormDialog } from "./erp-setting-form-create"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { ErpSettingsCards } from "./erp-settings-cards"
 import type { ErpSetting } from "@/types"
+import { PageShell } from "@/components/invoice-ui/design-system"
 
 export function ErpSettings() {
   const {
@@ -39,7 +40,7 @@ export function ErpSettings() {
   }
 
   return (
-    <div className="flex w-full animate-in flex-col gap-6 pb-12 duration-300 fade-in">
+    <PageShell>
       <PageHeader
         title="ERP Settings"
         description="Configure and maintain enterprise ERP integrations."
@@ -67,15 +68,15 @@ export function ErpSettings() {
       </PageHeader>
 
       {isLoading || isFetching ? (
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {Array.from({ length: 3 }).map((_, idx) => (
             <Skeleton key={idx} className="h-72 w-full rounded-xl" />
           ))}
         </div>
       ) : isError ? (
         <div className="mx-auto flex min-h-[40vh] max-w-md flex-col items-center justify-center gap-4 text-center">
-          <div className="rounded-full bg-red-100 p-3">
-            <AlertCircle className="h-8 w-8 text-red-600" />
+          <div className="rounded-full bg-destructive/10 p-3">
+            <AlertCircle className="h-8 w-8 text-destructive" />
           </div>
           <div>
             <h2 className="text-xl font-bold">Failed to load ERP settings</h2>
@@ -146,6 +147,6 @@ export function ErpSettings() {
           </DialogContent>
         </Dialog>
       )}
-    </div>
+    </PageShell>
   )
 }

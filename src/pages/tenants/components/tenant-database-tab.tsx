@@ -19,22 +19,22 @@ export function TenantDatabaseTab({
   isPendingMigrate,
 }: TenantDatabaseTabProps) {
   return (
-    <div className="bg-card border border-border rounded-xl p-6  space-y-6">
+    <div className="surface-card space-y-6 p-6">
       <div>
-        <h3 className="text-base font-bold text-foreground mb-1">Database Configurations</h3>
+        <h3 className="mb-1 text-sm font-semibold text-foreground">Database Configurations</h3>
         <p className="text-xs text-muted-foreground">
           View primary connection settings and database credentials for this tenant.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2 pb-6 border-b border-border/60">
+      <div className="grid grid-cols-1 gap-4 border-b border-border/45 pb-6 pt-2 md:grid-cols-2">
         <div className="space-y-4">
-          <div className="flex justify-between border-b border-border/50 pb-2">
+          <div className="flex justify-between rounded-lg bg-muted/30 px-3 py-2">
             <span className="text-xs font-semibold text-muted-foreground">Database Engine</span>
             <span className="text-xs font-bold text-foreground">PostgreSQL</span>
           </div>
           <CopyableField label="Database Name" value={tenant.db_name || ""} isSensitive={true} />
-          <div className="flex justify-between border-b border-border/50 pb-2">
+          <div className="flex justify-between rounded-lg bg-muted/30 px-3 py-2">
             <span className="text-xs font-semibold text-muted-foreground">Port</span>
             <span className="text-xs font-mono font-bold text-foreground">{tenant.db_port || "—"}</span>
           </div>
@@ -43,7 +43,7 @@ export function TenantDatabaseTab({
         <div className="space-y-4">
           <CopyableField label="Host Address" value={tenant.db_host || ""} isSensitive={true} />
           <CopyableField label="Master Username" value={tenant.db_user || ""} isSensitive={true} />
-          <div className="flex justify-between border-b border-border/50 pb-2">
+          <div className="flex justify-between rounded-lg bg-muted/30 px-3 py-2">
             <span className="text-xs font-semibold text-muted-foreground">SSL Mode</span>
             <span className="text-xs font-bold text-foreground">Require</span>
           </div>

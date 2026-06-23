@@ -122,7 +122,7 @@ export function ProfileTable({ entityId, entityType }: ProfileTableProps) {
   const columns = useMemo(() => getProfileColumns(isSaving, apiKeysMetadata, handleValueChange), [isSaving, apiKeysMetadata, handleValueChange])
 
   return (
-    <div className="flex flex-col bg-card border border-border rounded-xl overflow-hidden min-h-[300px]">
+    <div className="table-container min-h-[300px]">
       <ProfileTableHeader
         entityType={entityType}
         isSaving={isSaving}

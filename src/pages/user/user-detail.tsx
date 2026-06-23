@@ -7,6 +7,8 @@ import { usePlatformUser } from "@/api/hooks/useUsers"
 import { getInitials } from "@/lib/utils"
 import type { PlatformUser } from "@/types"
 import { ActiveStatusBadge } from "@/columns"
+import { PageHeader } from "@/components/layout/PageHeader"
+import { PageShell } from "@/components/invoice-ui/design-system"
 
 const formatDate = (dateStr?: string) => {
   if (!dateStr) return "—"
@@ -49,15 +51,15 @@ export function UserDetail() {
 
   if (isLoading) {
     return (
-      <div className="flex h-96 items-center justify-center">
+      <PageShell className="min-h-[60vh] items-center justify-center">
         <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-      </div>
+      </PageShell>
     )
   }
 
   if (isError || !user) {
     return (
-      <div className="flex h-96 flex-col items-center justify-center gap-4 animate-in fade-in duration-300">
+      <PageShell className="min-h-[60vh] items-center justify-center">
         <p className="text-sm text-muted-foreground">Failed to load platform user details.</p>
         <Button
           variant="outline"
@@ -66,19 +68,17 @@ export function UserDetail() {
         >
           Back to Users
         </Button>
-      </div>
+      </PageShell>
     )
   }
 
   return (
-    <div className="flex w-full flex-col gap-6 pb-12 animate-in fade-in duration-300">
+    <PageShell>
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="space-y-1">
-          <h1 className="text-lg font-semibold tracking-tight text-foreground">User Details</h1>
-          <p className="text-xs text-muted-foreground">View system access accounts and assigned roles for this user</p>
-        </div>
-        <div className="flex items-center gap-2">
+      <PageHeader
+        title="User Details"
+        description="View system access accounts and assigned roles for this user."
+      >
           <Button
             variant="outline"
             size="sm"
@@ -95,15 +95,11 @@ export function UserDetail() {
           >
             <Trash2 className="h-4 w-4" /> Delete User
           </Button>
-        </div>
-      </div>
+      </PageHeader>
 
       {/* Details Card */}
-      <div className="w-full">
-        <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm flex flex-col justify-between">
-          <div className="h-[3px] w-full bg-gradient-to-r from-primary to-chart-1" />
-          
-          <div className="flex flex-col gap-3 px-5 py-4 border-b border-border">
+      <div className="surface-card w-full overflow-hidden">
+          <div className="flex flex-col gap-3 border-b border-border/45 px-5 py-4">
             <div className="flex items-center gap-3">
               <Avatar className="h-10 w-10 rounded-lg border bg-background flex-shrink-0">
                 <AvatarFallback className="rounded-lg bg-primary/8 text-sm font-semibold text-primary uppercase">
@@ -111,7 +107,7 @@ export function UserDetail() {
                 </AvatarFallback>
               </Avatar>
               <div className="min-w-0">
-                <p className="text-sm font-medium text-foreground leading-snug truncate" title={user.full_name}>
+                <p className="truncate text-sm font-semibold leading-snug text-foreground" title={user.full_name}>
                   {user.full_name}
                 </p>
                 <p className="text-xs text-muted-foreground mt-0.5 truncate">
@@ -121,7 +117,7 @@ export function UserDetail() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-border/20 dark:bg-border/10 overflow-hidden">
+          <div className="grid grid-cols-1 gap-3 p-4 sm:grid-cols-2 lg:grid-cols-3">
             {[
               {
                 label: "User ID",
@@ -158,14 +154,14 @@ export function UserDetail() {
                 content: <p className="text-xs font-semibold text-foreground">{formatDate(user.created_at)}</p>
               }
             ].map((item) => (
-              <div key={item.label} className="bg-card px-5 py-4 hover:bg-muted/10 transition-colors flex flex-col justify-center">
-                <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1">{item.label}</p>
+              <div key={item.label} className="flex min-h-20 flex-col justify-center rounded-lg bg-muted/30 px-4 py-3 transition-colors hover:bg-muted/45">
+                <p className="mb-1 text-xs font-semibold text-muted-foreground">{item.label}</p>
                 {item.content}
               </div>
             ))}
           </div>
 
-          <div className="bg-card px-5 py-5 border-t border-border flex flex-col gap-2">
+          <div className="flex flex-col gap-2 border-t border-border/45 bg-card px-5 py-5">
             <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Assigned Roles</p>
             <div className="flex flex-wrap gap-1.5">
               {getRolesList(user).map((role) => {
@@ -178,8 +174,7 @@ export function UserDetail() {
               })}
             </div>
           </div>
-        </div>
       </div>
-    </div>
+    </PageShell>
   )
 }

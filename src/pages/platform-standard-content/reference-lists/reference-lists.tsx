@@ -5,7 +5,6 @@ import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
 import { DataTable } from "@/components/ui/data-table"
-import { Card, CardContent } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 
 import { PageHeader } from "@/components/layout/PageHeader"
@@ -14,6 +13,7 @@ import { useReferenceLists, useReferenceListPublications } from "@/api/hooks/use
 import type { ReferenceListRegistryResponse } from "@/types"
 import { RegistryDialog } from "./components/RegistryDialog"
 import { getReferenceListsColumns } from "@/columns"
+import { FilterBar, PageShell } from "@/components/invoice-ui/design-system"
 
 export function ReferenceLists() {
   const navigate = useNavigate()
@@ -66,16 +66,16 @@ export function ReferenceLists() {
   const columns = useMemo(() => getReferenceListsColumns(navigate, handleOpenEdit), [navigate])
 
   if (isLoading) return (
-    <div className="flex min-h-[50vh] flex-col items-center justify-center gap-3">
+    <PageShell className="min-h-[60vh] items-center justify-center">
       <Loader2 className="h-10 w-10 animate-spin text-primary" />
       <p className="font-medium text-muted-foreground">Loading reference lists...</p>
-    </div>
+    </PageShell>
   )
 
   if (isError) return (
-    <div className="mx-auto flex min-h-[50vh] max-w-md flex-col items-center justify-center gap-4 text-center">
-      <div className="rounded-full bg-red-100 p-3">
-        <AlertCircle className="h-8 w-8 text-red-600" />
+    <PageShell className="min-h-[60vh] max-w-md items-center justify-center text-center">
+      <div className="rounded-full bg-destructive/10 p-3">
+        <AlertCircle className="h-8 w-8 text-destructive" />
       </div>
       <div>
         <h2 className="text-xl font-bold">Failed to load reference lists</h2>
@@ -84,11 +84,11 @@ export function ReferenceLists() {
       <Button onClick={handleRefetch} variant="outline" className="gap-2" disabled={isFetching}>
         <RefreshCw className="h-4 w-4" /> Try Again
       </Button>
-    </div>
+    </PageShell>
   )
 
   return (
-    <div className="flex w-full animate-in flex-col gap-6 pb-12 duration-200 fade-in">
+    <PageShell>
       <PageHeader
         title="Reference Lists"
         description="Manage system lookup tables, catalogs, and reference lists."
@@ -103,9 +103,9 @@ export function ReferenceLists() {
         </Button>
       </PageHeader>
 
-      <Card className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border-border p-0">
-        <CardContent className="flex min-h-0 flex-1 flex-col p-0">
-          <div className="flex flex-col gap-3 border-b bg-card p-3 lg:flex-row lg:items-center lg:justify-between">
+      <div className="table-container">
+        <div className="flex min-h-0 flex-1 flex-col p-0">
+          <FilterBar>
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center w-full justify-end">
               <SearchInput 
                 value={searchText} 
@@ -124,7 +124,7 @@ export function ReferenceLists() {
                 <RefreshCw className={cn("size-4", isFetching && "animate-spin")} />
               </Button>
             </div>
-          </div>
+          </FilterBar>
 
           <DataTable
             data={filteredRegistries}
@@ -164,8 +164,8 @@ export function ReferenceLists() {
               </div>
             }
           />
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {dialogState.open && (dialogState.mode === "create" || dialogState.mode === "edit") && (
         <RegistryDialog
@@ -175,6 +175,6 @@ export function ReferenceLists() {
           registry={dialogState.registry}
         />
       )}
-    </div>
+    </PageShell>
   )
 }

@@ -69,20 +69,20 @@ export function Layout() {
           {/* ── Sidebar ── */}
           <AppSidebar />
 
-          <SidebarInset className="bg-background flex flex-col h-svh overflow-hidden">
+          <SidebarInset className="bg-background flex h-svh flex-col overflow-hidden">
 
             {/* ── Header ── */}
-            <header className="min-h-16 shrink-0 sticky top-0 z-10 flex items-center px-4 sm:px-6 py-3 bg-header/80 backdrop-blur-md text-header-foreground border-b border-border">
+            <header className="sticky top-0 z-10 flex min-h-14 shrink-0 items-center border-b border-border/45 bg-header/80 px-4 py-3 text-header-foreground backdrop-blur-xl sm:px-6">
               <AppBreadcrumb breadcrumbs={breadcrumbs} />
             </header>
 
             {/* ── Page content ── */}
-            <main className="flex-1 p-2 sm:p-4 lg:p-8 overflow-auto bg-background">
+            <main className="flex-1 overflow-auto bg-background">
               <Outlet />
             </main>
 
             {/* ── Footer ── */}
-            <PoweredByFooter className="h-10 border-t border-border bg-footer text-footer-foreground" />
+            <PoweredByFooter className="h-10 border-t border-border/45 bg-footer text-footer-foreground" />
 
           </SidebarInset>
         </SidebarProvider>

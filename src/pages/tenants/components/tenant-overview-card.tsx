@@ -65,20 +65,16 @@ export function TenantOverviewCard({ tenant, orgId }: TenantOverviewCardProps) {
   ]
 
   return (
-    <div className="w-full">
-      <div className="bg-card border border-border rounded-xl overflow-hidden flex flex-col justify-between">
-        {/* Accent stripe */}
-        <div className="h-[3px] w-full bg-gradient-to-r from-primary to-chart-1" />
-
+    <div className="surface-card w-full overflow-hidden">
         {/* Hero */}
-        <div className="flex flex-col gap-3 px-5 py-4 border-b border-border">
+        <div className="flex flex-col gap-3 border-b border-border/45 px-5 py-4">
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 flex-shrink-0 rounded-lg bg-primary text-primary-foreground flex items-center justify-center text-sm font-semibold ">
+            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary/10 text-sm font-semibold text-primary ring-1 ring-primary/15">
               {initials}
             </div>
             <div className="min-w-0">
               <div className="flex items-center gap-2 flex-wrap">
-                <p className="text-sm font-medium text-foreground leading-snug truncate" title={tenant.tenant_admin_full_name}>
+                <p className="truncate text-sm font-semibold leading-snug text-foreground" title={tenant.tenant_admin_full_name}>
                   {tenant.tenant_admin_full_name || tenant.id}
                 </p>
                 <StatusBadge status={tenant.access_status || "active"} />
@@ -89,15 +85,14 @@ export function TenantOverviewCard({ tenant, orgId }: TenantOverviewCardProps) {
         </div>
 
         {/* Facts mosaic */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-px bg-border/20 dark:bg-border/10 overflow-hidden">
+        <div className="grid grid-cols-1 gap-3 p-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {details.map((item) => (
-            <div key={item.label} className="bg-card px-4 py-3.5 hover:bg-muted/10 transition-colors flex flex-col justify-center">
+            <div key={item.label} className="flex min-h-20 flex-col justify-center rounded-lg bg-muted/30 px-4 py-3 transition-colors hover:bg-muted/45">
               <p className="text-xs font-semibold text-muted-foreground mb-1">{item.label}</p>
               {item.content}
             </div>
           ))}
         </div>
-      </div>
     </div>
   )
 }

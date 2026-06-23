@@ -10,6 +10,7 @@ import { SearchInput } from "@/components/search-input";
 import { cn } from "@/lib/utils";
 
 import { PageHeader } from "@/components/layout/PageHeader";
+import { PageShell } from "@/components/invoice-ui/design-system";
 import { useExtractionFields } from "@/api/hooks/useExtractionFields";
 import { useExtractionTemplates } from "@/api/hooks/useExtractionTemplates";
 import { useDerivedTemplates, useDeleteDerivedTemplate } from "@/api/hooks/useDerivedTemplates";
@@ -168,7 +169,7 @@ export function ExtractionManagement() {
     (state.activeTab === "derived" && derivedQuery.isError);
 
   return (
-    <div className="flex w-full flex-col gap-6 pb-12 animate-in fade-in duration-300">
+    <PageShell>
       <PageHeader
         title="Extraction Management"
         description="Configure document layout mappings, extraction fields, and derived templates globally."
@@ -204,10 +205,9 @@ export function ExtractionManagement() {
         )}
       </PageHeader>
 
-      <Tabs value={state.activeTab} onValueChange={handleTabChange} className="w-full flex flex-col gap-5 sadcnx">
+      <Tabs value={state.activeTab} onValueChange={handleTabChange} className="w-full">
         <TabsList
-          variant="line"
-          className="mb-2 w-full justify-start gap-6 border-b border-border [&>button]:flex-none"
+          className="w-full justify-start overflow-x-auto [&>button]:flex-none"
         >
           <TabsTrigger value="fields" className="cursor-pointer gap-1.5">
             <FileText className="size-4" />
@@ -225,8 +225,8 @@ export function ExtractionManagement() {
 
         {isError ? (
           <div className="flex h-96 flex-col items-center justify-center gap-4">
-            <div className="rounded-full bg-red-100 p-3">
-              <AlertCircle className="h-8 w-8 text-red-600" />
+            <div className="rounded-full bg-destructive/10 p-3">
+              <AlertCircle className="h-8 w-8 text-destructive" />
             </div>
             <p className="text-sm text-muted-foreground">Failed to load platform standard content list.</p>
             <Button onClick={handleRefetch} variant="outline" size="sm" className="gap-2">
@@ -302,8 +302,7 @@ export function ExtractionManagement() {
 
 
 
-    </div>
+    </PageShell>
   );
 }
-
 

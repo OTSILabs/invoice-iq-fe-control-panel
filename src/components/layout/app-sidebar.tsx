@@ -37,7 +37,7 @@ function SidebarLogoHeader() {
     <button
       type="button"
       className={cn(
-        "relative flex h-16 w-full items-center border-b border-sidebar-border cursor-pointer select-none transition-all duration-200 text-left bg-transparent p-0 border-t-0 border-x-0 outline-none",
+        "relative flex h-16 w-full cursor-pointer select-none items-center border-b border-sidebar-border/60 bg-transparent p-0 text-left outline-none transition-all duration-200",
         isCollapsed ? "justify-center" : "px-4"
       )}
       onMouseEnter={() => setHovered(true)}
@@ -48,7 +48,7 @@ function SidebarLogoHeader() {
       {/* App icon — disappears on hover when collapsed */}
       <div
         className={cn(
-          "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-600 text-white transition-opacity duration-200",
+          "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground shadow-sm transition-opacity duration-200",
           !open && !isMobile && hovered ? "opacity-0 pointer-events-none" : "opacity-100"
         )}
       >
@@ -122,7 +122,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   }
 
   return (
-    <Sidebar collapsible="icon" className="border-r border-sidebar-border" {...props}>
+    <Sidebar
+      collapsible="icon"
+      className="border-r border-sidebar-border/55 bg-[linear-gradient(180deg,color-mix(in_oklch,var(--sidebar)_96%,white)_0%,var(--sidebar)_45%,color-mix(in_oklch,var(--sidebar)_94%,var(--background))_100%)]"
+      {...props}
+    >
 
       {/* ── Header with logo + collapse trigger ── */}
       <SidebarHeader className="p-0">
@@ -150,10 +154,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     }
                   }}
                   className={cn(
-                    "h-9 rounded-lg text-sm font-medium transition-all duration-200 w-full justify-between cursor-pointer",
+                    "h-9 w-full cursor-pointer justify-between rounded-lg text-sm font-medium transition-all duration-200",
                     hasActiveChild && !isCollapsed
-                      ? "bg-slate-50 text-slate-900"
-                      : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                      ? "bg-background/85 text-sidebar-accent-foreground shadow-sm ring-1 ring-sidebar-border/70"
+                      : "text-sidebar-foreground/72 hover:bg-background/55 hover:text-sidebar-accent-foreground"
                   )}
                 >
                   <div className="flex items-center gap-2">
@@ -161,7 +165,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       <Icon
                         className={cn(
                           "h-5 w-5 shrink-0",
-                          hasActiveChild ? "text-blue-600" : "text-slate-700"
+                          hasActiveChild ? "text-sidebar-primary" : "text-sidebar-foreground/65"
                         )}
                       />
                     )}
@@ -169,9 +173,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   </div>
                   {!isCollapsed && (
                     isMenuExpanded ? (
-                      <ChevronDown className="h-4 w-4 text-slate-700 shrink-0" />
+                      <ChevronDown className="h-4 w-4 shrink-0 text-sidebar-foreground/55" />
                     ) : (
-                      <ChevronRight className="h-4 w-4 text-slate-700 shrink-0" />
+                      <ChevronRight className="h-4 w-4 shrink-0 text-sidebar-foreground/55" />
                     )
                   )}
                 </SidebarMenuButton>
@@ -191,7 +195,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   )}
 
                    {!isCollapsed && isMenuExpanded && (
-                    <div className="ml-6 mt-1 flex flex-col border-l border-slate-100 pl-2 gap-0.5 animate-in slide-in-from-top-1 duration-200">
+                    <div className="ml-6 mt-1 flex animate-in flex-col gap-0.5 border-l border-sidebar-border/55 pl-2 duration-200 slide-in-from-top-1">
                       {route.children.map((child) => {
                         const isChildActive = location.pathname === child.path
                         const ChildIcon = child.icon
@@ -202,15 +206,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                             className={cn(
                               "h-9 flex items-center text-sm font-medium transition-all duration-200 w-full gap-2",
                               isChildActive
-                                ? "bg-blue-50 text-blue-700 hover:bg-blue-100 hover:text-blue-800 border-l-2 border-blue-600 rounded-r-lg rounded-l-none pl-2.5"
-                                : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 rounded-lg pl-3"
+                                ? "rounded-lg bg-background/85 text-sidebar-accent-foreground shadow-sm ring-1 ring-sidebar-border/70"
+                                : "rounded-lg pl-3 text-sidebar-foreground/70 hover:bg-background/55 hover:text-sidebar-accent-foreground"
                             )}
                           >
                             {ChildIcon && (
                               <ChildIcon
                                 className={cn(
                                   "h-4 w-4 shrink-0",
-                                  isChildActive ? "text-blue-600" : "text-slate-700"
+                                  isChildActive ? "text-sidebar-primary" : "text-sidebar-foreground/60"
                                 )}
                               />
                             )}
@@ -230,10 +234,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 asChild
                 isActive={isActive}
                 className={cn(
-                  "h-9 rounded-lg text-sm font-medium transition-all duration-200 data-active:bg-blue-50! data-active:text-blue-700! group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-0!",
+                  "h-9 rounded-lg text-sm font-medium transition-all duration-200 data-active:bg-sidebar-accent! data-active:text-sidebar-accent-foreground! group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-0!",
                   isActive
-                    ? "hover:bg-blue-100 hover:text-blue-800 border-l-2 border-blue-600 rounded-r-lg rounded-l-none pl-2.5"
-                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 rounded-lg"
+                    ? "bg-background/85 text-sidebar-accent-foreground shadow-sm ring-1 ring-sidebar-border/70"
+                    : "rounded-lg text-sidebar-foreground/72 hover:bg-background/55 hover:text-sidebar-accent-foreground"
                 )}
               >
                 <Link to={route.path || "#"} className="flex items-center gap-2">
@@ -241,7 +245,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     <Icon
                       className={cn(
                         "h-5 w-5 shrink-0 ",
-                        isActive ? "text-blue-600" : "text-slate-700"
+                        isActive ? "text-sidebar-primary" : "text-sidebar-foreground/65"
                       )}
                     />
                   )}
@@ -269,43 +273,43 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarContent>
 
       {/* ── Footer: user menu ── */}
-      <SidebarFooter className="border-t border-sidebar-border p-2">
+      <SidebarFooter className="border-t border-sidebar-border/60 p-2">
         <SidebarMenu>
           <SidebarMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton
                   size="lg"
-                  className="h-10 rounded-lg ml-1.5  hover:bg-slate-100 data-[state=open]:bg-slate-100 group-data-[collapsible=icon]:justify-center"
+                  className="ml-1.5 h-10 rounded-lg hover:bg-sidebar-accent data-[state=open]:bg-sidebar-accent group-data-[collapsible=icon]:justify-center"
                 >
                   {/* Avatar */}
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-blue-100 text-blue-700 text-xs font-semibold group-data-[collapsible=icon]:mx-auto">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-sidebar-primary/12 text-sidebar-primary text-xs font-semibold group-data-[collapsible=icon]:mx-auto">
                     {userInitials}
                   </div>
 
                   {/* Name + role — hidden when collapsed */}
                   <div className="flex flex-col items-start leading-tight overflow-hidden flex-1 ml-1 group-data-[collapsible=icon]:hidden">
-                    <span className="text-sm font-medium text-slate-700 truncate w-full ">
+                    <span className="w-full truncate text-sm font-medium text-sidebar-foreground">
                       {userName}
                     </span>
-                    <span className="text-[11px] text-slate-700 truncate w-full">
+                    <span className="w-full truncate text-[11px] text-sidebar-foreground/60">
                       {userRole}
                     </span>
                   </div>
 
-                  <ChevronUp className="h-3.5 w-3.5 ml-auto shrink-0 text-slate-700 group-data-[collapsible=icon]:hidden" />
+                  <ChevronUp className="ml-auto h-3.5 w-3.5 shrink-0 text-sidebar-foreground/55 group-data-[collapsible=icon]:hidden" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
 
               <DropdownMenuContent side="top" className="w-[--radix-popper-anchor-width] text-xs-fine">
                 <DropdownMenuItem asChild className="gap-2 cursor-pointer">
                   <Link to="/profile" className="flex w-full items-center gap-2">
-                    <User2 className="h-3.5 w-3.5 text-slate-700" />
+                    <User2 className="h-3.5 w-3.5 text-muted-foreground" />
                     <span>Profile</span>
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  className="gap-2 cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50"
+                  className="gap-2 cursor-pointer text-destructive focus:bg-destructive/10 focus:text-destructive"
                   onClick={() => {
                     sessionStorage.clear()
                     window.dispatchEvent(new Event("auth:logout"))
