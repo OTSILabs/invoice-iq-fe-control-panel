@@ -19,8 +19,11 @@ export function TemplateFieldDialogSidebar({
     <aside className="overflow-hidden border-b bg-muted/15 p-3 md:border-b-0 md:border-r md:p-4">
       <nav
         aria-label="Field form sections"
-        className="relative flex gap-2 overflow-x-auto md:flex-col md:gap-1.5 md:overflow-visible md:before:absolute md:before:bottom-5 md:before:left-6 md:before:top-5 md:before:w-px md:before:bg-border"
+        className="relative flex gap-2 overflow-x-auto md:flex-col md:gap-1.5 md:overflow-visible"
       >
+        {/* Connecting line */}
+        <div className="absolute left-[27px] top-[26px] bottom-[46px] w-px bg-border hidden md:block" />
+
         {steps.map((step, index) => {
           const isActive = index === activeStepIndex;
           const isComplete = index < activeStepIndex;
@@ -31,13 +34,16 @@ export function TemplateFieldDialogSidebar({
               type="button"
               aria-current={isActive ? "step" : undefined}
               className={cn(
-                "relative z-10 flex min-w-56 items-start gap-3 rounded-md px-3 py-2.5 text-left transition-colors md:min-w-0",
+                "relative z-10 flex min-w-56 items-start gap-3 rounded-md px-3 py-2.5 text-left transition-colors md:min-w-0 border",
                 isActive
-                  ? "bg-background text-foreground shadow-sm ring-1 ring-border"
-                  : "text-muted-foreground hover:bg-background/70 hover:text-foreground",
+                  ? "bg-background text-foreground shadow-sm border-border"
+                  : "border-transparent text-muted-foreground hover:bg-background/70 hover:text-foreground",
               )}
               onClick={() => void handleStepChange(index)}
             >
+              {/* Mask to block the vertical line behind the semi-transparent circle */}
+              <span className="absolute left-[13px] top-[13px] size-7 rounded-full bg-background z-0 hidden md:block" />
+
               <span
                 className={cn(
                   "relative z-10 mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-full border text-xs font-semibold transition-colors",
