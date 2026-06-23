@@ -1,12 +1,8 @@
+import type { ConfigurationsTableHeaderProps } from "@/types";
 import { Info, Save } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
-interface ConfigurationsTableHeaderProps {
-  entityType: 'organization' | 'tenant'
-  isSaving: boolean
-  hasChanges: boolean
-  onSave: () => void
-}
+
 
 export function ConfigurationsTableHeader({
   entityType,

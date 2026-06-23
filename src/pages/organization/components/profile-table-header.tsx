@@ -1,12 +1,8 @@
+import type { ProfileTableHeaderProps } from "@/types";
 import { Info, Save } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
-interface ProfileTableHeaderProps {
-  entityType: 'organization' | 'tenant'
-  isSaving: boolean
-  hasChanges: boolean
-  onSave: () => void
-}
+
 
 export function ProfileTableHeader({
   entityType,

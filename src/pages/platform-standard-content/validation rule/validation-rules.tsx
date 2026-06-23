@@ -9,7 +9,7 @@ import { DataTable } from "@/components/ui/data-table"
 import type { CustomColumnDef } from "@/components/ui/data-table"
 import { SearchInput } from "@/components/search-input"
 import { useValidationRules, useDeleteValidationRuleMutation } from "@/api/hooks/validation-rules"
-import type { ValidationRule } from "@/types"
+import type { ValidationRule, DeleteValidationRuleDialogProps } from "@/types";
 import { ValidationRuleDialog } from "./modals/validation-rule-dialog"
 import { cn } from "@/lib/utils"
 import {
@@ -321,12 +321,7 @@ function ValidationRulesEmptyState({
   )
 }
 
-interface DeleteValidationRuleDialogProps {
-  deletingRule: ValidationRule | null
-  onClose: () => void
-  onConfirm: () => void
-  isDeleting: boolean
-}
+
 
 function DeleteValidationRuleDialog({
   deletingRule,

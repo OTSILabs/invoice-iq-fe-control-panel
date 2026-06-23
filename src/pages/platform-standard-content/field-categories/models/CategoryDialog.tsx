@@ -1,24 +1,20 @@
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { Loader2, Tags } from "lucide-react"
-import { toast } from "sonner"
+import {useForm} from "react-hook-form";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {Loader2, Tags} from "lucide-react";
+import {toast} from "sonner";
 
-import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Textarea } from "@/components/ui/textarea"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { InputField } from "@/components/ui/input-field"
-import { Field, FieldLabel, FieldError } from "@/components/ui/field"
+import {Button} from "@/components/ui/button";
+import {Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle} from "@/components/ui/dialog";
+import {Textarea} from "@/components/ui/textarea";
+import {ScrollArea} from "@/components/ui/scroll-area";
+import {InputField} from "@/components/ui/input-field";
+import {Field, FieldLabel, FieldError} from "@/components/ui/field";
 
-import { useCreateFieldCategory, useUpdateFieldCategory } from "@/api/hooks/useFieldCategories"
-import type { FieldCategoryResponse } from "@/types"
-import { fieldCategorySchema, type FieldCategoryFormValues, DEFAULT_FIELD_CATEGORY_VALUES } from "@/schemas/field-category-schema"
+import {useCreateFieldCategory, useUpdateFieldCategory} from "@/api/hooks/useFieldCategories";
+import type {CategoryDialogProps} from "@/types";
+import {fieldCategorySchema, type FieldCategoryFormValues, DEFAULT_FIELD_CATEGORY_VALUES} from "@/schemas/field-category-schema";
 
-interface CategoryDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  category: FieldCategoryResponse | null;
-}
+
 
 export function CategoryDialog({ open, onOpenChange, category }: CategoryDialogProps) {
   const isEdit = !!category

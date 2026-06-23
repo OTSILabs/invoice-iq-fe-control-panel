@@ -1,13 +1,13 @@
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { Loader2, Database } from "lucide-react"
-import { toast } from "sonner"
+import {useForm} from "react-hook-form";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {Loader2, Database} from "lucide-react";
+import {toast} from "sonner";
 
-import { Button } from "@/components/ui/button"
-import { InputField } from "@/components/ui/input-field"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { ScrollArea } from "@/components/ui/scroll-area"
+import {Button} from "@/components/ui/button";
+import {InputField} from "@/components/ui/input-field";
+import {Label} from "@/components/ui/label";
+import {Textarea} from "@/components/ui/textarea";
+import {ScrollArea} from "@/components/ui/scroll-area";
 import {
   Dialog,
   DialogContent,
@@ -25,13 +25,9 @@ import {
   type CreateDataTypeFormValues,
   DEFAULT_CREATE_DATA_TYPE_VALUES,
 } from "@/schemas/data-type-schema"
-import type { DataType } from "@/types"
+import type {DataTypeDialogProps} from "@/types";
 
-interface DataTypeDialogProps {
-  dataType?: DataType | null
-  open: boolean
-  onOpenChange: (open: boolean) => void
-}
+
 
 export function DataTypeDialog({
   dataType,

@@ -5,10 +5,9 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { DataTable } from "@/components/ui/data-table"
 import type { CustomColumnDef } from "@/components/ui/data-table"
-import type { Tenant } from "@/types"
+import type { Tenant, OrganizationTenantsTabProps, TenantActionType } from "@/types";
 import { CreateOrganizationModal } from "@/pages/organization/modals/create-organization-modal"
 import { TenantActionDialog } from "@/pages/tenants/tenant-actions/tenant-action-dialog"
-import type { TenantActionType } from "@/pages/tenants/tenant-actions/tenant-action-dialog"
 import { useOrganizationTenants } from "@/api/hooks/useOrganizations"
 import { getInitials } from "@/lib/utils"
 import { TenantActionsDropdown } from "../modals/tenant-actions-dropdown"
@@ -33,10 +32,7 @@ function StatusBadge({ status }: { status: string }) {
   )
 }
 
-interface OrganizationTenantsTabProps {
-  orgId: string
-  organizationName: string
-}
+
 
 
 

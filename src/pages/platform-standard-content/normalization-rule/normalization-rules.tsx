@@ -9,7 +9,7 @@ import { DataTable } from "@/components/ui/data-table"
 import type { CustomColumnDef } from "@/components/ui/data-table"
 import { SearchInput } from "@/components/search-input"
 import { useNormalizationRules, useDeleteNormalizationRuleMutation } from "@/api/hooks/normalization-rules"
-import type { NormalizationRule } from "@/types"
+import type { NormalizationRule, DeleteNormalizationRuleDialogProps } from "@/types";
 import { NormalizationRuleDialog } from "./modals/normalization-rule-dialog"
 import { cn } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
@@ -339,12 +339,7 @@ function NormalizationRulesEmptyState({
   )
 }
 
-interface DeleteNormalizationRuleDialogProps {
-  deletingRule: NormalizationRule | null
-  onClose: () => void
-  onConfirm: () => void
-  isDeleting: boolean
-}
+
 
 function DeleteNormalizationRuleDialog({
   deletingRule,

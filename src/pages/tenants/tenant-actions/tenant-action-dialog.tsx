@@ -1,6 +1,6 @@
-import { useState } from "react"
-import { Loader2 } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import {useState} from "react";
+import {Loader2} from "lucide-react";
+import {Button} from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -9,21 +9,16 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { organizationsService } from "@/api/services/organizations.service"
-import { toast } from "sonner"
-import type { Tenant } from "@/types"
+import {Input} from "@/components/ui/input";
+import {Label} from "@/components/ui/label";
+import {useMutation, useQueryClient} from "@tanstack/react-query";
+import {organizationsService} from "@/api/services/organizations.service";
+import {toast} from "sonner";
+import type {TenantActionDialogProps, TenantActionType} from "@/types";
 
-export type TenantActionType = "deactivate" | "activate" | "block" | "unblock" | "expire" | "delete"
 
-interface TenantActionDialogProps {
-  action: { type: TenantActionType; tenant: Tenant } | null
-  onClose: () => void
-  orgId?: string
-  onSuccess?: () => void
-}
+
+
 
 export function TenantActionDialog({ action, onClose, orgId, onSuccess }: TenantActionDialogProps) {
   const queryClient = useQueryClient()

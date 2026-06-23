@@ -1,14 +1,7 @@
+import type { FieldDialogSidebarProps } from "@/types";
 import { cn } from "@/lib/utils";
 
-interface FieldDialogSidebarProps {
-  activeStepIndex: number;
-  handleStepChange: (index: number) => void;
-  steps: readonly {
-    readonly title: string;
-    readonly description: string;
-    readonly fields: readonly string[];
-  }[];
-}
+
 
 export function FieldDialogSidebar({
   activeStepIndex,

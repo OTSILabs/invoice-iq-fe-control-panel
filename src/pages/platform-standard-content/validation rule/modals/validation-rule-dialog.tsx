@@ -1,15 +1,14 @@
-import { useForm, Controller } from "react-hook-form"
-import type { UseFormRegister, FieldErrors, Control } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { Loader2, ShieldCheck } from "lucide-react"
-import { toast } from "sonner"
+import {useForm, Controller} from "react-hook-form";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {Loader2, ShieldCheck} from "lucide-react";
+import {toast} from "sonner";
 
-import { Button } from "@/components/ui/button"
-import { InputField } from "@/components/ui/input-field"
-import { Switch } from "@/components/ui/switch"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { ScrollArea } from "@/components/ui/scroll-area"
+import {Button} from "@/components/ui/button";
+import {InputField} from "@/components/ui/input-field";
+import {Switch} from "@/components/ui/switch";
+import {Label} from "@/components/ui/label";
+import {Textarea} from "@/components/ui/textarea";
+import {ScrollArea} from "@/components/ui/scroll-area";
 import {
   Dialog,
   DialogContent,
@@ -27,13 +26,9 @@ import {
   type ValidationRuleFormValues,
   DEFAULT_VALIDATION_RULE_VALUES,
 } from "@/schemas/validation-rule-schema"
-import type { ValidationRule } from "@/types"
+import type {ValidationRuleDialogProps, ValidationRuleFormFieldsProps} from "@/types";
 
-interface ValidationRuleDialogProps {
-  validationRule?: ValidationRule | null
-  open: boolean
-  onOpenChange: (open: boolean) => void
-}
+
 
 export function ValidationRuleDialog({
   validationRule,
@@ -225,14 +220,7 @@ export function ValidationRuleDialog({
   )
 }
 
-interface ValidationRuleFormFieldsProps {
-  register: UseFormRegister<ValidationRuleFormValues>
-  errors: FieldErrors<ValidationRuleFormValues>
-  control: Control<ValidationRuleFormValues>
-  isEdit: boolean
-  isPending: boolean
-  formatJSONField: (fieldName: "parameter_schema_json" | "engine_config_json") => void
-}
+
 
 function ValidationRuleFormFields({
   register,

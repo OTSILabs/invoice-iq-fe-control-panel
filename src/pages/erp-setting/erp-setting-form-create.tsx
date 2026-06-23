@@ -1,9 +1,9 @@
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { Loader2 } from "lucide-react"
-import { toast } from "sonner"
+import {useForm} from "react-hook-form";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {Loader2} from "lucide-react";
+import {toast} from "sonner";
 
-import { Button } from "@/components/ui/button"
+import {Button} from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -12,22 +12,18 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { useCreateErpSettingMutation } from "@/api/hooks/useErp"
+import {Input} from "@/components/ui/input";
+import {Label} from "@/components/ui/label";
+import {Textarea} from "@/components/ui/textarea";
+import {useCreateErpSettingMutation} from "@/api/hooks/useErp";
 import {
   erpSettingSchema,
   type ErpSettingFormValues,
   DEFAULT_ERP_SETTING_VALUES,
 } from "@/schemas/erp-setting-schema"
-import type { ErpSetting } from "@/types"
+import type {ErpSettingFormDialogProps} from "@/types";
 
-interface ErpSettingFormDialogProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  record?: ErpSetting | null
-}
+
 
 export function ErpSettingFormDialog({ open, onOpenChange, record }: ErpSettingFormDialogProps) {
   const isEdit = !!record

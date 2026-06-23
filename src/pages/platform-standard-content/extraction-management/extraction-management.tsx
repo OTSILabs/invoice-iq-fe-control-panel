@@ -1,3 +1,4 @@
+import type { ExtractionManagementState } from "@/types";
 import { useReducer, useMemo, useCallback, useEffect } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { AlertCircle, RefreshCw, Plus, FileText, LayoutGrid, Layers } from "lucide-react";
@@ -23,12 +24,7 @@ import { TemplateCards } from "@/components/invoice-ui/templates/template-cards"
 import { FieldsTable } from "./components/fields-table";
 import { DerivedTable } from "./components/derived-table";
 
-interface State {
-  activeTab: string;
-  searchText: string;
-  fieldDialog: { open: boolean; item: StandardExtractionFieldResponse | null };
-  templateDialog: { open: boolean; item: StandardExtractionTemplateResponse | null };
-}
+
 
 type Action =
   | { type: "SET_ACTIVE_TAB"; payload: string }
@@ -38,7 +34,7 @@ type Action =
   | { type: "OPEN_TEMPLATE_DIALOG"; payload: StandardExtractionTemplateResponse | null }
   | { type: "CLOSE_TEMPLATE_DIALOG" };
 
-function reducer(state: State, action: Action): State {
+function reducer(state: ExtractionManagementState, action: Action): ExtractionManagementState {
   switch (action.type) {
     case "SET_ACTIVE_TAB":
       return { ...state, activeTab: action.payload, searchText: "" };
@@ -57,7 +53,7 @@ function reducer(state: State, action: Action): State {
   }
 }
 
-const initialState: State = {
+const initialState: ExtractionManagementState = {
   activeTab: "fields",
   searchText: "",
   fieldDialog: { open: false, item: null },

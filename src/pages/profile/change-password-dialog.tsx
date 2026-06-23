@@ -1,3 +1,4 @@
+import type { ChangePasswordDialogProps } from "@/types";
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -23,10 +24,7 @@ import {
   DEFAULT_CHANGE_PASSWORD_VALUES,
 } from "@/schemas/profile-schema"
 
-interface ChangePasswordDialogProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-}
+
 
 export function ChangePasswordDialog({ open, onOpenChange }: ChangePasswordDialogProps) {
   const { mutate: changePassword, isPending: isUpdatingPassword } = useChangePassword()

@@ -1,3 +1,4 @@
+import type { CreateOrganizationModalProps, CreatedTenantState, ReplicationSettings } from "@/types";
 import { useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { useSearchParams, useNavigate } from "react-router-dom"
@@ -12,7 +13,7 @@ import {
   useOrganizations,
 } from "@/api/hooks/useOrganizations"
 import { toast } from "@/lib/toast"
-import { ReplicationStep, type CreatedTenantState, type ReplicationSettings } from "./replication-step"
+import { ReplicationStep } from "./replication-step"
 import { OnboardingFormStep } from "./onboarding-form-step"
 import {
   onboardingSchema,
@@ -21,12 +22,9 @@ import {
   DEFAULT_REPLICATION_SETTINGS,
 } from "@/schemas/onboarding-schema"
 
-interface Props {
-  children?: React.ReactNode
-  existingOrganization?: { id: string; name: string }
-}
 
-export function CreateOrganizationModal({ children, existingOrganization }: Props) {
+
+export function CreateOrganizationModal({ children, existingOrganization }: CreateOrganizationModalProps) {
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
 

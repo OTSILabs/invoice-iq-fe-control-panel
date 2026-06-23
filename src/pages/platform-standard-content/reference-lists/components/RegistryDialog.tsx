@@ -1,24 +1,20 @@
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { Loader2, ListChecks } from "lucide-react"
-import { toast } from "sonner"
+import {useForm} from "react-hook-form";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {Loader2, ListChecks} from "lucide-react";
+import {toast} from "sonner";
 
-import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { InputField } from "@/components/ui/input-field"
-import { Field, FieldLabel, FieldError } from "@/components/ui/field"
-import { Textarea } from "@/components/ui/textarea"
-import { ScrollArea } from "@/components/ui/scroll-area"
+import {Button} from "@/components/ui/button";
+import {Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle} from "@/components/ui/dialog";
+import {InputField} from "@/components/ui/input-field";
+import {Field, FieldLabel, FieldError} from "@/components/ui/field";
+import {Textarea} from "@/components/ui/textarea";
+import {ScrollArea} from "@/components/ui/scroll-area";
 
-import { useCreateReferenceRegistry, useUpdateReferenceRegistry } from "@/api/hooks/useReferenceLists"
-import type { ReferenceListRegistryResponse } from "@/types"
-import { referenceRegistrySchema, type ReferenceRegistryFormValues, DEFAULT_REGISTRY_VALUES } from "@/schemas/reference-schema"
+import {useCreateReferenceRegistry, useUpdateReferenceRegistry} from "@/api/hooks/useReferenceLists";
+import type {RegistryDialogProps} from "@/types";
+import {referenceRegistrySchema, type ReferenceRegistryFormValues, DEFAULT_REGISTRY_VALUES} from "@/schemas/reference-schema";
 
-interface RegistryDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  registry: ReferenceListRegistryResponse | null;
-}
+
 
 export function RegistryDialog({ open, onOpenChange, registry }: RegistryDialogProps) {
   const isEdit = !!registry

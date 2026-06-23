@@ -1,3 +1,4 @@
+import type { ProfileTableProps } from "@/types";
 import { useState, useMemo, useCallback } from "react"
 import { DataTable } from "@/components/ui/data-table"
 import { useEntityProfile, useUpdateEntityProfile, useProfileKeys } from "@/api/hooks/useOrganizations"
@@ -6,10 +7,7 @@ import { ProfileTableHeader } from "./profile-table-header"
 import { useEntityKeysMetadata } from "./use-entity-keys-metadata"
 import { useProfileTableColumns } from "./use-profile-table-columns"
 
-interface ProfileTableProps {
-  entityId: string
-  entityType: 'organization' | 'tenant'
-}
+
 
 export function ProfileTable({ entityId, entityType }: ProfileTableProps) {
   const [newValues, setNewValues] = useState<Record<string, string>>({})

@@ -1,3 +1,9 @@
+import type * as React from "react"
+import type { UseFormRegister, FieldErrors, Control } from "react-hook-form"
+import type { ExtractionFieldFormValues } from "@/schemas/extraction-schema"
+import type { NormalizationRuleFormValues } from "@/schemas/normalization-rule-schema"
+import type { ValidationRuleFormValues } from "@/schemas/validation-rule-schema"
+
 export interface LoginPayload {
   email: string
   password: string
@@ -461,3 +467,309 @@ export interface DerivedTableProps {
   onRefresh: () => void
 }
 
+export interface ExtractionManagementState {
+  activeTab: string;
+  searchText: string;
+  fieldDialog: { open: boolean; item: StandardExtractionFieldResponse | null };
+  templateDialog: { open: boolean; item: StandardExtractionTemplateResponse | null };
+}
+
+export interface FieldDialogProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  fieldItem: StandardExtractionFieldResponse | null;
+}
+
+export interface FieldDialogDetailsStepProps {
+  register: UseFormRegister<ExtractionFieldFormValues>;
+  errors: FieldErrors<ExtractionFieldFormValues>;
+  categories: any[];
+  dataTypes: any[];
+  isEdit: boolean;
+  isSaving: boolean;
+}
+
+export interface FieldDialogMeaningStepProps {
+  register: UseFormRegister<ExtractionFieldFormValues>;
+  errors: FieldErrors<ExtractionFieldFormValues>;
+  isSaving: boolean;
+}
+
+export interface FieldDialogRulesStepProps {
+  register: UseFormRegister<ExtractionFieldFormValues>;
+  errors: FieldErrors<ExtractionFieldFormValues>;
+  valueMode: string;
+  referenceLists: any[];
+  isSaving: boolean;
+}
+
+export interface FieldDialogSidebarProps {
+  activeStepIndex: number;
+  handleStepChange: (index: number) => void;
+  steps: readonly {
+    readonly title: string;
+    readonly description: string;
+    readonly fields: readonly string[];
+  }[];
+}
+
+export interface ErpSettingFormDialogProps {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  record?: ErpSetting | null
+}
+
+export interface ConfigurationsTableHeaderProps {
+  entityType: 'organization' | 'tenant'
+  isSaving: boolean
+  hasChanges: boolean
+  onSave: () => void
+}
+
+export interface ConfigurationsTableProps {
+  entityId: string
+  entityType: 'organization' | 'tenant'
+}
+
+export interface EditableValueCellProps {
+  configKey: string
+  initialValue: string
+  isSaving: boolean
+  isBoolean: boolean
+  referenceKey?: string | null
+  onValueChange: (key: string, value: string) => void
+}
+
+export interface OrganizationTenantsTabProps {
+  orgId: string
+  organizationName: string
+}
+
+export interface ProfileEditableValueCellProps {
+  configKey: string
+  initialValue: string
+  isSaving: boolean
+  isBoolean: boolean
+  referenceKey?: string | null
+  onValueChange: (key: string, value: string) => void
+}
+
+export interface ProfileTableHeaderProps {
+  entityType: 'organization' | 'tenant'
+  isSaving: boolean
+  hasChanges: boolean
+  onSave: () => void
+}
+
+export interface ProfileTableProps {
+  entityId: string
+  entityType: 'organization' | 'tenant'
+}
+
+export interface CreateOrganizationModalProps {
+  children?: React.ReactNode
+  existingOrganization?: { id: string; name: string }
+}
+
+export interface OnboardingFormStepProps {
+  existingOrganization?: { id: string; name: string }
+  organizations: Organization[]
+  plans?: Plan[]
+  selectedOrgId: string
+  setIsCreatingPlan: (value: boolean) => void
+  handleToggleCreatingOrg: (value: boolean) => void
+  handleOrgChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
+  onSubmitForm: (e: React.FormEvent) => void
+  handleInlinePlanSuccess: (newPlan?: { id?: string } | null) => void
+  flags: {
+    isOrgsLoading: boolean
+    isPlansLoading: boolean
+    isCreatingOrg: boolean
+    isCreatingPlan: boolean
+    isPending: boolean
+    isFormReadyToSubmit: boolean
+  }
+}
+
+export interface OrganizationSectionProps {
+  existingOrganization?: { id: string; name: string }
+  organizations: Organization[]
+  isOrgsLoading: boolean
+  isCreatingOrg: boolean
+  selectedOrgId: string
+  handleToggleCreatingOrg: (value: boolean) => void
+  handleOrgChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
+}
+
+export interface PlanSelectionSectionProps {
+  plans?: Plan[]
+  isPlansLoading: boolean
+  isCreatingPlan: boolean
+  setIsCreatingPlan: (value: boolean) => void
+  handleInlinePlanSuccess: (newPlan?: { id?: string } | null) => void
+}
+
+export interface ReplicationStepProps {
+  createdTenant: CreatedTenantState
+  isReplicating: boolean
+  replicationSettings: ReplicationSettings
+  setReplicationSettings: React.Dispatch<React.SetStateAction<ReplicationSettings>>
+  onSkip: () => void
+  onReplicate: () => void
+}
+
+export interface TenantActionsDropdownProps {
+  tenant: Tenant;
+  orgId: string;
+  setTenantAction: (action: { type: "deactivate" | "activate" | "block" | "unblock" | "expire" | "delete", tenant: Tenant } | null) => void;
+}
+
+export interface PlanFormDialogProps {
+  onSuccess?: (data?: Plan) => void
+  onCancel?: () => void
+  mode?: "create" | "edit"
+  plan?: Plan | null
+  showFooter?: boolean
+  formId?: string
+}
+
+export interface DataTypeDialogProps {
+  dataType?: DataType | null
+  open: boolean
+  onOpenChange: (open: boolean) => void
+}
+
+export interface CategoryDialogProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  category: FieldCategoryResponse | null;
+}
+
+export interface NormalizationRuleDialogProps {
+  normalizationRule?: NormalizationRule | null
+  open: boolean
+  onOpenChange: (open: boolean) => void
+}
+
+export interface NormalizationRuleFormFieldsProps {
+  register: UseFormRegister<NormalizationRuleFormValues>
+  errors: FieldErrors<NormalizationRuleFormValues>
+  control: Control<NormalizationRuleFormValues>
+  isEdit: boolean
+  isPending: boolean
+  formatJSONField: (fieldName: "parameter_schema_json" | "engine_config_json") => void
+}
+
+export interface DeleteNormalizationRuleDialogProps {
+  deletingRule: NormalizationRule | null
+  onClose: () => void
+  onConfirm: () => void
+  isDeleting: boolean
+}
+
+export interface RegistryDialogProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  registry: ReferenceListRegistryResponse | null;
+}
+
+export interface ValueDialogProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  registryKey: string;
+  valueItem: ReferenceValueResponse | null;
+}
+
+export interface RegistryDetailsCardProps {
+  registry: {
+    display_label: string;
+    registry_key: string;
+    source_type: string;
+    sort_sequence: number;
+    version_no: number;
+    created_at?: string | null;
+    updated_at?: string | null;
+    description?: string | null;
+  };
+}
+
+export interface ValidationRuleDialogProps {
+  validationRule?: ValidationRule | null
+  open: boolean
+  onOpenChange: (open: boolean) => void
+}
+
+export interface ValidationRuleFormFieldsProps {
+  register: UseFormRegister<ValidationRuleFormValues>
+  errors: FieldErrors<ValidationRuleFormValues>
+  control: Control<ValidationRuleFormValues>
+  isEdit: boolean
+  isPending: boolean
+  formatJSONField: (fieldName: "parameter_schema_json" | "engine_config_json") => void
+}
+
+export interface DeleteValidationRuleDialogProps {
+  deletingRule: ValidationRule | null
+  onClose: () => void
+  onConfirm: () => void
+  isDeleting: boolean
+}
+
+export interface ChangePasswordDialogProps {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+}
+
+export interface AssignPlanDialogProps {
+  tenant: Tenant | null;
+  onClose: () => void;
+  onSuccess?: () => void;
+  orgId?: string;
+}
+
+export interface TenantActionDialogProps {
+  action: { type: TenantActionType; tenant: Tenant } | null
+  onClose: () => void
+  orgId?: string
+  onSuccess?: () => void
+}
+
+export interface TenantEventsTableProps {
+  tenantId: string;
+}
+
+export interface CreateUserDialogProps {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  roles: PlatformRole[]
+}
+
+export interface EditUserDialogProps {
+  user: PlatformUser | null
+  open: boolean
+  onOpenChange: (open: boolean) => void
+}
+
+export type TenantActionType = "deactivate" | "activate" | "block" | "unblock" | "expire" | "delete";
+
+export interface FormStep {
+  readonly title: string;
+  readonly description: string;
+  readonly fields: readonly (keyof ExtractionFieldFormValues)[];
+}
+
+export type CreatedTenantState = {
+  id: string
+  orgId: string
+  slug: string
+}
+
+export type ReplicationOptionKey =
+  | "extraction_fields"
+  | "extraction_templates"
+  | "tenant_configurations"
+  | "organisation_configurations"
+  | "tenant_profiles"
+  | "organisation_profiles";
+
+export type ReplicationSettings = Record<ReplicationOptionKey, boolean>;

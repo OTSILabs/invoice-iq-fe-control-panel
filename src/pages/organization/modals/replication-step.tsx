@@ -1,13 +1,8 @@
+import type { ReplicationStepProps } from "@/types";
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { Loader2, RefreshCw, ArrowRight } from "lucide-react"
-
-export type CreatedTenantState = {
-  id: string
-  orgId: string
-  slug: string
-}
 
 const replicationOptions = [
   { key: "extraction_fields", label: "Extraction Fields" },
@@ -18,17 +13,7 @@ const replicationOptions = [
   { key: "organisation_profiles", label: "Organisation Profiles" },
 ] as const
 
-export type ReplicationOptionKey = (typeof replicationOptions)[number]["key"]
-export type ReplicationSettings = Record<ReplicationOptionKey, boolean>
 
-interface ReplicationStepProps {
-  createdTenant: CreatedTenantState
-  isReplicating: boolean
-  replicationSettings: ReplicationSettings
-  setReplicationSettings: React.Dispatch<React.SetStateAction<ReplicationSettings>>
-  onSkip: () => void
-  onReplicate: () => void
-}
 
 export function ReplicationStep({
   createdTenant,

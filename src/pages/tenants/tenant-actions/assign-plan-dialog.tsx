@@ -1,9 +1,9 @@
-import { useState } from "react"
-import { Loader2 } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select"
+import {useState} from "react";
+import {Loader2} from "lucide-react";
+import {Button} from "@/components/ui/button";
+import {Input} from "@/components/ui/input";
+import {Label} from "@/components/ui/label";
+import {NativeSelect, NativeSelectOption} from "@/components/ui/native-select";
 import {
   Dialog,
   DialogContent,
@@ -12,18 +12,13 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog"
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
-import { plansService } from "@/api/services/plans.service"
-import { organizationsService } from "@/api/services/organizations.service"
-import { toast } from "sonner"
-import type { Tenant, Plan } from "@/types"
+import {useQuery, useMutation, useQueryClient} from "@tanstack/react-query";
+import {plansService} from "@/api/services/plans.service";
+import {organizationsService} from "@/api/services/organizations.service";
+import {toast} from "sonner";
+import type {Plan, AssignPlanDialogProps} from "@/types";
 
-interface AssignPlanDialogProps {
-  tenant: Tenant | null;
-  onClose: () => void;
-  onSuccess?: () => void;
-  orgId?: string;
-}
+
 
 export function AssignPlanDialog({ tenant, onClose, onSuccess, orgId }: AssignPlanDialogProps) {
   const queryClient = useQueryClient();

@@ -1,17 +1,9 @@
-import type { UseFormRegister, FieldErrors } from "react-hook-form";
-import { InputField } from "@/components/ui/input-field";
-import { Field, FieldLabel, FieldError } from "@/components/ui/field";
-import { NativeSelect } from "@/components/ui/native-select";
-import type { ExtractionFieldFormValues } from "@/schemas/extraction-schema";
+import type {FieldDialogDetailsStepProps} from "@/types";
+import {InputField} from "@/components/ui/input-field";
+import {Field, FieldLabel, FieldError} from "@/components/ui/field";
+import {NativeSelect} from "@/components/ui/native-select";
 
-interface FieldDialogDetailsStepProps {
-  register: UseFormRegister<ExtractionFieldFormValues>;
-  errors: FieldErrors<ExtractionFieldFormValues>;
-  categories: any[];
-  dataTypes: any[];
-  isEdit: boolean;
-  isSaving: boolean;
-}
+
 
 export function FieldDialogDetailsStep({
   register,

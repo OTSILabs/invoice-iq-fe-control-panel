@@ -1,17 +1,10 @@
-import type { UseFormRegister, FieldErrors } from "react-hook-form";
-import { InputField } from "@/components/ui/input-field";
-import { Field, FieldLabel, FieldError } from "@/components/ui/field";
-import { NativeSelect } from "@/components/ui/native-select";
-import { Textarea } from "@/components/ui/textarea";
-import type { ExtractionFieldFormValues } from "@/schemas/extraction-schema";
+import type {FieldDialogRulesStepProps} from "@/types";
+import {InputField} from "@/components/ui/input-field";
+import {Field, FieldLabel, FieldError} from "@/components/ui/field";
+import {NativeSelect} from "@/components/ui/native-select";
+import {Textarea} from "@/components/ui/textarea";
 
-interface FieldDialogRulesStepProps {
-  register: UseFormRegister<ExtractionFieldFormValues>;
-  errors: FieldErrors<ExtractionFieldFormValues>;
-  valueMode: string;
-  referenceLists: any[];
-  isSaving: boolean;
-}
+
 
 export function FieldDialogRulesStep({
   register,

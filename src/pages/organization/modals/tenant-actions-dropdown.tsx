@@ -1,6 +1,6 @@
-import { useNavigate } from "react-router-dom"
-import { Eye, Ban, CheckCircle2, Lock, Unlock, Clock, Trash2, MoreVertical } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import {useNavigate} from "react-router-dom";
+import {Eye, Ban, CheckCircle2, Lock, Unlock, Clock, Trash2, MoreVertical} from "lucide-react";
+import {Button} from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,13 +8,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import type { Tenant } from "@/types"
+import type {TenantActionsDropdownProps} from "@/types";
 
-interface TenantActionsDropdownProps {
-  tenant: Tenant;
-  orgId: string;
-  setTenantAction: (action: { type: "deactivate" | "activate" | "block" | "unblock" | "expire" | "delete", tenant: Tenant } | null) => void;
-}
+
 
 export function TenantActionsDropdown({ tenant, orgId, setTenantAction }: TenantActionsDropdownProps) {
   const navigate = useNavigate()

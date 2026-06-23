@@ -1,14 +1,9 @@
-import type { UseFormRegister, FieldErrors } from "react-hook-form";
-import { InputField } from "@/components/ui/input-field";
-import { FieldLabel, FieldError } from "@/components/ui/field";
-import { Textarea } from "@/components/ui/textarea";
-import type { ExtractionFieldFormValues } from "@/schemas/extraction-schema";
+import type {FieldDialogMeaningStepProps} from "@/types";
+import {InputField} from "@/components/ui/input-field";
+import {FieldLabel, FieldError} from "@/components/ui/field";
+import {Textarea} from "@/components/ui/textarea";
 
-interface FieldDialogMeaningStepProps {
-  register: UseFormRegister<ExtractionFieldFormValues>;
-  errors: FieldErrors<ExtractionFieldFormValues>;
-  isSaving: boolean;
-}
+
 
 export function FieldDialogMeaningStep({
   register,

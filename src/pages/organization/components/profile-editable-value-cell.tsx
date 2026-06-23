@@ -1,17 +1,11 @@
+import type { ProfileEditableValueCellProps } from "@/types";
 import { useState } from "react"
 import { Input } from "@/components/ui/input"
 import { NativeSelect } from "@/components/ui/native-select"
 import { useReferenceValues } from "@/api/hooks/useReferenceLists"
 import { Loader2 } from "lucide-react"
 
-interface EditableValueCellProps {
-  configKey: string
-  initialValue: string
-  isSaving: boolean
-  isBoolean: boolean
-  referenceKey?: string | null
-  onValueChange: (key: string, value: string) => void
-}
+
 
 export function EditableValueCell({
   configKey,
@@ -20,7 +14,7 @@ export function EditableValueCell({
   isBoolean,
   referenceKey,
   onValueChange
-}: EditableValueCellProps) {
+}: ProfileEditableValueCellProps) {
   const [localValue, setLocalValue] = useState(initialValue)
 
   const handleChange = (val: string) => {

@@ -1,25 +1,20 @@
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { Loader2, PlusCircle, Edit } from "lucide-react"
-import { toast } from "sonner"
+import {useForm} from "react-hook-form";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {Loader2, PlusCircle, Edit} from "lucide-react";
+import {toast} from "sonner";
 
-import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { InputField } from "@/components/ui/input-field"
-import { Field, FieldLabel, FieldError } from "@/components/ui/field"
-import { Textarea } from "@/components/ui/textarea"
-import { ScrollArea } from "@/components/ui/scroll-area"
+import {Button} from "@/components/ui/button";
+import {Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle} from "@/components/ui/dialog";
+import {InputField} from "@/components/ui/input-field";
+import {Field, FieldLabel, FieldError} from "@/components/ui/field";
+import {Textarea} from "@/components/ui/textarea";
+import {ScrollArea} from "@/components/ui/scroll-area";
 
-import { useCreateReferenceValue, useUpdateReferenceValue, useReferenceValueDetail } from "@/api/hooks/useReferenceLists"
-import type { ReferenceValueResponse } from "@/types"
-import { referenceValueSchema, type ReferenceValueFormValues, DEFAULT_VALUE_VALUES } from "@/schemas/reference-schema"
+import {useCreateReferenceValue, useUpdateReferenceValue, useReferenceValueDetail} from "@/api/hooks/useReferenceLists";
+import type {ValueDialogProps} from "@/types";
+import {referenceValueSchema, type ReferenceValueFormValues, DEFAULT_VALUE_VALUES} from "@/schemas/reference-schema";
 
-interface ValueDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  registryKey: string;
-  valueItem: ReferenceValueResponse | null;
-}
+
 
 export function ValueDialog({ open, onOpenChange, registryKey, valueItem }: ValueDialogProps) {
   const isEdit = !!valueItem

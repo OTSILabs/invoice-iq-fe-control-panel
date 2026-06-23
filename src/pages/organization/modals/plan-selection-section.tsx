@@ -1,17 +1,11 @@
-import { Button } from "@/components/ui/button"
-import { InputField } from "../../../components/ui/input-field"
-import { Plus, Minus, ArrowLeft } from "lucide-react"
-import { useFormContext } from "react-hook-form"
-import type { Plan } from "@/types"
-import { PlanForm } from "@/pages/plans/modals/plan-form-dailog"
+import {Button} from "@/components/ui/button";
+import {InputField} from "../../../components/ui/input-field";
+import {Plus, Minus, ArrowLeft} from "lucide-react";
+import {useFormContext} from "react-hook-form";
+import type {PlanSelectionSectionProps} from "@/types";
+import {PlanForm} from "@/pages/plans/modals/plan-form-dailog";
 
-interface PlanSelectionSectionProps {
-  plans?: Plan[]
-  isPlansLoading: boolean
-  isCreatingPlan: boolean
-  setIsCreatingPlan: (value: boolean) => void
-  handleInlinePlanSuccess: (newPlan?: { id?: string } | null) => void
-}
+
 
 export function PlanSelectionSection({
   plans,

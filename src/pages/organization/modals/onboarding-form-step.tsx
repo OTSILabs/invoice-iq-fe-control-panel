@@ -1,32 +1,14 @@
-import { Button } from "@/components/ui/button"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog"
-import { InputField } from "../../../components/ui/input-field"
-import { Plus, Loader2 } from "lucide-react"
-import { useFormContext } from "react-hook-form"
-import type { Organization, Plan } from "@/types"
-import { OrganizationSection } from "./organization-section"
-import { PlanSelectionSection } from "./plan-selection-section"
+import {Button} from "@/components/ui/button";
+import {ScrollArea} from "@/components/ui/scroll-area";
+import {DialogHeader, DialogTitle, DialogDescription, DialogFooter} from "@/components/ui/dialog";
+import {InputField} from "../../../components/ui/input-field";
+import {Plus, Loader2} from "lucide-react";
+import {useFormContext} from "react-hook-form";
+import type {OnboardingFormStepProps} from "@/types";
+import {OrganizationSection} from "./organization-section";
+import {PlanSelectionSection} from "./plan-selection-section";
 
-interface OnboardingFormStepProps {
-  existingOrganization?: { id: string; name: string }
-  organizations: Organization[]
-  plans?: Plan[]
-  selectedOrgId: string
-  setIsCreatingPlan: (value: boolean) => void
-  handleToggleCreatingOrg: (value: boolean) => void
-  handleOrgChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
-  onSubmitForm: (e: React.FormEvent) => void
-  handleInlinePlanSuccess: (newPlan?: { id?: string } | null) => void
-  flags: {
-    isOrgsLoading: boolean
-    isPlansLoading: boolean
-    isCreatingOrg: boolean
-    isCreatingPlan: boolean
-    isPending: boolean
-    isFormReadyToSubmit: boolean
-  }
-}
+
 
 export function OnboardingFormStep({
   existingOrganization,

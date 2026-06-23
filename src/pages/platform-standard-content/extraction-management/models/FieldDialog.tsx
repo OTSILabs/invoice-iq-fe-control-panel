@@ -10,7 +10,7 @@ import { useCreateExtractionField, useUpdateExtractionField } from "@/api/hooks/
 import { useDataTypes } from "@/api/hooks/data-types";
 import { useFieldCategories } from "@/api/hooks/useFieldCategories";
 import { useReferenceLists } from "@/api/hooks/useReferenceLists";
-import type { StandardExtractionFieldResponse } from "@/types";
+import type { FieldDialogProps, FormStep } from "@/types";
 import { extractionFieldSchema, type ExtractionFieldFormValues, DEFAULT_FIELD_VALUES } from "@/schemas/extraction-schema";
 
 import { FieldDialogDetailsStep, FieldDialogMeaningStep, FieldDialogRulesStep } from "./FieldDialogSteps";
@@ -18,16 +18,16 @@ import { FieldDialogSidebar } from "./FieldDialogSidebar";
 import { FieldDialogFooterNav, FieldDialogFooterSubmit } from "./FieldDialogFooter";
 import { Button } from "@/components/ui/button";
 
-const FIELD_FORM_STEPS = [
+const FIELD_FORM_STEPS: readonly FormStep[] = [
   {
     title: "Field details",
     description: "Category, name, type, and document section.",
-    fields: ["field_id", "field_category_code", "field_label", "data_type_code", "header_item"] as const,
+    fields: ["field_id", "field_category_code", "field_label", "data_type_code", "header_item"],
   },
   {
     title: "Field meaning",
     description: "Short and long context for the extractor.",
-    fields: ["short_desc", "field_long_description"] as const,
+    fields: ["short_desc", "field_long_description"],
   },
   {
     title: "Extraction rules",
@@ -40,17 +40,13 @@ const FIELD_FORM_STEPS = [
       "allowed_static_list_raw",
       "allowed_reference_registry_key",
       "default_value",
-    ] as const,
+    ],
   },
-] as const;
+];
 
 const FIELD_FORM_STEP_FIELDS = FIELD_FORM_STEPS.flatMap((step) => step.fields);
 
-interface FieldDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  fieldItem: StandardExtractionFieldResponse | null;
-}
+
 
 export function FieldDialog({ open, onOpenChange, fieldItem }: FieldDialogProps) {
   const isEdit = !!fieldItem;
@@ -99,12 +95,10 @@ export function FieldDialog({ open, onOpenChange, fieldItem }: FieldDialogProps)
 
   const validateStep = async (stepIndex: number) => {
     const step = FIELD_FORM_STEPS[stepIndex];
-    // @ts-ignore
     const fieldsToValidate = [...step.fields];
-    const isValid = await trigger(fieldsToValidate as any);
+    const isValid = await trigger(fieldsToValidate);
 
     if (!isValid) {
-      // @ts-ignore
       const firstField = step.fields.find((fieldName) => getFieldState(fieldName).invalid);
       if (firstField) {
         setFocus(firstField);
@@ -138,8 +132,8 @@ export function FieldDialog({ open, onOpenChange, fieldItem }: FieldDialogProps)
 
   const handleInvalidSubmit = (formErrors: any) => {
     const firstErrorField = FIELD_FORM_STEP_FIELDS.find((fieldName) => formErrors[fieldName]);
+    if (!firstErrorField) return;
     const firstErrorStepIndex = FIELD_FORM_STEPS.findIndex((step) =>
-      // @ts-ignore
       step.fields.includes(firstErrorField)
     );
     if (firstErrorStepIndex >= 0) {

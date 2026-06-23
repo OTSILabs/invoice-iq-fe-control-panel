@@ -13,7 +13,7 @@ import { SearchInput } from "@/components/search-input"
 import { cn } from "@/lib/utils"
 
 import { useReferenceListDetail, useReferenceValues } from "@/api/hooks/useReferenceLists"
-import type { ReferenceValueResponse } from "@/types"
+import type { ReferenceValueResponse, RegistryDetailsCardProps } from "@/types";
 import { ValueDialog } from "./components/ValueDialog"
 
 const formatDate = (dateStr?: string) => {
@@ -29,18 +29,7 @@ const formatDate = (dateStr?: string) => {
   })
 }
 
-interface RegistryDetailsCardProps {
-  registry: {
-    display_label: string;
-    registry_key: string;
-    source_type: string;
-    sort_sequence: number;
-    version_no: number;
-    created_at?: string | null;
-    updated_at?: string | null;
-    description?: string | null;
-  };
-}
+
 
 function RegistryDetailsCard({ registry }: RegistryDetailsCardProps) {
   return (

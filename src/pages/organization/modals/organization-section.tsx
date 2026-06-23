@@ -1,20 +1,12 @@
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Field, FieldLabel } from "@/components/ui/field"
-import { InputField } from "../../../components/ui/input-field"
-import { Plus } from "lucide-react"
-import { useFormContext } from "react-hook-form"
-import type { Organization } from "@/types"
+import {Button} from "@/components/ui/button";
+import {Input} from "@/components/ui/input";
+import {Field, FieldLabel} from "@/components/ui/field";
+import {InputField} from "../../../components/ui/input-field";
+import {Plus} from "lucide-react";
+import {useFormContext} from "react-hook-form";
+import type {OrganizationSectionProps} from "@/types";
 
-interface OrganizationSectionProps {
-  existingOrganization?: { id: string; name: string }
-  organizations: Organization[]
-  isOrgsLoading: boolean
-  isCreatingOrg: boolean
-  selectedOrgId: string
-  handleToggleCreatingOrg: (value: boolean) => void
-  handleOrgChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
-}
+
 
 export function OrganizationSection({
   existingOrganization,

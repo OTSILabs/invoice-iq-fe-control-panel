@@ -1,5 +1,5 @@
 import { z } from "zod"
-import type { ReplicationSettings } from "@/pages/organization/modals/replication-step"
+import type { ReplicationSettings } from "@/types"
 
 export const onboardingSchema = z.object({
   orgName: z

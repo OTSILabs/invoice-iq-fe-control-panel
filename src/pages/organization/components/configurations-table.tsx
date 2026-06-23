@@ -1,3 +1,4 @@
+import type { ConfigurationsTableProps } from "@/types";
 import { useState, useMemo, useCallback } from "react"
 import { DataTable } from "@/components/ui/data-table"
 import { useEntityConfigurations, useUpdateEntityConfigurations, useConfigurationKeys } from "@/api/hooks/useOrganizations"
@@ -6,10 +7,7 @@ import { ConfigurationsTableHeader } from "./configurations-table-header"
 import { useEntityKeysMetadata } from "./use-entity-keys-metadata"
 import { useConfigurationsTableColumns } from "./use-configurations-table-columns"
 
-interface ConfigurationsTableProps {
-  entityId: string
-  entityType: 'organization' | 'tenant'
-}
+
 
 export function ConfigurationsTable({ entityId, entityType }: ConfigurationsTableProps) {
   const [newValues, setNewValues] = useState<Record<string, string>>({})

@@ -1,14 +1,14 @@
-import { useForm, Controller } from "react-hook-form"
-import {  Loader2 } from "lucide-react"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { toast } from "sonner"
+import {useForm, Controller} from "react-hook-form";
+import {Loader2} from "lucide-react";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {toast} from "sonner";
 
-import { Button } from "@/components/ui/button"
-import { Switch } from "@/components/ui/switch"
-import { InputField } from "@/components/ui/input-field"
-import { Label } from "@/components/ui/label"
-import { useCreatePlanMutation } from "@/api/hooks/usePlans"
-import type { Plan } from "@/types"
+import {Button} from "@/components/ui/button";
+import {Switch} from "@/components/ui/switch";
+import {InputField} from "@/components/ui/input-field";
+import {Label} from "@/components/ui/label";
+import {useCreatePlanMutation} from "@/api/hooks/usePlans";
+import type {PlanFormDialogProps} from "@/types";
 import {
   planSchema,
   type PlanFormValues as FormValues,
@@ -17,14 +17,7 @@ import {
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-interface PlanFormProps {
-  onSuccess?: (data?: Plan) => void
-  onCancel?: () => void
-  mode?: "create" | "edit"
-  plan?: Plan | null
-  showFooter?: boolean
-  formId?: string
-}
+
 
 
 
@@ -37,7 +30,7 @@ export function PlanForm({
   plan = null,
   showFooter = true,
   formId = "plan-form-inner",
-}: PlanFormProps) {
+}: PlanFormDialogProps) {
   const createPlan = useCreatePlanMutation()
 
   const { register, handleSubmit, control, reset, formState: { errors } } = useForm<FormValues>({

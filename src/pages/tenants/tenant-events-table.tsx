@@ -1,3 +1,4 @@
+import type { TenantEventsTableProps } from "@/types";
 import { useQuery } from "@tanstack/react-query"
 import { Activity } from "lucide-react"
 import { DataTable } from "@/components/ui/data-table"
@@ -6,9 +7,7 @@ import { organizationsService } from "@/api/services/organizations.service"
 import { useMemo } from "react"
 import { Badge } from "@/components/ui/badge"
 
-interface TenantEventsTableProps {
-  tenantId: string;
-}
+
 
 export function TenantEventsTable({ tenantId }: TenantEventsTableProps) {
   const { data: events = [], isLoading } = useQuery({

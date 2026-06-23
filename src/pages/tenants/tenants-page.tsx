@@ -8,12 +8,11 @@ import { DataTable, type CustomColumnDef } from "@/components/ui/data-table"
 import { getInitials } from "@/lib/utils"
 import { Loader2, Users, Building, ChevronDown, Plus } from "lucide-react"
 import { useNavigate } from "react-router-dom"
-import type { Tenant } from "@/types"
+import type { Tenant, TenantActionType } from "@/types"
 import { Button } from "@/components/ui/button"
 import { CreateOrganizationModal } from "@/pages/organization/modals/create-organization-modal"
 import { TenantActionsDropdown } from "@/pages/organization/modals/tenant-actions-dropdown"
 import { TenantActionDialog } from "./tenant-actions/tenant-action-dialog"
-import type { TenantActionType } from "./tenant-actions/tenant-action-dialog"
 
 type StatusKey = "active" | "inactive" | "blocked" | "expired" | "pending"
 

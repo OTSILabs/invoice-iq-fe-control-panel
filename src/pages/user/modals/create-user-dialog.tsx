@@ -1,14 +1,14 @@
-import { useState } from "react"
-import { useForm, Controller } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { Loader2, Eye, EyeOff, UserPlus } from "lucide-react"
-import { toast } from "sonner"
+import {useState} from "react";
+import {useForm, Controller} from "react-hook-form";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {Loader2, Eye, EyeOff, UserPlus} from "lucide-react";
+import {toast} from "sonner";
 
-import { Button } from "@/components/ui/button"
-import { InputField } from "@/components/ui/input-field"
-import { Label } from "@/components/ui/label"
-import { Switch } from "@/components/ui/switch"
-import { ScrollArea } from "@/components/ui/scroll-area"
+import {Button} from "@/components/ui/button";
+import {InputField} from "@/components/ui/input-field";
+import {Label} from "@/components/ui/label";
+import {Switch} from "@/components/ui/switch";
+import {ScrollArea} from "@/components/ui/scroll-area";
 import {
   Dialog,
   DialogContent,
@@ -17,19 +17,15 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog"
-import { useCreatePlatformUserMutation } from "@/api/hooks/useUsers"
-import type { PlatformRole, CreatePlatformUserPayload } from "@/types"
+import {useCreatePlatformUserMutation} from "@/api/hooks/useUsers";
+import type {CreatePlatformUserPayload, CreateUserDialogProps} from "@/types";
 import {
   createUserSchema,
   type CreateUserFormValues,
   DEFAULT_CREATE_USER_VALUES,
 } from "@/schemas/user-schema"
 
-interface CreateUserDialogProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  roles: PlatformRole[]
-}
+
 
 export function CreateUserDialog({ open, onOpenChange, roles }: CreateUserDialogProps) {
   const { mutate: createUser, isPending: isCreating } = useCreatePlatformUserMutation()

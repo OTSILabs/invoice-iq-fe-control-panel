@@ -18,7 +18,7 @@ import {
   useUpdatePlatformUserMutation,
   usePlatformRoles,
 } from "@/api/hooks/useUsers"
-import type { PlatformUser } from "@/types"
+import type { PlatformUser, EditUserDialogProps } from "@/types";
 import {
   editUserSchema,
   type EditUserFormValues,
@@ -47,11 +47,7 @@ const getRolesList = (user: PlatformUser | null | undefined): string[] => {
   return []
 }
 
-interface EditUserDialogProps {
-  user: PlatformUser | null
-  open: boolean
-  onOpenChange: (open: boolean) => void
-}
+
 
 export function EditUserDialog({ user, open, onOpenChange }: EditUserDialogProps) {
   const { mutate: updateUser, isPending } = useUpdatePlatformUserMutation()
