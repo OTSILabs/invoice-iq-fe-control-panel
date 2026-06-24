@@ -92,7 +92,11 @@ Semantic status colors are allowed for badges and destructive/success states, bu
 
 ## Layout Rules
 
-- Use max-width constrained content via `PageShell`.
+- Use max-width constrained content via `PageShell` (`max-w-[1440px]`).
+- Spacing and gaps must adapt dynamically to screen resolutions using relative `rem` units via fluid CSS clamp:
+  - Standard spacing formula: `padding: clamp(1rem, 2.5vw, 2rem)`
+  - Standard container gaps: `gap: clamp(1rem, 2vw, 1.5rem)`
+  - Section spacing gaps: `gap: clamp(0.75rem, 1.5vw, 1rem)`
 - Keep page sections spaced with gaps, not excessive dividers.
 - Tables and large lists should sit in `table-container`.
 - Search/filter/action rows should use `FilterBar` or `filter-toolbar`.
@@ -101,13 +105,13 @@ Semantic status colors are allowed for badges and destructive/success states, bu
 
 ## Typography
 
-Use a consistent hierarchy:
+Use a consistent hierarchy that scales dynamically based on screen resolution:
 
-- Page title: compact, strong, not oversized
-- Section title: small and scannable
+- Page title: `font-size: clamp(1.125rem, 2vw, 1.375rem)` (compact, strong, fluid)
+- Section title: `font-size: clamp(0.8125rem, 1vw, 0.875rem)` (small, scannable, fluid)
 - Card title: medium weight with optional icon
 - Body text: readable, restrained
-- Caption text: muted and concise
+- Caption text: `font-size: clamp(0.6875rem, 0.8vw, 0.75rem)` (muted, concise, fluid)
 
 Avoid hero-scale headings inside dashboards, forms, cards, toolbars, and tables.
 

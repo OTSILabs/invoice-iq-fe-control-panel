@@ -81,12 +81,7 @@ export function Organizations() {
             </div>
           </div>
 
-        {filtered.length > 0 ? (
-         <div className="grid grid-cols-1 gap-4 p-3.5 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
-        {filtered.map(org => <OrgCard key={org.id} org={org} />)}
-           </div>
-
-          ) : (
+   {filtered.length > 0 ? ( <div className="grid grid-cols-1 gap-4 p-3.5 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4"> {filtered.map(org => <OrgCard key={org.id} org={org} />)} </div> ) : (
             <EmptyState
               icon={Search}
               title="No organizations found"
