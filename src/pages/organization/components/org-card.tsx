@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import { Users, ArrowRight, Calendar, Globe, Tag } from "lucide-react"
+import { UserCheck, ArrowRight, Calendar, Globe, Tag } from "lucide-react"
 import { getInitials } from "@/lib/utils"
 import type { Organization } from "@/types"
 import { ActiveStatusBadge } from "@/columns"
@@ -34,7 +34,7 @@ export function OrgCard({ org }: { org: Organization }) {
                 {org.name}
               </h3>
               <p className="mt-1 flex select-none items-center gap-1 text-xs font-medium text-muted-foreground">
-                <Users className="h-3 w-3 text-muted-foreground/60" />
+                <UserCheck className="h-3 w-3 text-muted-foreground/60" />
                 <span>{org.tenant_count ?? 0} {org.tenant_count === 1 ? "tenant" : "tenants"}</span>
               </p>
             </div>

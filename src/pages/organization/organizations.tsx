@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react"
 import { Button } from "@/components/ui/button"
 import { useOrganizations } from "@/api/hooks/useOrganizations"
-import { Plus, Building2, Users, BarChart3, Search } from "lucide-react"
+import { Plus, Building2, UserCheck, BarChart3, Search } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { OrgCard } from "./components/org-card"
 import { SearchInput } from "@/components/search-input"
@@ -40,7 +40,7 @@ export function Organizations() {
       {hasOrgs && (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <StatsCard label="Total organizations" value={organizations.length} icon={Building2} />
-          <StatsCard label="Total tenants" value={totalTenants} icon={Users} />
+          <StatsCard label="Total tenants" value={totalTenants} icon={UserCheck} />
           <StatsCard
             label="Avg tenants / org"
             value={Math.round(totalTenants / organizations.length) || 0}

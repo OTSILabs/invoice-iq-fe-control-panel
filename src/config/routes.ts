@@ -10,6 +10,7 @@ import {
   ShieldCheck,
   RefreshCw,
   FileText,
+  UserCheck,
 } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
 import { Organizations } from "@/pages/organization/organizations"
@@ -29,23 +30,22 @@ import { ExtractionManagement } from "@/pages/platform-standard-content/extracti
 import { TenantsPage } from "@/pages/tenants/tenants-page"
 
 export type AppSubRoute = {
-  path: string;
-  title: string;
-  icon: LucideIcon;
-  component: ComponentType;
+  path: string
+  title: string
+  icon: LucideIcon
+  component: ComponentType
 }
 
 export type AppRoute = {
-  path: string;
-  title: string;
-  icon: LucideIcon;
-  component?: ComponentType;
-  showInSidebar?: boolean;
-  children?: AppSubRoute[];
+  path: string
+  title: string
+  icon: LucideIcon
+  component?: ComponentType
+  showInSidebar?: boolean
+  children?: AppSubRoute[]
 }
 
 export const APP_ROUTES: AppRoute[] = [
- 
   {
     path: "/organizations",
     title: "Organizations",
@@ -61,12 +61,12 @@ export const APP_ROUTES: AppRoute[] = [
     showInSidebar: true,
   },
   {
-    path: "/tenants",
-    title: "Tenants",
-    icon: UsersIcon,
-    component: TenantsPage,
-    showInSidebar: true,
-  },
+    path: "/tenants",
+    title: "Tenants",
+    icon: UserCheck,
+    component: TenantsPage,
+    showInSidebar: true,
+  },
   {
     path: "/users",
     title: "Users",
@@ -74,7 +74,7 @@ export const APP_ROUTES: AppRoute[] = [
     component: Users,
     showInSidebar: true,
   },
-   {
+  {
     path: "/erp-settings",
     title: "ERP Settings",
     icon: Database,
@@ -123,7 +123,7 @@ export const APP_ROUTES: AppRoute[] = [
         icon: FileText,
         component: ExtractionManagement,
       },
-    ]
+    ],
   },
   {
     path: "/plan/create",
@@ -138,6 +138,6 @@ export const APP_ROUTES: AppRoute[] = [
     icon: UsersIcon,
     component: Profile,
     showInSidebar: false,
-  }
+  },
 ]
 

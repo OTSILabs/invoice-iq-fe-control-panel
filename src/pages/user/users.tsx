@@ -10,7 +10,7 @@ import { usePlatformUsers, usePlatformRoles } from "@/api/hooks/useUsers"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { SearchInput } from "@/components/search-input"
 import { getUsersColumns, getRolesList } from "@/columns"
-import { EmptyState, FilterBar, PageShell, SegmentedFilter } from "@/components/invoice-ui/design-system"
+import { EmptyState, FilterBar, PageShell } from "@/components/invoice-ui/design-system"
 
 export function Users() {
   const navigate = useNavigate()
@@ -23,17 +23,17 @@ export function Users() {
     roleFilter: "all",
   })
 
-  const roleCounts = useMemo(() => {
-    const counts: Record<string, number> = { all: users.length }
-    roles.forEach((r) => { counts[r.name.toLowerCase()] = 0 })
-    users.forEach((u) => {
-      getRolesList(u).forEach((r) => {
-        const val = r.toLowerCase()
-        counts[val] = (counts[val] || 0) + 1
-      })
-    })
-    return counts
-  }, [users, roles])
+  // const roleCounts = useMemo(() => {
+  //   const counts: Record<string, number> = { all: users.length }
+  //   roles.forEach((r) => { counts[r.name.toLowerCase()] = 0 })
+  //   users.forEach((u) => {
+  //     getRolesList(u).forEach((r) => {
+  //       const val = r.toLowerCase()
+  //       counts[val] = (counts[val] || 0) + 1
+  //     })
+  //   })
+  //   return counts
+  // }, [users, roles])
 
   const handleRefetch = async () => {
     await Promise.all([refetchUsers(), refetchRoles()])
@@ -92,39 +92,59 @@ export function Users() {
         </Button>
       </PageHeader>
 
-      <div className="table-container">
+      <div className="table-container overflow-visible">
         <div className="flex min-h-0 flex-1 flex-col p-0">
-          <FilterBar>
-            <SegmentedFilter
-              value={filters.roleFilter}
-              onValueChange={(val) => setFilters((s) => ({ ...s, roleFilter: val }))}
-              items={[
-                { value: "all", label: "All", count: roleCounts.all },
-                ...roles.map((role) => {
-                  const value = role.name.toLowerCase()
-                  return {
-                    value,
-                    label: role.name,
-                    count: roleCounts[value] || 0,
-                  }
-                }),
-              ]}
-            />
+          <FilterBar className="relative z-40 overflow-visible p-5 border-b border-border/40">
+            <div className="flex items-center gap-3">
+              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/20">
+                <UsersIcon className="h-4 w-4" />
+              </div>
+              <div>
+                <h3 className="text-sm font-semibold text-foreground">User Accounts</h3>
+                <p className="text-[12px] text-muted-foreground">
+                  Manage system access accounts, user permissions, and security roles.
+                </p>
+              </div>
+            </div>
 
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center w-full lg:w-auto ">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center w-full lg:w-auto mt-3 sm:mt-0">
               <SearchInput value={filters.searchText} onChange={(val) => setFilters((s) => ({ ...s, searchText: val }))} disabled={isFetchingUsers} placeholder="Search users..." className="w-full sm:w-64"/>
+              
+              <Select
+                value={filters.roleFilter}
+                onValueChange={(val) => setFilters((s) => ({ ...s, roleFilter: val }))}
+                disabled={isFetchingUsers}
+              >
+                <SelectTrigger className="h-9 w-full sm:w-44 bg-background/50">
+                  <SelectValue placeholder="All Roles" />
+                </SelectTrigger>
+                <SelectContent align="end">
+                  <SelectItem value="all" className="cursor-pointer text-xs">
+                    All Roles 
+                  </SelectItem>
+                  {roles.map((role) => {
+                    const value = role.name.toLowerCase()
+                    return (
+                      <SelectItem key={value} value={value} className="cursor-pointer text-xs">
+                        {role.name} 
+                      </SelectItem>
+                    )
+                  })}
+                </SelectContent>
+              </Select>
+
               <Select value={filters.status} onValueChange={(val) => setFilters((s) => ({ ...s, status: val }))} disabled={isFetchingUsers}>
-                <SelectTrigger className="h-9 w-full sm:w-40">
+                <SelectTrigger className="h-9 w-full sm:w-40 bg-background/50">
                   <SelectValue placeholder="All Status" />
                 </SelectTrigger>
                 <SelectContent align="end">
-                  <SelectItem value="all" className="cursor-pointer">
+                  <SelectItem value="all" className="cursor-pointer text-xs">
                     All Status
                   </SelectItem>
-                  <SelectItem value="active" className="cursor-pointer">
+                  <SelectItem value="active" className="cursor-pointer text-xs">
                     Active
                   </SelectItem>
-                  <SelectItem value="inactive" className="cursor-pointer">
+                  <SelectItem value="inactive" className="cursor-pointer text-xs">
                     Inactive
                   </SelectItem>
                 </SelectContent>

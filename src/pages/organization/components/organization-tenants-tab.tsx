@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { Plus, Users } from "lucide-react"
+import { Plus, UserCheck } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { DataTable } from "@/components/ui/data-table"
 import type { Tenant, OrganizationTenantsTabProps, TenantActionType } from "@/types";
@@ -25,7 +25,7 @@ export function OrganizationTenantsTab({ orgId }: OrganizationTenantsTabProps) {
         <FilterBar className="p-5">
           <div className="flex items-center gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary ring-1 ring-primary/15">
-              <Users className="h-4 w-4" />
+              <UserCheck className="h-4 w-4" />
             </div>
             <div>
               <h3 className="text-sm font-semibold text-foreground">Tenants</h3>
@@ -56,7 +56,7 @@ export function OrganizationTenantsTab({ orgId }: OrganizationTenantsTabProps) {
           emptyState={
             <div className="flex flex-col items-center justify-center py-12 text-center">
               <EmptyState
-                icon={Users}
+                icon={UserCheck}
                 title="No tenants yet"
                 description="Add a tenant to get started with this organization."
                 className="min-h-0 border-0 bg-transparent py-6"

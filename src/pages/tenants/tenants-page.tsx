@@ -5,7 +5,7 @@ import { useOrganizations } from "@/api/hooks/useOrganizations"
 import { organizationsService } from "@/api/services/organizations.service"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { DataTable } from "@/components/ui/data-table"
-import { Loader2, Users, Building, ChevronDown, Plus } from "lucide-react"
+import { Loader2, Building, ChevronDown, Plus, UserCheck } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import type { Tenant, TenantActionType } from "@/types"
 import { Button } from "@/components/ui/button"
@@ -126,7 +126,7 @@ export function TenantsPage() {
         <FilterBar className="relative z-40 overflow-visible p-5">
           <div className="flex items-center gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/20">
-              <Users className="h-4 w-4" />
+              <UserCheck className="h-4 w-4" />
             </div>
             <div>
               <h3 className="text-sm font-semibold text-foreground">Registered Tenants</h3>
@@ -236,7 +236,7 @@ export function TenantsPage() {
           emptyState={
             <div className="flex flex-col items-center justify-center py-12 text-center">
               <EmptyState
-                icon={Users}
+                icon={UserCheck}
                 title="No tenants yet"
                 description="There are no tenants configured under this organization."
                 className="min-h-0 border-0 bg-transparent"

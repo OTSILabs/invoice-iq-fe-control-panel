@@ -1,14 +1,16 @@
 import { useState, useMemo } from "react"
 import { useNavigate } from "react-router-dom"
-import { Loader2, AlertCircle, RefreshCw, Plus, Layers, Sparkles, CheckCircle2, CreditCard } from "lucide-react"
+import { Loader2, AlertCircle, RefreshCw, Plus, Layers,  CreditCard } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { DataTable } from "@/components/ui/data-table"
+import type { CustomColumnDef } from "@/components/ui/data-table"
 import { usePlans } from "@/api/hooks/usePlans"
 import { cn } from "@/lib/utils"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { SearchInput } from "@/components/search-input"
 import { planColumns as columns } from "@/columns"
-import { EmptyState, FilterBar, PageShell, SegmentedFilter } from "@/components/invoice-ui/design-system"
+import { EmptyState, FilterBar, PageShell } from "@/components/invoice-ui/design-system"
+import type { Plan } from "@/types"
 
 import { Select,SelectContent,SelectItem,SelectTrigger, SelectValue } from "@/components/ui/select"
 
@@ -35,15 +37,15 @@ export function Plans() {
     })
   }, [plans, searchText, status])
 
-  const typeCounts = useMemo(() =>
-    statusFiltered.reduce((acc, p) => {
-      acc.all++
-      const t = normalizePlanType(p.plan_type)
-      if (t === "basic") acc.basic++
-      else if (t === "free trial") acc.freeTrial++
-      return acc
-    }, { all: 0, basic: 0, freeTrial: 0 }),
-  [statusFiltered])
+  // const typeCounts = useMemo(() =>
+  //   statusFiltered.reduce((acc, p) => {
+  //     acc.all++
+  //     const t = normalizePlanType(p.plan_type)
+  //     if (t === "basic") acc.basic++
+  //     else if (t === "free trial") acc.freeTrial++
+  //     return acc
+  //   }, { all: 0, basic: 0, freeTrial: 0 }),
+  // [statusFiltered])
 
   const filteredPlans = useMemo(() =>
     planTypeFilter === "all"
@@ -84,20 +86,22 @@ export function Plans() {
         </Button>
       </PageHeader>
 
-      <div className="table-container">
+      <div className="table-container overflow-visible">
         <div className="flex min-h-0 flex-1 flex-col p-0">
-          <FilterBar>
-            <SegmentedFilter
-              value={planTypeFilter}
-              onValueChange={setPlanTypeFilter}
-              items={[
-                { value: "all", label: "All Plans", count: typeCounts.all, icon: Layers },
-                { value: "basic", label: "Basic", count: typeCounts.basic, icon: CheckCircle2 },
-                { value: "free trial", label: "Free Trial", count: typeCounts.freeTrial, icon: Sparkles },
-              ]}
-            />
+          <FilterBar className="relative z-40 overflow-visible p-5 border-b border-border/40">
+            <div className="flex items-center gap-3">
+              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/20">
+                <Layers className="h-4 w-4" />
+              </div>
+              <div>
+                <h3 className="text-sm font-semibold text-foreground">Billing Plans</h3>
+                <p className="text-[12px] text-muted-foreground">
+                  Monitor billing configurations, subscription features, and active plans.
+                </p>
+              </div>
+            </div>
 
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center w-full sm:w-auto mt-3 sm:mt-0">
               <SearchInput 
                 value={searchText} 
                 onChange={setSearchText} 
@@ -105,8 +109,22 @@ export function Plans() {
                 placeholder="Search plans..." 
                 className="w-full sm:w-64" 
               />
+              <Select value={planTypeFilter} onValueChange={setPlanTypeFilter} disabled={isFetching}>
+                <SelectTrigger className="h-9 w-full text-xs font-medium sm:w-44 bg-background/50">
+                  <SelectValue placeholder="All Plan Types" />
+                </SelectTrigger>
+                <SelectContent align="end">
+                  {[
+                    ["all", `All Plan Types `],
+                    ["basic", `Basic `],
+                    ["free trial", `Free Trial `],
+                  ].map(([v, l]) => (
+                    <SelectItem key={v} value={v} className="cursor-pointer text-xs">{l}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               <Select value={status} onValueChange={setStatus} disabled={isFetching}>
-                <SelectTrigger className="h-9 w-full text-xs font-medium sm:w-44">
+                <SelectTrigger className="h-9 w-full text-xs font-medium sm:w-44 bg-background/50">
                   <SelectValue placeholder="All Statuses" />
                 </SelectTrigger>
                 <SelectContent align="end">
@@ -123,7 +141,7 @@ export function Plans() {
 
           <DataTable
             data={filteredPlans}
-            columns={columns.map((c) => ({ ...(c as any), enableSorting: false }))}
+            columns={columns.map((c) => ({ ...(c as CustomColumnDef<Plan>), enableSorting: false }))}
             isLoading={isLoading || isFetching}
             enablePagination
             pageSize={10}
