@@ -29,6 +29,8 @@ export function TenantDetailHeader({
   isPendingMigrate,
 }: TenantDetailHeaderProps) {
   const navigate = useNavigate()
+  const isFromTenantsTab = window.location.pathname.startsWith("/tenants")
+  const backUrl = isFromTenantsTab ? "/tenants" : `/organizations/${orgId}`
 
   return (
     <PageHeader
@@ -99,7 +101,7 @@ export function TenantDetailHeader({
           variant="outline"
           size="sm"
           className="font-medium gap-1.5 border-border shadow-sm cursor-pointer ml-1"
-          onClick={() => navigate(`/organizations/${orgId}`)}
+          onClick={() => navigate(backUrl)}
         >
           <ArrowLeft className="h-4 w-4" />
           Back
