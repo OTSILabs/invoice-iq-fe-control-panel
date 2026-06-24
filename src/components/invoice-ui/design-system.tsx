@@ -26,7 +26,7 @@ export function SectionCard({
   className,
   contentClassName,
   ...props
-}: React.ComponentProps<typeof Card> & {
+}: Omit<React.ComponentProps<typeof Card>, "title" | "description"> & {
   title?: React.ReactNode
   description?: React.ReactNode
   actions?: React.ReactNode
@@ -86,7 +86,7 @@ export function EmptyState({
         className,
       )}
     >
-      <div className="mb-4 flex size-11 items-center justify-center rounded-xl bg-background text-muted-foreground shadow-sm ring-1 ring-border/65">
+      <div className="mb-4 flex size-11 items-center justify-center rounded-xl bg-background text-muted-foreground  ring-1 ring-border/65">
         <Icon className="size-5" />
       </div>
       <h3 className="text-sm font-semibold text-foreground">{title}</h3>
@@ -174,7 +174,7 @@ export function SegmentedFilter({
             className={cn(
               "inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-md border border-transparent px-3 py-1.5 text-xs font-semibold transition-all duration-150",
               isActive
-                ? "bg-card text-foreground shadow-sm ring-1 ring-border/50"
+                ? "bg-card text-foreground  ring-1 ring-border/50"
                 : "text-muted-foreground hover:bg-background/60 hover:text-foreground",
             )}
           >
@@ -224,12 +224,13 @@ export function SemanticBadge({
   children,
   className,
   showDot = false,
+  ...props
 }: {
   tone?: SemanticTone
   children: React.ReactNode
   className?: string
   showDot?: boolean
-}) {
+} & React.ComponentPropsWithoutRef<"span">) {
   return (
     <Badge
       variant="outline"
@@ -238,6 +239,7 @@ export function SemanticBadge({
         semanticBadgeTone[tone],
         className,
       )}
+      {...props}
     >
       {showDot && <span className={cn("size-1.5 rounded-full", semanticBadgeDot[tone])} />}
       {children}

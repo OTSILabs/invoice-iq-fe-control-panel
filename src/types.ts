@@ -1,8 +1,6 @@
 import type * as React from "react"
-import type { UseFormRegister, FieldErrors, Control } from "react-hook-form"
+import type { UseFormRegister, FieldErrors } from "react-hook-form"
 import type { ExtractionFieldFormValues } from "@/schemas/extraction-schema"
-import type { NormalizationRuleFormValues } from "@/schemas/normalization-rule-schema"
-import type { ValidationRuleFormValues } from "@/schemas/validation-rule-schema"
 
 export interface LoginPayload {
   email: string

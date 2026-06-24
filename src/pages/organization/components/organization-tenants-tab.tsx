@@ -9,7 +9,7 @@ import { useOrganizationTenants } from "@/api/hooks/useOrganizations"
 import { getTenantColumns } from "@/columns"
 import { EmptyState, FilterBar } from "@/components/invoice-ui/design-system"
 
-export function OrganizationTenantsTab({ orgId, organizationName }: OrganizationTenantsTabProps) {
+export function OrganizationTenantsTab({ orgId }: OrganizationTenantsTabProps) {
   const navigate = useNavigate()
   const [tenantAction, setTenantAction] = useState<{ type: TenantActionType; tenant: Tenant } | null>(null)
   const { data: tenants = [], isLoading } = useOrganizationTenants(orgId)

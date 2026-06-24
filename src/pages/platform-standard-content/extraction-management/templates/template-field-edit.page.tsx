@@ -1,7 +1,8 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, FileText } from "lucide-react";
 
-import type { ApiRecord } from "@/api/api.helpers";
+
+import type { ExtractionFieldResponse } from "@/api/templates/templates.types";
 import { useTemplateByCode } from "@/api/templates/templates.hooks";
 import { PageContainers } from "@/components/invoice-ui/page-containers";
 import {
@@ -30,7 +31,7 @@ export default function TemplateFieldEditPage() {
   const { isMounted } = useUser();
   const templateQuery = useTemplateByCode(templateCode);
   const template = normalizeTemplateDetail(templateQuery.data);
-  const fields = resolveTemplateFields<ApiRecord>(template);
+  const fields = resolveTemplateFields<ExtractionFieldResponse>(template);
   const field = fields.find((item) => getFieldCode(item) === fieldId) || null;
   const backUrl = APP_ROUTES.getRoute(APP_ROUTES.TEMPLATE_DETAILS, { templateCode }) + "?tab=fields";
 

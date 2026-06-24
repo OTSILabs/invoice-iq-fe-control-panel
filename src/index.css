@@ -7,7 +7,7 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --spacing: 0.25rem;
+  /* --spacing: 0.25rem; */
   --font-heading: var(--font-sans);
   --font-sans: 'Inter Variable', sans-serif;
   --font-size-xxs: 0.6875rem;
@@ -189,11 +189,14 @@
 
 @layer utilities {
   .page-container {
-    @apply mx-auto flex w-full max-w-[1440px] animate-in flex-col gap-6 px-5 py-6 duration-200 fade-in sm:px-7 lg:px-10 lg:py-7;
+    @apply mx-auto flex w-full max-w-[1440px] animate-in flex-col duration-200 fade-in;
+    gap: clamp(1rem, 2vw, 1.5rem);
+    padding: clamp(1rem, 2.5vw, 2rem);
   }
 
   .page-section {
-    @apply flex flex-col gap-4;
+    @apply flex flex-col;
+    gap: clamp(0.75rem, 1.5vw, 1rem);
   }
 
   .surface-card {
@@ -211,7 +214,9 @@
   }
 
   .filter-toolbar {
-    @apply flex flex-col gap-3 border-b border-border/45 bg-card/85 p-3.5 backdrop-blur-sm lg:flex-row lg:items-center lg:justify-between;
+    @apply flex flex-col border-b border-border/45 bg-card/85 backdrop-blur-sm lg:flex-row lg:items-center lg:justify-between;
+    gap: clamp(0.5rem, 1vw, 0.75rem);
+    padding: clamp(0.75rem, 1vw, 0.875rem);
   }
 
   .dialog-form {
@@ -219,30 +224,47 @@
   }
 
   .dialog-form-body {
-    @apply space-y-4 px-6 py-5;
+    @apply flex flex-col;
+    gap: clamp(0.75rem, 1.5vw, 1rem);
+    padding: clamp(1rem, 2vw, 1.25rem) clamp(1.25rem, 2.5vw, 1.5rem);
   }
 
   .dialog-form-footer {
-    @apply gap-3 border-t border-border/45 bg-popover px-6 py-4 sm:flex-row sm:items-center sm:justify-end;
+    @apply flex flex-col sm:flex-row border-t border-border/45 bg-popover sm:items-center sm:justify-end;
+    gap: clamp(0.5rem, 1vw, 0.75rem);
+    padding: clamp(0.75rem, 1.5vw, 1rem) clamp(1.25rem, 2.5vw, 1.5rem);
   }
 
   .dialog-field-grid {
-    @apply grid grid-cols-1 gap-4 sm:grid-cols-2;
+    @apply grid grid-cols-1;
+    gap: clamp(0.75rem, 1.5vw, 1rem);
+    @media (min-width: 640px) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
   }
 
   .dialog-toggle-row {
-    @apply flex items-center justify-between gap-4 rounded-lg border border-border/70 bg-muted/30 px-4 py-3;
+    @apply flex items-center justify-between border border-border/70 bg-muted/30;
+    gap: clamp(0.75rem, 1.5vw, 1rem);
+    padding: clamp(0.5rem, 1vw, 0.75rem) clamp(0.75rem, 1.5vw, 1rem);
   }
 
   .text-page-title {
-    @apply text-xl font-semibold tracking-tight text-foreground sm:text-[1.375rem];
+    @apply font-semibold tracking-tight text-foreground;
+    font-size: clamp(1.125rem, 2vw, 1.375rem);
   }
 
   .text-section-title {
-    @apply text-sm font-semibold tracking-tight text-foreground;
+    @apply font-semibold tracking-tight text-foreground;
+    font-size: clamp(0.8125rem, 1vw, 0.875rem);
   }
 
   .text-caption {
-    @apply text-xs leading-relaxed text-muted-foreground;
+    @apply leading-relaxed text-muted-foreground;
+    font-size: clamp(0.6875rem, 0.8vw, 0.75rem);
+  }
+
+  .filter-toolbar input {
+    background-color: var(--background);
   }
 }

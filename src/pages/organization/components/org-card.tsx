@@ -43,7 +43,8 @@ export function OrgCard({ org }: { org: Organization }) {
           <ActiveStatusBadge status={org.onboarding_status || "Complete"} className="shrink-0 select-none px-2 py-0.5 text-[9px] uppercase tracking-wider" />
         </div>
 
-        <div className="grid grid-cols-1 gap-2 rounded-lg bg-muted/28 p-3 text-xs text-muted-foreground">
+       
+        <div className="grid grid-cols-1 gap-2  text-xs border-t border-border/35 pt-3 text-muted-foreground">
           <div className="flex min-w-0 items-center gap-1.5">
             <Globe className="h-3.5 w-3.5 shrink-0 text-muted-foreground/60" />
             <span className="truncate" title={org.slug}>

@@ -271,7 +271,7 @@ type FieldBadgeData = {
   tone: SemanticTone;
 };
 
-function getFieldBadgeData(field: FieldListTableRecord) {
+function getFieldBadgeData(field: FieldListTableRecord): [FieldBadgeData, FieldBadgeData, FieldBadgeData] {
   const isStandard = getFieldIsStandard(field);
   return [
     {

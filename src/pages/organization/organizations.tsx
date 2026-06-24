@@ -73,23 +73,26 @@ export function Organizations() {
         />
       ) : (
         <div className="page-section">
-          <h2 className="text-section-title">
-            All organizations
-          </h2>
+         
           <FilterBar className="surface-card border-b-0 p-3.5 sm:flex-row sm:items-center sm:justify-between">
-            <SearchInput
-              value={searchQuery}
-              onChange={setSearchQuery}
-              placeholder="Search organizations..."
-              className="w-full sm:w-80"
-            />
-            <Button
-              size="sm"
-              className="w-full sm:w-auto font-medium shadow-sm gap-1.5 shrink-0"
-              onClick={() => navigate("/organizations/create")}
-            >
-              <Plus className="h-4 w-4" /> Start onboarding
-            </Button>
+            <h2 className="text-section-title">
+              All organizations
+            </h2>
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+              <SearchInput
+                value={searchQuery}
+                onChange={setSearchQuery}
+                placeholder="Search organizations..."
+                className="w-full sm:w-80"
+              />
+              <Button
+                size="sm"
+                className="w-full sm:w-auto font-medium gap-1.5 shrink-0"
+                onClick={() => navigate("/organizations/create")}
+              >
+                <Plus className="h-4 w-4" /> Start onboarding
+              </Button>
+            </div>
           </FilterBar>
           {filtered.length > 0 ? (
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
