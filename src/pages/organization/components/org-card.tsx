@@ -20,7 +20,7 @@ export function OrgCard({ org }: { org: Organization }) {
   return (
     <Link
       to={`/organizations/${org.id}`}
-      className="surface-card group relative flex min-h-42 flex-col justify-between overflow-hidden p-4 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_2px_4px_color-mix(in_oklch,var(--foreground)_8%,transparent),0_20px_48px_color-mix(in_oklch,var(--foreground)_8%,transparent)]"
+      className="surface-card group relative flex min-h-42 flex-col border border-border/35 justify-between overflow-hidden p-4 shadow-none transition-all duration-200 hover:-translate-y-0.5"
     >
       <div className="space-y-4">
         <div className="flex items-start justify-between gap-3">

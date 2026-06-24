@@ -189,7 +189,7 @@
 
 @layer utilities {
   .page-container {
-    @apply mx-auto flex w-full max-w-[1440px] animate-in flex-col duration-200 fade-in;
+    @apply mx-auto flex w-full  animate-in flex-col duration-200 fade-in;
     gap: clamp(1rem, 2vw, 1.5rem);
     padding: clamp(1rem, 2.5vw, 2rem);
   }
@@ -262,9 +262,5 @@
   .text-caption {
     @apply leading-relaxed text-muted-foreground;
     font-size: clamp(0.6875rem, 0.8vw, 0.75rem);
-  }
-
-  .filter-toolbar input {
-    background-color: var(--background);
   }
 }

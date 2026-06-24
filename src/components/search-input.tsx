@@ -31,7 +31,7 @@ export function SearchInput({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className={cn("h-9 w-full pl-9 shadow-xs", bgClass || "bg-inherit")}
+        className={cn("h-9 w-full pl-9 ", bgClass || "bg-inherit dark:bg-inherit")}
         disabled={disabled}
       />
     </div>

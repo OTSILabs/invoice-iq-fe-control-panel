@@ -103,7 +103,7 @@ export function Plans() {
                 onChange={setSearchText} 
                 disabled={isFetching} 
                 placeholder="Search plans..." 
-                className="w-full sm:w-72" 
+                className="w-full sm:w-64" 
               />
               <Select value={status} onValueChange={setStatus} disabled={isFetching}>
                 <SelectTrigger className="h-9 w-full text-xs font-medium sm:w-44">
