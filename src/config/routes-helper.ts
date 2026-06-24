@@ -4,6 +4,7 @@ const ROUTES = {
   TEMPLATE_CREATE: "/platform-standard-content/extraction-management/templates/new",
   TEMPLATE_DETAILS: "/platform-standard-content/extraction-management/templates/:templateCode",
   TEMPLATE_EDIT: "/platform-standard-content/extraction-management/templates/:templateCode/edit",
+  TEMPLATE_FIELD_EDIT: "/platform-standard-content/extraction-management/templates/:templateCode/fields/:fieldId/edit",
   DERIVED_TEMPLATE_CREATE: "/platform-standard-content/extraction-management/derived/new",
   DERIVED_TEMPLATE_EDIT: "/platform-standard-content/extraction-management/derived/:derivedTemplateId/edit",
 } as const;

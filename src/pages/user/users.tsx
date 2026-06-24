@@ -6,12 +6,11 @@ import { DataTable } from "@/components/ui/data-table"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { cn } from "@/lib/utils"
 import { toast } from "sonner"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { usePlatformUsers, usePlatformRoles } from "@/api/hooks/useUsers"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { SearchInput } from "@/components/search-input"
 import { getUsersColumns, getRolesList } from "@/columns"
-import { EmptyState, FilterBar, PageShell } from "@/components/invoice-ui/design-system"
+import { EmptyState, FilterBar, PageShell, SegmentedFilter } from "@/components/invoice-ui/design-system"
 
 export function Users() {
   const navigate = useNavigate()
@@ -96,21 +95,21 @@ export function Users() {
       <div className="table-container">
         <div className="flex min-h-0 flex-1 flex-col p-0">
           <FilterBar>
-            <Tabs value={filters.roleFilter} onValueChange={(val) => setFilters((s) => ({ ...s, roleFilter: val }))}>
-              <TabsList>
-                <TabsTrigger value="all" className="cursor-pointer text-xs">
-                  All ({roleCounts.all})
-                </TabsTrigger>
-                {roles.map((r) => {
-                  const val = r.name.toLowerCase()
-                  return (
-                    <TabsTrigger key={r.id || val} value={val} className="cursor-pointer text-xs capitalize">
-                      {r.name} ({roleCounts[val] || 0})
-                    </TabsTrigger>
-                  )
-                })}
-              </TabsList>
-            </Tabs>
+            <SegmentedFilter
+              value={filters.roleFilter}
+              onValueChange={(val) => setFilters((s) => ({ ...s, roleFilter: val }))}
+              items={[
+                { value: "all", label: "All", count: roleCounts.all },
+                ...roles.map((role) => {
+                  const value = role.name.toLowerCase()
+                  return {
+                    value,
+                    label: role.name,
+                    count: roleCounts[value] || 0,
+                  }
+                }),
+              ]}
+            />
 
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center w-full lg:w-auto ">
               <SearchInput value={filters.searchText} onChange={(val) => setFilters((s) => ({ ...s, searchText: val }))} disabled={isFetchingUsers} placeholder="Search users..." className="w-full sm:w-72"/>

@@ -2,6 +2,7 @@ import * as React from "react"
 import { Field, FieldLabel, FieldDescription } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { ChevronDown } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 export interface InputFieldProps extends React.InputHTMLAttributes<HTMLInputElement | HTMLSelectElement> {
   label?: React.ReactNode
@@ -40,13 +41,12 @@ export const InputField = ({
           <select
             id={id}
             ref={ref as React.Ref<HTMLSelectElement>}
-            className={[
-              "flex h-9 w-full appearance-none rounded-lg border border-input",
-              "bg-inherit pl-3 pr-9 py-1 text-sm text-foreground",
-              "transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:border-primary",
-              "disabled:cursor-not-allowed disabled:opacity-50",
+            className={cn(
+              "flex h-9 w-full appearance-none rounded-lg border border-input bg-background/70 py-1 pl-3 pr-9 text-sm text-foreground shadow-xs outline-none transition-colors",
+              "hover:border-ring/35 focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/15",
+              "disabled:cursor-not-allowed disabled:opacity-50 dark:bg-input/20",
               className,
-            ].filter(Boolean).join(" ")}
+            )}
             {...(props as React.SelectHTMLAttributes<HTMLSelectElement>)}
           >
             {options?.map((opt) => (
@@ -63,13 +63,7 @@ export const InputField = ({
           id={id}
           type={type}
           ref={ref as React.Ref<HTMLInputElement>}
-          className={[
-            "h-9 rounded-lg border border-input bg-inherit px-3 text-sm text-foreground",
-            "placeholder:text-muted-foreground",
-            "transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:border-primary",
-            "disabled:cursor-not-allowed disabled:opacity-50",
-            className,
-          ].filter(Boolean).join(" ")}
+          className={className}
           {...(props as React.InputHTMLAttributes<HTMLInputElement>)}
         />
       )}

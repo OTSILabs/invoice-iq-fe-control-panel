@@ -155,7 +155,7 @@ export function ReferenceValueFormPage({ mode }: { mode: "create" | "edit" }) {
               id="description"
               disabled={isSaving}
               placeholder="Provide details about what this value represents..."
-              className="min-h-[88px] rounded-lg border border-input bg-inherit text-sm"
+              className="min-h-[88px] text-sm"
               {...register("description")}
             />
             {errors.description && <FieldError>{errors.description.message}</FieldError>}
@@ -180,7 +180,7 @@ export function ReferenceValueFormPage({ mode }: { mode: "create" | "edit" }) {
               id="attributes_raw"
               disabled={isSaving}
               placeholder='e.g. { "currency_symbol": "$", "numeric_code": 840 }'
-              className="min-h-[132px] rounded-lg border border-input bg-inherit font-mono text-xs"
+              className="min-h-[132px] font-mono text-xs"
               {...register("attributes_raw")}
             />
             {errors.attributes_raw && <FieldError>{errors.attributes_raw.message}</FieldError>}

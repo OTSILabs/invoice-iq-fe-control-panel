@@ -386,33 +386,39 @@ const FIELD_FORM_STEPS = [
 const FIELD_FORM_STEP_FIELDS = FIELD_FORM_STEPS.flatMap((step) => step.fields);
 
 
-export function TemplateFieldFormDialog({
-  mode = "create",
-  template = null,
-  field = null,
-  defaultFieldCategoryCode = null,
-  open,
-  onOpenChange,
-  onSuccess,
-  children,
-}: {
+type TemplateFieldFormSurfaceProps = {
   mode?: "create" | "edit";
   template?: ApiRecord | null;
   field?: ApiRecord | null;
   defaultFieldCategoryCode?: string | null;
+  enabled?: boolean;
+  onCancel?: () => void;
+  onSuccess?: (response?: unknown, payload?: ApiRecord) => void;
+};
+
+type TemplateFieldFormDialogProps = Omit<TemplateFieldFormSurfaceProps, "enabled" | "onCancel"> & {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSuccess?: (response?: unknown, payload?: ApiRecord) => void;
   children?: ReactNode;
-}) {
+};
+
+export function TemplateFieldFormSurface({
+  mode = "create",
+  template = null,
+  field = null,
+  defaultFieldCategoryCode = null,
+  enabled = true,
+  onCancel,
+  onSuccess,
+}: TemplateFieldFormSurfaceProps) {
   const isEditMode = mode === "edit";
   const formId = `template-field-form-${mode}`;
   const createTemplateFieldMutation = useCreateTemplateField();
   const updateTemplateMutation = useUpdateTemplate();
   const updateTemplateFieldMutation = useUpdateTemplateField();
   const updateTemplateFieldMembershipMutation = useUpdateTemplateFieldMembership();
-  const fieldCatalogsQuery = useFieldCatalogs({ enabled: open });
-  const fieldCategoriesQuery = useFieldCategoriesList({}, { enabled: open });
+  const fieldCatalogsQuery = useFieldCatalogs({ enabled });
+  const fieldCategoriesQuery = useFieldCategoriesList({}, { enabled });
   const isPending =
     createTemplateFieldMutation.isPending ||
     updateTemplateMutation.isPending ||
@@ -442,21 +448,13 @@ export function TemplateFieldFormDialog({
     [watchedValues],
   );
 
-  const prevOpenRef = useRef(open);
-  if (open !== prevOpenRef.current) {
-    prevOpenRef.current = open;
-    if (open) {
+  const prevEnabledRef = useRef(enabled);
+  if (enabled !== prevEnabledRef.current) {
+    prevEnabledRef.current = enabled;
+    if (enabled) {
       form.reset(getDefaultValues(field, defaultFieldCategoryCode));
     }
   }
-
-  const handleDialogOpenChange = (nextOpen: boolean) => {
-    if (nextOpen) {
-      setActiveStepIndex(0);
-    }
-
-    onOpenChange(nextOpen);
-  };
 
   const showStep = (stepIndex: number) => {
     form.clearErrors();
@@ -537,7 +535,7 @@ export function TemplateFieldFormDialog({
           {
             onSuccess: (response) => {
               onSuccess?.(response, payload);
-              onOpenChange(false);
+              onCancel?.();
             },
           },
         );
@@ -549,7 +547,7 @@ export function TemplateFieldFormDialog({
         {
           onSuccess: (response) => {
             onSuccess?.(response, payload);
-            onOpenChange(false);
+            onCancel?.();
           },
         },
       );
@@ -576,7 +574,7 @@ export function TemplateFieldFormDialog({
         {
           onSuccess: (response) => {
             onSuccess?.(response, payload);
-            onOpenChange(false);
+            onCancel?.();
             form.reset(getDefaultValues(null, defaultFieldCategoryCode));
           },
         },
@@ -587,42 +585,21 @@ export function TemplateFieldFormDialog({
     createTemplateFieldMutation.mutate(payload, {
       onSuccess: (response) => {
         onSuccess?.(response, payload);
-        onOpenChange(false);
+        onCancel?.();
         form.reset(getDefaultValues(null, defaultFieldCategoryCode));
       },
     });
   };
 
   return (
-    <Dialog open={open} onOpenChange={handleDialogOpenChange}>
-      {children ? <DialogTrigger asChild>{children}</DialogTrigger> : null}
-      <DialogContent
-        showCloseButton={false}
-        className="grid h-[min(42rem,86vh)] grid-rows-[auto_minmax(0,1fr)_auto] gap-0 overflow-hidden p-0 sm:max-w-3xl"
-        onInteractOutside={(event) => event.preventDefault()}
-        onOpenAutoFocus={(event) => {
-          event.preventDefault();
-          requestAnimationFrame(() => form.setFocus("field_label"));
-        }}
-      >
-        <DialogHeader className="border-b px-5 py-4">
-          <DialogTitle>
-            {isEditMode ? "Edit Extraction Field" : "Add Custom Field"}
-          </DialogTitle>
-          <DialogDescription>
-            {isEditMode
-              ? "Update the field metadata and extraction guidance used to identify this business value."
-              : "Define a reusable field with the type, aliases, examples, and guidance needed for extraction."}
-          </DialogDescription>
-        </DialogHeader>
-
+    <>
         <form
           id={formId}
           onSubmit={(event) => {
             event.preventDefault();
             void handleNextStep();
           }}
-          className="h-full min-h-0 overflow-hidden"
+          className="h-full min-h-[32rem] overflow-hidden"
           noValidate
         >
           <div className="grid h-full min-h-0 md:grid-cols-[16rem_minmax(0,1fr)]">
@@ -659,6 +636,7 @@ export function TemplateFieldFormDialog({
             isFirstStep={isFirstStep}
             isLastStep={isLastStep}
             isPending={isPending}
+            onCancel={onCancel}
             handlePreviousStep={handlePreviousStep}
             handleNextStep={handleNextStep}
           />
@@ -671,6 +649,54 @@ export function TemplateFieldFormDialog({
             }}
           />
         </TemplateFieldDialogFooterWrapper>
+    </>
+  );
+}
+
+export function TemplateFieldFormDialog({
+  mode = "create",
+  template = null,
+  field = null,
+  defaultFieldCategoryCode = null,
+  open,
+  onOpenChange,
+  onSuccess,
+  children,
+}: TemplateFieldFormDialogProps) {
+  const isEditMode = mode === "edit";
+
+  const handleDialogOpenChange = (nextOpen: boolean) => {
+    onOpenChange(nextOpen);
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={handleDialogOpenChange}>
+      {children ? <DialogTrigger asChild>{children}</DialogTrigger> : null}
+      <DialogContent
+        showCloseButton={false}
+        className="grid h-[min(42rem,86vh)] grid-rows-[auto_minmax(0,1fr)_auto] gap-0 overflow-hidden p-0 sm:max-w-3xl"
+        onInteractOutside={(event) => event.preventDefault()}
+      >
+        <DialogHeader className="border-b px-5 py-4">
+          <DialogTitle>
+            {isEditMode ? "Edit Extraction Field" : "Add Custom Field"}
+          </DialogTitle>
+          <DialogDescription>
+            {isEditMode
+              ? "Update the field metadata and extraction guidance used to identify this business value."
+              : "Define a reusable field with the type, aliases, examples, and guidance needed for extraction."}
+          </DialogDescription>
+        </DialogHeader>
+
+        <TemplateFieldFormSurface
+          mode={mode}
+          template={template}
+          field={field}
+          defaultFieldCategoryCode={defaultFieldCategoryCode}
+          enabled={open}
+          onCancel={() => onOpenChange(false)}
+          onSuccess={onSuccess}
+        />
       </DialogContent>
     </Dialog>
   );

@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, Save, X } from "lucide-react";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { SectionCard } from "@/components/invoice-ui/design-system";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -89,8 +89,7 @@ export function DerivedTemplateForm({ mode, template, onCancel, onSuccess }: Der
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6" noValidate>
-      <Card className="surface-card max-w-2xl p-6">
-        <CardContent className="space-y-4 p-0">
+      <SectionCard className="max-w-2xl" contentClassName="space-y-4">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Field>
               <FieldLabel>Derived Template ID</FieldLabel>
@@ -147,9 +146,8 @@ export function DerivedTemplateForm({ mode, template, onCancel, onSuccess }: Der
               <FieldError errors={[form.formState.errors.description]} />
             )}
           </Field>
-        </CardContent>
 
-        <CardFooter className="mt-6 flex items-center justify-end gap-3 border-t border-border/45 bg-transparent px-0 pt-4 pb-0">
+        <div className="mt-6 flex items-center justify-end gap-3 border-t border-border/60 bg-transparent px-0 pt-4 pb-0">
           <Button
             type="button"
             variant="outline"
@@ -169,8 +167,8 @@ export function DerivedTemplateForm({ mode, template, onCancel, onSuccess }: Der
               </>
             )}
           </Button>
-        </CardFooter>
-      </Card>
+        </div>
+      </SectionCard>
     </form>
   );
 }

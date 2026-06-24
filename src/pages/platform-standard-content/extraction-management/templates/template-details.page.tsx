@@ -23,6 +23,7 @@ import {
   useUpdateTemplate,
   useUpdateTemplateSortOrder,
 } from "@/api/templates/templates.hooks";
+import { EmptyState } from "@/components/invoice-ui/design-system";
 import { PageContainers } from "@/components/invoice-ui/page-containers";
 import {
   FilterDropdown,
@@ -36,8 +37,6 @@ import {
   FieldsListTable,
   type FieldListTableRecord,
 } from "@/components/invoice-ui/templates/fields-list-table";
-import { buildTemplateFieldDialogRecord } from "@/components/invoice-ui/templates/field-management-utils";
-import { TemplateFieldFormDialog } from "@/components/invoice-ui/templates/template-field-form-dialog";
 import {
   buildTemplateUpdatePayload,
   getFieldCode,
@@ -84,12 +83,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import {
-  Empty,
-  EmptyDescription,
-  EmptyHeader,
-  EmptyTitle,
-} from "@/components/ui/empty";
 import { Input } from "@/components/ui/input";
 
 import {
@@ -316,12 +309,12 @@ function TemplateFieldsSection({
 }) {
   return (
     <TabsContent value={TEMPLATE_DETAILS_TABS.FIELDS}>
-      <Card>
-        <CardHeader>
-          <CardTitle>Fields</CardTitle>
+      <Card className="surface-card gap-0 overflow-hidden p-0">
+        <CardHeader className="border-b border-border/60 bg-muted/15 p-5">
+          <CardTitle className="text-section-title">Fields</CardTitle>
         </CardHeader>
 
-        <CardContent>
+        <CardContent className="p-5">
           <div className="mb-4 flex items-center gap-3">
             <FilterDropdown
               groups={fieldFilterGroups}
@@ -417,13 +410,11 @@ export default function TemplateDetailsPage() {
     activeStateOpen: boolean;
     cloneOpen: boolean;
     deleteOpen: boolean;
-    editingField: ApiRecord | null;
     deletingField: ApiRecord | null;
   }>({
     activeStateOpen: false,
     cloneOpen: false,
     deleteOpen: false,
-    editingField: null,
     deletingField: null,
   });
   const [fieldSearch, setFieldSearch] = useState("");
@@ -577,7 +568,12 @@ export default function TemplateDetailsPage() {
   };
 
   const editField = (field: FieldListTableRecord) => {
-    setDialogs((prev) => ({ ...prev, editingField: buildTemplateFieldDialogRecord(field) }));
+    const fieldCode = getFieldCode(field);
+    if (!resolvedTemplateCode || !fieldCode) return;
+    navigate(APP_ROUTES.getRoute(APP_ROUTES.TEMPLATE_FIELD_EDIT, {
+      templateCode: resolvedTemplateCode,
+      fieldId: fieldCode,
+    }));
   };
 
   const removeField = (field: FieldListTableRecord) => {
@@ -611,20 +607,18 @@ export default function TemplateDetailsPage() {
   if (templateQuery.isError || !isTemplateAvailable) {
     return (
       <PageContainers>
-        <Empty className="border">
-          <EmptyHeader>
-            <EmptyTitle>Template not found</EmptyTitle>
-            <EmptyDescription>
-              The selected template is not available.
-            </EmptyDescription>
-          </EmptyHeader>
-          <Button variant="outline" asChild>
-            <Link to={APP_ROUTES.TEMPLATES}>
-              <ArrowLeft className="size-4" data-icon="inline-start" />
-              Back to Templates
-            </Link>
-          </Button>
-        </Empty>
+        <EmptyState
+          title="Template not found"
+          description="The selected template is not available."
+          actions={
+            <Button variant="outline" asChild>
+              <Link to={APP_ROUTES.TEMPLATES}>
+                <ArrowLeft className="size-4" data-icon="inline-start" />
+                Back to Templates
+              </Link>
+            </Button>
+          }
+        />
       </PageContainers>
     );
   }
@@ -732,9 +726,9 @@ function TemplateDetailsContent({
         </Alert>
       ) : null}
 
-      <Card className="gap-0 py-0 ring-foreground/5">
+      <Card className="surface-card gap-0 py-0">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="gap-0 sadcnx">
-          <CardHeader className="border-b border-border/50 px-6 pb-0 pt-2">
+          <CardHeader className="border-b border-border/60 bg-muted/15 px-6 pb-0 pt-2">
             <CardTitle className="flex min-w-0 flex-col gap-3 md:flex-row md:items-center md:justify-between">
               <TabsList
                 variant="line"
@@ -825,18 +819,6 @@ function TemplateDetailsContent({
           </CardContent>
         </Tabs>
       </Card>
-
-      <TemplateFieldFormDialog
-        mode="edit"
-        template={template}
-        field={dialogs.editingField}
-        open={!!dialogs.editingField}
-        onOpenChange={(open: boolean) => {
-          if (!open) {
-            setDialogs((prev: any) => ({ ...prev, editingField: null }));
-          }
-        }}
-      />
 
       <RemoveFieldDialog
         field={dialogs.deletingField}

@@ -18,7 +18,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog"
-import { FilterBar, PageShell } from "@/components/invoice-ui/design-system"
+import { EmptyState, FilterBar, PageShell } from "@/components/invoice-ui/design-system"
 
 export function ValidationRules() {
   const navigate = useNavigate()
@@ -162,29 +162,24 @@ function ValidationRulesEmptyState({
   onCreateClick,
 }: ValidationRulesEmptyStateProps) {
   return (
-    <div className="flex animate-in flex-col items-center justify-center px-4 py-16 text-center duration-300 fade-in slide-in-from-bottom-2">
-      <div className="mb-3 rounded-full border border-primary/10 bg-primary/5 p-4 text-primary/80">
-        <ShieldCheck className="size-8 stroke-[1.5]" />
-      </div>
-      <h3 className="text-sm font-semibold text-foreground">
-        {searchText
-          ? "No validation rules match filters"
-          : "No standard validation rules"}
-      </h3>
-      <p className="mt-1.5 max-w-sm text-xs leading-relaxed text-muted-foreground">
-        {searchText
+    <EmptyState
+      icon={ShieldCheck}
+      title={searchText ? "No validation rules match filters" : "No standard validation rules"}
+      description={
+        searchText
           ? "We couldn't find any validation rules matching your search term. Try adjusting your search query."
-          : "Create your first platform standard validation rule to manage formats."}
-      </p>
-      {!searchText && rulesLength === 0 && (
+          : "Create your first platform standard validation rule to manage formats."
+      }
+      className="min-h-0 border-0 bg-transparent py-10"
+      actions={!searchText && rulesLength === 0 ? (
         <Button
           onClick={onCreateClick}
-          className="mt-4 cursor-pointer gap-1.5 rounded-lg px-4 py-2 text-xs font-semibold"
+          className="cursor-pointer gap-1.5 rounded-lg px-4 py-2 text-xs font-semibold"
         >
           <Plus className="size-3.5" /> Create Validation Rule
         </Button>
-      )}
-    </div>
+      ) : undefined}
+    />
   )
 }
 

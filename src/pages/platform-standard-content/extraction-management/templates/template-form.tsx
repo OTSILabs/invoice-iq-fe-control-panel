@@ -22,6 +22,7 @@ import type {
 	TemplateRecord,
 } from "@/api/templates/templates.types";
 import { TemplateFieldFormDialog } from "@/components/invoice-ui/templates/template-field-form-dialog";
+import { SectionCard } from "@/components/invoice-ui/design-system";
 import {
 	getFieldCode,
 	getFieldExamples,
@@ -38,7 +39,6 @@ import {
 	resolveTemplateFields,
 } from "@/components/invoice-ui/templates/template-data";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import {
 	CategorizedFieldSelector,
 	type CategorizedFieldSelectorCategory,
@@ -724,8 +724,8 @@ function TemplateFormContent({
 }: any) {
 	return (
 		<>
-			<Card className="overflow-visible p-0">
-				<CardContent className="p-4 sm:p-5">
+			<SectionCard className="overflow-visible" contentClassName="p-0">
+				<div className="p-4 sm:p-5">
 					<form id={formId} onSubmit={form.handleSubmit(submit)} noValidate>
 						<FieldGroup className="gap-5">
 							<TemplateFormDetails control={form.control} />
@@ -782,9 +782,9 @@ function TemplateFormContent({
 							/>
 						</FieldGroup>
 					</form>
-				</CardContent>
+				</div>
 
-				<CardFooter className="dialog-form-footer">
+				<div className="dialog-form-footer">
 					<Button type="button" variant="outline" disabled={isPending} onClick={onCancel}>
 						<X className="size-4" data-icon="inline-start" />
 						Cancel
@@ -799,8 +799,8 @@ function TemplateFormContent({
 						)}
 						{isEditMode ? "Save Changes" : "Create Template"}
 					</Button>
-				</CardFooter>
-			</Card>
+				</div>
+			</SectionCard>
 
 			<TemplateFieldFormDialog mode="create" open={isFieldDialogOpen} onOpenChange={setIsFieldDialogOpen} onSuccess={handleFieldCreated} />
 		</>

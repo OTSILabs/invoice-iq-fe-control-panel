@@ -1,0 +1,207 @@
+# UI Refactor Handoff TODO
+
+This app is already substantially shaped around the new SaaS dashboard direction. The remaining work should be a focused finishing pass, not a broad redesign.
+
+## Current State
+
+- `src/index.css` contains the global Tailwind v4 design utilities:
+  - `page-container`
+  - `page-section`
+  - `surface-card`
+  - `table-container`
+  - `filter-toolbar`
+  - dialog form utilities
+- `src/components/invoice-ui/design-system.tsx` contains shared primitives:
+  - `PageShell`
+  - `SectionCard`
+  - `FilterBar`
+  - `EmptyState`
+  - `StatCard`
+  - `SegmentedFilter`
+  - `SemanticBadge`
+  - `StatusBadge`
+- `src/components/layout/PageHeader.tsx` is the shared page header.
+- `src/components/ui/data-table.tsx` and `src/components/ui/pagination-component.tsx` have the modern table and pagination treatment.
+- Sidebar has been redesigned to the dark product-shell style.
+- Most create/edit dialog flows have been moved to full pages and routes.
+- `pnpm typecheck` currently passes after the latest changes.
+
+## Do Not Rework Unless Needed
+
+- Do not broadly redesign `src/pages/organization/organizations.tsx`; it was manually tuned during the session.
+- Preserve the restored tab style in `src/components/ui/tabs.tsx`.
+- Keep actual section-navigation tabs as tabs. Use `SegmentedFilter` only for filter controls inside toolbars.
+- Do not recreate `globals.css`; the active global stylesheet is `src/index.css`.
+
+## Handoff Status
+
+This refactor is not fully complete. The app has the new design-system foundation and most high-impact screens are shaped, but the remaining work is verification and finishing polish. Continue from the checklist below.
+
+## Remaining Work
+
+### 1. Platform Content Empty States
+
+Done. Standard Platform Content list empty states and the template fields table empty state now use `EmptyState`.
+
+Pattern:
+
+```tsx
+<EmptyState
+  icon={SomeIcon}
+  title={condition ? "No records match filters" : "No records"}
+  description={condition ? "Try adjusting your search or filters." : "Create the first record to get started."}
+  className="min-h-0 border-0 bg-transparent py-10"
+  actions={canCreate ? <Button size="sm">...</Button> : undefined}
+/>
+```
+
+### 2. Normalize List Filter Toolbars
+
+Plans and Users now use `SegmentedFilter`. Continue using shared toolbar patterns on list pages:
+
+- Search input width: `w-full sm:w-72`
+- Refresh icon button: `size-9` or `h-9 w-9`
+- Toolbar wrapper: `FilterBar`
+- Table wrapper: `table-container`
+- Data table class: `tableContainerClassName="border-0 rounded-none bg-transparent"`
+
+Review:
+
+- `src/pages/platform-standard-content/data-type/data-types.tsx`
+- `src/pages/platform-standard-content/reference-lists/reference-lists.tsx`
+- `src/pages/platform-standard-content/field-categories/field-categories.tsx`
+- `src/pages/platform-standard-content/validation rule/validation-rules.tsx`
+- `src/pages/platform-standard-content/normalization-rule/normalization-rules.tsx`
+- `src/pages/platform-standard-content/extraction-management/components/fields-table.tsx`
+- `src/pages/platform-standard-content/extraction-management/components/derived-table.tsx`
+
+Expected result:
+
+- all list toolbars use `FilterBar`
+- search/refresh/action controls have consistent height and spacing
+- use `SegmentedFilter` only for filter choices, not real section navigation
+- do not change the restored visual style of actual tabs
+
+### 3. Final Form Polish
+
+Most create/edit forms are full pages now, but they still need a final visual pass:
+
+- Check field spacing is consistent: prefer `space-y-5`, `grid gap-5`, and `SectionCard`.
+- Keep form footers right aligned and separated with subtle `border-t border-border/60`.
+- Use existing `InputField`, `NativeSelect`, and `Textarea` sizing instead of page-specific input classes.
+- Avoid dense multi-column groups below mobile width.
+
+Priority files:
+
+- `src/pages/platform-standard-content/data-type/data-type-form-page.tsx`
+- `src/pages/platform-standard-content/field-categories/field-category-form-page.tsx`
+- `src/pages/platform-standard-content/reference-lists/reference-list-form-page.tsx`
+- `src/pages/platform-standard-content/reference-lists/reference-value-form-page.tsx`
+- `src/pages/platform-standard-content/validation rule/validation-rule-form-page.tsx`
+- `src/pages/platform-standard-content/normalization-rule/normalization-rule-form-page.tsx`
+- `src/pages/platform-standard-content/extraction-management/extraction-field-form-page.tsx`
+- `src/pages/platform-standard-content/extraction-management/templates/template-form.tsx`
+- `src/pages/platform-standard-content/extraction-management/derived/derived-template-form.tsx`
+
+Expected result:
+
+- forms are grouped into clear `SectionCard` surfaces
+- labels, helper text, and validation text align consistently
+- submit/cancel footers have the same visual treatment
+- no modal create/edit flows are reintroduced
+
+### 4. Dropdown and Overflow QA
+
+The Tenants organization picker was fixed with a body portal because table wrappers use overflow for scrolling.
+
+Check other table action menus and filter menus for clipping:
+
+- table row action menus in `src/columns.tsx`
+- `src/components/invoice-ui/filter-dropdown.tsx`
+- action menus in template cards:
+  - `src/components/invoice-ui/templates/template-cards.tsx`
+
+If a menu is clipped by `overflow-hidden`, use a portal/Radix content portal instead of weakening table overflow globally.
+
+Expected result:
+
+- action menus appear above sticky table headers and pagination
+- menus are not clipped by `table-container` or table scroll wrappers
+- Tenants org picker remains body-portal based
+
+### 5. Dark Mode Visual QA
+
+Tokens are in place, but the app needs visual review in dark mode.
+
+Check at least:
+
+- Organizations list and detail
+- Plans list and form
+- Tenants list and detail
+- Users list and form
+- ERP settings
+- Platform Content list/detail/form pages
+- Extraction template pages
+
+Look for:
+
+- low contrast borders
+- overly bright muted backgrounds
+- badges with insufficient contrast
+- shadow/ring combinations that disappear
+- sidebar active states
+
+Expected result:
+
+- no unreadable text or badges
+- card/table boundaries remain visible but not heavy
+- sidebar, header, page surfaces, forms, and popovers all read as one product shell
+
+### 6. Documentation Update
+
+After the remaining passes, update `AGENTS.mdc` with any new patterns added after this handoff, especially:
+
+- when to use `SegmentedFilter`
+- how to handle overflow-safe dropdowns
+- empty-state conventions
+
+### 7. Final Output Summary
+
+Before closing the refactor, write a concise final summary covering:
+
+- design system structure
+- new reusable components
+- Tailwind utility patterns
+- major screen/layout updates
+- remaining known limitations, if any
+- verification commands run
+
+## Verification Commands
+
+Run after each focused change:
+
+```bash
+pnpm typecheck
+```
+
+Recommended final checks:
+
+```bash
+pnpm lint
+pnpm build
+```
+
+If `pnpm lint` reports pre-existing noise, save the output and fix only issues introduced by the UI refactor.
+
+## Completion Criteria
+
+The refactor can be considered complete when:
+
+- every top-level screen uses the shared page shell/header pattern
+- list screens use shared table/filter/empty-state patterns
+- forms use shared section cards and consistent spacing
+- badges come from `SemanticBadge` or `StatusBadge`
+- menus are not clipped by table/card overflow
+- light and dark mode have been visually checked
+- `pnpm typecheck` passes
+- final summary documents changed components, utilities, pages, and design decisions

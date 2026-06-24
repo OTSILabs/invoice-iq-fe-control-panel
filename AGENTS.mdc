@@ -47,12 +47,18 @@ Prefer reusable primitives before page-local styling:
 - `EmptyState` for no-data and no-results states
 - `StatCard` or existing stats card patterns for KPIs
 - `FilterBar` for search, filters, refresh, and table actions
+- `SemanticBadge` for non-status semantic labels
+- `StatusBadge` for active/inactive/pending/warning/error state badges
 
 Current shared primitives live primarily in:
 
 - `src/components/invoice-ui/design-system.tsx`
 - `src/components/layout/PageHeader.tsx`
 - `src/components/ui/data-table.tsx`
+- `src/components/ui/input.tsx`
+- `src/components/ui/textarea.tsx`
+- `src/components/ui/native-select.tsx`
+- `src/components/ui/input-field.tsx`
 
 ## Tailwind Utility Standards
 
@@ -118,6 +124,21 @@ Tables should be modern and lightweight:
 
 Do not let tables dominate the page without KPI, filter, or section context.
 
+## Forms And Fields
+
+Use the shared field primitives instead of page-local border/background/focus classes:
+
+- `InputField` for most labeled text/select/number fields
+- `Input` for custom field layouts
+- `Textarea` for descriptions and JSON text areas
+- `NativeSelect` for native select controls
+- `dialog-field-grid` for two-column form groups
+- `dialog-toggle-row` for switch/checkbox rows with helper text
+
+Do not duplicate old field styling such as `rounded-lg border border-input bg-inherit` or `focus-visible:ring-primary/30`; the shared primitives own field surface, hover, focus, disabled, and dark-mode behavior.
+
+Use `dialog-form-footer` for form action rows when a page form needs a compact submit/cancel footer.
+
 ## Forms And Create/Edit Flows
 
 Create and edit flows should be full routed pages, not modal dialogs.
@@ -145,6 +166,22 @@ The sidebar is the primary navigation product frame:
 - Use sidebar tokens, not generic primary colors, for sidebar states.
 - Active states should be visible but not loud.
 - Nested items must have enough width and indentation to avoid wrapping awkwardly.
+
+## Badges And Status
+
+Use `SemanticBadge` and `StatusBadge` from `src/components/invoice-ui/design-system.tsx` for readable, consistent badges.
+
+Existing exports from `src/columns.tsx` such as `ActiveStatusBadge` and `StatusBadge` are compatibility wrappers around the design-system badge primitives. Prefer the design-system primitives for new code.
+
+Use tones deliberately:
+
+- `success` for active/complete/enabled
+- `warning` for pending or user attention
+- `danger` for blocked/failed/expired/destructive state
+- `info` for in-progress/processing
+- `neutral` for inactive or metadata
+
+Hard-coded semantic color classes are acceptable for destructive menu actions, password requirement checks, code/JSON previews, and other one-off states, but do not create new ad hoc status badge styles.
 
 ## Implementation Discipline
 

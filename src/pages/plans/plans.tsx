@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { SearchInput } from "@/components/search-input"
 import { planColumns as columns } from "@/columns"
-import { EmptyState, FilterBar, PageShell } from "@/components/invoice-ui/design-system"
+import { EmptyState, FilterBar, PageShell, SegmentedFilter } from "@/components/invoice-ui/design-system"
 
 import { Select,SelectContent,SelectItem,SelectTrigger, SelectValue } from "@/components/ui/select"
 
@@ -87,39 +87,15 @@ export function Plans() {
       <div className="table-container">
         <div className="flex min-h-0 flex-1 flex-col p-0">
           <FilterBar>
-            <div className="flex w-fit items-center gap-1.5 rounded-lg bg-muted/70 p-1 ring-1 ring-border/50 select-none">
-              {[
+            <SegmentedFilter
+              value={planTypeFilter}
+              onValueChange={setPlanTypeFilter}
+              items={[
                 { value: "all", label: "All Plans", count: typeCounts.all, icon: Layers },
                 { value: "basic", label: "Basic", count: typeCounts.basic, icon: CheckCircle2 },
-                { value: "free trial", label: "Free Trial", count: typeCounts.freeTrial, icon: Sparkles }
-              ].map(({ value, label, count, icon: Icon }) => {
-                const isActive = planTypeFilter === value;
-                return (
-                  <button
-                    key={value}
-                    type="button"
-                    onClick={() => setPlanTypeFilter(value)}
-                    className={cn(
-                      "inline-flex items-center gap-1.5 rounded-md border border-transparent px-3 py-1.5 text-xs font-semibold transition-all duration-150 cursor-pointer select-none",
-                      isActive 
-                        ? "bg-card text-foreground shadow-sm ring-1 ring-border/50"
-                        : "text-muted-foreground hover:bg-background/60 hover:text-foreground"
-                    )}
-                  >
-                    <Icon className="size-3.5" />
-                    <span>{label}</span>
-                    <span className={cn(
-                      "flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[10px] font-bold leading-none",
-                      isActive 
-                        ? "bg-primary/12 text-primary"
-                        : "bg-background/70 text-muted-foreground"
-                    )}>
-                      {count}
-                    </span>
-                  </button>
-                )
-              })}
-            </div>
+                { value: "free trial", label: "Free Trial", count: typeCounts.freeTrial, icon: Sparkles },
+              ]}
+            />
 
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
               <SearchInput 

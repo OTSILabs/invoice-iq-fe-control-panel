@@ -2,14 +2,13 @@ import { useState, useMemo } from "react"
 import { Key, LogIn, Edit2, Shield, Mail, User, Clock, Calendar } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { useAuthMe } from "@/api/hooks/useAuth"
 import { getInitials, formatDate, getDecodedToken, formatRole } from "@/lib/utils"
 import { ChangePasswordDialog } from "./change-password-dialog"
 import { ActiveStatusBadge } from "@/columns"
 
 import { PageHeader } from "@/components/layout/PageHeader"
-import { PageShell } from "@/components/invoice-ui/design-system"
+import { PageShell, SectionCard } from "@/components/invoice-ui/design-system"
 
 const INITIAL_TIME = Date.now()
 
@@ -41,36 +40,36 @@ export function Profile() {
         description="Manage your account information, security settings, and audit activity."
       />
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 space-y-6">
-          <Card className="overflow-hidden p-0">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+        <div className="space-y-6 lg:col-span-2">
+          <div className="surface-card overflow-hidden">
             <div className="relative h-32 w-full border-b border-border/45 bg-muted/35">
               <div className="absolute inset-0 bg-[radial-gradient(color-mix(in_oklch,var(--muted-foreground)_20%,transparent)_1px,transparent_1px)] [background-size:16px_16px] opacity-50" />
             </div>
 
-            <div className="px-6 pb-6 relative">
-              <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 -mt-12 mb-6">
+            <div className="relative px-6 pb-6">
+              <div className="-mt-12 mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
                 <div className="relative">
                   <Avatar className="h-24 w-24 rounded-2xl border-4 border-card bg-card shadow-md">
-                    <AvatarFallback className="rounded-2xl bg-primary/10 text-primary text-3xl font-extrabold uppercase">{user.initials}</AvatarFallback>
+                    <AvatarFallback className="rounded-2xl bg-primary/10 text-3xl font-extrabold uppercase text-primary">{user.initials}</AvatarFallback>
                   </Avatar>
                   <span className="absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full border-2 border-card bg-emerald-500 shadow-sm" />
                 </div>
 
-                <div className="flex-1 min-w-0 sm:pb-2">
-                  <div className="flex items-center gap-2 flex-wrap">
+                <div className="min-w-0 flex-1 sm:pb-2">
+                  <div className="flex flex-wrap items-center gap-2">
                     <h2 className="text-lg font-semibold text-foreground truncate">{user.name}</h2>
-                    <ActiveStatusBadge status={user.status} className="hover:bg-emerald-100/50 text-[10px] font-semibold px-2 py-0.5 rounded-md capitalize shadow-none" />
+                    <ActiveStatusBadge status={user.status} className="capitalize" />
                   </div>
                   <p className="text-xs text-muted-foreground truncate">{user.email}</p>
                 </div>
 
-                <Button variant="outline" size="sm" className="h-8 text-xs font-medium gap-1.5 cursor-pointer shadow-none">
+                <Button variant="outline" size="sm" className="h-8 cursor-pointer gap-1.5 text-xs font-medium shadow-none">
                   <Edit2 className="size-3.5" /> Edit Profile
                 </Button>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+              <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
                 {[
                   { label: "Role", value: user.role, icon: Shield },
                   { label: "Email Address", value: user.email, icon: Mail },
@@ -89,16 +88,15 @@ export function Profile() {
                 ))}
               </div>
             </div>
-          </Card>
+          </div>
         </div>
 
         <div className="space-y-6">
-          <Card className="p-0">
-            <CardHeader className="border-b border-border/45 p-5">
-              <CardTitle className="text-xs font-semibold uppercase tracking-wider text-foreground">Account Security</CardTitle>
-              <CardDescription className="text-[10px] text-muted-foreground">Manage your credentials and sign-in credentials.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4 p-5">
+          <SectionCard
+            title="Account Security"
+            description="Manage your credentials and sign-in credentials."
+            contentClassName="space-y-4"
+          >
               <div>
                 <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Password Last Changed</p>
                 <p className="text-xs font-semibold text-foreground mt-1">{user.pwdUpdated}</p>
@@ -111,17 +109,16 @@ export function Profile() {
               >
                 <Key className="size-3.5" /> Change Password
               </Button>
-            </CardContent>
-          </Card>
+          </SectionCard>
 
-          <Card className="p-0">
-            <CardHeader className="border-b border-border/45 p-5">
-              <CardTitle className="text-xs font-semibold uppercase tracking-wider text-foreground flex items-center gap-2">
+          <SectionCard
+            title={
+              <span className="flex items-center gap-2">
                 <Clock className="size-3.5 text-muted-foreground" /> Recent Activity
-              </CardTitle>
-              <CardDescription className="text-[10px] text-muted-foreground">Your recent log-in and account modification events.</CardDescription>
-            </CardHeader>
-            <CardContent className="p-5">
+              </span>
+            }
+            description="Your recent log-in and account modification events."
+          >
               <div className="relative border-l border-border/55 pl-4 ml-2 space-y-5">
                 {[
                   { title: "Successful Login", date: user.lastLogin, icon: <LogIn className="size-3" /> },
@@ -139,8 +136,7 @@ export function Profile() {
               <div className="mt-5 pt-3 border-t border-border/45 flex justify-end">
                 <Button variant="ghost" size="sm" className="h-7 text-xs font-medium cursor-pointer">View Full Activity</Button>
               </div>
-            </CardContent>
-          </Card>
+          </SectionCard>
         </div>
       </div>
 

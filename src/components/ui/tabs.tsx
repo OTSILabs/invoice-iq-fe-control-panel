@@ -23,11 +23,11 @@ function Tabs({
 }
 
 const tabsListVariants = cva(
-  "group/tabs-list inline-flex w-fit items-center justify-center rounded-lg p-1 text-muted-foreground group-data-horizontal/tabs:h-10 group-data-vertical/tabs:h-fit group-data-vertical/tabs:flex-col group-data-vertical/tabs:rounded-lg data-[variant=line]:rounded-none",
+  "group/tabs-list inline-flex w-fit items-center justify-center text-muted-foreground group-data-horizontal/tabs:h-9 group-data-vertical/tabs:h-fit group-data-vertical/tabs:flex-col data-[variant=line]:rounded-none",
   {
     variants: {
       variant: {
-        default: "bg-muted/70 ring-1 ring-border/50",
+        default: "gap-1 rounded-lg bg-transparent p-0",
         line: "gap-1 bg-transparent",
       },
     },
@@ -63,7 +63,7 @@ function TabsTrigger({
       className={cn(
         "relative inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-3 py-1 text-sm font-medium whitespace-nowrap text-muted-foreground transition-all group-data-vertical/tabs:w-full group-data-vertical/tabs:justify-start group-data-vertical/tabs:px-2.5 group-data-vertical/tabs:py-1.5 hover:text-foreground focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/20 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         "group-data-[variant=line]/tabs-list:bg-transparent group-data-[variant=line]/tabs-list:data-active:bg-transparent dark:group-data-[variant=line]/tabs-list:data-active:border-transparent dark:group-data-[variant=line]/tabs-list:data-active:bg-transparent",
-        "data-active:bg-card data-active:text-foreground data-active:shadow-sm data-active:ring-1 data-active:ring-border/55 dark:data-active:bg-input/35 dark:data-active:text-foreground",
+        "data-active:border-border data-active:bg-card data-active:text-foreground data-active:shadow-sm dark:data-active:bg-input/35 dark:data-active:text-foreground",
         // sadcnx theme variants (when container has class sadcnx or data-theme=sadcnx)
         "group-[.sadcnx]/tabs:hover:text-primary group-data-[theme=sadcnx]/tabs:hover:text-primary",
         "group-[.sadcnx]/tabs:data-active:text-primary group-data-[theme=sadcnx]/tabs:data-active:text-primary",

@@ -1,4 +1,5 @@
-import { useState, useMemo } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
+import { createPortal } from "react-dom"
 import { useQueries } from "@tanstack/react-query"
 import { useOrganizations } from "@/api/hooks/useOrganizations"
 import { organizationsService } from "@/api/services/organizations.service"
@@ -8,6 +9,7 @@ import { Loader2, Users, Building, ChevronDown, Plus } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import type { Tenant, TenantActionType } from "@/types"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import { TenantActionDialog } from "./tenant-actions/tenant-action-dialog"
 import { getTenantColumns } from "@/columns"
 import { EmptyState, FilterBar, PageShell } from "@/components/invoice-ui/design-system"
@@ -18,7 +20,9 @@ export function TenantsPage() {
   const [selectedOrgId, setSelectedOrgId] = useState<string>("")
   const [orgSearch, setOrgSearch] = useState<string>("")
   const [isOrgDropdownOpen, setIsOrgDropdownOpen] = useState(false)
+  const [orgDropdownPosition, setOrgDropdownPosition] = useState<{ top: number; left: number; width: number } | null>(null)
   const [tenantAction, setTenantAction] = useState<{ type: TenantActionType; tenant: Tenant } | null>(null)
+  const orgDropdownTriggerRef = useRef<HTMLButtonElement>(null)
 
   // Derive active organization ID: default to first organization if no selection is made
   const activeOrgId = selectedOrgId || organizations[0]?.id || ""
@@ -50,6 +54,39 @@ export function TenantsPage() {
 
   // Columns for the Tenant list table
   const columns = useMemo(() => getTenantColumns(activeOrgId, setTenantAction), [activeOrgId])
+
+  useEffect(() => {
+    if (!isOrgDropdownOpen) return
+
+    const updatePosition = () => {
+      const trigger = orgDropdownTriggerRef.current
+      if (!trigger) return
+
+      const rect = trigger.getBoundingClientRect()
+      const viewportPadding = 16
+      const preferredWidth = window.innerWidth >= 640 ? 288 : rect.width
+      const width = Math.min(Math.max(preferredWidth, rect.width), window.innerWidth - viewportPadding * 2)
+      const left = Math.min(
+        Math.max(rect.right - width, viewportPadding),
+        window.innerWidth - width - viewportPadding,
+      )
+
+      setOrgDropdownPosition({
+        top: rect.bottom + 6,
+        left,
+        width,
+      })
+    }
+
+    updatePosition()
+    window.addEventListener("resize", updatePosition)
+    window.addEventListener("scroll", updatePosition, true)
+
+    return () => {
+      window.removeEventListener("resize", updatePosition)
+      window.removeEventListener("scroll", updatePosition, true)
+    }
+  }, [isOrgDropdownOpen])
 
   // Loading state
   if (isOrgsLoading || isTenantsLoading) {
@@ -84,9 +121,9 @@ export function TenantsPage() {
       />
 
       {/* Tenants list table - tabular format followed everywhere */}
-      <div className="table-container">
+      <div className="table-container overflow-visible">
         {/* Header - Put the select dropdown inside the table card header */}
-        <FilterBar className="p-5">
+        <FilterBar className="relative z-40 overflow-visible p-5">
           <div className="flex items-center gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/20">
               <Users className="h-4 w-4" />
@@ -100,10 +137,11 @@ export function TenantsPage() {
           </div>
           
           {/* Header actions (Dropdown and Add Tenant button side-by-side) */}
-          <div className="flex items-center gap-2.5 self-start sm:self-auto">
+          <div className="relative z-50 flex w-full flex-col gap-2.5 self-start sm:w-auto sm:flex-row sm:items-center sm:self-auto">
             {/* Searchable Organization Dropdown placed inside the table card header */}
-            <div className="relative">
+            <div className="relative w-full sm:w-auto">
               <button
+                ref={orgDropdownTriggerRef}
                 type="button"
                 onClick={() => setIsOrgDropdownOpen(!isOrgDropdownOpen)}
                 className="inline-flex h-9 w-full cursor-pointer items-center justify-between gap-2 rounded-lg border border-input bg-background/70 px-3 text-xs font-semibold text-foreground shadow-xs transition-colors hover:border-ring/35 sm:w-56"
@@ -116,20 +154,28 @@ export function TenantsPage() {
               </button>
 
               {isOrgDropdownOpen && (
-                <>
+                createPortal(
+                  <>
                   <button
                     type="button"
-                    className="fixed inset-0 z-30 w-full h-full cursor-default bg-transparent border-0"
+                    className="fixed inset-0 z-[90] h-full w-full cursor-default border-0 bg-transparent"
                     onClick={() => setIsOrgDropdownOpen(false)}
                     aria-label="Close dropdown"
                   />
-                  <div className="absolute right-0 z-40 mt-1 w-64 animate-in rounded-xl bg-popover p-2 text-popover-foreground shadow-2xl ring-1 ring-border/70 duration-150 fade-in slide-in-from-top-1">
-                    <input
+                  <div
+                    className="fixed z-[100] animate-in rounded-xl bg-popover p-2 text-popover-foreground shadow-2xl ring-1 ring-border/70 duration-150 fade-in slide-in-from-top-1"
+                    style={{
+                      top: orgDropdownPosition?.top ?? 0,
+                      left: orgDropdownPosition?.left ?? 0,
+                      width: orgDropdownPosition?.width ?? 288,
+                    }}
+                  >
+                    <Input
                       type="text"
                       value={orgSearch}
                       onChange={(e) => setOrgSearch(e.target.value)}
                       placeholder="Search organization..."
-                      className="w-full h-8 px-2.5 text-xs rounded-md border border-input bg-background outline-none focus:border-primary focus:ring-1 focus:ring-primary/30 mb-2 text-foreground"
+                      className="mb-2 h-8 text-xs"
                       aria-label="Search organization"
                     />
                     <div className="max-h-48 overflow-y-auto space-y-0.5 scrollbar-thin">
@@ -158,7 +204,9 @@ export function TenantsPage() {
                       )}
                     </div>
                   </div>
-                </>
+                  </>,
+                  document.body,
+                )
               )}
             </div>
 
@@ -183,7 +231,7 @@ export function TenantsPage() {
           totalItems={tenants.length}
           stickyHeader
           tableContainerClassName="border-0 rounded-none bg-transparent"
-          containerClassName="rounded-b-xl"
+          containerClassName="relative z-0 rounded-b-xl"
           onRowClick={(tenant) => navigate(`/tenants/${tenant.id}`)}
           emptyState={
             <div className="flex flex-col items-center justify-center py-12 text-center">

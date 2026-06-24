@@ -18,7 +18,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog"
-import { FilterBar, PageShell } from "@/components/invoice-ui/design-system"
+import { EmptyState, FilterBar, PageShell } from "@/components/invoice-ui/design-system"
 
 export function NormalizationRules() {
   const navigate = useNavigate()
@@ -162,27 +162,24 @@ function NormalizationRulesEmptyState({
   onCreateClick,
 }: NormalizationRulesEmptyStateProps) {
   return (
-    <div className="flex flex-col items-center justify-center px-4 py-10 text-center animate-in fade-in slide-in-from-bottom-2 duration-300">
-      <div className="bg-primary/5 p-4 rounded-full mb-3 text-primary/80 border border-primary/10">
-        <ShieldCheck className="size-8 stroke-[1.5]" />
-      </div>
-      <h3 className="text-sm font-semibold text-foreground">
-        {searchText ? "No rules match search" : "No normalization rules"}
-      </h3>
-      <p className="text-xs text-muted-foreground mt-1.5 max-w-sm leading-relaxed">
-        {searchText
+    <EmptyState
+      icon={ShieldCheck}
+      title={searchText ? "No rules match search" : "No normalization rules"}
+      description={
+        searchText
           ? "We couldn't find any normalization rules matching your query. Try adjusting your search term."
-          : "Add your first declarative normalization rule to clean up or transform document fields."}
-      </p>
-      {!searchText && rulesLength === 0 && (
+          : "Add your first declarative normalization rule to clean up or transform document fields."
+      }
+      className="min-h-0 border-0 bg-transparent py-10"
+      actions={!searchText && rulesLength === 0 ? (
         <Button
           onClick={onCreateClick}
-          className="mt-4 gap-1.5 rounded-lg px-4 py-2 text-xs font-semibold cursor-pointer"
+          className="cursor-pointer gap-1.5 rounded-lg px-4 py-2 text-xs font-semibold"
         >
           <Plus className="size-3.5" /> Create Rule
         </Button>
-      )}
-    </div>
+      ) : undefined}
+    />
   )
 }
 

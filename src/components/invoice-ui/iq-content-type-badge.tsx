@@ -3,7 +3,7 @@ import {
   getTemplateContentType,
   getTemplateIsStandard,
 } from "@/components/invoice-ui/templates/template-data";
-import { Badge } from "@/components/ui/badge";
+import { SemanticBadge } from "@/components/invoice-ui/design-system";
 import { cn } from "@/lib/utils";
 
 export function IqContentTypeBadge({
@@ -27,17 +27,14 @@ export function IqContentTypeBadge({
   }
 
   return (
-    <Badge
-      variant={isStandard ? "default" : "secondary"}
+    <SemanticBadge
+      tone={isStandard ? "info" : "accent"}
       className={cn(
-        "h-6 rounded-sm px-2 text-[10px] font-semibold uppercase leading-none shadow-none",
-        isStandard
-          ? "bg-primary !text-primary-foreground"
-          : "border border-border bg-secondary !text-secondary-foreground",
+        "h-6 rounded-sm uppercase leading-none",
         className,
       )}
     >
       {contentType}
-    </Badge>
+    </SemanticBadge>
   );
 }

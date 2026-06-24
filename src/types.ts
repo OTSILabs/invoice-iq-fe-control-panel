@@ -470,13 +470,6 @@ export interface DerivedTableProps {
 export interface ExtractionManagementState {
   activeTab: string;
   searchText: string;
-  templateDialog: { open: boolean; item: StandardExtractionTemplateResponse | null };
-}
-
-export interface FieldDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  fieldItem: StandardExtractionFieldResponse | null;
 }
 
 export interface FieldDialogDetailsStepProps {
@@ -601,51 +594,11 @@ export interface PlanFormProps {
   formId?: string
 }
 
-export interface DataTypeDialogProps {
-  dataType?: DataType | null
-  open: boolean
-  onOpenChange: (open: boolean) => void
-}
-
-export interface CategoryDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  category: FieldCategoryResponse | null;
-}
-
-export interface NormalizationRuleDialogProps {
-  normalizationRule?: NormalizationRule | null
-  open: boolean
-  onOpenChange: (open: boolean) => void
-}
-
-export interface NormalizationRuleFormFieldsProps {
-  register: UseFormRegister<NormalizationRuleFormValues>
-  errors: FieldErrors<NormalizationRuleFormValues>
-  control: Control<NormalizationRuleFormValues>
-  isEdit: boolean
-  isPending: boolean
-  formatJSONField: (fieldName: "parameter_schema_json" | "engine_config_json") => void
-}
-
 export interface DeleteNormalizationRuleDialogProps {
   deletingRule: NormalizationRule | null
   onClose: () => void
   onConfirm: () => void
   isDeleting: boolean
-}
-
-export interface RegistryDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  registry: ReferenceListRegistryResponse | null;
-}
-
-export interface ValueDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  registryKey: string;
-  valueItem: ReferenceValueResponse | null;
 }
 
 export interface RegistryDetailsCardProps {
@@ -659,21 +612,6 @@ export interface RegistryDetailsCardProps {
     updated_at?: string | null;
     description?: string | null;
   };
-}
-
-export interface ValidationRuleDialogProps {
-  validationRule?: ValidationRule | null
-  open: boolean
-  onOpenChange: (open: boolean) => void
-}
-
-export interface ValidationRuleFormFieldsProps {
-  register: UseFormRegister<ValidationRuleFormValues>
-  errors: FieldErrors<ValidationRuleFormValues>
-  control: Control<ValidationRuleFormValues>
-  isEdit: boolean
-  isPending: boolean
-  formatJSONField: (fieldName: "parameter_schema_json" | "engine_config_json") => void
 }
 
 export interface DeleteValidationRuleDialogProps {

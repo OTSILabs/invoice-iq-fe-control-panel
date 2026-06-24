@@ -1,6 +1,6 @@
 import { type ReactNode } from "react";
 import { humanizeDateTime } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
+import { SemanticBadge } from "@/components/invoice-ui/design-system";
 
 export type TemplateDetailRow = {
   label: string;
@@ -47,14 +47,14 @@ export function getTagBadges(values: unknown) {
   return (
     <div className="flex min-w-0 flex-wrap items-center gap-1.5">
       {tags.map((tag) => (
-        <Badge
+        <SemanticBadge
           key={tag}
-          variant="outline"
-          className="h-6 max-w-48 rounded-md border-border/60 bg-background px-2 text-xs font-medium text-foreground/85 shadow-none"
+          tone="neutral"
+          className="max-w-48 rounded-md font-medium"
           title={tag}
         >
           <span className="truncate">{tag}</span>
-        </Badge>
+        </SemanticBadge>
       ))}
     </div>
   );

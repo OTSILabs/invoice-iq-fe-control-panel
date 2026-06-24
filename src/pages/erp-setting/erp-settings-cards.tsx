@@ -93,8 +93,8 @@ function ErpSettingCard({
   const [isEnabled, setIsEnabled] = useState(Boolean(record.is_enabled ?? true))
 
   return (
-    <Card className="flex h-full flex-col overflow-hidden">
-      <CardHeader className="pb-4">
+    <Card className="surface-card flex h-full flex-col overflow-hidden p-0">
+      <CardHeader className="border-b border-border/60 bg-muted/15 p-5">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
             <CardTitle className="truncate text-base font-semibold text-foreground">
@@ -118,7 +118,7 @@ function ErpSettingCard({
             />
           </div>
         </div>
-        <div className="mt-3 flex items-start justify-between gap-4 rounded-lg bg-muted/35 p-3">
+        <div className="mt-3 flex items-start justify-between gap-4 rounded-lg bg-muted/35 p-3 ring-1 ring-border/45">
           <MetaDateItem label="Created" value={record.created_at} />
           <MetaDateItem label="Updated" value={record.updated_at} align="right" />
         </div>
@@ -130,7 +130,7 @@ function ErpSettingCard({
         </div>
       </CardContent>
 
-      <CardFooter className="flex items-center justify-end gap-2 border-t border-border/45 bg-muted/20 p-4">
+      <CardFooter className="flex items-center justify-end gap-2 border-t border-border/60 bg-muted/20 p-4">
         <Button variant="outline" size="sm" onClick={() => onEdit(record)} className="gap-1.5 text-xs" disabled>
           <Edit2 className="size-3.5" />
           Edit

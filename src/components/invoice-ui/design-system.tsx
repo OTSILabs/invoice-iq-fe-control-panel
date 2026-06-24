@@ -2,6 +2,7 @@ import * as React from "react"
 import type { LucideIcon } from "lucide-react"
 import { FileX2 } from "lucide-react"
 
+import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 
@@ -32,9 +33,9 @@ export function SectionCard({
   contentClassName?: string
 }) {
   return (
-    <Card className={cn("surface-card gap-0 p-0", className)} {...props}>
+    <Card className={cn("surface-card gap-0 overflow-hidden p-0", className)} {...props}>
       {(title || description || actions) && (
-        <CardHeader className="flex flex-col gap-3 border-b border-border/45 px-5 py-4 sm:flex-row sm:items-start sm:justify-between">
+        <CardHeader className="flex flex-col gap-3 border-b border-border/60 bg-muted/15 px-5 py-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0">
             {title && <CardTitle className="text-section-title">{title}</CardTitle>}
             {description && (
@@ -81,7 +82,7 @@ export function EmptyState({
   return (
     <div
       className={cn(
-        "flex min-h-56 flex-col items-center justify-center rounded-xl border border-dashed border-border/70 bg-muted/20 px-6 py-12 text-center",
+        "flex min-h-56 flex-col items-center justify-center rounded-xl border border-dashed border-border bg-muted/20 px-6 py-12 text-center",
         className,
       )}
     >
@@ -130,5 +131,151 @@ export function StatCard({
         <Icon className="size-4" />
       </div>
     </div>
+  )
+}
+
+export type SegmentedFilterItem = {
+  value: string
+  label: React.ReactNode
+  count?: number
+  icon?: LucideIcon
+}
+
+export function SegmentedFilter({
+  value,
+  items,
+  onValueChange,
+  className,
+}: {
+  value: string
+  items: SegmentedFilterItem[]
+  onValueChange: (value: string) => void
+  className?: string
+}) {
+  return (
+    <div
+      className={cn(
+        "flex w-fit max-w-full items-center gap-1.5 overflow-x-auto rounded-lg bg-muted/70 p-1 ring-1 ring-border/50 select-none",
+        className,
+      )}
+      role="tablist"
+    >
+      {items.map((item) => {
+        const Icon = item.icon
+        const isActive = value === item.value
+
+        return (
+          <button
+            key={item.value}
+            type="button"
+            role="tab"
+            aria-selected={isActive}
+            onClick={() => onValueChange(item.value)}
+            className={cn(
+              "inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-md border border-transparent px-3 py-1.5 text-xs font-semibold transition-all duration-150",
+              isActive
+                ? "bg-card text-foreground shadow-sm ring-1 ring-border/50"
+                : "text-muted-foreground hover:bg-background/60 hover:text-foreground",
+            )}
+          >
+            {Icon && <Icon className="size-3.5" />}
+            <span>{item.label}</span>
+            {typeof item.count === "number" && (
+              <span
+                className={cn(
+                  "flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[10px] font-bold leading-none",
+                  isActive
+                    ? "bg-primary/12 text-primary"
+                    : "bg-background/70 text-muted-foreground",
+                )}
+              >
+                {item.count}
+              </span>
+            )}
+          </button>
+        )
+      })}
+    </div>
+  )
+}
+
+export type SemanticTone = "neutral" | "success" | "warning" | "danger" | "info" | "accent"
+
+const semanticBadgeTone: Record<SemanticTone, string> = {
+  neutral: "border-border bg-muted text-muted-foreground",
+  success: "border-emerald-500/25 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
+  warning: "border-amber-500/25 bg-amber-500/10 text-amber-700 dark:text-amber-300",
+  danger: "border-rose-500/25 bg-rose-500/10 text-rose-700 dark:text-rose-300",
+  info: "border-primary/25 bg-primary/10 text-primary",
+  accent: "border-border bg-secondary text-secondary-foreground",
+}
+
+const semanticBadgeDot: Record<SemanticTone, string> = {
+  neutral: "bg-muted-foreground/70",
+  success: "bg-emerald-500",
+  warning: "bg-amber-500",
+  danger: "bg-rose-500",
+  info: "bg-primary",
+  accent: "bg-secondary-foreground/70",
+}
+
+export function SemanticBadge({
+  tone = "neutral",
+  children,
+  className,
+  showDot = false,
+}: {
+  tone?: SemanticTone
+  children: React.ReactNode
+  className?: string
+  showDot?: boolean
+}) {
+  return (
+    <Badge
+      variant="outline"
+      className={cn(
+        "h-5 rounded-full px-2 text-[0.68rem] font-semibold shadow-none",
+        semanticBadgeTone[tone],
+        className,
+      )}
+    >
+      {showDot && <span className={cn("size-1.5 rounded-full", semanticBadgeDot[tone])} />}
+      {children}
+    </Badge>
+  )
+}
+
+export function StatusBadge({
+  status,
+  active,
+  tone,
+  className,
+  showDot = false,
+}: {
+  status?: string | null
+  active?: boolean | null
+  tone?: SemanticTone
+  className?: string
+  showDot?: boolean
+}) {
+  const normalized = status ? status.toLowerCase().trim() : active ?? true ? "active" : "inactive"
+  const resolvedTone: SemanticTone = tone
+    ?? (["success", "active", "complete", "completed", "enabled"].includes(normalized)
+      ? "success"
+      : ["blocked", "deactivated", "failed", "error", "inactive"].includes(normalized)
+      ? "danger"
+      : ["expired"].includes(normalized)
+      ? "danger"
+      : ["pending", "warning"].includes(normalized)
+      ? "warning"
+      : ["in_progress", "inprogress", "processing"].includes(normalized)
+      ? "info"
+      : "neutral")
+  const label = status || (active ?? true ? "Active" : "Inactive")
+
+  return (
+    <SemanticBadge tone={resolvedTone} className={className} showDot={showDot}>
+      {label}
+    </SemanticBadge>
   )
 }

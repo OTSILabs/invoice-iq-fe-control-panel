@@ -35,6 +35,8 @@ export function PaginationComponent({
   if (!enablePagination) return null
 
   const totalPages = Math.max(1, Math.ceil(totalItems / pageSize))
+  const firstItem = totalItems === 0 ? 0 : (currentPage - 1) * pageSize + 1
+  const lastItem = Math.min(currentPage * pageSize, totalItems)
 
   const getPageNumbers = () => {
     if (totalPages <= 5) {
@@ -52,8 +54,12 @@ export function PaginationComponent({
   const pages = getPageNumbers()
 
   return (
-    <div className={cn("flex flex-col sm:flex-row items-center justify-between gap-4 py-4 px-2", className)}>
-      <div className="flex items-center gap-4 text-sm text-muted-foreground">
+    <div className={cn("flex flex-col items-center justify-between gap-3 px-2 py-4 sm:flex-row", className)}>
+      <div className="flex flex-col items-center gap-2 text-xs text-muted-foreground sm:flex-row sm:gap-4">
+        <span className="font-medium">
+          Showing <span className="text-foreground">{firstItem}-{lastItem}</span> of{" "}
+          <span className="text-foreground">{totalItems}</span>
+        </span>
         {onPageSizeChange && pageSizeOptions.length > 0 && (
           <div className="flex items-center gap-2">
             <span>Rows per page:</span>

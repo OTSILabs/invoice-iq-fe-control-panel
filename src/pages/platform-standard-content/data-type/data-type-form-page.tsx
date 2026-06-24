@@ -151,7 +151,7 @@ export function DataTypeFormPage({ mode }: { mode: "create" | "edit" }) {
               placeholder="e.g. Standard format for electronic mail contact addresses"
               disabled={isPending}
               {...register("description")}
-              className="min-h-[96px] rounded-lg border border-input bg-inherit text-sm"
+              className="min-h-[96px] text-sm"
             />
             {errors.description && (
               <span className="block px-1 text-[11px] font-medium text-destructive">

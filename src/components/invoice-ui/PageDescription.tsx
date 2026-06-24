@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 
 export function PageDescription({ description }: { description: ReactNode }) {
   return (
-    <p className="mt-1 text-[13px] leading-4 text-muted-foreground">
+    <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">
       {description}
     </p>
   );

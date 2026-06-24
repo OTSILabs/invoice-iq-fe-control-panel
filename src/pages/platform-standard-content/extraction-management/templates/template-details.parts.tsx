@@ -32,11 +32,11 @@ export function TemplateDetailsSkeleton() {
 					<Skeleton className="h-4 w-40" />
 				</div>
 
-				<Card>
-					<CardHeader>
+				<Card className="surface-card gap-0 overflow-hidden p-0">
+					<CardHeader className="border-b border-border/60 bg-muted/15 p-5">
 						<Skeleton className="h-5 w-48" />
 					</CardHeader>
-					<CardContent>
+					<CardContent className="p-5">
 						<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
 							{Array.from({ length: 6 }).map((_, i) => (
 								<Fragment key={i}>

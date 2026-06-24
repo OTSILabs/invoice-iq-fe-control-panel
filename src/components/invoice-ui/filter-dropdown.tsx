@@ -7,7 +7,7 @@ import {
 } from "react";
 import { Filter, X } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
+import { SemanticBadge } from "@/components/invoice-ui/design-system";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -378,10 +378,10 @@ export function FilterDropdownChips({
   return (
     <div className={cn("flex min-w-0 flex-wrap items-center gap-1.5", className)}>
       {chips.map((chip) => (
-        <Badge
+        <SemanticBadge
           key={chip.id}
-          variant="outline"
-          className="h-6 rounded-md border-border bg-background px-1.5 text-xs font-normal"
+          tone="neutral"
+          className="h-6 rounded-md font-normal"
         >
           <span className="max-w-48 truncate">
             {chip.groupLabel}: {chip.optionLabel}
@@ -405,7 +405,7 @@ export function FilterDropdownChips({
           >
             <X className="size-3" />
           </button>
-        </Badge>
+        </SemanticBadge>
       ))}
     </div>
   );

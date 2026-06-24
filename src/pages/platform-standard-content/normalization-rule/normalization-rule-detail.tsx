@@ -2,11 +2,10 @@ import { useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { ArrowLeft, ShieldCheck, Trash2, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import { useNormalizationRule, useDeleteNormalizationRuleMutation } from "@/api/hooks/normalization-rules"
 import { ActiveStatusBadge } from "@/columns"
 import { PageHeader } from "@/components/layout/PageHeader"
-import { PageShell } from "@/components/invoice-ui/design-system"
+import { PageShell, SemanticBadge } from "@/components/invoice-ui/design-system"
 import { toast } from "sonner"
 import {
   Dialog,
@@ -144,9 +143,9 @@ export function NormalizationRuleDetail() {
               {
                 label: "Rule Mode",
                 content: (
-                  <Badge variant="outline" className="text-xxs px-2 py-0.5 font-mono uppercase">
+                  <SemanticBadge tone="neutral" className="font-mono uppercase">
                     {rule.rule_mode}
-                  </Badge>
+                  </SemanticBadge>
                 )
               },
               {
@@ -204,9 +203,9 @@ export function NormalizationRuleDetail() {
               <div className="flex flex-wrap gap-1.5">
                 {rule.supported_data_types_json && rule.supported_data_types_json.length > 0 ? (
                   rule.supported_data_types_json.map((dt) => (
-                    <Badge key={dt} variant="secondary" className="text-[10px] font-mono font-medium px-2 py-0.5 uppercase">
+                    <SemanticBadge key={dt} tone="accent" className="font-mono uppercase">
                       {dt}
-                    </Badge>
+                    </SemanticBadge>
                   ))
                 ) : (
                   <span className="text-xs text-muted-foreground">—</span>
@@ -219,9 +218,9 @@ export function NormalizationRuleDetail() {
               <div className="flex flex-wrap gap-1.5">
                 {rule.supported_header_items_json && rule.supported_header_items_json.length > 0 ? (
                   rule.supported_header_items_json.map((hi) => (
-                    <Badge key={hi} variant="secondary" className="text-[10px] font-mono font-medium px-2 py-0.5 uppercase">
+                    <SemanticBadge key={hi} tone="accent" className="font-mono uppercase">
                       {hi}
-                    </Badge>
+                    </SemanticBadge>
                   ))
                 ) : (
                   <span className="text-xs text-muted-foreground">—</span>

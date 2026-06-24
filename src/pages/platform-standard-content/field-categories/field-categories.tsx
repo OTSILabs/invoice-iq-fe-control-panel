@@ -11,7 +11,7 @@ import { PageHeader } from "@/components/layout/PageHeader"
 import { SearchInput } from "@/components/search-input"
 import { useFieldCategories } from "@/api/hooks/useFieldCategories"
 import { getFieldCategoriesColumns } from "@/columns"
-import { FilterBar, PageShell } from "@/components/invoice-ui/design-system"
+import { EmptyState, FilterBar, PageShell } from "@/components/invoice-ui/design-system"
 
 export function FieldCategories() {
   const navigate = useNavigate()
@@ -104,30 +104,25 @@ export function FieldCategories() {
             tableContainerClassName="border-0 rounded-none bg-transparent"
             onRowClick={(category) => navigate(`/platform-standard-content/field-categories/${category.field_category_code}`)}
             emptyState={
-              <div className="flex flex-col items-center justify-center px-4 py-10 text-center animate-in fade-in slide-in-from-bottom-2 duration-300">
-                <div className="bg-primary/5 p-4 rounded-full mb-3 text-primary/80 border border-primary/10">
-                  <Tags className="size-8 stroke-[1.5]" />
-                </div>
-                <h3 className="text-sm font-semibold text-foreground">
-                  {searchText
-                    ? "No field categories match filters"
-                    : "No field categories"}
-                </h3>
-                <p className="text-xs text-muted-foreground mt-1.5 max-w-sm leading-relaxed">
-                  {searchText
+              <EmptyState
+                icon={Tags}
+                title={searchText ? "No field categories match filters" : "No field categories"}
+                description={
+                  searchText
                     ? "We couldn't find any field categories matching your search. Try adjusting your search query."
-                    : "Create a new field category to categorize standard document fields."}
-                </p>
-                {categories.length === 0 && (
+                    : "Create a new field category to categorize standard document fields."
+                }
+                className="min-h-0 border-0 bg-transparent py-10"
+                actions={categories.length === 0 ? (
                   <Button
                     onClick={() => navigate("/platform-standard-content/field-categories/create")}
-                    className="mt-4 gap-1.5 rounded-lg px-4 py-2 text-xs font-semibold cursor-pointer"
+                    className="cursor-pointer gap-1.5 rounded-lg px-4 py-2 text-xs font-semibold"
                     disabled={isFetching}
                   >
                     <Plus className="size-3.5" /> Add Category
                   </Button>
-                )}
-              </div>
+                ) : undefined}
+              />
             }
           />
         </div>

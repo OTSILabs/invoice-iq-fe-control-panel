@@ -34,7 +34,7 @@ import {
   IqActiveStatusBadge,
   IqContentTypeBadge,
 } from "@/components/invoice-ui/iq-status-badges";
-import { Badge } from "@/components/ui/badge";
+import { EmptyState, SemanticBadge, type SemanticTone } from "@/components/invoice-ui/design-system";
 import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
 import {
@@ -45,13 +45,6 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
-import {
-  Empty,
-  EmptyDescription,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyTitle,
-} from "@/components/ui/empty";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn, humanizeDateTime } from "@/lib/utils";
@@ -275,8 +268,7 @@ function getDesktopGridClass(showOrderColumn: boolean) {
 
 type FieldBadgeData = {
   label: string;
-  variant: "default" | "secondary" | "outline";
-  className: string;
+  tone: SemanticTone;
 };
 
 function getFieldBadgeData(field: FieldListTableRecord) {
@@ -284,35 +276,24 @@ function getFieldBadgeData(field: FieldListTableRecord) {
   return [
     {
       label: getFieldDataTypeLabel(field),
-      variant: "secondary" as const,
-      className: "bg-muted text-muted-foreground",
+      tone: "neutral",
     },
     {
       label: getFieldPositionLabel(field),
-      variant: "secondary" as const,
-      className: "bg-muted text-muted-foreground",
+      tone: "accent",
     },
     {
       label: getFieldContentTypeLabel(field),
-      variant: isStandard ? ("default" as const) : ("outline" as const),
-      className: isStandard
-        ? "border-primary bg-primary text-primary-foreground"
-        : "bg-background text-foreground",
+      tone: isStandard ? "info" : "neutral",
     },
   ];
 }
 
 function FieldBadge({ badge }: { badge: FieldBadgeData }) {
   return (
-    <Badge
-      variant={badge.variant}
-      className={cn(
-        "h-5 rounded-md px-2 text-[10px] font-semibold uppercase tracking-normal",
-        badge.className,
-      )}
-    >
+    <SemanticBadge tone={badge.tone} className="rounded-md uppercase tracking-normal">
       {badge.label}
-    </Badge>
+    </SemanticBadge>
   );
 }
 
@@ -412,13 +393,13 @@ function TokenValue({
   return (
     <div className="flex flex-wrap gap-1.5">
       {values.map((item, index) => (
-        <Badge
+        <SemanticBadge
           key={`${item}-${index}`}
-          variant="outline"
-          className="h-auto min-h-6 rounded-sm bg-background px-2 py-0.5 text-xs leading-5 text-foreground"
+          tone="neutral"
+          className="h-auto min-h-6 rounded-sm leading-5"
         >
           {item}
-        </Badge>
+        </SemanticBadge>
       ))}
     </div>
   );
@@ -998,15 +979,12 @@ function FieldTableEmpty({
 }) {
   return (
     <div className="p-4">
-      <Empty className="border border-dashed">
-        <EmptyHeader>
-          <EmptyMedia variant="icon">
-            <ListChecks className="size-5" />
-          </EmptyMedia>
-          <EmptyTitle>{title}</EmptyTitle>
-          <EmptyDescription>{description}</EmptyDescription>
-        </EmptyHeader>
-      </Empty>
+      <EmptyState
+        icon={ListChecks}
+        title={title}
+        description={description}
+        className="min-h-48 border-0 bg-transparent"
+      />
     </div>
   );
 }

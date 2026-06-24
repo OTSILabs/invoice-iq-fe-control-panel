@@ -2,6 +2,7 @@ import { ArrowRight, Loader2, RefreshCw } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
+import { SemanticBadge } from "@/components/invoice-ui/design-system"
 import type { ReplicationStepProps } from "@/types"
 
 const replicationOptions = [
@@ -41,9 +42,7 @@ export function ReplicationStep({
           <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
             Replication Items
           </span>
-          <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-medium text-emerald-600">
-            Recommended
-          </span>
+          <SemanticBadge tone="success">Recommended</SemanticBadge>
         </div>
         <div className="grid grid-cols-1 gap-2 rounded-lg border border-border bg-background p-4">
           {replicationOptions.map((option) => (

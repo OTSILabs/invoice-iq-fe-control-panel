@@ -164,7 +164,7 @@ export function ReferenceListFormPage({ mode }: { mode: "create" | "edit" }) {
               id="description"
               disabled={isSaving}
               placeholder="Describe the purpose of this reference list..."
-              className="min-h-[96px] rounded-lg border border-input bg-inherit text-sm"
+              className="min-h-[96px] text-sm"
               {...register("description")}
             />
             {errors.description && <FieldError>{errors.description.message}</FieldError>}

@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom"
 import type { CustomColumnDef } from "@/components/ui/data-table"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import {
@@ -9,11 +8,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { cn, getInitials } from "@/lib/utils"
+import { getInitials } from "@/lib/utils"
 import { MaskedValue } from "@/components/ui/copyable-field"
 import { EditableValueCell } from "@/pages/organization/components/editable-value-cell"
 import { EditableValueCell as ProfileEditableValueCell } from "@/pages/organization/components/profile-editable-value-cell"
 import { TenantActionsDropdown } from "@/pages/organization/components/tenant-actions-dropdown"
+import { SemanticBadge, StatusBadge as DesignStatusBadge, type SemanticTone } from "@/components/invoice-ui/design-system"
 import {
   MoreVertical,
   Eye,
@@ -40,26 +40,8 @@ import type {
 } from "@/types"
 import type { EntityKeyMetadata } from "@/pages/organization/components/use-entity-keys-metadata"
 
-// Shared Tenant Status Badge
-type StatusKey = "active" | "inactive" | "blocked" | "expired" | "pending" | "warning"
-
-const STATUS_CFG: Record<StatusKey, { label: string; dot: string; badge: string }> = {
-  active: { label: "Active", dot: "bg-emerald-500", badge: "bg-emerald-50 text-emerald-700 border-emerald-300 dark:bg-emerald-950 dark:text-emerald-400 dark:border-emerald-800" },
-  inactive: { label: "Inactive", dot: "bg-muted-foreground", badge: "bg-muted text-muted-foreground border-border" },
-  blocked: { label: "Blocked", dot: "bg-red-500", badge: "bg-red-50 text-red-700 border-red-300 dark:bg-red-950 dark:text-red-400 dark:border-red-800" },
-  expired: { label: "Expired", dot: "bg-rose-500", badge: "bg-rose-50 text-rose-700 border-rose-300 dark:bg-rose-950 dark:text-rose-400 dark:border-rose-800" },
-  pending: { label: "Pending", dot: "bg-primary", badge: "bg-primary/8 text-primary border-primary/25" },
-  warning: { label: "Warning", dot: "bg-amber-500", badge: "bg-amber-50 text-amber-700 border-amber-300 dark:bg-amber-950/30 dark:text-amber-400 dark:border-amber-900/40" },
-}
-
 export function StatusBadge({ status }: { status: string }) {
-  const cfg = STATUS_CFG[status.toLowerCase() as StatusKey] || STATUS_CFG.inactive
-  return (
-    <Badge variant="outline" className={cn("inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xxs font-semibold", cfg.badge)}>
-      <span className={cn("h-1.5 w-1.5 rounded-full", cfg.dot)} />
-      {cfg.label}
-    </Badge>
-  )
+  return <DesignStatusBadge status={status} showDot />
 }
 
 export function ActiveStatusBadge({
@@ -74,48 +56,39 @@ export function ActiveStatusBadge({
   className?: string
 }) {
   const normalized = status ? status.toLowerCase().trim() : (active ?? true ? "active" : "inactive")
-  
-  let key: StatusKey = "inactive"
+  let tone: SemanticTone = "neutral"
   if (color) {
-    key = color === "green"
-      ? "active"
+    tone = color === "green"
+      ? "success"
       : color === "blue"
-      ? "pending"
+      ? "info"
       : color === "red"
-      ? "blocked"
+      ? "danger"
       : color === "yellow"
       ? "warning"
       : color === "rose"
-      ? "expired"
-      : "inactive"
+      ? "danger"
+      : "neutral"
   } else {
-    key = ["success", "active", "complete", "completed"].includes(normalized)
-      ? "active"
+    tone = ["success", "active", "complete", "completed"].includes(normalized)
+      ? "success"
       : ["blocked", "deactivated", "failed"].includes(normalized)
-      ? "blocked"
+      ? "danger"
       : ["expired"].includes(normalized)
-      ? "expired"
+      ? "danger"
       : ["in_progress", "inprogress"].includes(normalized)
-      ? "pending"
+      ? "info"
       : ["pending"].includes(normalized)
       ? "warning"
-      : "inactive"
+      : "neutral"
   }
 
-  const displayLabel = status || (key === "active" ? "Active" : "Inactive")
-  const cfg = STATUS_CFG[key] || STATUS_CFG.inactive
-
   return (
-    <Badge
-      variant={key === "active" ? "secondary" : "outline"}
-      className={cn(
-        "text-xxs px-2 py-0.5 font-semibold",
-        cfg.badge,
-        className
-      )}
-    >
-      {displayLabel}
-    </Badge>
+    <DesignStatusBadge
+      status={status || (active ?? true ? "Active" : "Inactive")}
+      tone={tone}
+      className={className}
+    />
   )
 }
 
@@ -132,12 +105,19 @@ export const getRolesList = (u: PlatformUser | null | undefined): string[] => {
   }, [])
 }
 
-const getRoleBadgeVariant = (role: string) => {
+function getRoleBadgeTone(role: string): SemanticTone {
   const r = role?.toLowerCase()
-  const base = "font-semibold text-[10px] px-1.5 py-0.5"
-  if (r === "admin") return { variant: "outline" as const, className: `${base} border-primary text-primary` }
-  if (r === "user" || r === "standard user") return { variant: "secondary" as const, className: `${base} bg-slate-100 text-foreground hover:bg-slate-200` }
-  return { variant: "outline" as const, className: base }
+  if (r === "admin" || r === "global_admin" || r === "global admin") return "info"
+  if (r === "user" || r === "standard user") return "accent"
+  return "neutral"
+}
+
+export function RoleBadge({ role }: { role: string }) {
+  return (
+    <SemanticBadge tone={getRoleBadgeTone(role)} className="font-semibold uppercase">
+      {String(role).toUpperCase()}
+    </SemanticBadge>
+  )
 }
 
 // 1. Subscription Plans Columns
@@ -618,7 +598,11 @@ export const getFieldsTableColumns = (
     header: "Type",
     width: "120px",
     minWidth: "100px",
-    cell: ({ row }) => <Badge variant="outline" className="text-[10px] uppercase font-bold">{row.original.data_type_code}</Badge>,
+    cell: ({ row }) => (
+      <SemanticBadge tone="neutral" className="font-mono uppercase">
+        {row.original.data_type_code}
+      </SemanticBadge>
+    ),
   },
   {
     accessorKey: "field_category_code",
@@ -635,9 +619,9 @@ export const getFieldsTableColumns = (
     cell: ({ row }) => {
       const isHeader = row.original.header_item === "header";
       return (
-        <Badge variant={isHeader ? "secondary" : "outline"} className={cn("text-[9px] font-semibold px-2 py-0.5 capitalize", isHeader ? "bg-muted text-foreground border-border" : "bg-primary/8 text-primary border-primary/25")}>
+        <SemanticBadge tone={isHeader ? "accent" : "info"} className="capitalize">
           {row.original.header_item}
-        </Badge>
+        </SemanticBadge>
       );
     },
   },
@@ -702,9 +686,9 @@ export const getFieldCategoriesColumns = (
     cell: ({ row }) => {
       const count = row.original.example_fields?.length || 0
       return (
-        <Badge variant="secondary" className="text-[11px] px-2 py-0.5 font-semibold bg-slate-100 text-slate-700 hover:bg-slate-100">
+        <SemanticBadge tone="accent">
           {count} {count === 1 ? "Field" : "Fields"}
-        </Badge>
+        </SemanticBadge>
       )
     },
   },
@@ -1017,11 +1001,11 @@ export const getReferenceListsColumns = (
     maxWidth: "100px",
     cell: ({ row }) => {
       const type = row.original.source_type || "custom"
-      const variant = type === "system" ? "default" : type === "standard" ? "secondary" : "outline"
+      const tone: SemanticTone = type === "system" ? "info" : type === "standard" ? "accent" : "neutral"
       return (
-        <Badge variant={variant} className="text-[10px] px-2 py-0.5 capitalize font-semibold">
+        <SemanticBadge tone={tone} className="capitalize">
           {type}
-        </Badge>
+        </SemanticBadge>
       )
     },
   },
@@ -1245,14 +1229,7 @@ export const getUsersColumns = (
     minWidth: "180px",
     cell: ({ row }) => (
       <div className="flex flex-wrap items-center gap-2">
-        {getRolesList(row.original).map((role) => {
-          const badge = getRoleBadgeVariant(role)
-          return (
-            <Badge key={role} variant={badge.variant} className={badge.className}>
-              {String(role).toUpperCase()}
-            </Badge>
-          )
-        })}
+        {getRolesList(row.original).map((role) => <RoleBadge key={role} role={role} />)}
       </div>
     ),
   },

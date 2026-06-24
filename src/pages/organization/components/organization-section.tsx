@@ -80,7 +80,7 @@ export function OrganizationSection({
               <Input
                 id="orgName"
                 placeholder="e.g. Acme Corp"
-                className="h-9 flex-1 rounded-lg border border-input bg-inherit px-3 text-sm text-foreground placeholder:text-muted-foreground transition-colors focus-visible:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex-1"
                 {...register("orgName")}
               />
               {organizations.length > 0 && (

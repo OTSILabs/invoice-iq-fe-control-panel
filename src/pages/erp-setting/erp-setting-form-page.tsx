@@ -127,7 +127,7 @@ export function ErpSettingFormPage({ mode }: { mode: "create" | "edit" }) {
               rows={10}
               placeholder='{"url":"https://example.com","username":"..."}'
               {...register("settingsInput")}
-              className="min-h-64 resize-y rounded-lg border border-input bg-background font-mono text-xs"
+              className="min-h-64 resize-y font-mono text-xs"
               disabled={isPending}
             />
             {errors.settingsInput ? (

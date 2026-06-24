@@ -196,7 +196,7 @@ export function NormalizationRuleFormPage({ mode }: { mode: "create" | "edit" })
               placeholder="e.g. Standardizes white spaces and trims leading/trailing spaces"
               disabled={isPending}
               {...register("description")}
-              className="min-h-[88px] rounded-lg border border-input bg-inherit text-sm"
+              className="min-h-[88px] text-sm"
             />
             {errors.description && <span className="block px-1 text-[11px] font-medium text-destructive">{errors.description.message}</span>}
           </div>
@@ -232,7 +232,7 @@ export function NormalizationRuleFormPage({ mode }: { mode: "create" | "edit" })
                   register("parameter_schema_json").onBlur(e)
                   formatJSONField("parameter_schema_json")
                 }}
-                className="min-h-[132px] rounded-lg border border-input bg-inherit font-mono text-xs"
+                className="min-h-[132px] font-mono text-xs"
               />
               {errors.parameter_schema_json && <span className="block px-1 text-[11px] font-medium text-destructive">{errors.parameter_schema_json.message}</span>}
             </div>
@@ -248,7 +248,7 @@ export function NormalizationRuleFormPage({ mode }: { mode: "create" | "edit" })
                   register("engine_config_json").onBlur(e)
                   formatJSONField("engine_config_json")
                 }}
-                className="min-h-[132px] rounded-lg border border-input bg-inherit font-mono text-xs"
+                className="min-h-[132px] font-mono text-xs"
               />
               {errors.engine_config_json && <span className="block px-1 text-[11px] font-medium text-destructive">{errors.engine_config_json.message}</span>}
             </div>

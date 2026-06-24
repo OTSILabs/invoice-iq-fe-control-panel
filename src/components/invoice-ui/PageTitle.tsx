@@ -9,7 +9,7 @@ export function PageTitle({
   className?: string;
 }) {
   return (
-    <h1 className={cn("text-lg font-semibold leading-6 text-foreground", className)}>
+    <h1 className={cn("text-page-title", className)}>
       {title}
     </h1>
   );

@@ -1,10 +1,18 @@
-import type { ExtractionManagementState } from "@/types";
-import { useReducer, useMemo, useCallback, useEffect } from "react";
+import type { ExtractionManagementState, StandardDerivedTemplateResponse } from "@/types";
+import { useReducer, useMemo, useCallback, useEffect, useState } from "react";
 import { useNavigate, useSearchParams, Link } from "react-router-dom";
-import { AlertCircle, RefreshCw, Plus, FileText, LayoutGrid, Layers } from "lucide-react";
+import { AlertCircle, RefreshCw, Plus, FileText, LayoutGrid, Layers, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SearchInput } from "@/components/search-input";
 import { cn } from "@/lib/utils";
@@ -15,21 +23,13 @@ import { useExtractionFields } from "@/api/hooks/useExtractionFields";
 import { useExtractionTemplates } from "@/api/hooks/useExtractionTemplates";
 import { useDerivedTemplates, useDeleteDerivedTemplate } from "@/api/hooks/useDerivedTemplates";
 
-import type {
-  StandardExtractionTemplateResponse,
-} from "@/types";
-
 import { TemplateCards } from "@/components/invoice-ui/templates/template-cards";
 import { FieldsTable } from "./components/fields-table";
 import { DerivedTable } from "./components/derived-table";
 
-
-
 type Action =
   | { type: "SET_ACTIVE_TAB"; payload: string }
-  | { type: "SET_SEARCH_TEXT"; payload: string }
-  | { type: "OPEN_TEMPLATE_DIALOG"; payload: StandardExtractionTemplateResponse | null }
-  | { type: "CLOSE_TEMPLATE_DIALOG" };
+  | { type: "SET_SEARCH_TEXT"; payload: string };
 
 function reducer(state: ExtractionManagementState, action: Action): ExtractionManagementState {
   switch (action.type) {
@@ -37,10 +37,6 @@ function reducer(state: ExtractionManagementState, action: Action): ExtractionMa
       return { ...state, activeTab: action.payload, searchText: "" };
     case "SET_SEARCH_TEXT":
       return { ...state, searchText: action.payload };
-    case "OPEN_TEMPLATE_DIALOG":
-      return { ...state, templateDialog: { open: true, item: action.payload } };
-    case "CLOSE_TEMPLATE_DIALOG":
-      return { ...state, templateDialog: { open: false, item: null } };
     default:
       return state;
   }
@@ -49,7 +45,6 @@ function reducer(state: ExtractionManagementState, action: Action): ExtractionMa
 const initialState: ExtractionManagementState = {
   activeTab: "fields",
   searchText: "",
-  templateDialog: { open: false, item: null },
 };
 
 export function ExtractionManagement() {
@@ -57,6 +52,7 @@ export function ExtractionManagement() {
   const [searchParams, setSearchParams] = useSearchParams();
   const urlTab = searchParams.get("tab") || "fields";
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [deletingDerived, setDeletingDerived] = useState<StandardDerivedTemplateResponse | null>(null);
 
   useEffect(() => {
     if (urlTab !== state.activeTab) {
@@ -70,17 +66,22 @@ export function ExtractionManagement() {
   const derivedQuery = useDerivedTemplates();
   const deleteMutation = useDeleteDerivedTemplate();
 
-  // Deletion trigger
-  const handleDeleteDerived = useCallback(async (id: string) => {
-    if (!window.confirm("Are you sure you want to delete this derived template? This action cannot be undone.")) return;
+  const handleDeleteDerived = useCallback(async () => {
+    if (!deletingDerived) return;
     try {
-      await deleteMutation.mutateAsync(id);
+      await deleteMutation.mutateAsync(deletingDerived.derived_template_id);
       toast.success("Derived template deleted successfully");
+      setDeletingDerived(null);
     } catch (err: any) {
       console.error(err);
       toast.error(err.response?.data?.detail || err.message || "Failed to delete derived template");
     }
-  }, [deleteMutation]);
+  }, [deleteMutation, deletingDerived]);
+
+  const requestDeleteDerived = useCallback((id: string) => {
+    const derivedTemplate = derivedQuery.data?.find((item) => item.derived_template_id === id) || null;
+    setDeletingDerived(derivedTemplate);
+  }, [derivedQuery.data]);
 
   // Global Refetch
   const handleRefetch = useCallback(async () => {
@@ -265,7 +266,7 @@ export function ExtractionManagement() {
                 data={filteredDerived}
                 isLoading={isLoading || isFetching}
                 isFetching={isFetching}
-                onDelete={handleDeleteDerived}
+                onDelete={requestDeleteDerived}
                 searchText={state.searchText}
                 onSearchChange={setSearchText}
                 onRefresh={handleRefetch}
@@ -274,6 +275,54 @@ export function ExtractionManagement() {
           </>
         )}
       </Tabs>
+
+      <DeleteDerivedTemplateDialog
+        deletingTemplate={deletingDerived}
+        isDeleting={deleteMutation.isPending}
+        onClose={() => setDeletingDerived(null)}
+        onConfirm={handleDeleteDerived}
+      />
     </PageShell>
+  );
+}
+
+function DeleteDerivedTemplateDialog({
+  deletingTemplate,
+  isDeleting,
+  onClose,
+  onConfirm,
+}: {
+  deletingTemplate: StandardDerivedTemplateResponse | null;
+  isDeleting: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+}) {
+  if (!deletingTemplate) return null;
+
+  return (
+    <Dialog open={!!deletingTemplate} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Delete Derived Template</DialogTitle>
+          <DialogDescription>
+            Are you sure you want to delete <strong>{deletingTemplate.name || deletingTemplate.derived_template_id}</strong>?
+          </DialogDescription>
+        </DialogHeader>
+        <div className="space-y-4 py-3">
+          <p className="text-xs text-muted-foreground">
+            This permanently removes the derived template configuration and cannot be undone.
+          </p>
+        </div>
+        <DialogFooter className="dialog-form-footer">
+          <Button variant="outline" size="sm" className="cursor-pointer" onClick={onClose} disabled={isDeleting}>
+            Cancel
+          </Button>
+          <Button variant="destructive" size="sm" className="cursor-pointer gap-1.5" onClick={onConfirm} disabled={isDeleting}>
+            {isDeleting && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
+            Delete
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

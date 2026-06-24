@@ -31,7 +31,8 @@ export function EditableValueCell({
         value={localValue || "false"}
         onChange={(e) => handleChange(e.target.value)}
         className="w-[180px]"
-        selectClassName="bg-card border-border/80 rounded-md h-8 text-xs hover:border-slate-200 transition-colors shadow-2xs"
+        size="sm"
+        selectClassName="text-xs"
         disabled={isSaving}
       >
         <option value="true">true</option>
@@ -43,7 +44,7 @@ export function EditableValueCell({
   if (referenceKey) {
     if (isLoading) {
       return (
-        <div className="flex items-center gap-1.5 w-[180px] h-8 px-3 text-xs text-muted-foreground border border-input rounded-md bg-inherit">
+        <div className="flex h-8 w-[180px] items-center gap-1.5 rounded-lg border border-input bg-background/70 px-3 text-xs text-muted-foreground shadow-xs">
           <Loader2 className="h-3 w-3 animate-spin" />
           <span>Loading values...</span>
         </div>
@@ -55,7 +56,8 @@ export function EditableValueCell({
         value={localValue}
         onChange={(e) => handleChange(e.target.value)}
         className="w-[180px]"
-        selectClassName="bg-card border-border/80 rounded-md h-8 text-xs hover:border-slate-200 transition-colors shadow-2xs"
+        size="sm"
+        selectClassName="text-xs"
         disabled={isSaving}
       >
         <option value="">Select value...</option>
@@ -73,7 +75,7 @@ export function EditableValueCell({
       placeholder="Enter value"
       value={localValue}
       onChange={(e) => handleChange(e.target.value)}
-      className="h-8 text-xs w-[180px] bg-card border-border/80 rounded-md hover:border-slate-50 transition-colors "
+      className="h-8 w-[180px] text-xs"
       disabled={isSaving}
     />
   )

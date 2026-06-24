@@ -4,12 +4,11 @@ import { ArrowLeft, ListChecks, Loader2, AlertCircle, RefreshCw, Plus } from "lu
 import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import { DataTable } from "@/components/ui/data-table"
 import { SearchInput } from "@/components/search-input"
 import { cn } from "@/lib/utils"
 import { PageHeader } from "@/components/layout/PageHeader"
-import { PageShell } from "@/components/invoice-ui/design-system"
+import { EmptyState, PageShell, SemanticBadge } from "@/components/invoice-ui/design-system"
 
 import { useReferenceListDetail, useReferenceValues } from "@/api/hooks/useReferenceLists"
 import type { RegistryDetailsCardProps } from "@/types";
@@ -47,7 +46,7 @@ function RegistryDetailsCard({ registry }: RegistryDetailsCardProps) {
 
         <div className="grid grid-cols-1 gap-3 p-4 sm:grid-cols-2 lg:grid-cols-3">
           {[
-            { label: "Source Type", content: <Badge variant="outline" className="text-xxs px-2 py-0.5 capitalize font-semibold">{registry.source_type || "custom"}</Badge> },
+            { label: "Source Type", content: <SemanticBadge tone="neutral" className="capitalize">{registry.source_type || "custom"}</SemanticBadge> },
             { label: "Sort Sequence", content: <p className="text-sm font-semibold text-foreground">{registry.sort_sequence}</p> },
             { label: "Version Number", content: <p className="text-xs font-mono font-bold text-foreground">v{registry.version_no}</p> },
             { label: "Created At", content: <p className="text-xs font-semibold text-foreground">{formatDate(registry.created_at || undefined)}</p> },
@@ -196,30 +195,25 @@ export function ReferenceListDetails() {
             tableContainerClassName="border-0 rounded-none bg-transparent"
             onRowClick={(valueItem) => navigate(`/platform-standard-content/reference-lists/${key}/${valueItem.value_code}`)}
             emptyState={
-              <div className="flex flex-col items-center justify-center px-4 py-10 text-center animate-in fade-in duration-300">
-                <div className="bg-primary/5 p-4 rounded-full mb-3 text-primary/80 border border-primary/10">
-                  <ListChecks className="size-8 stroke-[1.5]" />
-                </div>
-                <h3 className="text-sm font-semibold text-foreground">
-                  {searchText
-                    ? "No reference values match filters"
-                    : "No reference values"}
-                </h3>
-                <p className="text-xs text-muted-foreground mt-1.5 max-w-sm leading-relaxed">
-                  {searchText
+              <EmptyState
+                icon={ListChecks}
+                title={searchText ? "No reference values match filters" : "No reference values"}
+                description={
+                  searchText
                     ? "We couldn't find any reference values matching your search. Try adjusting your search query."
-                    : "Create a reference value to append codes and labels to this lookup registry."}
-                </p>
-                {values.length === 0 && (
+                    : "Create a reference value to append codes and labels to this lookup registry."
+                }
+                className="min-h-0 border-0 bg-transparent py-10"
+                actions={values.length === 0 ? (
                   <Button
                     onClick={() => navigate(`/platform-standard-content/reference-lists/${key}/values/create`)}
-                    className="mt-4 gap-1.5 rounded-lg px-4 py-2 text-xs font-semibold cursor-pointer"
+                    className="cursor-pointer gap-1.5 rounded-lg px-4 py-2 text-xs font-semibold"
                     disabled={isValuesFetching}
                   >
                     <Plus className="size-3.5" /> Add Value
                   </Button>
-                )}
-              </div>
+                ) : undefined}
+              />
             }
             />
       </div>

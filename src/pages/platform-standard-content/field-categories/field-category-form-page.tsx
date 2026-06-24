@@ -146,7 +146,7 @@ export function FieldCategoryFormPage({ mode }: { mode: "create" | "edit" }) {
               id="description"
               disabled={isSaving}
               placeholder="Describe what fields belong in this category..."
-              className="min-h-[96px] rounded-lg border border-input bg-inherit text-sm"
+              className="min-h-[96px] text-sm"
               {...register("description")}
             />
             {errors.description && <FieldError>{errors.description.message}</FieldError>}

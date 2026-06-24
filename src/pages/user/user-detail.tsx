@@ -1,12 +1,10 @@
 import { useParams, useNavigate } from "react-router-dom"
 import { ArrowLeft, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { usePlatformUser } from "@/api/hooks/useUsers"
 import { getInitials } from "@/lib/utils"
-import type { PlatformUser } from "@/types"
-import { ActiveStatusBadge } from "@/columns"
+import { ActiveStatusBadge, RoleBadge, getRolesList } from "@/columns"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { PageShell } from "@/components/invoice-ui/design-system"
 
@@ -21,26 +19,6 @@ const formatDate = (dateStr?: string) => {
     minute: "2-digit",
     hour12: true
   })
-}
-
-const getRolesList = (u: PlatformUser | null | undefined): string[] => {
-  if (!u) return []
-  const raw = Array.isArray(u.roles) ? u.roles : Array.isArray(u.role_names) ? u.role_names : [u.role, u.role_name]
-  return raw.reduce<string[]>((acc, r: unknown) => {
-    if (r) {
-      const name = typeof r === "string" ? r : (r as { name?: string })?.name || ""
-      if (name) acc.push(name)
-    }
-    return acc
-  }, [])
-}
-
-const getRoleBadgeVariant = (role: string) => {
-  const r = role?.toLowerCase()
-  const base = "font-semibold text-[10px] px-1.5 py-0.5"
-  if (r === "admin") return { variant: "outline" as const, className: `${base} border-primary text-primary` }
-  if (r === "user" || r === "standard user") return { variant: "secondary" as const, className: `${base} bg-slate-100 text-foreground hover:bg-slate-200` }
-  return { variant: "outline" as const, className: base }
 }
 
 export function UserDetail() {
@@ -164,14 +142,7 @@ export function UserDetail() {
           <div className="flex flex-col gap-2 border-t border-border/45 bg-card px-5 py-5">
             <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Assigned Roles</p>
             <div className="flex flex-wrap gap-1.5">
-              {getRolesList(user).map((role) => {
-                const badge = getRoleBadgeVariant(role)
-                return (
-                  <Badge key={role} variant={badge.variant} className={badge.className}>
-                    {String(role).toUpperCase()}
-                  </Badge>
-                )
-              })}
+              {getRolesList(user).map((role) => <RoleBadge key={role} role={role} />)}
             </div>
           </div>
       </div>

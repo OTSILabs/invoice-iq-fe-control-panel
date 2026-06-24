@@ -258,7 +258,7 @@ export function DataTable<TData, TValue = unknown>({
           tableScrollClassName
         )}
       >
-        <TableHeader className="border-b border-border/45 bg-muted/35 transition-colors">
+        <TableHeader className="border-b border-border/60 bg-muted/45 transition-colors">
           {table.getHeaderGroups().map((headerGroup) => {
             const isFilterable = headerGroup.headers.some((header) =>
               header.column.getCanFilter(),
@@ -273,7 +273,7 @@ export function DataTable<TData, TValue = unknown>({
                       <TableHead
                         key={header.id}
                         className={cn(
-                          "h-10 bg-transparent px-4 py-3 text-[0.68rem] font-semibold uppercase tracking-[0.13em] text-muted-foreground",
+                          "h-10 bg-transparent px-4 py-3 text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-muted-foreground",
                           stickyHeader && "sticky top-0 z-10",
                           getPinnedColumnClassName(header.column),
                           customColumnDef.rowClassName,
@@ -330,7 +330,7 @@ export function DataTable<TData, TValue = unknown>({
         <TableBody>
           {isLoading ? (
             Array.from({ length: 5 }).map((_, rowIndex) => (
-              <TableRow key={rowIndex} className="hover:bg-transparent">
+                  <TableRow key={rowIndex} className="border-b border-border/35 hover:bg-transparent">
                 {columns.map((col, colIndex) => {
                   const customColumnDef = col as CustomColumnDef<TData, TValue>;
                   return (
@@ -354,7 +354,7 @@ export function DataTable<TData, TValue = unknown>({
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                   className={cn(
-                    "group/row border-b border-border/35 transition-colors hover:bg-muted/35 data-[state=selected]:bg-muted/45",
+                    "group/row border-b border-border/45 transition-colors hover:bg-muted/40 data-[state=selected]:bg-muted/50",
                     customOriginal?.rowClassName,
                     isClickable && "cursor-pointer focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring",
                   )}
@@ -378,7 +378,7 @@ export function DataTable<TData, TValue = unknown>({
                       <TableCell
                         key={cell.id}
                         className={cn(
-                          "px-4 py-3.5 text-sm text-muted-foreground font-normal transition-colors group-hover/row:text-foreground truncate",
+                          "px-4 py-4 text-sm font-normal text-muted-foreground transition-colors truncate group-hover/row:text-foreground",
                           getPinnedColumnClassName(cell.column),
                           customColumnDef.rowClassName,
                         )}
@@ -427,7 +427,7 @@ export function DataTable<TData, TValue = unknown>({
         }}
         onPageSizeChange={onPageSizeChange}
         enablePagination={enablePagination}
-        className="justify-end border-t border-border/40 bg-card/80 px-4 py-3"
+        className="border-t border-border/60 bg-muted/20 px-4 py-3"
       />
     </div>
   );

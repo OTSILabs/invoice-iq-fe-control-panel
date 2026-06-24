@@ -2,10 +2,9 @@ import { useParams, useNavigate } from "react-router-dom"
 import { ArrowLeft, Tags, Loader2, AlertCircle, RefreshCw } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import { useFieldCategory } from "@/api/hooks/useFieldCategories"
 import { PageHeader } from "@/components/layout/PageHeader"
-import { PageShell } from "@/components/invoice-ui/design-system"
+import { PageShell, SemanticBadge } from "@/components/invoice-ui/design-system"
 
 const formatDate = (dateStr?: string) => {
   if (!dateStr) return "—"
@@ -83,7 +82,7 @@ export function FieldCategoryDetails() {
           <div className="grid grid-cols-1 gap-3 p-4 sm:grid-cols-2 lg:grid-cols-3">
             {[
               { label: "Sort Sequence", content: <p className="text-sm font-semibold text-foreground">{category.sort_sequence}</p> },
-              { label: "Fields Count", content: <Badge variant="outline" className="text-xxs px-2 py-0.5 font-semibold">{category.example_fields?.length || 0} Fields</Badge> },
+              { label: "Fields Count", content: <SemanticBadge tone="accent">{category.example_fields?.length || 0} Fields</SemanticBadge> },
               { label: "Version Number", content: <p className="text-xs font-mono font-bold text-foreground">v{category.version_no}</p> },
               { label: "Created At", content: <p className="text-xs font-semibold text-foreground">{formatDate(category.created_at || undefined)}</p> },
               { label: "Updated At", content: <p className="text-xs font-semibold text-foreground">{formatDate(category.updated_at || undefined)}</p> },
@@ -101,13 +100,13 @@ export function FieldCategoryDetails() {
               {category.example_fields && category.example_fields.length > 0 ? (
                 <div className="flex flex-wrap gap-1.5">
                   {category.example_fields.map((field) => (
-                    <Badge
+                    <SemanticBadge
                       key={field}
-                      variant="outline"
-                      className="font-mono text-xs px-2.5 py-1 transition-colors"
+                      tone="neutral"
+                      className="font-mono"
                     >
                       {field}
-                    </Badge>
+                    </SemanticBadge>
                   ))}
                 </div>
               ) : (

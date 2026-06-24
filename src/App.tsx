@@ -30,6 +30,7 @@ import { Layout } from "./components/layout/layout"
 const TemplateCreatePage = React.lazy(() => import("./pages/platform-standard-content/extraction-management/templates/template-create.page"))
 const TemplateDetailsPage = React.lazy(() => import("./pages/platform-standard-content/extraction-management/templates/template-details.page"))
 const TemplateEditPage = React.lazy(() => import("./pages/platform-standard-content/extraction-management/templates/template-edit.page"))
+const TemplateFieldEditPage = React.lazy(() => import("./pages/platform-standard-content/extraction-management/templates/template-field-edit.page"))
 
 const DerivedTemplateCreatePage = React.lazy(() => import("./pages/platform-standard-content/extraction-management/derived/derived-template-create.page"))
 const DerivedTemplateEditPage = React.lazy(() => import("./pages/platform-standard-content/extraction-management/derived/derived-template-edit.page"))
@@ -85,6 +86,7 @@ export function App() {
                         <Route path="extraction-management/templates/new" element={<React.Suspense fallback={null}><TemplateCreatePage /></React.Suspense>} />
                         <Route path="extraction-management/templates/:templateCode" element={<React.Suspense fallback={null}><TemplateDetailsPage /></React.Suspense>} />
                         <Route path="extraction-management/templates/:templateCode/edit" element={<React.Suspense fallback={null}><TemplateEditPage /></React.Suspense>} />
+                        <Route path="extraction-management/templates/:templateCode/fields/:fieldId/edit" element={<React.Suspense fallback={null}><TemplateFieldEditPage /></React.Suspense>} />
 
                       <Route path="extraction-management/derived/new" element={<React.Suspense fallback={null}><DerivedTemplateCreatePage /></React.Suspense>} />
                       <Route path="extraction-management/derived/:derivedTemplateId/edit" element={<React.Suspense fallback={null}><DerivedTemplateEditPage /></React.Suspense>} />
@@ -116,86 +118,6 @@ export function App() {
           <Route path="users/:id" element={<UserDetail />} />
           <Route path="erp-settings/create" element={<ErpSettingFormPage mode="create" />} />
           <Route path="erp-settings/:id/edit" element={<ErpSettingFormPage mode="edit" />} />
-          <Route
-            path="platform-standard-content/data-types/create"
-            element={<DataTypeFormPage mode="create" />}
-          />
-          <Route
-            path="platform-standard-content/data-types/:code/edit"
-            element={<DataTypeFormPage mode="edit" />}
-          />
-          <Route
-            path="platform-standard-content/data-types/:code"
-            element={<DataTypeDetail />}
-          />
-          <Route
-            path="platform-standard-content/field-categories/create"
-            element={<FieldCategoryFormPage mode="create" />}
-          />
-          <Route
-            path="platform-standard-content/field-categories/:code/edit"
-            element={<FieldCategoryFormPage mode="edit" />}
-          />
-          <Route
-            path="platform-standard-content/field-categories/:code"
-            element={<FieldCategoryDetails />}
-          />
-          <Route
-            path="platform-standard-content/validation-rules/create"
-            element={<ValidationRuleFormPage mode="create" />}
-          />
-          <Route
-            path="platform-standard-content/validation-rules/:code/edit"
-            element={<ValidationRuleFormPage mode="edit" />}
-          />
-          <Route
-            path="platform-standard-content/validation-rules/:code"
-            element={<ValidationRuleDetail />}
-          />
-          <Route
-            path="platform-standard-content/normalization-rules/create"
-            element={<NormalizationRuleFormPage mode="create" />}
-          />
-          <Route
-            path="platform-standard-content/normalization-rules/:code/edit"
-            element={<NormalizationRuleFormPage mode="edit" />}
-          />
-          <Route
-            path="platform-standard-content/normalization-rules/:code"
-            element={<NormalizationRuleDetail />}
-          />
-          <Route
-            path="platform-standard-content/reference-lists/create"
-            element={<ReferenceListFormPage mode="create" />}
-          />
-          <Route
-            path="platform-standard-content/reference-lists/:key/edit"
-            element={<ReferenceListFormPage mode="edit" />}
-          />
-          <Route
-            path="platform-standard-content/reference-lists/:key/values/create"
-            element={<ReferenceValueFormPage mode="create" />}
-          />
-          <Route
-            path="platform-standard-content/reference-lists/:key/:valueCode/edit"
-            element={<ReferenceValueFormPage mode="edit" />}
-          />
-          <Route
-            path="platform-standard-content/reference-lists/:key"
-            element={<ReferenceListDetails />}
-          />
-          <Route
-            path="platform-standard-content/reference-lists/:key/:valueCode"
-            element={<ReferenceValueDetails />}
-          />
-          <Route
-            path="platform-standard-content/extraction-management/fields/create"
-            element={<ExtractionFieldFormPage mode="create" />}
-          />
-          <Route
-            path="platform-standard-content/extraction-management/fields/:fieldId/edit"
-            element={<ExtractionFieldFormPage mode="edit" />}
-          />
         </Route>
 
         <Route path="*" element={<Navigate to="/organizations" replace />} />

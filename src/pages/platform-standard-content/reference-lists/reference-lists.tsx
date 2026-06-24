@@ -11,7 +11,7 @@ import { PageHeader } from "@/components/layout/PageHeader"
 import { SearchInput } from "@/components/search-input"
 import { useReferenceLists, useReferenceListPublications } from "@/api/hooks/useReferenceLists"
 import { getReferenceListsColumns } from "@/columns"
-import { FilterBar, PageShell } from "@/components/invoice-ui/design-system"
+import { EmptyState, FilterBar, PageShell } from "@/components/invoice-ui/design-system"
 
 export function ReferenceLists() {
   const navigate = useNavigate()
@@ -122,30 +122,25 @@ export function ReferenceLists() {
             tableContainerClassName="border-0 rounded-none bg-transparent"
             onRowClick={(registry) => navigate(`/platform-standard-content/reference-lists/${registry.registry_key}`)}
             emptyState={
-              <div className="flex flex-col items-center justify-center px-4 py-10 text-center animate-in fade-in slide-in-from-bottom-2 duration-300">
-                <div className="bg-primary/5 p-4 rounded-full mb-3 text-primary/80 border border-primary/10">
-                  <ListChecks className="size-8 stroke-[1.5]" />
-                </div>
-                <h3 className="text-sm font-semibold text-foreground">
-                  {searchText
-                    ? "No reference lists match filters"
-                    : "No reference lists"}
-                </h3>
-                <p className="text-xs text-muted-foreground mt-1.5 max-w-sm leading-relaxed">
-                  {searchText
+              <EmptyState
+                icon={ListChecks}
+                title={searchText ? "No reference lists match filters" : "No reference lists"}
+                description={
+                  searchText
                     ? "We couldn't find any reference lists matching your search. Try adjusting your search query."
-                    : "Create a new reference list to manage lookup registries."}
-                </p>
-                {registries.length === 0 && (
+                    : "Create a new reference list to manage lookup registries."
+                }
+                className="min-h-0 border-0 bg-transparent py-10"
+                actions={registries.length === 0 ? (
                   <Button
                     onClick={() => navigate("/platform-standard-content/reference-lists/create")}
-                    className="mt-4 gap-1.5 rounded-lg px-4 py-2 text-xs font-semibold cursor-pointer"
+                    className="cursor-pointer gap-1.5 rounded-lg px-4 py-2 text-xs font-semibold"
                     disabled={isFetching}
                   >
                     <Plus className="size-3.5" /> Add Reference List
                   </Button>
-                )}
-              </div>
+                ) : undefined}
+              />
             }
           />
         </div>

@@ -17,6 +17,7 @@ import type { ApiRecord } from "@/api/api.helpers";
 
 const EMPTY_TEMPLATES: ApiRecord[] = [];
 import { IqStatusBadges } from "@/components/invoice-ui/iq-status-badges";
+import { EmptyState } from "@/components/invoice-ui/design-system";
 import { TemplateTagList } from "@/components/invoice-ui/template-tag-list";
 import { Button } from "@/components/ui/button";
 import {
@@ -32,13 +33,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Empty,
-  EmptyDescription,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyTitle,
-} from "@/components/ui/empty";
 import { Switch } from "@/components/ui/switch";
 import {
   Tooltip,
@@ -103,17 +97,11 @@ export function TemplateCards({
 }) {
   if (!templates.length) {
     return (
-      <Empty className="border">
-        <EmptyHeader>
-          <EmptyMedia variant="icon">
-            <FileText className="size-5" />
-          </EmptyMedia>
-          <EmptyTitle>No templates found</EmptyTitle>
-          <EmptyDescription>
-            Create a template to start managing invoice extraction fields.
-          </EmptyDescription>
-        </EmptyHeader>
-      </Empty>
+      <EmptyState
+        icon={FileText}
+        title="No templates found"
+        description="Create a template to start managing invoice extraction fields."
+      />
     );
   }
 
@@ -144,10 +132,10 @@ export function TemplateCards({
           <Card
             key={templateCode || templateName}
             className={cn(
-              "group h-full gap-0 overflow-hidden rounded-lg bg-card py-0",
+              "surface-card group h-full gap-0 overflow-hidden py-0 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_2px_4px_color-mix(in_oklch,var(--foreground)_8%,transparent),0_20px_48px_color-mix(in_oklch,var(--foreground)_8%,transparent)]",
             )}
           >
-            <CardHeader className="gap-0 border-b border-border/40 bg-card p-4">
+            <CardHeader className="gap-0 border-b border-border/60 bg-muted/15 p-4">
               <div className="flex min-w-0 items-start justify-between gap-3">
                 <div className="min-w-0 flex-1 space-y-3">
                   <TemplateCardTitle
@@ -234,7 +222,7 @@ export function TemplateCards({
             </CardHeader>
 
             {hasTags ? (
-              <CardContent className="space-y-2.5 border-b border-border/40 px-4 py-3 flex-1">
+              <CardContent className="flex-1 space-y-2.5 border-b border-border/45 px-4 py-3">
                 <TemplateTagList
                   label="Process"
                   values={template.business_process_tags}
@@ -253,7 +241,7 @@ export function TemplateCards({
               </CardContent>
             ) : null}
 
-            <CardFooter className="border-t border-border/30 bg-muted/25 p-0!">
+            <CardFooter className="border-t border-border/60 bg-muted/20 p-0!">
               {templateCode ? (
                 <Link
                   to={href}

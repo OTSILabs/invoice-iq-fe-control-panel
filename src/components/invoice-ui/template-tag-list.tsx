@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import { Badge } from "@/components/ui/badge";
+import { SemanticBadge } from "@/components/invoice-ui/design-system";
 import { cn } from "@/lib/utils";
 
 function normalizeTags(values: unknown) {
@@ -56,22 +56,19 @@ export function TemplateTagList({
 
       <div className="flex min-w-0 flex-wrap items-center gap-1.5">
         {visibleTags.map((tag) => (
-          <Badge
+          <SemanticBadge
             key={tag}
-            variant="outline"
-            className="h-5 max-w-36 rounded-md border-border bg-muted/45 px-1.5 text-[11px] font-medium text-foreground shadow-none"
+            tone="neutral"
+            className="max-w-36 rounded-md font-medium"
             title={tag}
           >
             <span className="truncate">{tag}</span>
-          </Badge>
+          </SemanticBadge>
         ))}
         {hiddenCount > 0 ? (
-          <Badge
-            variant="outline"
-            className="h-5 rounded-md border-border bg-muted/45 px-1.5 text-[11px] font-medium text-foreground shadow-none"
-          >
+          <SemanticBadge tone="neutral" className="rounded-md font-medium">
             +{hiddenCount} more
-          </Badge>
+          </SemanticBadge>
         ) : null}
       </div>
     </div>
