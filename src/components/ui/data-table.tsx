@@ -334,7 +334,7 @@ export function DataTable<TData, TValue = unknown>({
                 {columns.map((col, colIndex) => {
                   const customColumnDef = col as CustomColumnDef<TData, TValue>;
                   return (
-                    <TableCell key={colIndex} className={cn("p-4", customColumnDef.rowClassName)}>
+                    <TableCell key={colIndex} className={cn("p-2", customColumnDef.rowClassName)}>
                       <Skeleton className={cn(
                         "h-4 rounded-md animate-pulse bg-muted-foreground/10",
                         colIndex === 0 ? "w-2/3" : colIndex === 1 ? "w-1/2" : "w-3/4"
@@ -378,7 +378,7 @@ export function DataTable<TData, TValue = unknown>({
                       <TableCell
                         key={cell.id}
                         className={cn(
-                          "px-4 py-4 text-sm font-normal text-muted-foreground transition-colors truncate group-hover/row:text-foreground",
+                          "px-4 text-sm font-normal text-muted-foreground transition-colors truncate group-hover/row:text-foreground",
                           getPinnedColumnClassName(cell.column),
                           customColumnDef.rowClassName,
                         )}
