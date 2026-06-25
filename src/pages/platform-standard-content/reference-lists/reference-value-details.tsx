@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { useReferenceValueDetail } from "@/api/hooks/useReferenceLists"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { PageShell } from "@/components/invoice-ui/design-system"
+import { DetailGrid } from "@/components/ui/detail-grid"
 
 const formatDate = (dateStr?: string) => {
   if (!dateStr) return "—"
@@ -79,7 +80,7 @@ export function ReferenceValueDetails() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-3 p-4 sm:grid-cols-2 lg:grid-cols-3">
+          <DetailGrid cols={3}>
             {[
               { label: "Sort Sequence", content: <p className="text-sm font-semibold text-foreground">{detail.sort_sequence}</p> },
               { label: "Registry Key / Code", content: <p className="font-mono text-xs font-medium text-foreground truncate" title={detail.registry_key}>{detail.registry_key}</p> },
@@ -88,31 +89,30 @@ export function ReferenceValueDetails() {
               { label: "Updated At", content: <p className="text-xs font-semibold text-foreground">{formatDate(detail.updated_at || undefined)}</p> },
               { label: "Value Key / Code", content: <p className="font-mono text-xs font-medium text-foreground truncate" title={detail.value_code}>{detail.value_code}</p> }
             ].map((item) => (
-              <div key={item.label} className="flex min-h-20 flex-col justify-center rounded-lg bg-muted/30 px-4 py-3 transition-colors hover:bg-muted/45">
-                <p className="mb-1 text-xs font-semibold text-muted-foreground">{item.label}</p>
+              <DetailGrid.Item key={item.label} label={item.label}>
                 {item.content}
-              </div>
+              </DetailGrid.Item>
             ))}
+          </DetailGrid>
 
-            {/* Description - Full Width Row */}
-            <div className="col-span-1 flex flex-col justify-center rounded-lg bg-muted/30 px-4 py-3 transition-colors hover:bg-muted/45 sm:col-span-2 lg:col-span-3">
-              <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1.5">Description</p>
-              <p className="text-xs text-foreground leading-relaxed whitespace-pre-wrap">
-                {detail.description || <span className="text-muted-foreground italic">No description provided.</span>}
-              </p>
-            </div>
+          {/* Description */}
+          <div className="flex flex-col gap-1.5 border-t border-border/45 bg-card px-5 py-4">
+            <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Description</p>
+            <p className="text-xs text-foreground leading-relaxed whitespace-pre-wrap">
+              {detail.description || <span className="text-muted-foreground italic">No description provided.</span>}
+            </p>
+          </div>
 
-            {/* Custom Attributes - Full Width Row */}
-            <div className="col-span-1 flex flex-col justify-center rounded-lg bg-muted/30 px-4 py-3 transition-colors hover:bg-muted/45 sm:col-span-2 lg:col-span-3">
-              <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-2">Custom JSON Attributes</p>
-              {detail.attributes && Object.keys(detail.attributes).length > 0 ? (
-                <pre className="max-w-full overflow-x-auto whitespace-pre-wrap rounded-xl border border-slate-800 bg-slate-950 p-4 font-mono text-xs text-slate-100 shadow-inner">
-                  {JSON.stringify(detail.attributes, null, 2)}
-                </pre>
-              ) : (
-                <p className="text-xs text-muted-foreground italic">No custom attributes configured.</p>
-              )}
-            </div>
+          {/* Custom Attributes */}
+          <div className="flex flex-col gap-1.5 border-t border-border/45 bg-card px-5 py-4">
+            <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Custom JSON Attributes</p>
+            {detail.attributes && Object.keys(detail.attributes).length > 0 ? (
+              <pre className="max-w-full overflow-x-auto whitespace-pre-wrap rounded-xl border border-slate-800 bg-slate-950 p-4 font-mono text-xs text-slate-100 shadow-inner mt-1">
+                {JSON.stringify(detail.attributes, null, 2)}
+              </pre>
+            ) : (
+              <p className="text-xs text-muted-foreground italic">No custom attributes configured.</p>
+            )}
           </div>
       </div>
     </PageShell>

@@ -9,6 +9,7 @@ import { SearchInput } from "@/components/search-input"
 import { cn } from "@/lib/utils"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { EmptyState, PageShell, SemanticBadge } from "@/components/invoice-ui/design-system"
+import { DetailGrid } from "@/components/ui/detail-grid"
 
 import { useReferenceListDetail, useReferenceValues } from "@/api/hooks/useReferenceLists"
 import type { RegistryDetailsCardProps } from "@/types";
@@ -44,7 +45,7 @@ function RegistryDetailsCard({ registry }: RegistryDetailsCardProps) {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-3 p-4 sm:grid-cols-2 lg:grid-cols-3">
+        <DetailGrid cols={3}>
           {[
             { label: "Source Type", content: <SemanticBadge tone="neutral" className="capitalize">{registry.source_type || "custom"}</SemanticBadge> },
             { label: "Sort Sequence", content: <p className="text-sm font-semibold text-foreground">{registry.sort_sequence}</p> },
@@ -53,19 +54,18 @@ function RegistryDetailsCard({ registry }: RegistryDetailsCardProps) {
             { label: "Updated At", content: <p className="text-xs font-semibold text-foreground">{formatDate(registry.updated_at || undefined)}</p> },
             { label: "Registry Key / Code", content: <p className="font-mono text-xs font-medium text-foreground truncate" title={registry.registry_key}>{registry.registry_key}</p> }
           ].map((item) => (
-            <div key={item.label} className="flex min-h-20 flex-col justify-center rounded-lg bg-muted/30 px-4 py-3 transition-colors hover:bg-muted/45">
-              <p className="mb-1 text-xs font-semibold text-muted-foreground">{item.label}</p>
+            <DetailGrid.Item key={item.label} label={item.label}>
               {item.content}
-            </div>
+            </DetailGrid.Item>
           ))}
+        </DetailGrid>
 
-          {/* Description - Full Width Row */}
-          <div className="col-span-1 flex flex-col justify-center rounded-lg bg-muted/30 px-4 py-3 transition-colors hover:bg-muted/45 sm:col-span-2 lg:col-span-3">
-            <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1.5">Description</p>
-            <p className="text-xs text-foreground leading-relaxed whitespace-pre-wrap">
-              {registry.description || <span className="text-muted-foreground italic">No description provided.</span>}
-            </p>
-          </div>
+        {/* Description */}
+        <div className="flex flex-col gap-1.5 border-t border-border/45 bg-card px-5 py-4">
+          <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Description</p>
+          <p className="text-xs text-foreground leading-relaxed whitespace-pre-wrap">
+            {registry.description || <span className="text-muted-foreground italic">No description provided.</span>}
+          </p>
         </div>
     </div>
   )

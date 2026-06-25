@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { useDataType } from "@/api/hooks/data-types"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { PageShell } from "@/components/invoice-ui/design-system"
+import { DetailGrid } from "@/components/ui/detail-grid"
 
 const formatDate = (dateStr?: string) => {
   if (!dateStr) return "—"
@@ -82,7 +83,7 @@ export function DataTypeDetail() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-3 p-4 sm:grid-cols-2 lg:grid-cols-3">
+          <DetailGrid cols={3}>
             {[
               {
                 label: "Code",
@@ -117,12 +118,11 @@ export function DataTypeDetail() {
                 content: <p className="text-xs font-semibold text-foreground">{formatDate(dataType.updated_at)}</p>
               }
             ].map((item) => (
-              <div key={item.label} className="flex min-h-20 flex-col justify-center rounded-lg bg-muted/30 px-4 py-3 transition-colors hover:bg-muted/45">
-                <p className="mb-1 text-xs font-semibold text-muted-foreground">{item.label}</p>
+              <DetailGrid.Item key={item.label} label={item.label}>
                 {item.content}
-              </div>
+              </DetailGrid.Item>
             ))}
-          </div>
+          </DetailGrid>
 
           <div className="flex flex-col gap-1.5 border-t border-border/45 bg-card px-5 py-4">
             <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Description</p>

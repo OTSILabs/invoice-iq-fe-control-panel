@@ -2,6 +2,7 @@ import { StatusBadge, ActiveStatusBadge } from "@/columns"
 import { CopyButton } from "@/components/ui/copyable-field"
 import { formatDate, getInitials } from "@/lib/utils"
 import type { Tenant } from "@/types"
+import { DetailGrid } from "@/components/ui/detail-grid"
 
 interface TenantOverviewCardProps {
   tenant: Tenant
@@ -84,15 +85,14 @@ export function TenantOverviewCard({ tenant, orgId }: TenantOverviewCardProps) {
           </div>
         </div>
 
-        {/* Facts mosaic */}
-        <div className="grid grid-cols-1 gap-3 p-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        {/* Facts grid */}
+        <DetailGrid cols={4}>
           {details.map((item) => (
-            <div key={item.label} className="flex min-h-20 flex-col justify-center rounded-lg bg-muted/30 px-4 py-3 transition-colors hover:bg-muted/45">
-              <p className="text-xs font-semibold text-muted-foreground mb-1">{item.label}</p>
+            <DetailGrid.Item key={item.label} label={item.label}>
               {item.content}
-            </div>
+            </DetailGrid.Item>
           ))}
-        </div>
+        </DetailGrid>
     </div>
   )
 }

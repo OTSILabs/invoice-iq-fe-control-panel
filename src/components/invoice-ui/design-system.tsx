@@ -120,7 +120,7 @@ export function StatCard({
       {...props}
     >
       <div className="min-w-0">
-        <p className="text-[0.68rem] font-medium uppercase tracking-[0.14em] text-muted-foreground">
+        <p className="text-sm font-medium  text-muted-foreground">
           {label}
         </p>
         <p className="mt-1.5 text-xl font-semibold tracking-tight text-foreground">

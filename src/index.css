@@ -7,7 +7,7 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --spacing: 0.25rem;
+  /* --spacing: 0.25rem; */
   --font-heading: var(--font-sans);
   --font-sans: 'Inter Variable', sans-serif;
   --font-size-xxs: 0.6875rem;
@@ -58,31 +58,31 @@
 }
 
 :root {
-  --background: oklch(0.982 0.006 255);
-  --foreground: oklch(0.17 0.018 255);
+  --background: oklch(0.982 0 0);
+  --foreground: oklch(0.17 0.01 255);
 
-  --card: oklch(0.998 0.002 255);
-  --card-foreground: oklch(0.18 0.018 255);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.18 0.01 255);
 
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.18 0.018 255);
+  --popover-foreground: oklch(0.18 0.01 255);
 
   --primary: oklch(0.18 0.025 255);
   --primary-foreground: oklch(0.985 0.006 255);
 
-  --secondary: oklch(0.948 0.012 255);
-  --secondary-foreground: oklch(0.24 0.025 255);
+  --secondary: oklch(0.948 0.004 255);
+  --secondary-foreground: oklch(0.24 0.015 255);
 
-  --muted: oklch(0.952 0.01 255);
-  --muted-foreground: oklch(0.47 0.025 255);
+  --muted: oklch(0.952 0.003 255);
+  --muted-foreground: oklch(0.47 0.015 255);
 
-  --accent: oklch(0.925 0.012 255);
-  --accent-foreground: oklch(0.18 0.025 255);
+  --accent: oklch(0.925 0.004 255);
+  --accent-foreground: oklch(0.18 0.015 255);
 
   --destructive: oklch(0.58 0.23 27);
 
-  --border: oklch(0.82 0.018 255 / 82%);
-  --input: oklch(0.86 0.016 255);
+  --border: oklch(0.82 0.006 255 / 82%);
+  --input: oklch(0.86 0.005 255);
   --ring: oklch(0.32 0.035 255);
 
   --chart-1: oklch(0.28 0.035 255);
@@ -102,11 +102,11 @@
   --sidebar-border: oklch(1 0 0 / 12%);
   --sidebar-ring: oklch(0.62 0.018 255);
 
-  --header: oklch(0.982 0.006 255 / 88%);
-  --header-foreground: oklch(0.18 0.018 255);
+  --header: oklch(0.982 0 0 / 88%);
+  --header-foreground: oklch(0.18 0.01 255);
 
-  --footer: oklch(0.965 0.012 255);
-  --footer-foreground: oklch(0.42 0.025 255);
+  --footer: oklch(0.965 0.003 255);
+  --footer-foreground: oklch(0.42 0.015 255);
 }
 
 .dark {
@@ -188,16 +188,19 @@
 }
 
 @layer utilities {
+  /* ── Page shell ──────────────────────────────────────────────────────────
+     gap:     0.875rem → 1.25rem  (was up to 1.5rem — too loose at 1080p)
+     padding: 1rem → 1.5rem       (was up to 2rem   — too much at 1366×768)
+  ── */
   .page-container {
-    @apply mx-auto flex w-full  animate-in flex-col duration-200 fade-in;
-    gap: clamp(1rem, 2vw, 1.5rem);
-    padding: clamp(1rem, 2.5vw, 2rem);
-    spacing: var(--spacing);
+    @apply mx-auto flex w-full animate-in flex-col duration-200 fade-in;
+    gap: clamp(0.875rem, 1.5vw, 1.25rem);
+    padding: clamp(1rem, 1.75vw, 1.5rem);
   }
 
   .page-section {
     @apply flex flex-col;
-    gap: clamp(0.75rem, 1.5vw, 1rem);
+    gap: clamp(0.625rem, 1vw, 0.875rem);
   }
 
   .surface-card {
@@ -213,8 +216,8 @@
 
   .filter-toolbar {
     @apply flex flex-col border-b border-border/45 bg-card/85 backdrop-blur-sm lg:flex-row lg:items-center lg:justify-between;
-    gap: clamp(0.5rem, 1vw, 0.75rem);
-    padding: clamp(0.75rem, 1vw, 0.875rem);
+    gap: clamp(0.5rem, 0.75vw, 0.75rem);
+    padding: clamp(0.625rem, 0.875vw, 0.875rem);
   }
 
   .dialog-form {
@@ -223,19 +226,19 @@
 
   .dialog-form-body {
     @apply flex flex-col;
-    gap: clamp(0.75rem, 1.5vw, 1rem);
-    padding: clamp(1rem, 2vw, 1.25rem) clamp(1.25rem, 2.5vw, 1.5rem);
+    gap: clamp(0.75rem, 1.25vw, 1rem);
+    padding: clamp(1rem, 1.5vw, 1.25rem) clamp(1.25rem, 2vw, 1.5rem);
   }
 
   .dialog-form-footer {
     @apply flex flex-col sm:flex-row border-t border-border/45 bg-popover sm:items-center sm:justify-end;
-    gap: clamp(0.5rem, 1vw, 0.75rem);
-    padding: clamp(0.75rem, 1.5vw, 1rem) clamp(1.25rem, 2.5vw, 1.5rem);
+    gap: clamp(0.5rem, 0.75vw, 0.75rem);
+    padding: clamp(0.625rem, 1vw, 0.875rem) clamp(1.25rem, 2vw, 1.5rem);
   }
 
   .dialog-field-grid {
     @apply grid grid-cols-1;
-    gap: clamp(0.75rem, 1.5vw, 1rem);
+    gap: clamp(0.75rem, 1.25vw, 1rem);
     @media (min-width: 640px) {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
@@ -243,22 +246,26 @@
 
   .dialog-toggle-row {
     @apply flex items-center justify-between border border-border/70 bg-muted/30;
-    gap: clamp(0.75rem, 1.5vw, 1rem);
-    padding: clamp(0.5rem, 1vw, 0.75rem) clamp(0.75rem, 1.5vw, 1rem);
+    gap: clamp(0.75rem, 1.25vw, 1rem);
+    padding: clamp(0.5rem, 0.75vw, 0.75rem) clamp(0.75rem, 1.25vw, 1rem);
   }
 
+  /* ── Typography ──────────────────────────────────────────────────────────
+     Fixed px sizes — text role should not depend on viewport width.
+     Was scaling up to 22px on wide screens which looked oversized.
+  ── */
   .text-page-title {
     @apply font-semibold tracking-tight text-foreground;
-    font-size: clamp(1.125rem, 2vw, 1.375rem);
+    font-size: 1.125rem;
   }
 
   .text-section-title {
     @apply font-semibold tracking-tight text-foreground;
-    font-size: clamp(0.8125rem, 1vw, 0.875rem);
+    font-size: 0.8125rem;
   }
 
   .text-caption {
     @apply leading-relaxed text-muted-foreground;
-    font-size: clamp(0.6875rem, 0.8vw, 0.75rem);
+    font-size: 0.6875rem;
   }
 }

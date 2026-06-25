@@ -38,7 +38,7 @@ export function Organizations() {
       />
 
       {hasOrgs && (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           <StatsCard label="Total organizations" value={organizations.length} icon={Building2} />
           <StatsCard label="Total tenants" value={totalTenants} icon={UserCheck} />
           <StatsCard
@@ -61,32 +61,38 @@ export function Organizations() {
           }
         />
       ) : (
-        <div className="surface-card p-3 shadow-none">
-          <div className="flex flex-col gap-2 p-3.5 sm:flex-row sm:items-end sm:justify-end">
-            {/* <h1 className="text-section-title">All organizations</h1> */}
+        <div className="surface-card overflow-hidden">
+          {/* toolbar */}
+          <div className="flex flex-col gap-2 px-4 py-4 sm:flex-row sm:items-center sm:justify-end">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
               <SearchInput
                 value={searchQuery}
                 onChange={setSearchQuery}
                 placeholder="Search organizations..."
-                className="w-full sm:w-64"
+                className="w-full sm:w-56"
               />
               <Button
                 size="sm"
                 className="w-full sm:w-auto font-medium gap-1.5 shrink-0"
                 onClick={() => navigate("/organizations/create")}
               >
-                <Plus className="h-4 w-4" /> Start onboarding
+                <Plus className="h-3.5 w-3.5" /> Start onboarding
               </Button>
             </div>
           </div>
 
-   {filtered.length > 0 ? ( <div className="grid grid-cols-1 gap-4 p-3.5 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4"> {filtered.map(org => <OrgCard key={org.id} org={org} />)} </div> ) : (
-            <EmptyState
-              icon={Search}
-              title="No organizations found"
-              description={`No organizations match "${searchQuery}". Try a different search term.`}
-            />
+          {filtered.length > 0 ? (
+            <div className="grid grid-cols-1 gap-3 px-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+              {filtered.map(org => <OrgCard key={org.id} org={org} />)}
+            </div>
+          ) : (
+            <div className="p-4">
+              <EmptyState
+                icon={Search}
+                title="No organizations found"
+                description={`No organizations match "${searchQuery}". Try a different search term.`}
+              />
+            </div>
           )}
         </div>
       )}

@@ -6,6 +6,7 @@ import { useNormalizationRule, useDeleteNormalizationRuleMutation } from "@/api/
 import { ActiveStatusBadge } from "@/columns"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { PageShell, SemanticBadge } from "@/components/invoice-ui/design-system"
+import { DetailGrid } from "@/components/ui/detail-grid"
 import { toast } from "sonner"
 import {
   Dialog,
@@ -126,7 +127,7 @@ export function NormalizationRuleDetail() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-3 p-4 sm:grid-cols-2 lg:grid-cols-3">
+          <DetailGrid cols={3}>
             {[
               {
                 label: "Code",
@@ -183,12 +184,11 @@ export function NormalizationRuleDetail() {
                 content: <p className="text-xs font-semibold text-foreground">{formatDate(rule.updated_at)}</p>
               }
             ].map((item) => (
-              <div key={item.label} className="flex min-h-20 flex-col justify-center rounded-lg bg-muted/30 px-4 py-3 transition-colors hover:bg-muted/45">
-                <p className="mb-1 text-xs font-semibold text-muted-foreground">{item.label}</p>
+              <DetailGrid.Item key={item.label} label={item.label}>
                 {item.content}
-              </div>
+              </DetailGrid.Item>
             ))}
-          </div>
+          </DetailGrid>
 
           <div className="flex flex-col gap-1.5 border-t border-border/45 bg-card px-5 py-4">
             <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Description</p>
