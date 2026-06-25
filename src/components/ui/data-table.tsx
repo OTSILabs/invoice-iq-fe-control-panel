@@ -1,4 +1,4 @@
-import { Fragment, useMemo, useRef, useState, useEffect } from "react";
+import { Fragment, useMemo, useRef, useState } from "react";
 import {
   flexRender,
   getFilteredRowModel,
@@ -183,6 +183,7 @@ export function DataTable<TData, TValue = unknown>({
   emptyMessage,
 }: DataTableProps<TData, TValue>) {
   "use no memo";
+  "use no compiler";
   const tableContainerRef = useRef<HTMLDivElement>(null);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [internalSorting, setInternalSorting] = useState<SortingState>([]);
@@ -190,26 +191,22 @@ export function DataTable<TData, TValue = unknown>({
   const hasPinnedColumns = Boolean(columnPinning.left?.length || columnPinning.right?.length);
   const sortingState = sorting ?? internalSorting;
 
-  const [internalPagination, setInternalPagination] = useState({
+  const isControlled = manualPagination;
+
+  const [clientPagination, setClientPagination] = useState(() => ({
     pageIndex: page - 1,
     pageSize,
-  });
+  }));
 
-  useEffect(() => {
-    setInternalPagination({
-      pageIndex: page - 1,
-      pageSize,
-    });
-  }, [page, pageSize]);
+  const [prevData, setPrevData] = useState(data);
+  if (!isControlled && data !== prevData) {
+    setPrevData(data);
+    setClientPagination((prev) => ({ ...prev, pageIndex: 0 }));
+  }
 
-  useEffect(() => {
-    if (!manualPagination) {
-      setInternalPagination((prev) => ({
-        ...prev,
-        pageIndex: 0,
-      }));
-    }
-  }, [data, manualPagination]);
+  const paginationState = isControlled
+    ? { pageIndex: page - 1, pageSize }
+    : clientPagination;
 
   const handleSortingChange = (updater: Updater<SortingState>) => {
     const nextSorting =
@@ -247,12 +244,15 @@ export function DataTable<TData, TValue = unknown>({
     },
     onPaginationChange: (updater) => {
       const nextPagination = typeof updater === "function"
-        ? updater(internalPagination)
+        ? updater(paginationState)
         : updater;
-      setInternalPagination(nextPagination);
-      onPageChange(nextPagination.pageIndex + 1);
-      if (onPageSizeChange) {
-        onPageSizeChange(nextPagination.pageSize);
+      if (isControlled) {
+        onPageChange(nextPagination.pageIndex + 1);
+        if (onPageSizeChange) {
+          onPageSizeChange(nextPagination.pageSize);
+        }
+      } else {
+        setClientPagination(nextPagination);
       }
     },
 
@@ -265,7 +265,7 @@ export function DataTable<TData, TValue = unknown>({
       columnFilters,
       rowSelection,
       sorting: sortingState,
-      pagination: internalPagination,
+      pagination: paginationState,
     },
   });
 
@@ -451,9 +451,9 @@ export function DataTable<TData, TValue = unknown>({
         </TableBody>
       </Table>
       <PaginationComponent
-        currentPage={internalPagination.pageIndex + 1}
+        currentPage={paginationState.pageIndex + 1}
         totalItems={manualPagination ? totalItems : table.getFilteredRowModel().rows.length}
-        pageSize={internalPagination.pageSize}
+        pageSize={paginationState.pageSize}
         pageSizeOptions={pageSizeOptions}
         onPageChange={(page) => {
           table.setPageIndex(page - 1);
