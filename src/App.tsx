@@ -17,7 +17,9 @@ import { ReferenceListFormPage } from "./pages/platform-standard-content/referen
 import { ReferenceValueDetails } from "./pages/platform-standard-content/reference-lists/reference-value-details"
 import { ReferenceValueFormPage } from "./pages/platform-standard-content/reference-lists/reference-value-form-page"
 import { ValidationRuleFormPage } from "./pages/platform-standard-content/validation rule/validation-rule-form-page"
+import { ValidationRuleDetail } from "./pages/platform-standard-content/validation rule/validation-rule-detail"
 import { NormalizationRuleFormPage } from "./pages/platform-standard-content/normalization-rule/normalization-rule-form-page"
+import { NormalizationRuleDetail } from "./pages/platform-standard-content/normalization-rule/normalization-rule-detail"
 import { UserDetail } from "./pages/user/user-detail"
 import { UserCreate } from "./pages/user/user-create"
 import { UserEdit } from "./pages/user/user-edit"
@@ -75,8 +77,10 @@ export function App() {
                       <Route path="reference-lists/:key" element={<ReferenceListDetails />} />
                       <Route path="reference-lists/:key/:valueCode" element={<ReferenceValueDetails />} />
                       <Route path="validation-rules/create" element={<ValidationRuleFormPage mode="create" />} />
+                      <Route path="validation-rules/:code" element={<ValidationRuleDetail />} />
                       <Route path="validation-rules/:code/edit" element={<ValidationRuleFormPage mode="edit" />} />
                       <Route path="normalization-rules/create" element={<NormalizationRuleFormPage mode="create" />} />
+                      <Route path="normalization-rules/:code" element={<NormalizationRuleDetail />} />
                       <Route path="normalization-rules/:code/edit" element={<NormalizationRuleFormPage mode="edit" />} />
 
                       <Route path="extraction-management/fields/create" element={<ExtractionFieldFormPage mode="create" />} />

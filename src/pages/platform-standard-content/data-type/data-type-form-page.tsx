@@ -123,24 +123,26 @@ export function DataTypeFormPage({ mode }: { mode: "create" | "edit" }) {
       
       >
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
-          <InputField
-            label={isEdit ? "Data Type Code (Read-only)" : "Data Type Code"}
-            placeholder="e.g. email_address"
-            disabled={isEdit || isPending}
-            error={errors.data_type_code?.message}
-            {...register("data_type_code")}
-            required
-            className={isEdit ? "cursor-not-allowed bg-muted text-muted-foreground opacity-100" : ""}
-          />
+          <div className="dialog-field-grid">
+            <InputField
+              label={isEdit ? "Data Type Code (Read-only)" : "Data Type Code"}
+              placeholder="e.g. email_address"
+              disabled={isEdit || isPending}
+              error={errors.data_type_code?.message}
+              {...register("data_type_code")}
+              required
+              className={isEdit ? "cursor-not-allowed bg-muted text-muted-foreground opacity-100" : ""}
+            />
 
-          <InputField
-            label="Display Label"
-            placeholder="e.g. Email Address"
-            error={errors.display_label?.message}
-            disabled={isPending}
-            {...register("display_label")}
-            required
-          />
+            <InputField
+              label="Display Label"
+              placeholder="e.g. Email Address"
+              error={errors.display_label?.message}
+              disabled={isPending}
+              {...register("display_label")}
+              required
+            />
+          </div>
 
           <div className="space-y-1.5">
             <Label htmlFor="description" className="text-sm font-medium text-foreground">

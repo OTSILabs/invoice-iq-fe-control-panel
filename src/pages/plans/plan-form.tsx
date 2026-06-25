@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
 import { InputField } from "@/components/ui/input-field"
 import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
 import { useCreatePlanMutation } from "@/api/hooks/usePlans"
 import type { PlanFormProps } from "@/types"
 import {
@@ -56,14 +57,18 @@ export function PlanForm({
 
   return (
     <form id={formId} onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
-      <InputField
-        id="description"
-        label="Description"
-        required
-        error={errors.description?.message}
-        placeholder="e.g. Starter tier for basic users"
-        {...register("description")}
-      />
+      <div className="space-y-1.5">
+        <Label htmlFor="description" className="text-sm font-medium text-foreground">
+          Description <span className="ml-0.5 text-destructive">*</span>
+        </Label>
+        <Textarea
+          id="description"
+          placeholder="e.g. Starter tier for basic users"
+          {...register("description")}
+          className="min-h-[88px] text-sm"
+        />
+        {errors.description && <span className="block px-1 text-[11px] font-medium text-destructive">{errors.description.message}</span>}
+      </div>
 
       <div className="dialog-field-grid">
         <InputField
