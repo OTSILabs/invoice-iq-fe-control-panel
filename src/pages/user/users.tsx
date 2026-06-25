@@ -95,17 +95,9 @@ export function Users() {
       <div className="table-container overflow-visible">
         <div className="flex min-h-0 flex-1 flex-col p-0">
           <FilterBar className="relative z-40 overflow-visible p-5 border-b border-border/40">
-            <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/20">
-                <UsersIcon className="h-4 w-4" />
-              </div>
-              <div>
-                <h3 className="text-sm font-semibold text-foreground">User Accounts</h3>
-                <p className="text-[12px] text-muted-foreground">
-                  Manage system access accounts, user permissions, and security roles.
-                </p>
-              </div>
-            </div>
+            <h3 className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+              User Accounts ({filteredUsers.length})
+            </h3>
 
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center w-full lg:w-auto mt-3 sm:mt-0">
               <SearchInput value={filters.searchText} onChange={(val) => setFilters((s) => ({ ...s, searchText: val }))} disabled={isFetchingUsers} placeholder="Search users..." className="w-full sm:w-64"/>

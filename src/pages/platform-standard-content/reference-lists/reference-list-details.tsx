@@ -154,7 +154,9 @@ export function ReferenceListDetails() {
       {/* Values Sub-Table Section */}
       <div className="table-container">
           <div className="filter-toolbar">
-            <h2 className="text-sm font-semibold text-foreground">Configured Reference Values</h2>
+            <h3 className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+              Reference Values ({filteredValues.length})
+            </h3>
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center justify-end">
               <SearchInput 
                 value={searchText} 
