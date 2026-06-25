@@ -99,41 +99,53 @@ export function UserCreate() {
             />
           </div>
 
-          <div className="relative">
-            <InputField
-              id="password"
-              label="Password"
-              type={showPassword ? "text" : "password"}
-              required
-              error={errors.password?.message}
-              placeholder="Minimum 8 characters"
-              className="pr-10"
-              {...register("password")}
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword((prev) => !prev)}
-              className="absolute right-3 top-[32px] z-10 cursor-pointer text-muted-foreground transition-colors hover:text-foreground focus:outline-none"
-            >
-              {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
-            </button>
-          </div>
+          <div className="dialog-field-grid">
+            <div className="space-y-1.5">
+              <Label htmlFor="password" className="text-sm font-medium text-foreground">
+                Password <span className="text-destructive ml-0.1">*</span>
+              </Label>
+              <div className="relative">
+                <InputField
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Minimum 8 characters"
+                  className="pr-10"
+                  {...register("password")}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 z-10 cursor-pointer text-muted-foreground transition-colors hover:text-foreground focus:outline-none"
+                >
+                  {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                </button>
+              </div>
+              {errors.password?.message && (
+                <span className="block px-1 text-[11px] font-medium text-destructive">
+                  {errors.password.message}
+                </span>
+              )}
+            </div>
 
-          <InputField
-            id="role_name"
-            label="Role Type"
-            type="select"
-            required
-            error={errors.role_name?.message}
-            {...register("role_name")}
-          >
-            <option value="" disabled>Select a role</option>
-            {roles.map((role) => (
-              <option key={role.id} value={role.name}>
-                {role.name}
-              </option>
-            ))}
-          </InputField>
+            <div className="space-y-1.5">
+              <Label htmlFor="role_name" className="text-sm font-medium text-foreground">
+                Role Type <span className="text-destructive ml-0.1">*</span>
+              </Label>
+              <InputField
+                id="role_name"
+                type="select"
+                error={errors.role_name?.message}
+                {...register("role_name")}
+              >
+                <option value="" disabled>Select a role</option>
+                {roles.map((role) => (
+                  <option key={role.id} value={role.name}>
+                    {role.name}
+                  </option>
+                ))}
+              </InputField>
+            </div>
+          </div>
 
           <div className="dialog-toggle-row">
             <div>
