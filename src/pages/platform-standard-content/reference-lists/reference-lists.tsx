@@ -90,6 +90,10 @@ export function ReferenceLists() {
       <div className="table-container">
         <div className="flex min-h-0 flex-1 flex-col p-0">
           <FilterBar>
+            <h3 className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+              Reference Lists ({filteredRegistries.length})
+            </h3>
+
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center w-full justify-end">
               <SearchInput 
                 value={searchText} 

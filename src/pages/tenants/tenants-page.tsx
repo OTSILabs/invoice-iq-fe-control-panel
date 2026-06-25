@@ -124,16 +124,13 @@ export function TenantsPage() {
       <div className="table-container overflow-visible">
         {/* Header - Put the select dropdown inside the table card header */}
         <FilterBar className="relative z-40 overflow-visible p-5">
-          <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/20">
-              <UserCheck className="h-4 w-4" />
-            </div>
-            <div>
-              <h3 className="text-sm font-semibold text-foreground">Registered Tenants</h3>
-              <p className="text-[12px] text-muted-foreground">
-                Tenants under organization <strong className="text-primary">{selectedOrg?.name}</strong>. Click a row to view tenant details.
-              </p>
-            </div>
+          <div>
+            <h3 className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+              Registered Tenants ({tenants.length})
+            </h3>
+            <p className="text-[12px] text-muted-foreground mt-1">
+              Tenants under organization <strong className="text-primary">{selectedOrg?.name}</strong>. Click a row to view tenant details.
+            </p>
           </div>
           
           {/* Header actions (Dropdown and Add Tenant button side-by-side) */}

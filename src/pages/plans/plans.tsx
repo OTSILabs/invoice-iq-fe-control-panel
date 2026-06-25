@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react"
 import { useNavigate } from "react-router-dom"
-import { Loader2, AlertCircle, RefreshCw, Plus, Layers,  CreditCard } from "lucide-react"
+import { Loader2, AlertCircle, RefreshCw, Plus, CreditCard } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { DataTable } from "@/components/ui/data-table"
 import type { CustomColumnDef } from "@/components/ui/data-table"
@@ -89,17 +89,9 @@ export function Plans() {
       <div className="table-container overflow-visible">
         <div className="flex min-h-0 flex-1 flex-col p-0">
           <FilterBar className="relative z-40 overflow-visible p-5 border-b border-border/40">
-            <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/20">
-                <Layers className="h-4 w-4" />
-              </div>
-              <div>
-                <h3 className="text-sm font-semibold text-foreground">Billing Plans</h3>
-                <p className="text-[12px] text-muted-foreground">
-                  Monitor billing configurations, subscription features, and active plans.
-                </p>
-              </div>
-            </div>
+            <h3 className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+              Billing Plans ({filteredPlans.length})
+            </h3>
 
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center w-full sm:w-auto mt-3 sm:mt-0">
               <SearchInput 

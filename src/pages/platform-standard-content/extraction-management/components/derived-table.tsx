@@ -22,7 +22,7 @@ export function DerivedTable({
   return (
     <div className="table-container">
       <FilterBar>
-        <h3 className="text-xs font-semibold tracking-wider text-muted-foreground ">
+        <h3 className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
           Derived Templates ({data.length})
         </h3>
         <div className="flex items-center gap-2">

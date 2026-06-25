@@ -72,7 +72,11 @@ export function FieldCategories() {
       <div className="table-container">
         <div className="flex min-h-0 flex-1 flex-col p-0">
           <FilterBar>
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center w-full justify-end">
+            <h3 className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+              Field Categories ({filteredCategories.length})
+            </h3>
+
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
               <SearchInput 
                 value={searchText} 
                 onChange={setSearchText} 
