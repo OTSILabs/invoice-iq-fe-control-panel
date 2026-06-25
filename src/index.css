@@ -7,7 +7,7 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  /* --spacing: 0.25rem; */
+  --spacing: 0.25rem;
   --font-heading: var(--font-sans);
   --font-sans: 'Inter Variable', sans-serif;
   --font-size-xxs: 0.6875rem;
@@ -192,6 +192,7 @@
     @apply mx-auto flex w-full  animate-in flex-col duration-200 fade-in;
     gap: clamp(1rem, 2vw, 1.5rem);
     padding: clamp(1rem, 2.5vw, 2rem);
+    spacing: var(--spacing);
   }
 
   .page-section {

@@ -42,9 +42,9 @@ export const InputField = ({
             id={id}
             ref={ref as React.Ref<HTMLSelectElement>}
             className={cn(
-              "flex h-9 w-full appearance-none rounded-lg border border-input bg-background/70 py-1 pl-3 pr-9 text-sm text-foreground shadow-xs outline-none transition-colors",
+              "flex h-9 w-full appearance-none rounded-lg border border-border bg-transparent py-1 pl-3 pr-9 text-sm text-foreground outline-none transition-colors",
               "hover:border-ring/35 focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/15",
-              "disabled:cursor-not-allowed disabled:opacity-50 dark:bg-input/20",
+              "disabled:cursor-not-allowed disabled:opacity-50 dark:bg-transparent",
               className,
             )}
             {...(props as React.SelectHTMLAttributes<HTMLSelectElement>)}
