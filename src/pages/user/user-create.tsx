@@ -75,7 +75,7 @@ export function UserCreate() {
           </span>
         }
         description="Set the user's identity, temporary password, role, and activation status."
-        className="max-w-3xl"
+        // className="max-w-full"
       >
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
           <div className="dialog-field-grid">

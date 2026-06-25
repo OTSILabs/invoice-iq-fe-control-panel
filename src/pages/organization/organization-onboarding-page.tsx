@@ -163,7 +163,7 @@ export function OrganizationOnboardingPage() {
       </PageHeader>
 
       {createdTenant ? (
-        <SectionCard className="max-w-xl">
+        <SectionCard >
           <ReplicationStep
             createdTenant={createdTenant}
             isReplicating={isReplicating}
@@ -177,7 +177,7 @@ export function OrganizationOnboardingPage() {
           />
         </SectionCard>
       ) : (
-        <SectionCard className="max-w-5xl">
+        <SectionCard >
           <FormProvider {...formMethods}>
             <form
               id="create-all-form"

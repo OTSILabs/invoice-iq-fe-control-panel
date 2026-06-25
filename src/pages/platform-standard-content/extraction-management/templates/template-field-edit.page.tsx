@@ -89,8 +89,7 @@ export default function TemplateFieldEditPage() {
             Field configuration
           </span>
         }
-        className="max-w-5xl overflow-hidden p-0"
-        contentClassName="p-0"
+       
       >
         <TemplateFieldFormSurface
           mode="edit"

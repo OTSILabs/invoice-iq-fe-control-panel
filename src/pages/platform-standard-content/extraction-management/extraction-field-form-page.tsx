@@ -227,7 +227,7 @@ export function ExtractionFieldFormPage({ mode }: { mode: "create" | "edit" }) {
             Field configuration
           </span>
         }
-        className="max-w-5xl overflow-hidden p-0"
+     
       >
         <form
           onSubmit={(event) => {

@@ -170,7 +170,7 @@ export function NormalizationRuleFormPage({ mode }: { mode: "create" | "edit" })
             Rule configuration
           </span>
         }
-        className="max-w-5xl"
+    
       >
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
           <div className="dialog-field-grid">

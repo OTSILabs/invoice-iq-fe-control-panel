@@ -121,7 +121,7 @@ export function ReferenceValueFormPage({ mode }: { mode: "create" | "edit" }) {
             Value configuration
           </span>
         }
-        className="max-w-3xl"
+      
       >
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
           <div className="dialog-field-grid">

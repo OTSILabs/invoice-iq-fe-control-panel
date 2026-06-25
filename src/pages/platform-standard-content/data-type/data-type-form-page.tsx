@@ -120,7 +120,7 @@ export function DataTypeFormPage({ mode }: { mode: "create" | "edit" }) {
             Data type configuration
           </span>
         }
-        className="max-w-3xl"
+      
       >
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
           <InputField

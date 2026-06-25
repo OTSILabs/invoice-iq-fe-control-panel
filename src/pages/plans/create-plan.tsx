@@ -27,7 +27,7 @@ export function CreatePlan() {
             Plan configuration
           </span>
         }
-        className="max-w-3xl"
+    
       >
         <PlanForm mode="create" onSuccess={onDone} onCancel={onDone} />
       </SectionCard>

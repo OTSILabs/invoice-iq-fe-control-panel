@@ -89,7 +89,7 @@ export function DerivedTemplateForm({ mode, template, onCancel, onSuccess }: Der
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6" noValidate>
-      <SectionCard className="max-w-2xl" contentClassName="space-y-4">
+      <SectionCard  contentClassName="space-y-4">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Field>
               <FieldLabel>Derived Template ID</FieldLabel>

@@ -110,7 +110,7 @@ export function UserEdit() {
           </span>
         }
         description="Assign the user the appropriate access level."
-        className="max-w-2xl"
+      
       >
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
           <InputField
