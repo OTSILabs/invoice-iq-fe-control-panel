@@ -44,9 +44,10 @@ Prefer reusable primitives before page-local styling:
 - `PageHeader` for title, description, and page-level actions
 - `SectionCard` for grouped form/detail content
 - `DataTable` for tabular data
-- `EmptyState` for no-data and no-results states
+- `EmptyState` for no-data and no-results states (always use this instead of custom empty panels)
 - `StatCard` or existing stats card patterns for KPIs
 - `FilterBar` for search, filters, refresh, and table actions
+- `SegmentedFilter` for sub-filtering/filter options in toolbars (avoid using for top-level page routing navigation)
 - `SemanticBadge` for non-status semantic labels
 - `StatusBadge` for active/inactive/pending/warning/error state badges
 
@@ -94,9 +95,11 @@ Semantic status colors are allowed for badges and destructive/success states, bu
 
 - Use max-width constrained content via `PageShell` (`max-w-[1440px]`).
 - Spacing and gaps must adapt dynamically to screen resolutions using relative `rem` units via fluid CSS clamp:
-  - Standard spacing formula: `padding: clamp(1rem, 2.5vw, 2rem)`
-  - Standard container gaps: `gap: clamp(1rem, 2vw, 1.5rem)`
-  - Section spacing gaps: `gap: clamp(0.75rem, 1.5vw, 1rem)`
+  - Standard spacing formula: `padding: clamp(0.75rem, 2.5vw, 1.25rem)`
+  - Standard container gaps: `gap: clamp(0.75rem, 2vw, 1.5rem)`
+  - Section spacing gaps: `gap: clamp(0.5rem, 1.5vw, 1.125rem)`
+- Prefer global override classes/selectors in `src/index.css` to refine layout details (e.g., metadata grids, nested cards, card padding) rather than making direct inline changes inside individual page TSX files. This preserves pristine page file sanity.
+- Table action menus and filter dropdowns must use portal containers (e.g., Radix/body portals) to avoid layout clipping inside tables/cards that have `overflow-hidden` boundaries.
 - Keep page sections spaced with gaps, not excessive dividers.
 - Tables and large lists should sit in `table-container`.
 - Search/filter/action rows should use `FilterBar` or `filter-toolbar`.
@@ -107,11 +110,11 @@ Semantic status colors are allowed for badges and destructive/success states, bu
 
 Use a consistent hierarchy that scales dynamically based on screen resolution:
 
-- Page title: `font-size: clamp(1.125rem, 2vw, 1.375rem)` (compact, strong, fluid)
-- Section title: `font-size: clamp(0.8125rem, 1vw, 0.875rem)` (small, scannable, fluid)
+- Page title: `font-size: clamp(1.125rem, 2.5vw, 1.75rem)` (compact, strong, fluid)
+- Section title: `font-size: clamp(0.875rem, 1.5vw, 1.125rem)` (small, scannable, fluid)
 - Card title: medium weight with optional icon
 - Body text: readable, restrained
-- Caption text: `font-size: clamp(0.6875rem, 0.8vw, 0.75rem)` (muted, concise, fluid)
+- Caption text: `font-size: clamp(0.75rem, 1vw, 0.875rem)` (muted, concise, fluid)
 
 Avoid hero-scale headings inside dashboards, forms, cards, toolbars, and tables.
 
@@ -123,7 +126,7 @@ Tables should be modern and lightweight:
 - Keep row height comfortable.
 - Use subtle header backgrounds and muted uppercase labels.
 - Keep action menus visible enough to discover.
-- Provide empty states for no records and no search results.
+- Provide empty states for no records and no search results. Always use the shared `EmptyState` component for consistency.
 - Align pagination and table footer controls cleanly.
 
 Do not let tables dominate the page without KPI, filter, or section context.
