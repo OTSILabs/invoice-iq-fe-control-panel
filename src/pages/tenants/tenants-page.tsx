@@ -224,7 +224,7 @@ export function TenantsPage() {
           columns={columns}
           isLoading={isTenantsLoading}
           enablePagination
-          pageSize={5}
+          pageSize={10}
           totalItems={tenants.length}
           stickyHeader
           tableContainerClassName="border-0 rounded-none bg-transparent"

@@ -1,4 +1,4 @@
-import { Fragment, useMemo, useRef, useState } from "react";
+import { Fragment, useMemo, useRef, useState, useEffect } from "react";
 import {
   flexRender,
   getFilteredRowModel,
@@ -132,6 +132,7 @@ export interface DataTableProps<TData, TValue = unknown> {
   page?: number;
   onPageChange?: (page: number) => void;
   onPageSizeChange?: (pageSize: number) => void;
+  manualPagination?: boolean;
   manualFiltering?: boolean;
   manualSorting?: boolean;
   sorting?: SortingState;
@@ -158,10 +159,11 @@ export function DataTable<TData, TValue = unknown>({
   enablePagination,
   pageSize = 10,
   pageSizeOptions,
-  totalItems = 0,
+  totalItems = data.length,
   page = 1,
   onPageChange = () => {},
   onPageSizeChange,
+  manualPagination = false,
   manualFiltering = true,
   manualSorting = false,
   sorting,
@@ -188,6 +190,27 @@ export function DataTable<TData, TValue = unknown>({
   const hasPinnedColumns = Boolean(columnPinning.left?.length || columnPinning.right?.length);
   const sortingState = sorting ?? internalSorting;
 
+  const [internalPagination, setInternalPagination] = useState({
+    pageIndex: page - 1,
+    pageSize,
+  });
+
+  useEffect(() => {
+    setInternalPagination({
+      pageIndex: page - 1,
+      pageSize,
+    });
+  }, [page, pageSize]);
+
+  useEffect(() => {
+    if (!manualPagination) {
+      setInternalPagination((prev) => ({
+        ...prev,
+        pageIndex: 0,
+      }));
+    }
+  }, [data, manualPagination]);
+
   const handleSortingChange = (updater: Updater<SortingState>) => {
     const nextSorting =
       typeof updater === "function" ? updater(sortingState) : updater;
@@ -210,7 +233,7 @@ export function DataTable<TData, TValue = unknown>({
       ? getPaginationRowModel()
       : undefined,
     getSortedRowModel: manualSorting ? undefined : getSortedRowModel(),
-    manualPagination: true,
+    manualPagination: manualPagination,
     manualFiltering: manualFiltering,
     manualSorting,
     enableColumnFilters: true,
@@ -222,6 +245,16 @@ export function DataTable<TData, TValue = unknown>({
       setColumnFilters(nextFilters);
       onFilterChange?.(nextFilters);
     },
+    onPaginationChange: (updater) => {
+      const nextPagination = typeof updater === "function"
+        ? updater(internalPagination)
+        : updater;
+      setInternalPagination(nextPagination);
+      onPageChange(nextPagination.pageIndex + 1);
+      if (onPageSizeChange) {
+        onPageSizeChange(nextPagination.pageSize);
+      }
+    },
 
     onRowSelectionChange: onRowSelectionChange,
     onSortingChange: handleSortingChange,
@@ -232,6 +265,7 @@ export function DataTable<TData, TValue = unknown>({
       columnFilters,
       rowSelection,
       sorting: sortingState,
+      pagination: internalPagination,
     },
   });
 
@@ -417,15 +451,17 @@ export function DataTable<TData, TValue = unknown>({
         </TableBody>
       </Table>
       <PaginationComponent
-        currentPage={page}
-        totalItems={totalItems}
-        pageSize={pageSize}
+        currentPage={internalPagination.pageIndex + 1}
+        totalItems={manualPagination ? totalItems : table.getFilteredRowModel().rows.length}
+        pageSize={internalPagination.pageSize}
         pageSizeOptions={pageSizeOptions}
         onPageChange={(page) => {
-          onPageChange(page);
+          table.setPageIndex(page - 1);
           tableContainerRef.current?.scrollIntoView({ behavior: "smooth" });
         }}
-        onPageSizeChange={onPageSizeChange}
+        onPageSizeChange={(size) => {
+          table.setPageSize(size);
+        }}
         enablePagination={enablePagination}
         className="border-t border-border/60 bg-muted/20 px-4 py-3"
       />
