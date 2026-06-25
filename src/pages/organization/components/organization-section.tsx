@@ -86,7 +86,7 @@ export function OrganizationSection({
               {organizations.length > 0 && (
                 <Button
                   type="button"
-                  variant="ghost"
+                  variant="outline"
                   size="sm"
                   className="h-9 shrink-0 cursor-pointer text-xs text-muted-foreground hover:text-foreground"
                   onClick={() => handleToggleCreatingOrg(false)}

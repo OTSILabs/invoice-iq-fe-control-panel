@@ -137,7 +137,7 @@ export const useOrganizationDetail = (id?: string) => {
   return useQuery({
     queryKey: ["organizations", id],
     queryFn: () => organizationsService.getById(id!),
-    enabled: !!id,
+    enabled: !!id && id !== "create",
   })
 }
 
@@ -145,7 +145,7 @@ export const useOrganizationTenants = (id?: string) => {
   return useQuery({
     queryKey: ["organizations", id, "tenants"],
     queryFn: () => organizationsService.getTenants(id!),
-    enabled: !!id,
+    enabled: !!id && id !== "create",
   })
 }
 
@@ -163,7 +163,7 @@ export const useEntityConfigurations = (entityId: string, entityType: 'organizat
     queryFn: () => entityType === 'organization'
       ? organizationsService.getConfigurations(entityId)
       : organizationsService.getTenantConfigurations(entityId),
-    enabled: !!entityId
+    enabled: !!entityId && (entityType !== 'organization' || entityId !== "create")
   })
 }
 
@@ -203,7 +203,7 @@ export const useEntityProfile = (entityId: string, entityType: 'organization' | 
     queryFn: () => entityType === 'organization'
       ? organizationsService.getProfile(entityId)
       : organizationsService.getTenantProfile(entityId),
-    enabled: !!entityId
+    enabled: !!entityId && (entityType !== 'organization' || entityId !== "create")
   })
 }
 

@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom"
+import { useParams, useNavigate, Navigate } from "react-router-dom"
 import { ArrowLeft, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
@@ -25,6 +25,10 @@ const formatDate = (dateStr?: string) => {
 export function UserDetail() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
+
+  if (id === "create") {
+    return <Navigate to="/users/create" replace />
+  }
 
   const { data: user, isLoading, isError } = usePlatformUser(id || "")
 

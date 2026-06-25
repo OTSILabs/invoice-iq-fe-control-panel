@@ -20,6 +20,7 @@ export function OrganizationTenantsTab({ orgId }: OrganizationTenantsTabProps) {
 
   return (
     <>
+     <div className="">
       <div className="table-container">
         {/* Header */}
         <FilterBar className="p-5">
@@ -75,6 +76,8 @@ export function OrganizationTenantsTab({ orgId }: OrganizationTenantsTabProps) {
           }
         />
       </div>
+      </div>
+   
 
       <TenantActionDialog action={tenantAction} onClose={() => setTenantAction(null)} orgId={orgId} />
     </>

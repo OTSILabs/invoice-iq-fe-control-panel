@@ -63,7 +63,9 @@ function OrgName({ id }: { id: string }) {
   const { data } = useQuery({
     queryKey: ["organizations", id],
     queryFn: () => organizationsService.getById(id),
+    enabled: !!id && id !== "create",
     staleTime: 1000 * 60 * 5,
   })
+  if (id === "create") return <>Create</>
   return <>{data?.name ?? "Loading..."}</>
 }

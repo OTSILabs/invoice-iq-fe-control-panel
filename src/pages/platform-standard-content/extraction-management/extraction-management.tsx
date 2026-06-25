@@ -195,7 +195,7 @@ export function ExtractionManagement() {
       </PageHeader>
 
       <Tabs value={state.activeTab} onValueChange={handleTabChange} className="w-full">
-        <TabsList className="w-full justify-start overflow-x-auto [&>button]:flex-none">
+        <TabsList variant="line" className="border-b border-border w-full justify-start  [&>button]:flex-none">
           <TabsTrigger value="fields" className="cursor-pointer gap-1.5">
             <FileText className="size-4" />
             Extraction Fields

@@ -43,7 +43,7 @@ export function TenantTabs({
 
   return (
     <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-      <TabsList className="w-full justify-start overflow-x-auto [&>button]:flex-none">
+             <TabsList variant="line" className="border-b border-border w-full justify-start  [&>button]:flex-none">
         <TabsTrigger value="overview" className="cursor-pointer">
           Overview
         </TabsTrigger>

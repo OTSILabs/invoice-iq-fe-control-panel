@@ -269,3 +269,18 @@
     font-size: 0.6875rem;
   }
 }
+
+
+/* [data-slot="tabs-trigger"] {
+  margin-bottom: -1px;
+}
+
+[data-slot="tabs-trigger"][data-state="active"] {
+  border-top: 1px solid var(--border) !important;
+  border-left: 1px solid var(--border) !important;
+  border-right: 1px solid var(--border) !important;
+  border-bottom: 1px solid var(--card) !important;
+  border-radius: 6px 6px 0 0 !important;
+  background: var(--card) !important;
+  color: var(--foreground) !important;
+} */

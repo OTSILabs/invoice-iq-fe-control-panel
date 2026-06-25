@@ -123,7 +123,7 @@ export function OrganizationDetail() {
         onValueChange={(val) => setSearchParams({ tab: val })}
         className="w-full"
       >
-        <TabsList>
+        <TabsList variant="line" className="border-b border-border w-full justify-start  [&>button]:flex-none">
           <TabsTrigger value="tenants">Tenants</TabsTrigger>
           <TabsTrigger value="configuration">Configurations</TabsTrigger>
           <TabsTrigger value="profile">Profile</TabsTrigger>

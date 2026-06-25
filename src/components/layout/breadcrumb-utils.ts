@@ -40,7 +40,7 @@ function resolveSegmentTitle(
   }
 
   // 2. Dynamic org ID — resolve from cache, fallback to async
-  const isOrgChild = index > 0 && segments[index - 1] === "organizations"
+  const isOrgChild = index > 0 && segments[index - 1] === "organizations" && segments[index] !== "create"
   if (isOrgChild) {
     const cached = queryClient.getQueryData<{ name?: string }>(["organizations", segments[index]])
     return cached?.name ?? `DYNAMIC_ORG_${segments[index]}`

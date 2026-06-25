@@ -730,10 +730,7 @@ function TemplateDetailsContent({
         <Tabs value={activeTab} onValueChange={setActiveTab} className="gap-0 sadcnx">
           <CardHeader className="border-b border-border/60 bg-muted/15 px-6 pb-0 pt-2">
             <CardTitle className="flex min-w-0 flex-col gap-3 md:flex-row md:items-center md:justify-between">
-              <TabsList
-                variant="line"
-                className="h-11 w-full justify-start gap-6 rounded-none p-0 md:flex-1"
-              >
+                      <TabsList variant="line" className="border-b border-border w-full justify-start  [&>button]:flex-none">
                 <TabsTrigger
                   value={TEMPLATE_DETAILS_TABS.DETAILS}
                   className="h-11 flex-none rounded-none px-0 text-sm"
