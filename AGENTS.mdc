@@ -125,6 +125,7 @@ Tables should be modern and lightweight:
 - Use `DataTable`.
 - Keep row height comfortable.
 - Use subtle header backgrounds and muted uppercase labels.
+- Ensure the outer outline of the table container (the border of `.table-container`) is clearly defined (e.g., using `border border-border/65 dark:border-border/45`) to prevent a pale or washed-out appearance, while keeping inner row/header borders lightweight.
 - Keep action menus visible enough to discover.
 - Provide empty states for no records and no search results. Always use the shared `EmptyState` component for consistency.
 - Align pagination and table footer controls cleanly.
@@ -189,6 +190,16 @@ Use tones deliberately:
 - `neutral` for inactive or metadata
 
 Hard-coded semantic color classes are acceptable for destructive menu actions, password requirement checks, code/JSON previews, and other one-off states, but do not create new ad hoc status badge styles.
+
+## React & Code Quality Standards
+
+Follow clean React architecture and React 19 practices:
+
+- **React 19 Context**: Prefer importing and using `use` from `"react"` over `React.useContext` for reading context.
+- **Rules of Hooks**: Always call hooks at the top level of a component. Never call hooks conditionally or after early returns. Control conditional behavior via configuration properties (such as the `enabled` option in TanStack Query hooks).
+- **Hook Dependencies**: Maintain complete dependency arrays for hooks like `useCallback`, `useMemo`, and `useEffect`. If a dependency is recreated every render, stabilize it using `useCallback`/`useMemo` or move its definition inside the hook.
+- **State Management & Reducers**: Group conceptually-related state slices. If a component body has 5 or more `useState` calls, refactor them into a single `useReducer` state structure to prevent rendering fan-out and keep state updates cohesive.
+- **Dead Code Cleanup**: Remove unused files and components (such as unused UI templates) to keep the codebase maintainable and reduce linting/diagnostics noise.
 
 ## Implementation Discipline
 
