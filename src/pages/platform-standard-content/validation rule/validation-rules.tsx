@@ -85,6 +85,7 @@ export function ValidationRules() {
           size="sm"
           onClick={() => navigate("/platform-standard-content/validation-rules/create")}
           className="w-full gap-1.5 px-3 sm:w-auto"
+          disabled={isFetching}
         >
           <Plus className="size-4" /> Create Validation Rule
         </Button>
@@ -101,7 +102,7 @@ export function ValidationRules() {
               <SearchInput
                 value={searchText}
                 onChange={setSearchText}
-                disabled={isLoading}
+                disabled={isFetching}
                 placeholder="Search validation rules..."
                 className="w-full sm:w-72"
               />
@@ -134,6 +135,7 @@ export function ValidationRules() {
                 searchText={searchText}
                 rulesLength={rules.length}
                 onCreateClick={() => navigate("/platform-standard-content/validation-rules/create")}
+                disabled={isFetching}
               />
             }
           />
@@ -154,12 +156,14 @@ interface ValidationRulesEmptyStateProps {
   searchText: string
   rulesLength: number
   onCreateClick: () => void
+  disabled?: boolean
 }
 
 function ValidationRulesEmptyState({
   searchText,
   rulesLength,
   onCreateClick,
+  disabled,
 }: ValidationRulesEmptyStateProps) {
   return (
     <EmptyState
@@ -175,6 +179,7 @@ function ValidationRulesEmptyState({
         <Button
           onClick={onCreateClick}
           className="cursor-pointer gap-1.5 rounded-lg px-4 py-2 text-xs font-semibold"
+          disabled={disabled}
         >
           <Plus className="size-3.5" /> Create Validation Rule
         </Button>

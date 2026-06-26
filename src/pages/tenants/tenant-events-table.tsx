@@ -19,12 +19,14 @@ export function TenantEventsTable({ tenantId }: TenantEventsTableProps) {
   return (
     <div className="table-container min-h-[300px]">
       <FilterBar className="justify-start p-5">
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary ring-1 ring-primary/15">
-          <Activity className="h-4 w-4" />
-        </div>
-        <div>
-          <h3 className="text-sm font-semibold text-foreground">Tenant Events</h3>
-          <p className="text-[12px] text-muted-foreground">Audit logs and activity history for this tenant.</p>
+        <div className="flex items-center gap-3">
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary ring-1 ring-primary/15">
+            <Activity className="h-4 w-4" />
+          </div>
+          <div>
+            <h3 className="text-sm font-semibold text-foreground">Tenant Events</h3>
+            <p className="text-[12px] text-muted-foreground">Audit logs and activity history for this tenant.</p>
+          </div>
         </div>
       </FilterBar>
 

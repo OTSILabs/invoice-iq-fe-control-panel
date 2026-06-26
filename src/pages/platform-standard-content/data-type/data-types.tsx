@@ -53,6 +53,7 @@ export function DataTypes() {
           size="sm"
           onClick={() => navigate("/platform-standard-content/data-types/create")}
           className="w-full gap-1.5 px-3 sm:w-auto"
+          disabled={isFetching}
         >
           <Plus className="size-4" /> Create Data Type
         </Button>
@@ -69,7 +70,7 @@ export function DataTypes() {
               <SearchInput
                 value={searchText}
                 onChange={setSearchText}
-                disabled={isLoading}
+                disabled={isFetching}
                 placeholder="Search data types..."
                 className="w-full sm:w-72"
               />
@@ -111,6 +112,7 @@ export function DataTypes() {
                   <Button
                     onClick={() => navigate("/platform-standard-content/data-types/create")}
                     className="cursor-pointer gap-1.5 rounded-lg px-4 py-2 text-xs font-semibold"
+                    disabled={isFetching}
                   >
                     <Plus className="size-3.5" /> Create Data Type
                   </Button>

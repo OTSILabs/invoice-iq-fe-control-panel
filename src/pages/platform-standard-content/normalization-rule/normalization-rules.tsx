@@ -84,6 +84,7 @@ export function NormalizationRules() {
           size="sm"
           onClick={() => navigate("/platform-standard-content/normalization-rules/create")}
           className="w-full gap-1.5 px-3 sm:w-auto cursor-pointer"
+          disabled={isFetching}
         >
           <Plus className="size-4" /> Create Normalization Rule
         </Button>
@@ -100,7 +101,7 @@ export function NormalizationRules() {
               <SearchInput
                 value={searchText}
                 onChange={setSearchText}
-                disabled={isLoading}
+                disabled={isFetching}
                 placeholder="Search normalization rules..."
                 className="w-full sm:w-72"
               />
@@ -133,6 +134,7 @@ export function NormalizationRules() {
                 searchText={searchText}
                 rulesLength={rules.length}
                 onCreateClick={() => navigate("/platform-standard-content/normalization-rules/create")}
+                disabled={isFetching}
               />
             }
           />
@@ -154,12 +156,14 @@ interface NormalizationRulesEmptyStateProps {
   searchText: string
   rulesLength: number
   onCreateClick: () => void
+  disabled?: boolean
 }
 
 function NormalizationRulesEmptyState({
   searchText,
   rulesLength,
   onCreateClick,
+  disabled,
 }: NormalizationRulesEmptyStateProps) {
   return (
     <EmptyState
@@ -175,6 +179,7 @@ function NormalizationRulesEmptyState({
         <Button
           onClick={onCreateClick}
           className="cursor-pointer gap-1.5 rounded-lg px-4 py-2 text-xs font-semibold"
+          disabled={disabled}
         >
           <Plus className="size-3.5" /> Create Rule
         </Button>
