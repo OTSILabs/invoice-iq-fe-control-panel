@@ -52,7 +52,7 @@ export function TenantDatabaseTab({
 
       {/* Database Actions */}
       <div className="pt-2">
-        <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3">
+        <h4 className="text-xs font-bold text-muted-foreground mb-3">
           Database Maintenance Operations
         </h4>
         <div className="flex flex-wrap gap-3">

@@ -13,7 +13,7 @@ import { MaskedValue } from "@/components/ui/copyable-field"
 import { EditableValueCell } from "@/pages/organization/components/editable-value-cell"
 import { EditableValueCell as ProfileEditableValueCell } from "@/pages/organization/components/profile-editable-value-cell"
 import { TenantActionsDropdown } from "@/pages/organization/components/tenant-actions-dropdown"
-import { SemanticBadge, StatusBadge as DesignStatusBadge, type SemanticTone } from "@/components/invoice-ui/design-system"
+import { SemanticBadge, type SemanticTone } from "@/components/invoice-ui/design-system"
 import {
   MoreVertical,
   Eye,
@@ -40,57 +40,13 @@ import type {
 } from "@/types"
 import type { EntityKeyMetadata } from "@/pages/organization/components/use-entity-keys-metadata"
 
-export function StatusBadge({ status }: { status: string }) {
-  return <DesignStatusBadge status={status} showDot />
-}
+import { StatusBadge } from "@/components/invoice-ui/status-badge"
+import { ActiveStatusBadge } from "@/components/invoice-ui/active-status-badge"
+import { RoleBadge } from "@/components/invoice-ui/role-badge"
 
-export function ActiveStatusBadge({
-  status,
-  active,
-  color,
-  className
-}: {
-  status?: string | null
-  active?: boolean | null
-  color?: "green" | "blue" | "red" | "yellow" | "gray" | "rose"
-  className?: string
-}) {
-  const normalized = status ? status.toLowerCase().trim() : (active ?? true ? "active" : "inactive")
-  let tone: SemanticTone = "neutral"
-  if (color) {
-    tone = color === "green"
-      ? "success"
-      : color === "blue"
-      ? "info"
-      : color === "red"
-      ? "danger"
-      : color === "yellow"
-      ? "warning"
-      : color === "rose"
-      ? "danger"
-      : "neutral"
-  } else {
-    tone = ["success", "active", "complete", "completed"].includes(normalized)
-      ? "success"
-      : ["blocked", "deactivated", "failed"].includes(normalized)
-      ? "danger"
-      : ["expired"].includes(normalized)
-      ? "danger"
-      : ["in_progress", "inprogress"].includes(normalized)
-      ? "info"
-      : ["pending"].includes(normalized)
-      ? "warning"
-      : "neutral"
-  }
-
-  return (
-    <DesignStatusBadge
-      status={status || (active ?? true ? "Active" : "Inactive")}
-      tone={tone}
-      className={className}
-    />
-  )
-}
+export { StatusBadge } from "@/components/invoice-ui/status-badge"
+export { ActiveStatusBadge } from "@/components/invoice-ui/active-status-badge"
+export { RoleBadge } from "@/components/invoice-ui/role-badge"
 
 // User role parsing utility
 export const getRolesList = (u: PlatformUser | null | undefined): string[] => {
@@ -103,21 +59,6 @@ export const getRolesList = (u: PlatformUser | null | undefined): string[] => {
     }
     return acc
   }, [])
-}
-
-function getRoleBadgeTone(role: string): SemanticTone {
-  const r = role?.toLowerCase()
-  if (r === "admin" || r === "global_admin" || r === "global admin") return "info"
-  if (r === "user" || r === "standard user") return "accent"
-  return "neutral"
-}
-
-export function RoleBadge({ role }: { role: string }) {
-  return (
-    <SemanticBadge tone={getRoleBadgeTone(role)} className="font-semibold uppercase">
-      {String(role).toUpperCase()}
-    </SemanticBadge>
-  )
 }
 
 // 1. Subscription Plans Columns
@@ -599,7 +540,7 @@ export const getFieldsTableColumns = (
     width: "120px",
     minWidth: "100px",
     cell: ({ row }) => (
-      <SemanticBadge tone="neutral" className="font-mono uppercase">
+      <SemanticBadge tone="neutral" className="">
         {row.original.data_type_code}
       </SemanticBadge>
     ),
@@ -776,7 +717,7 @@ export const getNormalizationRuleColumns = (
     width: 100,
     rowClassName: "hidden lg:table-cell",
     cell: ({ row }) => (
-      <span className="text-xs text-foreground font-mono uppercase">
+      <span className="text-xs text-foreground">
         {row.original.rule_mode || "DECLARATIVE"}
       </span>
     ),
@@ -896,7 +837,7 @@ export const getValidationRuleColumns = (
     width: 100,
     rowClassName: "hidden lg:table-cell",
     cell: ({ row }) => (
-      <span className="text-xs text-foreground font-mono uppercase">
+      <span className="text-xs text-foreground ">
         {row.original.rule_mode || "DECLARATIVE"}
       </span>
     ),
@@ -1205,7 +1146,7 @@ export const getUsersColumns = (
     cell: ({ row }) => (
       <div className="flex items-center gap-3">
         <Avatar className="h-8 w-8 rounded-md border bg-background">
-          <AvatarFallback className="rounded-md bg-primary/8 text-[11px] font-semibold text-primary uppercase">
+          <AvatarFallback className="rounded-md bg-primary/8 text-[11px] font-semibold text-primary ">
             {getInitials(row.original.full_name) || "U"}
           </AvatarFallback>
         </Avatar>

@@ -39,7 +39,7 @@ export function ReplicationStep({
 
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+          <span className="text-[11px] font-bold  tracking-wider text-muted-foreground">
             Replication Items
           </span>
           <SemanticBadge tone="success">Recommended</SemanticBadge>

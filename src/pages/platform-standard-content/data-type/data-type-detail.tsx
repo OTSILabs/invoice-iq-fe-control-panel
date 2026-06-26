@@ -125,7 +125,7 @@ export function DataTypeDetail() {
           </DetailGrid>
 
           <div className="flex flex-col gap-1.5 border-t border-border/45 bg-card px-5 py-4">
-            <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Description</p>
+            <p className="text-xs font-bold   text-muted-foreground">Description</p>
             <p className="text-xs text-foreground leading-relaxed whitespace-pre-wrap">
               {dataType.description || "No description provided."}
             </p>

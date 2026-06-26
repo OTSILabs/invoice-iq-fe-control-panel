@@ -273,7 +273,7 @@ export function DataTable<TData, TValue = unknown>({
                       <TableHead
                         key={header.id}
                         className={cn(
-                          "h-10 bg-transparent px-4 py-3 text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-muted-foreground",
+                          "h-10 bg-transparent px-4 py-3 text-[0.68rem] font-semibold   text-muted-foreground",
                           stickyHeader && "sticky top-0 z-10",
                           getPinnedColumnClassName(header.column),
                           customColumnDef.rowClassName,
@@ -467,14 +467,14 @@ function ColumnHeader<TData, TValue>({ header }: ColumnHeaderProps<TData, TValue
   const customColumnDef = header.column.columnDef as CustomColumnDef<TData, TValue>;
 
   if (!canSort) {
-    return <span className="text-[0.68rem] font-semibold tracking-[0.13em] text-muted-foreground">{content}</span>;
+    return <span className="text-[0.68rem] font-semibold  text-muted-foreground">{content}</span>;
   }
 
   return (
     <button
       type="button"
       className={cn(
-        "group/btn flex w-full cursor-pointer items-center gap-1.5 text-left text-[0.68rem] font-semibold tracking-[0.13em] transition-colors",
+        "group/btn flex w-full cursor-pointer items-center gap-1.5 text-left text-[0.68rem] font-semibold  transition-colors",
         sorted ? "text-primary font-bold" : "text-muted-foreground hover:text-foreground",
         customColumnDef.rowClassName === "text-center" && "justify-center text-center"
       )}

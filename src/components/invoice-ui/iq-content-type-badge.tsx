@@ -30,7 +30,7 @@ export function IqContentTypeBadge({
     <SemanticBadge
       tone={isStandard ? "info" : "accent"}
       className={cn(
-        "h-6 rounded-sm uppercase leading-none",
+        "h-6 rounded-sm  leading-none",
         className,
       )}
     >

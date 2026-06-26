@@ -25,27 +25,27 @@ export function TenantOverviewTab({ tenant, onAction }: TenantOverviewTabProps) 
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3">
               <div className="flex flex-col gap-0.5">
-                <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Display Name</span>
+                <span className="text-xs font-semibold text-muted-foreground  ">Display Name</span>
                 <span className="text-xs font-semibold text-foreground">{tenant.profile?.display_name || "—"}</span>
               </div>
               <div className="flex flex-col gap-0.5">
-                <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Domain Name</span>
+                <span className="text-xs font-semibold text-muted-foreground  ">Domain Name</span>
                 <span className="text-xs font-semibold text-foreground">{tenant.profile?.domain_name || "—"}</span>
               </div>
               <div className="flex flex-col gap-0.5">
-                <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Reporting Currency</span>
+                <span className="text-xs font-semibold text-muted-foreground  ">Reporting Currency</span>
                 <span className="text-xs font-semibold text-foreground">{tenant.profile?.reporting_currency || "—"}</span>
               </div>
               <div className="flex flex-col gap-0.5">
-                <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Timezone</span>
+                <span className="text-xs font-semibold text-muted-foreground  ">Timezone</span>
                 <span className="text-xs font-semibold text-foreground">{tenant.profile?.timezone || "—"}</span>
               </div>
               <div className="flex flex-col gap-0.5">
-                <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Admin Full Name</span>
+                <span className="text-xs font-semibold text-muted-foreground  ">Admin Full Name</span>
                 <span className="text-xs font-semibold text-foreground">{tenant.tenant_admin_full_name || "—"}</span>
               </div>
               <div className="flex flex-col gap-0.5 flex-1 min-w-0">
-                <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Admin Email</span>
+                <span className="text-xs font-semibold text-muted-foreground  ">Admin Email</span>
                 <span className="text-xs font-semibold text-foreground truncate block" title={tenant.tenant_admin_email}>
                   {tenant.tenant_admin_email || "—"}
                 </span>
@@ -63,15 +63,15 @@ export function TenantOverviewTab({ tenant, onAction }: TenantOverviewTabProps) 
             </div>
             <div className="space-y-3">
               <div className="flex flex-col gap-0.5">
-                <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Effective Plan ID</span>
+                <span className="text-xs font-semibold text-muted-foreground  ">Effective Plan ID</span>
                 <span className="text-xs font-mono font-semibold text-foreground">{tenant.effective_plan_id || "—"}</span>
               </div>
               <div className="flex flex-col gap-0.5">
-                <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Plan Valid From</span>
+                <span className="text-xs font-semibold text-muted-foreground  ">Plan Valid From</span>
                 <span className="text-xs font-semibold text-foreground">{formatDate(tenant.effective_plan_valid_from)}</span>
               </div>
               <div className="flex flex-col gap-0.5">
-                <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Plan Valid To</span>
+                <span className="text-xs font-semibold text-muted-foreground  ">Plan Valid To</span>
                 <span className="text-xs font-semibold text-foreground">{formatDate(tenant.effective_plan_valid_to)}</span>
               </div>
             </div>
@@ -97,17 +97,17 @@ export function TenantOverviewTab({ tenant, onAction }: TenantOverviewTabProps) 
             </div>
             <div className="space-y-3">
               <div className="flex flex-col gap-0.5">
-                <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Governance Blocked</span>
-                <ActiveStatusBadge status={tenant.governance_blocked ? "Blocked" : "Active / Unblocked"} className="text-[10px] w-fit mt-0.5" />
+                <span className="text-xs font-semibold text-muted-foreground  ">Governance Blocked</span>
+                <ActiveStatusBadge status={tenant.governance_blocked ? "Blocked" : "Active / Unblocked"} className="text-xs w-fit mt-0.5" />
               </div>
               <div className="flex flex-col gap-0.5">
-                <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Governance Outcome</span>
+                <span className="text-xs font-semibold text-muted-foreground  ">Governance Outcome</span>
                 <span className="text-xs font-semibold text-foreground truncate" title={tenant.governance_outcome || "None"}>
                   {tenant.governance_outcome || "None"}
                 </span>
               </div>
               <div className="flex flex-col gap-0.5">
-                <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Provisioned At</span>
+                <span className="text-xs font-semibold text-muted-foreground  ">Provisioned At</span>
                 <span className="text-xs font-semibold text-foreground">{formatDate(tenant.provisioned_at)}</span>
               </div>
             </div>
@@ -129,7 +129,7 @@ export function TenantOverviewTab({ tenant, onAction }: TenantOverviewTabProps) 
         <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-xl text-destructive flex items-start gap-2.5">
           <Info className="h-4.5 w-4.5 mt-0.5 flex-shrink-0" />
           <div className="space-y-1">
-            <span className="text-[10px] font-bold uppercase tracking-wider block">Last Provisioning Error Logged</span>
+            <span className="text-xs font-bold   block">Last Provisioning Error Logged</span>
             <p className="text-xs font-mono break-all">{tenant.last_error}</p>
           </div>
         </div>

@@ -1,4 +1,5 @@
 import * as React from "react"
+import { use } from "react"
 import { cn } from "@/lib/utils"
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -88,8 +89,10 @@ function DetailGrid({ cols = 3, children, className }: DetailGridProps) {
     resolved.lg ? lgColsClass[resolved.lg] : "",
   ].filter(Boolean).join(" ")
 
+  const contextValue = React.useMemo(() => ({ cols: resolved, total }), [resolved, total])
+
   return (
-    <GridContext.Provider value={{ cols: resolved, total }}>
+    <GridContext.Provider value={contextValue}>
       <div data-slot="detail-grid" className={cn("grid border-t border-border/40", colClasses, className)}>
         {items.map((child, index) =>
           React.isValidElement(child)
@@ -112,7 +115,7 @@ interface DetailGridItemProps {
 }
 
 function DetailGridItem({ label, children, className, _index = 0 }: DetailGridItemProps) {
-  const { cols, total } = React.useContext(GridContext)
+  const { cols, total } = use(GridContext)
 
   // At each breakpoint, add a right border unless the cell is the last in its row.
   // Add a bottom border unless the cell is in the last row.
@@ -162,7 +165,7 @@ function DetailGridItem({ label, children, className, _index = 0 }: DetailGridIt
         className
       )}
     >
-      <p className="text-[0.68rem] font-medium uppercase tracking-[0.1em] text-muted-foreground">
+      <p className="text-xs text-muted-foreground">
         {label}
       </p>
       <div className="min-w-0">{children}</div>

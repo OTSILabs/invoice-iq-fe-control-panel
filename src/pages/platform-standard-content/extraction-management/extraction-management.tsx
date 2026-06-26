@@ -236,7 +236,7 @@ export function ExtractionManagement() {
 
             <TabsContent value="templates" className="m-0 focus:outline-none flex flex-col gap-4">
               <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between px-1">
-                <h3 className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+                <h3 className="text-xs font-semibold  text-muted-foreground ">
                   Base Templates ({filteredTemplates.length})
                 </h3>
                 <div className="flex items-center gap-2">

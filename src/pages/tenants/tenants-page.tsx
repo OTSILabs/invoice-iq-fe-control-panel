@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState, useReducer } from "react"
 import { createPortal } from "react-dom"
 import { useQueries } from "@tanstack/react-query"
 import { useOrganizations } from "@/api/hooks/useOrganizations"
@@ -14,13 +14,46 @@ import { TenantActionDialog } from "./tenant-actions/tenant-action-dialog"
 import { getTenantColumns } from "@/columns"
 import { EmptyState, FilterBar, PageShell } from "@/components/invoice-ui/design-system"
 
+interface OrgDropdownState {
+  selectedOrgId: string
+  orgSearch: string
+  isOrgDropdownOpen: boolean
+  orgDropdownPosition: { top: number; left: number; width: number } | null
+}
+
+const initialOrgDropdownState: OrgDropdownState = {
+  selectedOrgId: "",
+  orgSearch: "",
+  isOrgDropdownOpen: false,
+  orgDropdownPosition: null,
+}
+
+type OrgDropdownAction =
+  | { type: "SELECT_ORG"; id: string }
+  | { type: "SET_SEARCH"; search: string }
+  | { type: "TOGGLE_DROPDOWN"; open: boolean }
+  | { type: "SET_POSITION"; position: { top: number; left: number; width: number } | null }
+
+function orgDropdownReducer(state: OrgDropdownState, action: OrgDropdownAction): OrgDropdownState {
+  switch (action.type) {
+    case "SELECT_ORG":
+      return { ...state, selectedOrgId: action.id }
+    case "SET_SEARCH":
+      return { ...state, orgSearch: action.search }
+    case "TOGGLE_DROPDOWN":
+      return { ...state, isOrgDropdownOpen: action.open }
+    case "SET_POSITION":
+      return { ...state, orgDropdownPosition: action.position }
+    default:
+      return state
+  }
+}
+
 export function TenantsPage() {
   const navigate = useNavigate()
   const { data: organizations = [], isLoading: isOrgsLoading } = useOrganizations()
-  const [selectedOrgId, setSelectedOrgId] = useState<string>("")
-  const [orgSearch, setOrgSearch] = useState<string>("")
-  const [isOrgDropdownOpen, setIsOrgDropdownOpen] = useState(false)
-  const [orgDropdownPosition, setOrgDropdownPosition] = useState<{ top: number; left: number; width: number } | null>(null)
+  const [dropdownState, dispatch] = useReducer(orgDropdownReducer, initialOrgDropdownState)
+  const { selectedOrgId, orgSearch, isOrgDropdownOpen, orgDropdownPosition } = dropdownState
   const [tenantAction, setTenantAction] = useState<{ type: TenantActionType; tenant: Tenant } | null>(null)
   const orgDropdownTriggerRef = useRef<HTMLButtonElement>(null)
 
@@ -71,10 +104,13 @@ export function TenantsPage() {
         window.innerWidth - width - viewportPadding,
       )
 
-      setOrgDropdownPosition({
-        top: rect.bottom + 6,
-        left,
-        width,
+      dispatch({
+        type: "SET_POSITION",
+        position: {
+          top: rect.bottom + 6,
+          left,
+          width,
+        },
       })
     }
 
@@ -125,7 +161,7 @@ export function TenantsPage() {
         {/* Header - Put the select dropdown inside the table card header */}
         <FilterBar className="relative z-40 overflow-visible p-5">
           <div>
-            <h3 className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+            <h3 className="text-xs font-semibold text-muted-foreground ">
               Registered Tenants ({tenants.length})
             </h3>
             <p className="text-[12px] text-muted-foreground mt-1">
@@ -140,7 +176,7 @@ export function TenantsPage() {
               <button
                 ref={orgDropdownTriggerRef}
                 type="button"
-                onClick={() => setIsOrgDropdownOpen(!isOrgDropdownOpen)}
+                onClick={() => dispatch({ type: "TOGGLE_DROPDOWN", open: !isOrgDropdownOpen })}
                 className="inline-flex h-9 w-full cursor-pointer items-center justify-between gap-2 rounded-lg border border-input bg-background/70 px-3 text-xs font-semibold text-foreground shadow-xs transition-colors hover:border-ring/35 sm:w-56"
               >
                 <span className="flex items-center gap-2 truncate">
@@ -156,7 +192,7 @@ export function TenantsPage() {
                   <button
                     type="button"
                     className="fixed inset-0 z-[90] h-full w-full cursor-default border-0 bg-transparent"
-                    onClick={() => setIsOrgDropdownOpen(false)}
+                    onClick={() => dispatch({ type: "TOGGLE_DROPDOWN", open: false })}
                     aria-label="Close dropdown"
                   />
                   <div
@@ -170,7 +206,7 @@ export function TenantsPage() {
                     <Input
                       type="text"
                       value={orgSearch}
-                      onChange={(e) => setOrgSearch(e.target.value)}
+                      onChange={(e) => dispatch({ type: "SET_SEARCH", search: e.target.value })}
                       placeholder="Search organization..."
                       className="mb-2 h-8 text-xs"
                       aria-label="Search organization"
@@ -184,9 +220,9 @@ export function TenantsPage() {
                             key={org.id}
                             type="button"
                             onClick={() => {
-                              setSelectedOrgId(org.id)
-                              setIsOrgDropdownOpen(false)
-                              setOrgSearch("")
+                              dispatch({ type: "SELECT_ORG", id: org.id })
+                              dispatch({ type: "TOGGLE_DROPDOWN", open: false })
+                              dispatch({ type: "SET_SEARCH", search: "" })
                             }}
                             className={`w-full text-left px-2 py-1.5 rounded-md text-xs transition-colors flex items-center justify-between cursor-pointer ${
                               org.id === activeOrgId

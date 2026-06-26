@@ -26,11 +26,12 @@ export function UserDetail() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
 
-  if (id === "create") {
+  const isCreate = id === "create"
+  const { data: user, isLoading, isError } = usePlatformUser(id || "", !isCreate)
+
+  if (isCreate) {
     return <Navigate to="/users/create" replace />
   }
-
-  const { data: user, isLoading, isError } = usePlatformUser(id || "")
 
   if (isLoading) {
     return (
@@ -85,7 +86,7 @@ export function UserDetail() {
           <div className="flex flex-col gap-3 border-b border-border/45 px-5 py-4">
             <div className="flex items-center gap-3">
               <Avatar className="h-10 w-10 rounded-lg border bg-background flex-shrink-0">
-                <AvatarFallback className="rounded-lg bg-primary/8 text-sm font-semibold text-primary uppercase">
+                <AvatarFallback className="rounded-lg bg-primary/8 text-sm font-semibold text-primary">
                   {getInitials(user.full_name) || "U"}
                 </AvatarFallback>
               </Avatar>
@@ -144,7 +145,7 @@ export function UserDetail() {
           </DetailGrid>
 
           <div className="flex flex-col gap-2 border-t border-border/45 bg-card px-5 py-5">
-            <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Assigned Roles</p>
+            <p className="text-xs text-muted-foreground">Assigned Roles</p>
             <div className="flex flex-wrap gap-1.5">
               {getRolesList(user).map((role) => <RoleBadge key={role} role={role} />)}
             </div>

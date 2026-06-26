@@ -97,7 +97,7 @@ export function ReferenceValueDetails() {
 
           {/* Description */}
           <div className="flex flex-col gap-1.5 border-t border-border/45 bg-card px-5 py-4">
-            <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Description</p>
+            <p className="text-xs font-bold  text-muted-foreground">Description</p>
             <p className="text-xs text-foreground leading-relaxed whitespace-pre-wrap">
               {detail.description || <span className="text-muted-foreground italic">No description provided.</span>}
             </p>
@@ -105,7 +105,7 @@ export function ReferenceValueDetails() {
 
           {/* Custom Attributes */}
           <div className="flex flex-col gap-1.5 border-t border-border/45 bg-card px-5 py-4">
-            <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Custom JSON Attributes</p>
+            <p className="text-xs font-bold  text-muted-foreground">Custom JSON Attributes</p>
             {detail.attributes && Object.keys(detail.attributes).length > 0 ? (
               <pre className="max-w-full overflow-x-auto whitespace-pre-wrap rounded-xl border border-slate-800 bg-slate-950 p-4 font-mono text-xs text-slate-100 shadow-inner mt-1">
                 {JSON.stringify(detail.attributes, null, 2)}

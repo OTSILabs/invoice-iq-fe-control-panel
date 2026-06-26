@@ -32,7 +32,7 @@ function DetailSection({
 }) {
   return (
     <div className="flex flex-col gap-0.5 border-t border-border/40 py-2 first:border-t-0 first:pt-0 last:pb-0">
-      <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+      <span className="text-[10px] font-semibold tracking-wider text-muted-foreground">
         {label}
       </span>
       <div className="text-xs leading-5 text-foreground">{value}</div>

@@ -291,7 +291,7 @@ function getFieldBadgeData(field: FieldListTableRecord): [FieldBadgeData, FieldB
 
 function FieldBadge({ badge }: { badge: FieldBadgeData }) {
   return (
-    <SemanticBadge tone={badge.tone} className="rounded-md uppercase tracking-normal">
+    <SemanticBadge tone={badge.tone} className="rounded-md tracking-normal">
       {badge.label}
     </SemanticBadge>
   );
@@ -907,7 +907,7 @@ function FieldTableHeader({
   return (
     <div
       className={cn(
-        "hidden items-center gap-2 border-b bg-muted/30 px-3 py-2 text-[10px] font-semibold uppercase tracking-wide text-foreground/75 md:grid",
+        "hidden items-center gap-2 border-b bg-muted/30 px-3 py-2 text-[10px] font-semibold  text-foreground/75 md:grid",
         getDesktopGridClass(showOrderColumn),
       )}
     >

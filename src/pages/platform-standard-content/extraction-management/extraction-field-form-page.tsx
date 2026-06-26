@@ -104,7 +104,7 @@ export function ExtractionFieldFormPage({ mode }: { mode: "create" | "edit" }) {
   })
 
   const valueMode = watch("allowed_value_mode")
-  const backToList = () => navigate("/platform-standard-content/extraction-management?tab=fields")
+  const backToList = useCallback(() => navigate("/platform-standard-content/extraction-management?tab=fields"), [navigate])
 
   const showStep = (stepIndex: number) => {
     clearErrors()
@@ -188,7 +188,7 @@ export function ExtractionFieldFormPage({ mode }: { mode: "create" | "edit" }) {
     } catch (err: any) {
       toast.error(err.response?.data?.detail || err.message || "Failed to save field")
     }
-  }, [isEdit, fieldItem, createMutation, updateMutation])
+  }, [isEdit, fieldItem, createMutation, updateMutation, backToList])
 
   if (isEdit && fieldsQuery.isLoading) {
     return (

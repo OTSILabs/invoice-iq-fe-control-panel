@@ -144,7 +144,7 @@ export function NormalizationRuleDetail() {
               {
                 label: "Rule Mode",
                 content: (
-                  <SemanticBadge tone="neutral" className="font-mono uppercase">
+                  <SemanticBadge tone="neutral" className="font-mono ">
                     {rule.rule_mode}
                   </SemanticBadge>
                 )
@@ -191,7 +191,7 @@ export function NormalizationRuleDetail() {
           </DetailGrid>
 
           <div className="flex flex-col gap-1.5 border-t border-border/45 bg-card px-5 py-4">
-            <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Description</p>
+            <p className="text-xs font-bold  text-muted-foreground">Description</p>
             <p className="text-xs text-foreground leading-relaxed whitespace-pre-wrap">
               {rule.description || "No description provided."}
             </p>
@@ -199,11 +199,11 @@ export function NormalizationRuleDetail() {
 
           <div className="grid grid-cols-1 gap-4 border-t border-border/45 bg-card px-5 py-5 md:grid-cols-2">
             <div className="flex flex-col gap-2 pb-2 md:pb-0">
-              <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Supported Data Types</p>
+              <p className="text-xs font-bold  text-muted-foreground">Supported Data Types</p>
               <div className="flex flex-wrap gap-1.5">
                 {rule.supported_data_types_json && rule.supported_data_types_json.length > 0 ? (
                   rule.supported_data_types_json.map((dt) => (
-                    <SemanticBadge key={dt} tone="accent" className="font-mono uppercase">
+                    <SemanticBadge key={dt} tone="accent" className="font-mono ">
                       {dt}
                     </SemanticBadge>
                   ))
@@ -214,11 +214,11 @@ export function NormalizationRuleDetail() {
             </div>
 
             <div className="flex flex-col gap-2">
-              <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Supported Header Items</p>
+              <p className="text-xs font-bold  text-muted-foreground">Supported Header Items</p>
               <div className="flex flex-wrap gap-1.5">
                 {rule.supported_header_items_json && rule.supported_header_items_json.length > 0 ? (
                   rule.supported_header_items_json.map((hi) => (
-                    <SemanticBadge key={hi} tone="accent" className="font-mono uppercase">
+                    <SemanticBadge key={hi} tone="accent" className="font-mono ">
                       {hi}
                     </SemanticBadge>
                   ))
@@ -231,14 +231,14 @@ export function NormalizationRuleDetail() {
 
           <div className="grid grid-cols-1 gap-6 border-t border-border/45 bg-muted/20 px-5 py-5 md:grid-cols-2">
             <div className="flex flex-col gap-2 h-full">
-              <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Parameter Schema</p>
+              <p className="text-xs font-bold  text-muted-foreground">Parameter Schema</p>
               <pre className="min-h-[120px] max-h-72 flex-1 overflow-x-auto rounded-xl border border-slate-800 bg-slate-950 p-3.5 font-mono text-[10px] text-slate-100 shadow-inner">
                 {JSON.stringify(rule.parameter_schema_json, null, 2)}
               </pre>
             </div>
 
             <div className="flex flex-col gap-2 h-full">
-              <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Engine Configuration</p>
+              <p className="text-xs font-bold  text-muted-foreground">Engine Configuration</p>
               <pre className="min-h-[120px] max-h-72 flex-1 overflow-x-auto rounded-xl border border-slate-800 bg-slate-950 p-3.5 font-mono text-[10px] text-slate-100 shadow-inner">
                 {JSON.stringify(rule.engine_config_json, null, 2)}
               </pre>

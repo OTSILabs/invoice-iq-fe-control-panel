@@ -72,7 +72,7 @@ export function FieldCategories() {
       <div className="table-container">
         <div className="flex min-h-0 flex-1 flex-col p-0">
           <FilterBar>
-            <h3 className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+            <h3 className="text-xs font-semibold text-muted-foreground ">
               Field Categories ({filteredCategories.length})
             </h3>
 

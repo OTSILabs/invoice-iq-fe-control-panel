@@ -51,7 +51,7 @@ export function Profile() {
               <div className="-mt-12 mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
                 <div className="relative">
                   <Avatar className="h-24 w-24 rounded-2xl border-4 border-card bg-card shadow-md">
-                    <AvatarFallback className="rounded-2xl bg-primary/10 text-3xl font-extrabold uppercase text-primary">{user.initials}</AvatarFallback>
+                    <AvatarFallback className="rounded-2xl bg-primary/10 text-3xl font-extrabold  text-primary">{user.initials}</AvatarFallback>
                   </Avatar>
                   <span className="absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full border-2 border-card bg-emerald-500 shadow-sm" />
                 </div>
@@ -81,7 +81,7 @@ export function Profile() {
                       <Icon className="h-4 w-4" />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">{label}</p>
+                      <p className="text-[10px] font-semibold text-muted-foreground text-xs">{label}</p>
                       <p className="text-xs font-semibold text-foreground truncate mt-0.5">{value}</p>
                     </div>
                   </div>
@@ -98,7 +98,7 @@ export function Profile() {
             contentClassName="space-y-4"
           >
               <div>
-                <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Password Last Changed</p>
+                <p className="text-[10px] font-semibold text-muted-foreground text-xs">Password Last Changed</p>
                 <p className="text-xs font-semibold text-foreground mt-1">{user.pwdUpdated}</p>
               </div>
               <Button

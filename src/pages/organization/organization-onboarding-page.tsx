@@ -216,7 +216,7 @@ export function OrganizationOnboardingPage() {
                   </InputField>
                 </div>
                 <div className="pt-4">
-                  <h4 className="mb-4 text-xs font-bold tracking-wider text-muted-foreground uppercase">
+                  <h4 className="mb-4 text-xs font-bold  text-muted-foreground ">
                     Admin User Details
                   </h4>
                   <div className="grid gap-4 sm:grid-cols-2">

@@ -97,7 +97,7 @@ export function FieldCategoryDetails() {
 
           {/* Example Fields */}
           <div className="flex flex-col gap-1.5 border-t border-border/45 bg-card px-5 py-4">
-            <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Example Fields</p>
+            <p className="text-xs font-bold  text-muted-foreground">Example Fields</p>
             {category.example_fields && category.example_fields.length > 0 ? (
               <div className="flex flex-wrap gap-1.5 mt-1">
                 {category.example_fields.map((field) => (
@@ -117,7 +117,7 @@ export function FieldCategoryDetails() {
 
           {/* Description */}
           <div className="flex flex-col gap-1.5 border-t border-border/45 bg-card px-5 py-4">
-            <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Description</p>
+            <p className="text-xs font-bold  text-muted-foreground">Description</p>
             <p className="text-xs text-foreground leading-relaxed whitespace-pre-wrap">
               {category.description || <span className="text-muted-foreground italic">No description provided.</span>}
             </p>

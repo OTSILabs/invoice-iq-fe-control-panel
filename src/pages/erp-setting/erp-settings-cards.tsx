@@ -65,7 +65,7 @@ function MetaDateItem({
   if (!value) return null
   return (
     <div className={align === "right" ? "flex flex-col text-right" : "flex flex-col"}>
-      <span className="text-[10px] font-medium tracking-wider text-muted-foreground/80 uppercase">
+      <span className="text-[10px] font-medium tracking-wider text-muted-foreground/80">
         {label}
       </span>
       <span className="text-xs font-medium text-foreground/85">
@@ -100,7 +100,7 @@ function ErpSettingCard({
             <CardTitle className="truncate text-base font-semibold text-foreground">
               {record.display_name || `${record.erp_type.toUpperCase()} Integration`}
             </CardTitle>
-            <CardDescription className="mt-0.5 text-xs font-medium tracking-wider text-primary/80 uppercase">
+            <CardDescription className="mt-0.5 text-xs font-medium tracking-wider text-primary/80">
               {record.erp_type}
             </CardDescription>
           </div>
