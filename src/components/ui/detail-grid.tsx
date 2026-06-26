@@ -90,7 +90,7 @@ function DetailGrid({ cols = 3, children, className }: DetailGridProps) {
 
   return (
     <GridContext.Provider value={{ cols: resolved, total }}>
-      <div className={cn("grid border-t border-border/40", colClasses, className)}>
+      <div data-slot="detail-grid" className={cn("grid border-t border-border/40", colClasses, className)}>
         {items.map((child, index) =>
           React.isValidElement(child)
             ? React.cloneElement(child as React.ReactElement<DetailGridItemProps>, { _index: index })
