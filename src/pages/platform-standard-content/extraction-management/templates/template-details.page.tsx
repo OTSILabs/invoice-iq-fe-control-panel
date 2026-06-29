@@ -27,7 +27,6 @@ import { EmptyState } from "@/components/invoice-ui/design-system";
 import { PageContainers } from "@/components/invoice-ui/page-containers";
 import {
   FilterDropdown,
-  FilterDropdownChips,
   FilterDropdownContent,
   FilterDropdownTrigger,
   type FilterGroup,
@@ -282,10 +281,6 @@ function TemplateDetailsHeader({
 }
 
 function TemplateFieldsSection({
-  fieldFilterGroups,
-  fieldFilters,
-  setFieldFilters,
-  setFieldSearch,
   filteredTemplateFields,
   isFieldFilterActive,
   saveSortOrder,
@@ -294,11 +289,6 @@ function TemplateFieldsSection({
   removeField,
   updateTemplateSortOrderMutation,
 }: {
-  fieldFilterGroups: FilterGroup[];
-  fieldFilters: Record<string, string[]>;
-  setFieldFilters: React.Dispatch<React.SetStateAction<Record<string, string[]>>>;
-  fieldSearch: string;
-  setFieldSearch: React.Dispatch<React.SetStateAction<string>>;
   filteredTemplateFields: FieldListTableRecord[];
   isFieldFilterActive: boolean;
   saveSortOrder: (fieldCodes: string[]) => void;
@@ -308,94 +298,52 @@ function TemplateFieldsSection({
   updateTemplateSortOrderMutation: any;
 }) {
   return (
-    <TabsContent value={TEMPLATE_DETAILS_TABS.FIELDS}>
-      <Card className="surface-card gap-0 overflow-hidden p-0">
-        <CardHeader className="border-b border-border/60 bg-muted/15 p-5">
-          <CardTitle className="text-section-title">Fields</CardTitle>
-        </CardHeader>
+    <TabsContent value={TEMPLATE_DETAILS_TABS.FIELDS} className="m-0 p-3 border-0 rounded-xl">
+      <FieldsListTable<FieldListTableRecord>
+        fields={filteredTemplateFields}
+        categories={[]}
+        options={{
+          sortable: true,
+          isSortOrderSaving: updateTemplateSortOrderMutation.isPending,
+          isSortingDisabled: !canManageTemplate || isFieldFilterActive,
+          showSortSequenceInSubtitle: false,
+        }}
+        emptyTitle={isFieldFilterActive ? "No matching fields" : "No fields assigned"}
+        emptyDescription={
+          isFieldFilterActive
+            ? "No fields match the current search or selected filters."
+            : "Add a field to this template to build the extraction schema."
+        }
+        className="rounded-md border border-border shadow-none overflow-hidden"
+        renderActions={({ field }) =>
+          canManageTemplate ? (
+            <>
+              <Button
+                type="button"
+                variant="outline"
+                size="icon-sm"
+                className="size-7"
+                aria-label={`Edit ${getFieldLabel(field)}`}
+                onClick={() => editField(field)}
+              >
+                <Edit2 className="size-3.5" />
+              </Button>
 
-        <CardContent className="p-5">
-          <div className="mb-4 flex items-center gap-3">
-            <FilterDropdown
-              groups={fieldFilterGroups}
-              value={fieldFilters as FilterValue}
-              onValueChange={(v: FilterValue) => setFieldFilters(v as any)}
-            >
-              <div className="flex items-center gap-3">
-                <Button variant="outline" size="sm">
-                  <Search className="size-4 mr-2" />
-                  Filters
-                </Button>
-
-                <FilterDropdownChips />
-
-                <div className="ml-4">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => {
-                      setFieldSearch("");
-                      setFieldFilters({});
-                    }}
-                  >
-                    Clear
-                  </Button>
-                </div>
-              </div>
-            </FilterDropdown>
-
-            <div className="ml-auto text-sm text-muted-foreground">
-              {isFieldFilterActive ? "Filters active" : "All fields"}
-            </div>
-          </div>
-
-            <FieldsListTable<FieldListTableRecord>
-              fields={filteredTemplateFields as FieldListTableRecord[]}
-              categories={[]}
-              options={{
-                sortable: true,
-                isSortOrderSaving: updateTemplateSortOrderMutation.isPending,
-                isSortingDisabled: !canManageTemplate || isFieldFilterActive,
-                showSortSequenceInSubtitle: false,
-              }}
-              emptyTitle={isFieldFilterActive ? "No matching fields" : "No fields assigned"}
-              emptyDescription={
-                isFieldFilterActive
-                  ? "No fields match the current search or selected filters."
-                  : "Add a field to this template to build the extraction schema."
-              }
-              className="rounded-none border-0 shadow-none"
-              renderActions={({ field }) =>
-                canManageTemplate ? (
-                  <>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="icon-sm"
-                      className="size-7"
-                      aria-label={`Edit ${getFieldLabel(field)}`}
-                      onClick={() => editField(field)}
-                    >
-                      <Edit2 className="size-3.5" />
-                    </Button>
-
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="icon-sm"
-                      className="size-7 text-destructive hover:bg-destructive/10 hover:text-destructive"
-                      aria-label={`Remove ${getFieldLabel(field)}`}
-                      onClick={() => removeField(field)}
-                    >
-                      <Trash2 className="size-3.5" />
-                    </Button>
-                  </>
-                ) : null
-              }
-              onSortOrderChange={saveSortOrder}
-            />
-        </CardContent>
-      </Card>
+              <Button
+                type="button"
+                variant="outline"
+                size="icon-sm"
+                className="size-7 text-destructive hover:bg-destructive/10 hover:text-destructive"
+                aria-label={`Remove ${getFieldLabel(field)}`}
+                onClick={() => removeField(field)}
+              >
+                <Trash2 className="size-3.5" />
+              </Button>
+            </>
+          ) : null
+        }
+        onSortOrderChange={saveSortOrder}
+      />
     </TabsContent>
   );
 }
@@ -728,21 +676,21 @@ function TemplateDetailsContent({
 
       <Card className="surface-card gap-0 py-0">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="gap-0 sadcnx">
-          <CardHeader className="border-b border-border/60 bg-muted/15 px-6 pb-0 pt-2">
+          <CardHeader className="bg-transparent px-6 pb-0 pt-2 border-b-0">
             <CardTitle className="flex min-w-0 flex-col gap-3 md:flex-row md:items-center md:justify-between">
-                      <TabsList variant="line" className="border-b border-border w-full justify-start  [&>button]:flex-none">
+              <TabsList variant="line" className="border-b border-border w-full justify-start [&>button]:flex-none">
                 <TabsTrigger
                   value={TEMPLATE_DETAILS_TABS.DETAILS}
-                  className="h-11 flex-none rounded-none px-0 text-sm"
+                  className="cursor-pointer gap-1.5 px-3"
                 >
                   Details
                 </TabsTrigger>
                 <TabsTrigger
                   value={TEMPLATE_DETAILS_TABS.FIELDS}
-                  className="h-11 flex-none rounded-none px-0 text-sm"
+                  className="cursor-pointer gap-1.5 px-3"
                 >
                   Fields
-                  <span className="rounded-full bg-primary px-1.5 text-[11px] font-semibold text-primary-foreground">
+                  <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-semibold text-primary">
                     {displayedFieldCount}
                   </span>
                 </TabsTrigger>
@@ -754,7 +702,7 @@ function TemplateDetailsContent({
                   value={fieldFilters}
                   onValueChange={setFieldFilters}
                 >
-                  <div className="flex w-full min-w-0 flex-col gap-2 pb-2 md:w-auto md:flex-row md:items-center md:justify-end md:pb-0">
+                  <div className="flex w-full min-w-0 flex-col gap-2 pb-2 md:w-auto md:flex-row md:items-center md:justify-end md:pb-3 p-4">
                     <div className="relative min-w-0 md:w-64">
                       <Search className="pointer-events-none absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
                       <Input
@@ -800,11 +748,6 @@ function TemplateDetailsContent({
             </TabsContent>
 
             <TemplateFieldsSection
-              fieldFilterGroups={fieldFilterGroups}
-              fieldFilters={fieldFilters as Record<string, string[]>}
-              setFieldFilters={setFieldFilters as any}
-              fieldSearch={fieldSearch}
-              setFieldSearch={setFieldSearch}
               filteredTemplateFields={filteredTemplateFields as FieldListTableRecord[]}
               isFieldFilterActive={isFieldFilterActive}
               saveSortOrder={saveSortOrder}

@@ -1158,7 +1158,7 @@ export function FieldsListTable<TField extends FieldListTableRecord>({
   const table = (
     <section
       className={cn(
-        "overflow-hidden rounded-md border bg-card shadow-xs",
+        "overflow-hidden rounded-md border shadow-xs",
         scrollable && "flex h-full min-h-0 flex-col",
         className,
       )}

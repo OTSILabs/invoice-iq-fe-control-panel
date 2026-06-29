@@ -300,11 +300,19 @@ export function resolveTemplateFields<TRecord extends ApiRecord = ApiRecord>(
     record.existing_fields;
 
   if (Array.isArray(fields) && fields.length) {
-    return fields.map((field) =>
-      typeof field === "string"
-        ? ({ field_code: field } as unknown as TRecord)
-        : (field as TRecord),
-    );
+    return fields.map((field) => {
+      if (typeof field === "string") {
+        return ({ field_code: field } as unknown as TRecord);
+      }
+      const fRecord = asRecord(field);
+      if (fRecord.field && typeof fRecord.field === "object") {
+        return {
+          ...asRecord(fRecord.field),
+          ...fRecord,
+        } as unknown as TRecord;
+      }
+      return (field as TRecord);
+    });
   }
 
   const fieldsByCode = new Map(

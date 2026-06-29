@@ -1,15 +1,14 @@
 import type { ApiRecord } from "@/api/api.helpers";
 import { Switch } from "@/components/ui/switch";
 import { IqActiveStatusBadge, IqContentTypeBadge } from "@/components/invoice-ui/iq-status-badges";
+import { DetailGrid } from "@/components/ui/detail-grid";
 
 import {
   getTrimmedValue,
   getOptionalDisplayValue,
   getDateDisplayValue,
   getTagBadges,
-  type TemplateDetailRow,
 } from "../template-details.helpers";
-import { TemplateDetailGrid } from "../template-details.parts";
 import { getTemplateCode, getTemplateContentType, getTemplateIsActive } from "@/components/invoice-ui/templates/template-data";
 
 export function TemplateInformation({
@@ -27,14 +26,15 @@ export function TemplateInformation({
   const isActive = getTemplateIsActive(template);
   const activeSince = getDateDisplayValue(template.activated_at);
   const contentType = getTemplateContentType(template);
-  const detailRows: TemplateDetailRow[] = [
+
+  const gridItems = [
     {
       label: "Status",
-      value: (
+      content: (
         <div className="flex min-w-0 flex-wrap items-center gap-3">
           <IqActiveStatusBadge template={template} />
           {canManageTemplate ? (
-            <label className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
+            <label className="flex items-center gap-2 text-xs font-medium text-muted-foreground cursor-pointer">
               <Switch
                 checked={isActive}
                 disabled={isActiveStatePending}
@@ -53,44 +53,107 @@ export function TemplateInformation({
           ) : null}
         </div>
       ),
-      always: true,
     },
     {
       label: "Template type",
-      value: contentType ? (
+      content: contentType ? (
         <IqContentTypeBadge template={template} />
-      ) : null,
+      ) : (
+        <p className="text-xs font-semibold text-foreground">—</p>
+      ),
     },
-    { label: "Template ID", value: getTemplateCode(template), always: true },
     {
-      label: "Description",
-      value: description || null,
+      label: "Template ID",
+      content: (
+        <p className="font-mono text-xs font-semibold text-foreground truncate" title={getTemplateCode(template)}>
+          {getTemplateCode(template)}
+        </p>
+      ),
     },
     {
       label: "Process tags",
-      value: getTagBadges(template.business_process_tags),
+      content: getTagBadges(template.business_process_tags) || (
+        <p className="text-xs font-semibold text-foreground">—</p>
+      ),
     },
     {
       label: "Document tags",
-      value: getTagBadges(template.document_type_tags),
+      content: getTagBadges(template.document_type_tags) || (
+        <p className="text-xs font-semibold text-foreground">—</p>
+      ),
     },
     {
       label: "Tax tags",
-      value: getTagBadges(template.taxation_tags),
+      content: getTagBadges(template.taxation_tags) || (
+        <p className="text-xs font-semibold text-foreground">—</p>
+      ),
     },
     {
       label: "Platform ID",
-      value: getOptionalDisplayValue(template.source_platform_template_id),
+      content: (
+        <p className="text-xs font-semibold text-foreground">
+          {getOptionalDisplayValue(template.source_platform_template_id)}
+        </p>
+      ),
     },
     {
       label: "Version",
-      value: getOptionalDisplayValue(template.source_platform_version_no),
+      content: (
+        <p className="text-xs font-semibold text-foreground">
+          {getOptionalDisplayValue(template.source_platform_version_no)}
+        </p>
+      ),
     },
-    { label: "Last synced", value: getDateDisplayValue(template.last_synced_at) },
-    { label: "Created by", value: getOptionalDisplayValue(template.created_by) },
-    { label: "Created", value: getDateDisplayValue(template.created_at) },
-    { label: "Updated", value: getDateDisplayValue(template.updated_at) },
+    {
+      label: "Last synced",
+      content: (
+        <p className="text-xs font-semibold text-foreground">
+          {getDateDisplayValue(template.last_synced_at)}
+        </p>
+      ),
+    },
+    {
+      label: "Created by",
+      content: (
+        <p className="text-xs font-semibold text-foreground">
+          {getOptionalDisplayValue(template.created_by)}
+        </p>
+      ),
+    },
+    {
+      label: "Created",
+      content: (
+        <p className="text-xs font-semibold text-foreground">
+          {getDateDisplayValue(template.created_at)}
+        </p>
+      ),
+    },
+    {
+      label: "Updated",
+      content: (
+        <p className="text-xs font-semibold text-foreground">
+          {getDateDisplayValue(template.updated_at)}
+        </p>
+      ),
+    },
   ];
 
-  return <TemplateDetailGrid rows={detailRows} />;
+  return (
+    <div className="w-full overflow-hidden rounded-md border border-border bg-card">
+      <DetailGrid cols={3}>
+        {gridItems.map((item) => (
+          <DetailGrid.Item key={item.label} label={item.label}>
+            {item.content}
+          </DetailGrid.Item>
+        ))}
+      </DetailGrid>
+
+      <div className="flex flex-col gap-1.5 border-t border-border/40 bg-card px-4 py-3">
+        <p className="text-xs text-muted-foreground">Description</p>
+        <p className="text-xs text-foreground leading-relaxed whitespace-pre-wrap">
+          {description || "No description provided."}
+        </p>
+      </div>
+    </div>
+  );
 }
