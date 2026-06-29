@@ -132,6 +132,7 @@ export interface DataTableProps<TData, TValue = unknown> {
   page?: number;
   onPageChange?: (page: number) => void;
   onPageSizeChange?: (pageSize: number) => void;
+  manualPagination?: boolean;
   manualFiltering?: boolean;
   manualSorting?: boolean;
   sorting?: SortingState;
@@ -159,10 +160,11 @@ export function DataTable<TData, TValue = unknown>({
   enablePagination,
   pageSize = 10,
   pageSizeOptions,
-  totalItems = 0,
+  totalItems = data.length,
   page = 1,
   onPageChange = () => {},
   onPageSizeChange,
+  manualPagination = false,
   manualFiltering = true,
   manualSorting = false,
   sorting,
@@ -183,12 +185,30 @@ export function DataTable<TData, TValue = unknown>({
   emptyMessage,
 }: DataTableProps<TData, TValue>) {
   "use no memo";
+  "use no compiler";
   const tableContainerRef = useRef<HTMLDivElement>(null);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [internalSorting, setInternalSorting] = useState<SortingState>([]);
   const tableColumns = useMemo(() => withColumnSizing(columns), [columns]);
   const hasPinnedColumns = Boolean(columnPinning.left?.length || columnPinning.right?.length);
   const sortingState = sorting ?? internalSorting;
+
+  const isControlled = manualPagination;
+
+  const [clientPagination, setClientPagination] = useState(() => ({
+    pageIndex: page - 1,
+    pageSize,
+  }));
+
+  const [prevData, setPrevData] = useState(data);
+  if (!isControlled && data !== prevData) {
+    setPrevData(data);
+    setClientPagination((prev) => ({ ...prev, pageIndex: 0 }));
+  }
+
+  const paginationState = isControlled
+    ? { pageIndex: page - 1, pageSize }
+    : clientPagination;
 
   const handleSortingChange = (updater: Updater<SortingState>) => {
     const nextSorting =
@@ -212,7 +232,7 @@ export function DataTable<TData, TValue = unknown>({
       ? getPaginationRowModel()
       : undefined,
     getSortedRowModel: manualSorting ? undefined : getSortedRowModel(),
-    manualPagination: true,
+    manualPagination: manualPagination,
     manualFiltering: manualFiltering,
     manualSorting,
     enableColumnFilters: true,
@@ -224,6 +244,19 @@ export function DataTable<TData, TValue = unknown>({
       setColumnFilters(nextFilters);
       onFilterChange?.(nextFilters);
     },
+    onPaginationChange: (updater) => {
+      const nextPagination = typeof updater === "function"
+        ? updater(paginationState)
+        : updater;
+      if (isControlled) {
+        onPageChange(nextPagination.pageIndex + 1);
+        if (onPageSizeChange) {
+          onPageSizeChange(nextPagination.pageSize);
+        }
+      } else {
+        setClientPagination(nextPagination);
+      }
+    },
 
     onRowSelectionChange: onRowSelectionChange,
     onSortingChange: handleSortingChange,
@@ -234,6 +267,7 @@ export function DataTable<TData, TValue = unknown>({
       columnFilters,
       rowSelection,
       sorting: sortingState,
+      pagination: paginationState,
     },
   });
 
@@ -419,15 +453,17 @@ export function DataTable<TData, TValue = unknown>({
         </TableBody>
       </Table>
       <PaginationComponent
-        currentPage={page}
-        totalItems={totalItems}
-        pageSize={pageSize}
+        currentPage={paginationState.pageIndex + 1}
+        totalItems={manualPagination ? totalItems : table.getFilteredRowModel().rows.length}
+        pageSize={paginationState.pageSize}
         pageSizeOptions={pageSizeOptions}
         onPageChange={(page) => {
-          onPageChange(page);
+          table.setPageIndex(page - 1);
           tableContainerRef.current?.scrollIntoView({ behavior: "smooth" });
         }}
-        onPageSizeChange={onPageSizeChange}
+        onPageSizeChange={(size) => {
+          table.setPageSize(size);
+        }}
         enablePagination={enablePagination}
         className="border-t border-border/60 bg-muted/20 px-4 py-3"
       />
