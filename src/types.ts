@@ -424,25 +424,47 @@ export interface StandardExtractionTemplateUpdateRequest {
 // --- Derived Templates ---
 export interface StandardDerivedTemplateResponse {
   derived_template_id: string
-  template_id: string
   name: string
   description?: string | null
+  erp_type?: string
+  document_type_code?: string
+  is_active?: boolean
+  template_id?: string
   version_no: number
   created_at?: string | null
   updated_at?: string | null
   base_template?: StandardExtractionTemplateResponse
 }
 
+export interface StandardDerivedTemplateFieldMembershipRequest {
+  field_id: string
+  header_item?: string
+  sort_sequence: number
+  is_required?: boolean
+  implementation_key?: string
+  input_field_ids?: string[]
+  params?: Record<string, any>
+  execution_stage?: string
+  failure_policy?: string
+  is_active?: boolean
+}
+
 export interface StandardDerivedTemplateCreateRequest {
   derived_template_id: string
-  template_id: string
   name: string
   description?: string | null
+  erp_type: string
+  document_type_code: string
+  is_active: boolean
+  field_membership?: StandardDerivedTemplateFieldMembershipRequest[]
 }
 
 export interface StandardDerivedTemplateUpdateRequest {
   name?: string
   description?: string | null
+  is_active?: boolean
+  erp_type?: string
+  document_type_code?: string
 }
 
 // --- Component UI Props ---

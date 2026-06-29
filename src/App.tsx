@@ -34,6 +34,7 @@ const TemplateEditPage = React.lazy(() => import("./pages/platform-standard-cont
 const TemplateFieldEditPage = React.lazy(() => import("./pages/platform-standard-content/extraction-management/templates/template-field-edit.page"))
 
 const DerivedTemplateCreatePage = React.lazy(() => import("./pages/platform-standard-content/extraction-management/derived/derived-template-create.page"))
+const DerivedTemplateDetailsPage = React.lazy(() => import("./pages/platform-standard-content/extraction-management/derived/derived-template-details.page"))
 const DerivedTemplateEditPage = React.lazy(() => import("./pages/platform-standard-content/extraction-management/derived/derived-template-edit.page"))
 
 
@@ -93,6 +94,7 @@ export function App() {
                         <Route path="extraction-management/templates/:templateCode/fields/:fieldId/edit" element={<React.Suspense fallback={null}><TemplateFieldEditPage /></React.Suspense>} />
 
                       <Route path="extraction-management/derived/new" element={<React.Suspense fallback={null}><DerivedTemplateCreatePage /></React.Suspense>} />
+                      <Route path="extraction-management/derived/:derivedTemplateId" element={<React.Suspense fallback={null}><DerivedTemplateDetailsPage /></React.Suspense>} />
                       <Route path="extraction-management/derived/:derivedTemplateId/edit" element={<React.Suspense fallback={null}><DerivedTemplateEditPage /></React.Suspense>} />
 
                     </>
