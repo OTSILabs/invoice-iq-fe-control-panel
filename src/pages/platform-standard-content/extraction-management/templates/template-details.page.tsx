@@ -29,9 +29,11 @@ import {
   FilterDropdown,
   FilterDropdownContent,
   FilterDropdownTrigger,
+} from "@/components/invoice-ui/filter-dropdown";
+import {
   type FilterGroup,
   type FilterValue,
-} from "@/components/invoice-ui/filter-dropdown";
+} from "@/components/invoice-ui/filter-dropdown-context";
 import {
   FieldsListTable,
   type FieldListTableRecord,

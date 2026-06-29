@@ -3,26 +3,6 @@ import { PageContainers } from "@/components/invoice-ui/page-containers";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
-import type { TemplateDetailRow } from "./template-details.helpers";
-
-export function TemplateDetailGrid({ rows }: { rows: TemplateDetailRow[] }) {
-	return (
-		<div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
-			{rows.map((row) => {
-				const shouldRender = row.always || (row.value !== null && row.value !== undefined && String(row.value) !== "");
-				if (!shouldRender) return null;
-
-				return (
-					<dl key={row.label} className="min-w-0 break-words">
-						<dt className="text-xs text-muted-foreground">{row.label}</dt>
-						<dd className="mt-1 text-sm text-foreground">{row.value}</dd>
-					</dl>
-				);
-			})}
-		</div>
-	);
-}
-
 export function TemplateDetailsSkeleton() {
 	return (
 		<PageContainers>
