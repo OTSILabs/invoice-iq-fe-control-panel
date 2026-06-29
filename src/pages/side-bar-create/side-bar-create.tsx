@@ -27,76 +27,76 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Link } from "react-router-dom"
 
+const createOptions = [
+  {
+    group: "Core Management",
+    items: [
+      {
+        label: "Organization",
+        path: "/organizations/create",
+        icon: Building2,
+      },
+      { label: "Billing Plan", path: "/plan/create", icon: CreditCard },
+      { label: "User Account", path: "/users/create", icon: Users },
+      { label: "ERP Setting", path: "/erp-settings/create", icon: Database },
+    ],
+  },
+  {
+    group: "Platform Content",
+    items: [
+      {
+        label: "Data Type",
+        path: "/platform-standard-content/data-types/create",
+        icon: Database,
+      },
+      {
+        label: "Field Category",
+        path: "/platform-standard-content/field-categories/create",
+        icon: Tags,
+      },
+      {
+        label: "Reference List",
+        path: "/platform-standard-content/reference-lists/create",
+        icon: ListChecks,
+      },
+      {
+        label: "Validation Rule",
+        path: "/platform-standard-content/validation-rules/create",
+        icon: ShieldCheck,
+      },
+      {
+        label: "Normalization Rule",
+        path: "/platform-standard-content/normalization-rules/create",
+        icon: RefreshCw,
+      },
+    ],
+  },
+  {
+    group: "Extraction Management",
+    items: [
+      {
+        label: "Base Template",
+        path: "/platform-standard-content/extraction-management/templates/new",
+        icon: FileText,
+      },
+      {
+        label: "Derived Template",
+        path: "/platform-standard-content/extraction-management/derived/new",
+        icon: FileText,
+      },
+      {
+        label: "Extraction Field",
+        path: "/platform-standard-content/extraction-management/fields/create",
+        icon: FileText,
+      },
+    ],
+  },
+]
+
 export function SidebarCreateButton() {
   const { open, isMobile } = useSidebar()
   const isCollapsed = !open && !isMobile
   const [isOpen, setIsOpen] = React.useState(false)
-
-  const createOptions = [
-    {
-      group: "Core Management",
-      items: [
-        {
-          label: "Organization",
-          path: "/organizations/create",
-          icon: Building2,
-        },
-        { label: "Billing Plan", path: "/plan/create", icon: CreditCard },
-        { label: "User Account", path: "/users/create", icon: Users },
-        { label: "ERP Setting", path: "/erp-settings/create", icon: Database },
-      ],
-    },
-    {
-      group: "Platform Content",
-      items: [
-        {
-          label: "Data Type",
-          path: "/platform-standard-content/data-types/create",
-          icon: Database,
-        },
-        {
-          label: "Field Category",
-          path: "/platform-standard-content/field-categories/create",
-          icon: Tags,
-        },
-        {
-          label: "Reference List",
-          path: "/platform-standard-content/reference-lists/create",
-          icon: ListChecks,
-        },
-        {
-          label: "Validation Rule",
-          path: "/platform-standard-content/validation-rules/create",
-          icon: ShieldCheck,
-        },
-        {
-          label: "Normalization Rule",
-          path: "/platform-standard-content/normalization-rules/create",
-          icon: RefreshCw,
-        },
-      ],
-    },
-    {
-      group: "Extraction Management",
-      items: [
-        {
-          label: "Base Template",
-          path: "/platform-standard-content/extraction-management/templates/new",
-          icon: FileText,
-        },
-        {
-          label: "Derived Template",
-          path: "/platform-standard-content/extraction-management/derived/new",
-          icon: FileText,
-        },
-        {
-          label: "Extraction Field",
-          path: "/platform-standard-content/extraction-management/fields/create",
-          icon: FileText,
-        },
-      ],
-    },
-  ]
 
   const triggerButton = isCollapsed ? (
     <Tooltip delayDuration={0}>
