@@ -200,6 +200,8 @@ Follow clean React architecture and React 19 practices:
 - **Hook Dependencies**: Maintain complete dependency arrays for hooks like `useCallback`, `useMemo`, and `useEffect`. If a dependency is recreated every render, stabilize it using `useCallback`/`useMemo` or move its definition inside the hook.
 - **State Management & Reducers**: Group conceptually-related state slices. If a component body has 5 or more `useState` calls, refactor them into a single `useReducer` state structure to prevent rendering fan-out and keep state updates cohesive.
 - **Dead Code Cleanup**: Remove unused files and components (such as unused UI templates) to keep the codebase maintainable and reduce linting/diagnostics noise.
+- **Reactive Breadcrumb Resolution**: Dynamic URL segment names (e.g., templates, fields) in breadcrumbs must be reactive. Return `DYNAMIC_*` placeholders in `breadcrumb-utils.ts` and resolve them in `AppBreadcrumb.tsx` using sub-components with `useQuery`, rather than executing direct `queryClient.getQueryData` reads during layout rendering which fail to update on load.
+- **API Endpoint Standards**: Enforce pluralization consistency (e.g., `/api/platform-standard-content/extraction-templates/...`). Never call `/api/withkey/...` endpoints; if present, stub or disable them to avoid security/caching side-effects.
 
 ## Implementation Discipline
 
