@@ -94,7 +94,7 @@ export function ReferenceLists() {
               Reference Lists ({filteredRegistries.length})
             </h3>
 
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center w-full justify-end">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
               <SearchInput 
                 value={searchText} 
                 onChange={setSearchText} 

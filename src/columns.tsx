@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom"
 import type { CustomColumnDef } from "@/components/ui/data-table"
 import { Button } from "@/components/ui/button"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -69,13 +68,23 @@ export const planColumns: CustomColumnDef<Plan>[] = [
     width: 140,
     cell: ({ row }) => <span className="text-xs font-semibold text-foreground">{row.original.plan_type}</span>,
   },
+   {
+    accessorKey: "price_per_invoice_currency",
+    header: "Currency",
+    width: 100,
+    cell: ({ row }) => (
+      <span className="text-xs font-semibold text-muted-foreground">
+        {row.original.price_per_invoice_currency}
+      </span>
+    ),
+  },
   {
     accessorKey: "price_per_invoice_amount",
     header: "Price",
-    width: 140,
+    width: 100,
     cell: ({ row }) => (
       <span className="text-xs font-medium text-foreground">
-        {row.original.price_per_invoice_currency} {row.original.price_per_invoice_amount}
+        {row.original.price_per_invoice_amount}
       </span>
     ),
   },
@@ -919,8 +928,8 @@ export const getReferenceListsColumns = (
   {
     accessorKey: "registry_key",
     header: "Registry Key",
-    width: "25%",
-    minWidth: "150px",
+    width: 220,
+    minWidth: 150,
     cell: ({ row }) => (
       <span className="font-mono text-xs font-semibold text-foreground truncate block">
         {row.original.registry_key}
@@ -930,16 +939,15 @@ export const getReferenceListsColumns = (
   {
     accessorKey: "display_label",
     header: "Display Label",
-    width: "25%",
-    minWidth: "150px",
+    width: 220,
+    minWidth: 150,
     cell: ({ row }) => <span className="text-xs font-medium text-foreground">{row.original.display_label}</span>,
   },
   {
     accessorKey: "source_type",
     header: "Source",
-    width: "100px",
-    minWidth: "90px",
-    maxWidth: "100px",
+    width: 120,
+    minWidth: 100,
     cell: ({ row }) => {
       const type = row.original.source_type || "custom"
       const tone: SemanticTone = type === "system" ? "info" : type === "standard" ? "accent" : "neutral"
@@ -953,8 +961,8 @@ export const getReferenceListsColumns = (
   {
     accessorKey: "description",
     header: "Description",
-    width: "40%",
-    minWidth: "200px",
+    width: 320,
+    minWidth: 200,
     cell: ({ row }) => (
       <span className="block truncate text-xs text-muted-foreground max-w-[450px]" title={row.original.description || ""}>
         {row.original.description || "—"}
@@ -964,17 +972,15 @@ export const getReferenceListsColumns = (
   {
     accessorKey: "sort_sequence",
     header: "Sort",
-    width: "70px",
-    minWidth: "60px",
-    maxWidth: "70px",
+    width: 100,
+    minWidth: 80,
     cell: ({ row }) => <span className="text-xs text-muted-foreground font-semibold">{row.original.sort_sequence}</span>,
   },
   {
     id: "actions",
     header: "Actions",
-    width: "80px",
-    minWidth: "80px",
-    maxWidth: "80px",
+    width: 80,
+    minWidth: 80,
     cell: ({ row }) => (
       <div className="flex items-center" onClick={(e) => e.stopPropagation()}>
         <DropdownMenu>
@@ -1008,8 +1014,8 @@ export const getReferenceListDetailsColumns = (
   {
     accessorKey: "value_code",
     header: "Value Code",
-    width: "25%",
-    minWidth: "130px",
+    width: 220,
+    minWidth: 130,
     cell: ({ row }) => (
       <span className="font-mono text-xs font-semibold text-foreground truncate block">
         {row.original.value_code}
@@ -1019,15 +1025,15 @@ export const getReferenceListDetailsColumns = (
   {
     accessorKey: "value_label",
     header: "Display Label",
-    width: "25%",
-    minWidth: "150px",
+    width: 220,
+    minWidth: 150,
     cell: ({ row }) => <span className="text-xs font-medium text-foreground">{row.original.value_label}</span>,
   },
   {
     accessorKey: "description",
     header: "Description",
-    width: "30%",
-    minWidth: "200px",
+    width: 320,
+    minWidth: 200,
     cell: ({ row }) => (
       <span className="block truncate text-xs text-muted-foreground max-w-[350px]" title={row.original.description || ""}>
         {row.original.description || "—"}
@@ -1037,8 +1043,8 @@ export const getReferenceListDetailsColumns = (
   {
     accessorKey: "attributes",
     header: "Attributes",
-    width: "150px",
-    minWidth: "120px",
+    width: 150,
+    minWidth: 120,
     cell: ({ row }) => {
       if (!row.original.attributes) return <span className="text-xs text-muted-foreground">—</span>
       const keys = Object.keys(row.original.attributes)
@@ -1056,17 +1062,15 @@ export const getReferenceListDetailsColumns = (
   {
     accessorKey: "sort_sequence",
     header: "Sort",
-    width: "70px",
-    minWidth: "60px",
-    maxWidth: "70px",
+    width: 100,
+    minWidth: 80,
     cell: ({ row }) => <span className="text-xs text-muted-foreground font-semibold">{row.original.sort_sequence}</span>,
   },
   {
     id: "actions",
     header: "Actions",
-    width: "80px",
-    minWidth: "80px",
-    maxWidth: "80px",
+    width: 80,
+    minWidth: 80,
     cell: ({ row }) => (
       <div className="flex items-center" onClick={(e) => e.stopPropagation()}>
         <DropdownMenu>
@@ -1145,11 +1149,9 @@ export const getUsersColumns = (
     minWidth: "220px",
     cell: ({ row }) => (
       <div className="flex items-center gap-3">
-        <Avatar className="h-8 w-8 rounded-md border bg-background">
-          <AvatarFallback className="rounded-md bg-primary/8 text-[11px] font-semibold text-primary ">
-            {getInitials(row.original.full_name) || "U"}
-          </AvatarFallback>
-        </Avatar>
+         <div className="h-6 w-6 rounded-md bg-primary/10 text-primary border border-primary/20 flex items-center justify-center text-[10px] leading-none font-semibold flex-shrink-0 uppercase">
+          {getInitials(row.original.full_name) || "U"}
+        </div>
         <div className="min-w-0">
           <p className="truncate text-xs font-medium text-foreground">{row.original.full_name}</p>
         </div>
