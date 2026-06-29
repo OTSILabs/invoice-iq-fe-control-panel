@@ -47,7 +47,7 @@ export const templateEndpoints = {
     `/api/extraction-template/field-categories/${pathId(fieldCategoryCode)}/fields`,
   templates: "/api/extraction-template/templates",
   template: (templateId: TemplatePathId) =>
-    `/api/extraction-template/templates/${pathId(templateId)}`,
+    `/api/platform-standard-content/extraction-templates/${pathId(templateId)}`,
   templateClone: (templateId: TemplatePathId) =>
     `/api/extraction-template/templates/${pathId(templateId)}/clone`,
   templateActive: (templateId: TemplatePathId) =>

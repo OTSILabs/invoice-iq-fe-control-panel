@@ -1,18 +1,16 @@
-import { useState, useMemo } from "react"
-import { useNavigate } from "react-router-dom"
-import { Loader2, AlertCircle, RefreshCw, Plus, CreditCard } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { DataTable } from "@/components/ui/data-table"
-import type { CustomColumnDef } from "@/components/ui/data-table"
 import { usePlans } from "@/api/hooks/usePlans"
-import { cn } from "@/lib/utils"
-import { PageHeader } from "@/components/layout/PageHeader"
-import { SearchInput } from "@/components/search-input"
 import { planColumns as columns } from "@/columns"
 import { EmptyState, FilterBar, PageShell } from "@/components/invoice-ui/design-system"
-import type { Plan } from "@/types"
+import { PageHeader } from "@/components/layout/PageHeader"
+import { SearchInput } from "@/components/search-input"
+import { Button } from "@/components/ui/button"
+import { DataTable } from "@/components/ui/data-table"
+import { cn } from "@/lib/utils"
+import { AlertCircle, CreditCard, Loader2, Plus, RefreshCw } from "lucide-react"
+import { useMemo, useState } from "react"
+import { useNavigate } from "react-router-dom"
 
-import { Select,SelectContent,SelectItem,SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 const normalizePlanType = (type: string) => {
   const lower = String(type).toLowerCase()
@@ -133,7 +131,7 @@ export function Plans() {
 
           <DataTable
             data={filteredPlans}
-            columns={columns.map((c) => ({ ...(c as CustomColumnDef<Plan>), enableSorting: false }))}
+            columns={columns}
             isLoading={isLoading || isFetching}
             enablePagination
             pageSize={10}

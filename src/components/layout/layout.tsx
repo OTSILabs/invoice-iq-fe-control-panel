@@ -1,6 +1,5 @@
 import { useEffect } from "react"
 import { Outlet, useLocation, useNavigate } from "react-router-dom"
-import { useQueryClient } from "@tanstack/react-query"
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import { Toaster } from "@/components/ui/sonner"
@@ -24,7 +23,6 @@ import { clearSession } from "@/lib/auth-store"
 export function Layout() {
   const location = useLocation()
   const navigate = useNavigate()
-  const queryClient = useQueryClient()
 
   // ── Auth logout listener ──────────────────────────────────────────────────
   useEffect(() => {
@@ -38,7 +36,7 @@ export function Layout() {
   }, [navigate])
 
   // ── Breadcrumbs ───────────────────────────────────────────────────────────
-  const breadcrumbs = resolveBreadcrumbs(location.pathname, queryClient)
+  const breadcrumbs = resolveBreadcrumbs(location.pathname)
 
   // ─────────────────────────────────────────────────────────────────────────
   return (

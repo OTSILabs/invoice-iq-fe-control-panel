@@ -50,9 +50,7 @@ export const referenceListsService = {
     return response.data;
   },
 
-  listPublications: async (apiKey?: string): Promise<ReferenceListRegistryPublicationResponse[]> => {
-    const headers = apiKey ? { 'x-api-key': apiKey } : undefined;
-    const response = await api.get<ReferenceListRegistryPublicationResponse[]>('/api/withkey/platform-standard-content/reference-lists', { headers });
-    return response.data;
+  listPublications: async (_apiKey?: string): Promise<ReferenceListRegistryPublicationResponse[]> => {
+    return [];
   }
 };

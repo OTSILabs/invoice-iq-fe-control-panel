@@ -351,7 +351,7 @@ export const getDataTypeColumns = (
     header: "Code",
     width: 130,
     cell: ({ row }) => (
-      <span className="font-mono text-xs font-semibold text-foreground">
+      <span className=" text-xs font-semibold text-foreground">
         {row.original.data_type_code}
       </span>
     ),
@@ -386,7 +386,7 @@ export const getDataTypeColumns = (
     width: 120,
     rowClassName: "hidden lg:table-cell",
     cell: ({ row }) => (
-      <span className="block max-w-[110px] truncate font-mono text-xs text-muted-foreground">
+      <span className="block max-w-[110px] truncate  text-xs text-muted-foreground">
         {row.original.sample_value || "—"}
       </span>
     ),
@@ -525,7 +525,7 @@ export const getFieldsTableColumns = (
     header: "Field ID",
     width: "20%",
     minWidth: "120px",
-    cell: ({ row }) => <span className="font-mono text-xs font-semibold text-foreground truncate block">{row.original.field_id}</span>,
+    cell: ({ row }) => <span className=" text-xs font-semibold text-foreground truncate block">{row.original.field_id}</span>,
   },
   {
     accessorKey: "field_label",
@@ -598,7 +598,7 @@ export const getFieldCategoriesColumns = (
     header: "Category Code",
     width: "25%",
     minWidth: "150px",
-    cell: ({ row }) => <span className="font-mono text-xs font-semibold text-slate-700">{row.original.field_category_code}</span>,
+    cell: ({ row }) => <span className=" text-xs font-semibold text-slate-700">{row.original.field_category_code}</span>,
   },
   {
     accessorKey: "ui_label",
@@ -682,7 +682,7 @@ export const getNormalizationRuleColumns = (
     header: "Code",
     width: 120,
     cell: ({ row }) => (
-      <span className="font-mono text-xs font-semibold text-foreground">
+      <span className=" text-xs font-semibold text-foreground">
         {row.original.rule_code}
       </span>
     ),
@@ -728,7 +728,7 @@ export const getNormalizationRuleColumns = (
     width: 110,
     rowClassName: "hidden lg:table-cell",
     cell: ({ row }) => (
-      <span className="text-xs text-muted-foreground font-mono">
+      <span className="text-xs text-muted-foreground ">
         {row.original.engine_type}
       </span>
     ),
@@ -802,7 +802,7 @@ export const getValidationRuleColumns = (
     header: "Code",
     width: 120,
     cell: ({ row }) => (
-      <span className="font-mono text-xs font-semibold text-foreground">
+      <span className=" text-xs font-semibold text-foreground">
         {row.original.rule_code}
       </span>
     ),
@@ -848,7 +848,7 @@ export const getValidationRuleColumns = (
     width: 110,
     rowClassName: "hidden lg:table-cell",
     cell: ({ row }) => (
-      <span className="text-xs text-muted-foreground font-mono">
+      <span className="text-xs text-muted-foreground ">
         {row.original.engine_type}
       </span>
     ),
@@ -922,7 +922,7 @@ export const getReferenceListsColumns = (
     width: "25%",
     minWidth: "150px",
     cell: ({ row }) => (
-      <span className="font-mono text-xs font-semibold text-foreground truncate block">
+      <span className=" text-xs font-semibold text-foreground truncate block">
         {row.original.registry_key}
       </span>
     ),
@@ -1011,7 +1011,7 @@ export const getReferenceListDetailsColumns = (
     width: "25%",
     minWidth: "130px",
     cell: ({ row }) => (
-      <span className="font-mono text-xs font-semibold text-foreground truncate block">
+      <span className=" text-xs font-semibold text-foreground truncate block">
         {row.original.value_code}
       </span>
     ),
@@ -1098,7 +1098,7 @@ export const tenantEventsTableColumns: CustomColumnDef<any>[] = [
     header: "Event Type",
     width: "25%",
     cell: ({ row }) => (
-      <span className="text-xs font-semibold text-foreground font-mono">
+      <span className="text-xs font-semibold text-foreground ">
         {row.original.event_type || row.original.type || "Unknown"}
       </span>
     ),

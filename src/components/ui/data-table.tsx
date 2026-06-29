@@ -149,6 +149,7 @@ export interface DataTableProps<TData, TValue = unknown> {
   fillAvailableHeight?: boolean;
   emptyState?: React.ReactNode;
   emptyMessage?: string;
+  enableSorting?: boolean;
 }
 
 export function DataTable<TData, TValue = unknown>({
@@ -178,6 +179,7 @@ export function DataTable<TData, TValue = unknown>({
   tableScrollClassName,
   fillAvailableHeight = false,
   emptyState,
+  enableSorting = false,
   emptyMessage,
 }: DataTableProps<TData, TValue>) {
   "use no memo";
@@ -214,7 +216,7 @@ export function DataTable<TData, TValue = unknown>({
     manualFiltering: manualFiltering,
     manualSorting,
     enableColumnFilters: true,
-    enableSorting: true,
+    enableSorting,
     getFilteredRowModel: getFilteredRowModel(),
     onColumnFiltersChange: (updater) => {
       const nextFilters =

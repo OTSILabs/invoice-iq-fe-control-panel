@@ -123,7 +123,7 @@ export function ConfigurationsTable({ entityId, entityType }: ConfigurationsTabl
       <div className="relative">
         <DataTable
           data={tableData}
-          columns={columns}
+          columns={columns.map((c) => ({ ...c, enableSorting: false }))}
           isLoading={isLoading}
           enablePagination
           pageSize={10}
