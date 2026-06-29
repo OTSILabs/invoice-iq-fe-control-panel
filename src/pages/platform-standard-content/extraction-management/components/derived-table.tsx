@@ -1,5 +1,6 @@
 import { SearchInput } from "@/components/search-input"
 import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
 import { DataTable } from "@/components/ui/data-table"
 import { FilterBar } from "@/components/invoice-ui/design-system"
 import { cn } from "@/lib/utils"
@@ -20,8 +21,8 @@ export function DerivedTable({
   const columns = useMemo(() => getDerivedTableColumns(onDelete), [onDelete]);
 
   return (
-    <div className="table-container">
-      <FilterBar>
+    <Card className="surface-card overflow-hidden">
+      <FilterBar className="border-b px-4 py-3 bg-muted/10">
         <h3 className="text-xs font-semibold text-muted-foreground ">
           Derived Templates ({data.length})
         </h3>
@@ -57,6 +58,6 @@ export function DerivedTable({
           tableContainerClassName="border-0 rounded-none bg-transparent"
         />
       </div>
-    </div>
+    </Card>
   );
 }

@@ -12,6 +12,7 @@ export function FieldDialogRulesStep({
   valueMode,
   referenceLists,
   isSaving,
+  isEdit,
 }: FieldDialogRulesStepProps) {
   return (
     <div className="space-y-5">
@@ -56,7 +57,7 @@ export function FieldDialogRulesStep({
 
       <Field>
         <FieldLabel>Allowed Value Mode <span className="text-destructive">*</span></FieldLabel>
-        <NativeSelect id="allowed_value_mode" disabled={isSaving} {...register("allowed_value_mode")}>
+        <NativeSelect id="allowed_value_mode" disabled={isEdit || isSaving} {...register("allowed_value_mode")}>
           <option value="any">Any (Unrestricted)</option>
           <option value="static_list">Static List</option>
           <option value="reference_list">Reference List</option>

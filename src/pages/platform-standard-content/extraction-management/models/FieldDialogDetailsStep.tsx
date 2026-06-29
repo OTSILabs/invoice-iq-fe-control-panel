@@ -52,7 +52,7 @@ export function FieldDialogDetailsStep({
 
       <Field>
         <FieldLabel>Data Type <span className="text-destructive">*</span></FieldLabel>
-        <NativeSelect id="data_type_code" disabled={isSaving} {...register("data_type_code")}>
+        <NativeSelect id="data_type_code" disabled={isEdit || isSaving} {...register("data_type_code")}>
           <option value="">Select type...</option>
           {dataTypes.map((dt) => (
             <option key={dt.data_type_code} value={dt.data_type_code}>
@@ -67,7 +67,7 @@ export function FieldDialogDetailsStep({
 
       <Field>
         <FieldLabel>Header or Line Item <span className="text-destructive">*</span></FieldLabel>
-        <NativeSelect id="header_item" disabled={isSaving} {...register("header_item")}>
+        <NativeSelect id="header_item" disabled={isEdit || isSaving} {...register("header_item")}>
           <option value="header">Header Field</option>
           <option value="item">Line Item Field</option>
         </NativeSelect>

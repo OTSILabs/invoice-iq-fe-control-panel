@@ -9,6 +9,14 @@ export const useExtractionFields = () => {
   });
 };
 
+export const useExtractionField = (fieldId: string | undefined) => {
+  return useQuery({
+    queryKey: ['extraction-fields', fieldId],
+    queryFn: () => extractionFieldsService.get(fieldId!),
+    enabled: !!fieldId,
+  });
+};
+
 
 export const useCreateExtractionField = () => {
   const queryClient = useQueryClient();

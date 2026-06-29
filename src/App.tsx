@@ -25,6 +25,7 @@ import { UserCreate } from "./pages/user/user-create"
 import { UserEdit } from "./pages/user/user-edit"
 import { ErpSettingFormPage } from "./pages/erp-setting/erp-setting-form-page"
 import { ExtractionFieldFormPage } from "./pages/platform-standard-content/extraction-management/extraction-field-form-page"
+import { ExtractionFieldDetailsPage } from "./pages/platform-standard-content/extraction-management/extraction-field-details.page"
 import { Layout } from "./components/layout/layout"
 
 const TemplateCreatePage = React.lazy(() => import("./pages/platform-standard-content/extraction-management/templates/template-create.page"))
@@ -84,6 +85,7 @@ export function App() {
                       <Route path="normalization-rules/:code/edit" element={<NormalizationRuleFormPage mode="edit" />} />
 
                       <Route path="extraction-management/fields/create" element={<ExtractionFieldFormPage mode="create" />} />
+                      <Route path="extraction-management/fields/:fieldId" element={<ExtractionFieldDetailsPage />} />
                       <Route path="extraction-management/fields/:fieldId/edit" element={<ExtractionFieldFormPage mode="edit" />} />
                         <Route path="extraction-management/templates/new" element={<React.Suspense fallback={null}><TemplateCreatePage /></React.Suspense>} />
                         <Route path="extraction-management/templates/:templateCode" element={<React.Suspense fallback={null}><TemplateDetailsPage /></React.Suspense>} />

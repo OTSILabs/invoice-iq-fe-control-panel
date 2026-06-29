@@ -317,6 +317,7 @@ export interface StandardExtractionFieldResponse {
   extraction_instructions?: string[] | null
   header_item: string
   content_type: string
+  field_source_mode?: string
   allowed_value_mode: string
   allowed_static_list?: string[] | null
   allowed_reference_registry_key?: string | null
@@ -491,6 +492,7 @@ export interface FieldDialogRulesStepProps {
   valueMode: string;
   referenceLists: any[];
   isSaving: boolean;
+  isEdit?: boolean;
 }
 
 export interface FieldDialogSidebarProps {

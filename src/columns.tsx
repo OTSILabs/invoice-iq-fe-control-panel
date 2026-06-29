@@ -527,7 +527,8 @@ export const getDerivedTableColumns = (
 
 // 7. Extraction Fields table columns
 export const getFieldsTableColumns = (
-  onEdit: (field: StandardExtractionFieldResponse) => void
+  onEdit: (field: StandardExtractionFieldResponse) => void,
+  onView?: (field: StandardExtractionFieldResponse) => void
 ): CustomColumnDef<StandardExtractionFieldResponse>[] => [
   {
     accessorKey: "field_id",
@@ -589,9 +590,35 @@ export const getFieldsTableColumns = (
     minWidth: "80px",
     cell: ({ row }) => (
       <div className="flex items-center" onClick={(e) => e.stopPropagation()}>
-        <Button variant="ghost" size="sm" className="h-8 w-8 p-0 cursor-pointer" onClick={() => onEdit(row.original)}>
-          <Edit2 className="h-3.5 w-3.5 text-muted-foreground" />
-        </Button>
+      <div onClick={(e) => e.stopPropagation()}>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 w-8 cursor-pointer p-0"
+            >
+              <MoreVertical className="h-4 w-4 text-muted-foreground" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-45">
+            <DropdownMenuItem
+              className="cursor-pointer text-xs"
+              onClick={() => onView && onView(row.original)}
+            >
+              <Eye className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
+              View 
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className="cursor-pointer text-xs"
+              onClick={() => onEdit(row.original)}
+            >
+              <Edit className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
+              Edit
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
       </div>
     ),
   },

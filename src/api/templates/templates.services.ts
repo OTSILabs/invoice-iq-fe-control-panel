@@ -37,7 +37,7 @@ const pathId = (value: TemplatePathId) => encodeURIComponent(String(value));
 export const templateEndpoints = {
   fields: "/api/extraction-template/fields",
   field: (fieldId: TemplatePathId) =>
-    `/api/extraction-template/fields/${pathId(fieldId)}`,
+    `/api/platform-standard-content/extraction-fields/${pathId(fieldId)}`,
   fieldActive: (fieldId: TemplatePathId) =>
     `/api/extraction-template/fields/${pathId(fieldId)}/active`,
   fieldCategories: "/api/extraction-template/field-categories",

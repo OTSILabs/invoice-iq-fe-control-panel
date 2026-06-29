@@ -1,6 +1,7 @@
 import { SearchInput } from "@/components/search-input"
 import { Button } from "@/components/ui/button"
 import { DataTable } from "@/components/ui/data-table"
+import { Card } from "@/components/ui/card"
 import { FilterBar } from "@/components/invoice-ui/design-system"
 import { cn } from "@/lib/utils"
 import type { FieldsTableProps } from "@/types"
@@ -16,12 +17,13 @@ export function FieldsTable({
   searchText,
   onSearchChange,
   onRefresh,
-}: FieldsTableProps) {
-  const columns = useMemo(() => getFieldsTableColumns(onEdit), [onEdit]);
+  onView,
+}: FieldsTableProps & { onView?: (field: any) => void }) {
+  const columns = useMemo(() => getFieldsTableColumns(onEdit, onView), [onEdit, onView]);
 
   return (
-    <div className="table-container">
-      <FilterBar>
+    <Card className="surface-card overflow-hidden">
+      <FilterBar className="border-b px-4 py-3 bg-muted/10">
         <h3 className="text-xs font-semibold text-muted-foreground ">
           Extraction Fields ({data.length})
         </h3>
@@ -57,6 +59,6 @@ export function FieldsTable({
           tableContainerClassName="border-0 rounded-none bg-transparent"
         />
       </div>
-    </div>
+    </Card>
   );
 }

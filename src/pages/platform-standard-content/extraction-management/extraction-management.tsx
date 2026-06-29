@@ -195,7 +195,7 @@ export function ExtractionManagement() {
       </PageHeader>
 
       <Tabs value={state.activeTab} onValueChange={handleTabChange} className="w-full">
-        <TabsList variant="line" className="border-b border-border w-full justify-start  [&>button]:flex-none">
+        <TabsList variant="line" className="border-b border-border w-full justify-start [&>button]:flex-none mb-4">
           <TabsTrigger value="fields" className="cursor-pointer gap-1.5">
             <FileText className="size-4" />
             Extraction Fields
@@ -228,6 +228,7 @@ export function ExtractionManagement() {
                 isLoading={isLoading || isFetching}
                 isFetching={isFetching}
                 onEdit={(field) => navigate(`/platform-standard-content/extraction-management/fields/${field.field_id}/edit`)}
+                onView={(field) => navigate(`/platform-standard-content/extraction-management/fields/${field.field_id}`)}
                 searchText={state.searchText}
                 onSearchChange={setSearchText}
                 onRefresh={handleRefetch}

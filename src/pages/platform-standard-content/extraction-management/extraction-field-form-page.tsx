@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react"
+import { useCallback, useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useNavigate, useParams } from "react-router-dom"
@@ -6,7 +6,7 @@ import { ArrowLeft, FileText, Loader2 } from "lucide-react"
 import { toast } from "sonner"
 
 import { useDataTypes } from "@/api/hooks/data-types"
-import { useCreateExtractionField, useExtractionFields, useUpdateExtractionField } from "@/api/hooks/useExtractionFields"
+import { useCreateExtractionField, useExtractionField, useUpdateExtractionField } from "@/api/hooks/useExtractionFields"
 import { useFieldCategories } from "@/api/hooks/useFieldCategories"
 import { useReferenceLists } from "@/api/hooks/useReferenceLists"
 import { PageHeader } from "@/components/layout/PageHeader"
@@ -54,11 +54,8 @@ export function ExtractionFieldFormPage({ mode }: { mode: "create" | "edit" }) {
   const { fieldId = "" } = useParams<{ fieldId: string }>()
   const navigate = useNavigate()
   const isEdit = mode === "edit"
-  const fieldsQuery = useExtractionFields()
-  const fieldItem = useMemo(
-    () => fieldsQuery.data?.find((field) => field.field_id === fieldId),
-    [fieldsQuery.data, fieldId]
-  )
+  const fieldQuery = useExtractionField(isEdit ? fieldId : undefined)
+  const fieldItem = fieldQuery.data
   const createMutation = useCreateExtractionField()
   const updateMutation = useUpdateExtractionField()
   const isSaving = createMutation.isPending || updateMutation.isPending
@@ -67,9 +64,14 @@ export function ExtractionFieldFormPage({ mode }: { mode: "create" | "edit" }) {
   const isFirstStep = activeStepIndex === 0
   const isLastStep = activeStepIndex === FIELD_FORM_STEPS.length - 1
 
-  const { data: dataTypes = [] } = useDataTypes()
-  const { data: categories = [] } = useFieldCategories()
-  const { data: referenceLists = [] } = useReferenceLists()
+  const dataTypesQuery = useDataTypes()
+  const dataTypes = dataTypesQuery.data || []
+  
+  const categoriesQuery = useFieldCategories()
+  const categories = categoriesQuery.data || []
+  
+  const referenceListsQuery = useReferenceLists()
+  const referenceLists = referenceListsQuery.data || []
 
   const {
     register,
@@ -87,17 +89,19 @@ export function ExtractionFieldFormPage({ mode }: { mode: "create" | "edit" }) {
       ? {
           field_id: fieldItem.field_id,
           field_label: fieldItem.field_label,
-          short_desc: fieldItem.short_desc || "",
-          field_long_description: fieldItem.field_long_description || "",
+          short_desc: fieldItem.short_desc ?? "",
+          field_long_description: fieldItem.field_long_description ?? "",
           data_type_code: fieldItem.data_type_code,
           labels_raw: fieldItem.labels ? fieldItem.labels.join(", ") : "",
           examples_raw: fieldItem.examples ? fieldItem.examples.join(", ") : "",
           extraction_instructions_raw: fieldItem.extraction_instructions ? fieldItem.extraction_instructions.join(", ") : "",
-          header_item: (fieldItem.header_item as "header" | "item") || "header",
-          allowed_value_mode: (fieldItem.allowed_value_mode as "any" | "static_list" | "reference_list") || "any",
+          header_item: fieldItem.header_item?.toLowerCase() === "item" ? "item" : "header",
+          allowed_value_mode: 
+            fieldItem.allowed_value_mode?.toLowerCase() === "static_list" ? "static_list" :
+            fieldItem.allowed_value_mode?.toLowerCase() === "reference_list" ? "reference_list" : "any",
           allowed_static_list_raw: fieldItem.allowed_static_list ? fieldItem.allowed_static_list.join(", ") : "",
-          allowed_reference_registry_key: fieldItem.allowed_reference_registry_key || "",
-          default_value: fieldItem.default_value || "",
+          allowed_reference_registry_key: fieldItem.allowed_reference_registry_key ?? "",
+          default_value: fieldItem.default_value ?? "",
           field_category_code: fieldItem.field_category_code,
         }
       : DEFAULT_FIELD_VALUES,
@@ -159,29 +163,38 @@ export function ExtractionFieldFormPage({ mode }: { mode: "create" | "edit" }) {
       ? values.allowed_static_list_raw.split(",").flatMap((s) => s.trim() || [])
       : []
 
-    const payload = {
+    const basePayload = {
       field_id: values.field_id,
       field_label: values.field_label,
+      ...( !isEdit && { data_type_code: values.data_type_code } ),
       short_desc: values.short_desc || null,
       field_long_description: values.field_long_description || null,
-      data_type_code: values.data_type_code,
-      labels,
-      examples,
-      extraction_instructions,
-      header_item: values.header_item,
-      allowed_value_mode: values.allowed_value_mode,
-      allowed_static_list: values.allowed_value_mode === "static_list" ? allowed_static_list : [],
-      allowed_reference_registry_key: values.allowed_value_mode === "reference_list" ? values.allowed_reference_registry_key || null : null,
+      labels: labels.length > 0 ? labels : null,
+      examples: examples.length > 0 ? examples : null,
+    }
+
+    const isDerived = fieldItem?.field_source_mode === "DERIVED" || fieldItem?.extraction_instructions?.some(i => i.toLowerCase().includes("derived"));
+
+    const payload = {
+      ...basePayload,
+      extraction_instructions: isDerived ? [] : (extraction_instructions.length > 0 ? extraction_instructions : []),
+      ...( !isEdit && { header_item: values.header_item === "item" ? "Item" : "Header" } ),
+      field_source_mode: isDerived ? "DERIVED" : "EXTRACTED",
+      ...( !isEdit && { 
+        allowed_value_mode: values.allowed_value_mode === "static_list" ? "STATIC_LIST" : values.allowed_value_mode === "reference_list" ? "REFERENCE_LIST" : "NONE",
+        allowed_static_list: values.allowed_value_mode === "static_list" ? allowed_static_list : [],
+        allowed_reference_registry_key: values.allowed_value_mode === "reference_list" ? values.allowed_reference_registry_key || null : null,
+      }),
       default_value: values.default_value || null,
       field_category_code: values.field_category_code,
     }
 
     try {
       if (isEdit && fieldItem) {
-        await updateMutation.mutateAsync({ fieldId: fieldItem.field_id, payload })
+        await updateMutation.mutateAsync({ fieldId: fieldItem.field_id, payload: payload as any })
         toast.success("Extraction field updated successfully")
       } else {
-        await createMutation.mutateAsync(payload)
+        await createMutation.mutateAsync(payload as any)
         toast.success("Extraction field created successfully")
       }
       backToList()
@@ -190,7 +203,13 @@ export function ExtractionFieldFormPage({ mode }: { mode: "create" | "edit" }) {
     }
   }, [isEdit, fieldItem, createMutation, updateMutation, backToList])
 
-  if (isEdit && fieldsQuery.isLoading) {
+  const isAnyLoading = 
+    (isEdit && fieldQuery.isLoading) || 
+    dataTypesQuery.isLoading || 
+    categoriesQuery.isLoading || 
+    referenceListsQuery.isLoading
+
+  if (isAnyLoading) {
     return (
       <PageShell className="min-h-[60vh] items-center justify-center">
         <Loader2 className="size-8 animate-spin text-primary" />
@@ -198,7 +217,7 @@ export function ExtractionFieldFormPage({ mode }: { mode: "create" | "edit" }) {
     )
   }
 
-  if (isEdit && (fieldsQuery.isError || !fieldItem)) {
+  if (isEdit && (fieldQuery.isError || !fieldItem)) {
     return (
       <PageShell className="min-h-[60vh] items-center justify-center">
         <p className="text-sm text-muted-foreground">Failed to load extraction field.</p>
@@ -275,6 +294,7 @@ export function ExtractionFieldFormPage({ mode }: { mode: "create" | "edit" }) {
                   valueMode={valueMode}
                   referenceLists={referenceLists}
                   isSaving={isSaving}
+                  isEdit={isEdit}
                 />
               ) : null}
             </div>
