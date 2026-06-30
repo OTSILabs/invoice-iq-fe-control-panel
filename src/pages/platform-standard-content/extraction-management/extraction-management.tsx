@@ -135,7 +135,7 @@ export function ExtractionManagement() {
     return data.filter(
       (d) =>
         d.derived_template_id.toLowerCase().includes(query) ||
-        d.template_id.toLowerCase().includes(query) ||
+        d.template_id?.toLowerCase().includes(query) ||
         d.name.toLowerCase().includes(query) ||
         (d.description && d.description.toLowerCase().includes(query))
     );

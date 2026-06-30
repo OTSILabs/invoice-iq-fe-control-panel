@@ -19,7 +19,6 @@ import {
   Edit,
   Edit2,
   Trash2,
-  Plus,
 } from "lucide-react"
 import type {
   Plan,
@@ -504,10 +503,16 @@ export const getDerivedTableColumns = (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="sm" className="h-8 w-8 p-0 cursor-pointer">
-              <Plus className="h-4 w-4 rotate-45 text-muted-foreground" />
+              <MoreVertical className="h-4 w-4 text-muted-foreground" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-45">
+            <DropdownMenuItem asChild className="text-xs cursor-pointer">
+              <Link to={`/platform-standard-content/extraction-management/derived/${row.original.derived_template_id}`}>
+                <Eye className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
+                View Details
+              </Link>
+            </DropdownMenuItem>
             <DropdownMenuItem asChild className="text-xs cursor-pointer">
               <Link to={`/platform-standard-content/extraction-management/derived/${row.original.derived_template_id}/edit`}>
                 <Edit2 className="h-3.5 w-3.5 mr-2 text-muted-foreground" />

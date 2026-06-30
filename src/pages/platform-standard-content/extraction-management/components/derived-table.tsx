@@ -22,7 +22,7 @@ export function DerivedTable({
 
   return (
     <Card className="surface-card overflow-hidden">
-      <FilterBar className="border-b px-4 py-3 bg-muted/10">
+      <FilterBar className="border-b px-4 bg-muted/10">
         <h3 className="text-xs font-semibold text-muted-foreground ">
           Derived Templates ({data.length})
         </h3>
