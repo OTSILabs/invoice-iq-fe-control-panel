@@ -64,7 +64,7 @@ export const planColumns: CustomColumnDef<Plan>[] = [
     accessorKey: "plan_type",
     header: "Plan Type",
     width: 140,
-    cell: ({ row }) => <span className="text-xs font-semibold text-foreground">{row.original.plan_type}</span>,
+    cell: ({ row }) => <span className="text-xs font-semibold text-foreground">{row.original.plan_type || "—"}</span>,
   },
    {
     accessorKey: "price_per_invoice_currency",
@@ -72,7 +72,7 @@ export const planColumns: CustomColumnDef<Plan>[] = [
     width: 100,
     cell: ({ row }) => (
       <span className="text-xs font-semibold text-muted-foreground">
-        {row.original.price_per_invoice_currency}
+        {row.original.price_per_invoice_currency || "—"}
       </span>
     ),
   },
@@ -82,7 +82,7 @@ export const planColumns: CustomColumnDef<Plan>[] = [
     width: 100,
     cell: ({ row }) => (
       <span className="text-xs font-medium text-foreground">
-        {row.original.price_per_invoice_amount}
+        {row.original.price_per_invoice_amount ?? "—"}
       </span>
     ),
   },
@@ -90,7 +90,7 @@ export const planColumns: CustomColumnDef<Plan>[] = [
     accessorKey: "plan_interval",
     header: "Interval",
     width: 120,
-    cell: ({ row }) => <span className="text-xs text-muted-foreground">{row.original.plan_interval}</span>,
+    cell: ({ row }) => <span className="text-xs text-muted-foreground">{row.original.plan_interval || "—"}</span>,
   },
   {
     accessorKey: "is_active",
@@ -102,7 +102,7 @@ export const planColumns: CustomColumnDef<Plan>[] = [
     accessorKey: "description",
     header: "Description",
     width: 120,
-    cell: ({ row }) => <span className="block truncate text-xs text-muted-foreground">{row.original.description}</span>,
+    cell: ({ row }) => <span className="block truncate text-xs text-muted-foreground">{row.original.description || "—"}</span>,
   },
   {
     accessorKey: "created_at",
@@ -359,7 +359,7 @@ export const getDataTypeColumns = (
     width: 130,
     cell: ({ row }) => (
       <span className=" text-xs font-semibold text-foreground">
-        {row.original.data_type_code}
+        {row.original.data_type_code || "—"}
       </span>
     ),
   },
@@ -369,7 +369,7 @@ export const getDataTypeColumns = (
     width: 130,
     cell: ({ row }) => (
       <span className="text-xs font-medium text-foreground">
-        {row.original.display_label}
+        {row.original.display_label || "—"}
       </span>
     ),
   },
@@ -381,9 +381,9 @@ export const getDataTypeColumns = (
     cell: ({ row }) => (
       <span
         className="block max-w-[170px] truncate text-xs text-muted-foreground"
-        title={row.original.description}
+        title={row.original.description || "—"}
       >
-        {row.original.description}
+        {row.original.description || "—"}
       </span>
     ),
   },
@@ -471,14 +471,14 @@ export const getFieldsTableColumns = (
     header: "Field ID",
     width: "20%",
     minWidth: "120px",
-    cell: ({ row }) => <span className=" text-xs font-semibold text-foreground truncate block">{row.original.field_id}</span>,
+    cell: ({ row }) => <span className=" text-xs font-semibold text-foreground truncate block">{row.original.field_id || "—"}</span>,
   },
   {
     accessorKey: "field_label",
     header: "Label",
     width: "20%",
     minWidth: "130px",
-    cell: ({ row }) => <span className="text-xs font-medium text-foreground">{row.original.field_label}</span>,
+    cell: ({ row }) => <span className="text-xs font-medium text-foreground">{row.original.field_label || "—"}</span>,
   },
   {
     accessorKey: "data_type_code",
@@ -487,7 +487,7 @@ export const getFieldsTableColumns = (
     minWidth: "100px",
     cell: ({ row }) => (
       <SemanticBadge tone="neutral" className="">
-        {row.original.data_type_code}
+        {row.original.data_type_code || "—"}
       </SemanticBadge>
     ),
   },
@@ -496,7 +496,7 @@ export const getFieldsTableColumns = (
     header: "Category",
     width: "150px",
     minWidth: "120px",
-    cell: ({ row }) => <span className="text-xs text-muted-foreground truncate block">{row.original.field_category_code}</span>,
+    cell: ({ row }) => <span className="text-xs text-muted-foreground truncate block">{row.original.field_category_code || "—"}</span>,
   },
   {
     accessorKey: "header_item",
@@ -507,7 +507,7 @@ export const getFieldsTableColumns = (
       const isHeader = row.original.header_item === "header";
       return (
         <SemanticBadge tone={isHeader ? "accent" : "info"} className="capitalize">
-          {row.original.header_item}
+          {row.original.header_item || "—"}
         </SemanticBadge>
       );
     },
@@ -517,7 +517,7 @@ export const getFieldsTableColumns = (
     header: "Value Mode",
     width: "130px",
     minWidth: "110px",
-    cell: ({ row }) => <span className="text-xs text-muted-foreground capitalize">{row.original.allowed_value_mode.replace("_", " ")}</span>,
+    cell: ({ row }) => <span className="text-xs text-muted-foreground capitalize">{(row.original.allowed_value_mode || "—").replace("_", " ")}</span>,
   },
   {
     id: "actions",
@@ -570,14 +570,14 @@ export const getFieldCategoriesColumns = (
     header: "Category Code",
     width: "25%",
     minWidth: "150px",
-    cell: ({ row }) => <span className=" text-xs font-semibold text-slate-700">{row.original.field_category_code}</span>,
+    cell: ({ row }) => <span className=" text-xs font-semibold text-slate-700">{row.original.field_category_code || "—"}</span>,
   },
   {
     accessorKey: "ui_label",
     header: "UI Label",
     width: "25%",
     minWidth: "150px",
-    cell: ({ row }) => <span className="text-xs font-medium text-foreground">{row.original.ui_label}</span>,
+    cell: ({ row }) => <span className="text-xs font-medium text-foreground">{row.original.ui_label || "—"}</span>,
   },
   {
     accessorKey: "description",
@@ -585,8 +585,8 @@ export const getFieldCategoriesColumns = (
     width: "50%",
     minWidth: "250px",
     cell: ({ row }) => (
-      <span className="block truncate text-xs text-muted-foreground max-w-[450px]" title={row.original.description}>
-        {row.original.description}
+      <span className="block truncate text-xs text-muted-foreground max-w-[450px]" title={row.original.description || "—"}>
+        {row.original.description || "—"}
       </span>
     ),
   },
@@ -611,7 +611,7 @@ export const getFieldCategoriesColumns = (
     width: "80px",
     minWidth: "70px",
     maxWidth: "80px",
-    cell: ({ row }) => <span className="text-xs text-muted-foreground font-semibold">{row.original.sort_sequence}</span>,
+    cell: ({ row }) => <span className="text-xs text-muted-foreground font-semibold">{row.original.sort_sequence ?? "—"}</span>,
   },
   {
     id: "actions",
@@ -655,7 +655,7 @@ export const getNormalizationRuleColumns = (
     width: 120,
     cell: ({ row }) => (
       <span className=" text-xs font-semibold text-foreground">
-        {row.original.rule_code}
+        {row.original.rule_code || "—"}
       </span>
     ),
   },
@@ -665,7 +665,7 @@ export const getNormalizationRuleColumns = (
     width: 140,
     cell: ({ row }) => (
       <span className="text-xs font-medium text-foreground">
-        {row.original.display_label}
+        {row.original.display_label || "—"}
       </span>
     ),
   },
@@ -677,9 +677,9 @@ export const getNormalizationRuleColumns = (
     cell: ({ row }) => (
       <span
         className="block max-w-[170px] truncate text-xs text-muted-foreground"
-        title={row.original.description}
+        title={row.original.description || "—"}
       >
-        {row.original.description}
+        {row.original.description || "—"}
       </span>
     ),
   },
@@ -700,10 +700,10 @@ export const getNormalizationRuleColumns = (
     width: 110,
     rowClassName: "hidden lg:table-cell",
     cell: ({ row }) => (
-      <span className="text-xs text-muted-foreground ">
-        {row.original.engine_type}
-      </span>
-    ),
+  <span className="text-xs text-muted-foreground">
+    {row.original.engine_type || "-"}
+  </span>
+),
   },
   {
     accessorKey: "sort_sequence",
@@ -797,9 +797,9 @@ export const getValidationRuleColumns = (
     cell: ({ row }) => (
       <span
         className="block max-w-[170px] truncate text-xs text-muted-foreground"
-        title={row.original.description}
+        title={row.original.description || "—"}
       >
-        {row.original.description}
+        {row.original.description || "—"}
       </span>
     ),
   },
@@ -821,7 +821,7 @@ export const getValidationRuleColumns = (
     rowClassName: "hidden lg:table-cell",
     cell: ({ row }) => (
       <span className="text-xs text-muted-foreground ">
-        {row.original.engine_type}
+        {row.original.engine_type || "—"}
       </span>
     ),
   },
@@ -895,7 +895,7 @@ export const getReferenceListsColumns = (
     minWidth: 150,
     cell: ({ row }) => (
       <span className=" text-xs font-semibold text-foreground truncate block">
-        {row.original.registry_key}
+        {row.original.registry_key || "—"}
       </span>
     ),
   },
@@ -904,7 +904,7 @@ export const getReferenceListsColumns = (
     header: "Display Label",
     width: 220,
     minWidth: 150,
-    cell: ({ row }) => <span className="text-xs font-medium text-foreground">{row.original.display_label}</span>,
+    cell: ({ row }) => <span className="text-xs font-medium text-foreground">{row.original.display_label || "—"}</span>,
   },
   {
     accessorKey: "source_type",
@@ -937,7 +937,7 @@ export const getReferenceListsColumns = (
     header: "Sort",
     width: 100,
     minWidth: 80,
-    cell: ({ row }) => <span className="text-xs text-muted-foreground font-semibold">{row.original.sort_sequence}</span>,
+    cell: ({ row }) => <span className="text-xs text-muted-foreground font-semibold">{row.original.sort_sequence ?? "—"}</span>,
   },
   {
     id: "actions",
@@ -981,7 +981,7 @@ export const getReferenceListDetailsColumns = (
     minWidth: 130,
     cell: ({ row }) => (
       <span className=" text-xs font-semibold text-foreground truncate block">
-        {row.original.value_code}
+        {row.original.value_code || "—"}
       </span>
     ),
   },
@@ -990,7 +990,7 @@ export const getReferenceListDetailsColumns = (
     header: "Display Label",
     width: 220,
     minWidth: 150,
-    cell: ({ row }) => <span className="text-xs font-medium text-foreground">{row.original.value_label}</span>,
+    cell: ({ row }) => <span className="text-xs font-medium text-foreground">{row.original.value_label || "—"}</span>,
   },
   {
     accessorKey: "description",
@@ -1027,7 +1027,7 @@ export const getReferenceListDetailsColumns = (
     header: "Sort",
     width: 100,
     minWidth: 80,
-    cell: ({ row }) => <span className="text-xs text-muted-foreground font-semibold">{row.original.sort_sequence}</span>,
+    cell: ({ row }) => <span className="text-xs text-muted-foreground font-semibold">{row.original.sort_sequence ?? "—"}</span>,
   },
   {
     id: "actions",
@@ -1116,7 +1116,7 @@ export const getUsersColumns = (
           {getInitials(row.original.full_name) || "U"}
         </div>
         <div className="min-w-0">
-          <p className="truncate text-xs font-medium text-foreground">{row.original.full_name}</p>
+          <p className="truncate text-xs font-medium text-foreground">{row.original.full_name || "—"}</p>
         </div>
       </div>
     ),
@@ -1126,7 +1126,7 @@ export const getUsersColumns = (
     header: "Email",
     width: "30%",
     minWidth: "220px",
-    cell: ({ row }) => <span className="block truncate text-xs text-muted-foreground">{row.original.email}</span>,
+    cell: ({ row }) => <span className="block truncate text-xs text-muted-foreground">{row.original.email || "—"}</span>,
   },
   {
     accessorKey: "roles",
