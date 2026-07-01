@@ -108,7 +108,13 @@ export function ExtractionFieldFormPage({ mode }: { mode: "create" | "edit" }) {
   })
 
   const valueMode = watch("allowed_value_mode")
-  const backToList = useCallback(() => navigate("/platform-standard-content/extraction-management?tab=fields"), [navigate])
+  const backToList = useCallback(() => {
+    if (window.history.length > 2) {
+      navigate(-1)
+    } else {
+      navigate("/platform-standard-content/extraction-management?tab=fields")
+    }
+  }, [navigate])
 
   const showStep = (stepIndex: number) => {
     clearErrors()

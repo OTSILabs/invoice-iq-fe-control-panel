@@ -1,11 +1,14 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { extractionFieldsService } from '../services/extraction-fields.service';
-import type { StandardExtractionFieldCreateRequest, StandardExtractionFieldUpdateRequest } from '../../types';
+import type { StandardExtractionFieldCreateRequest, StandardExtractionFieldUpdateRequest, StandardExtractionFieldResponse } from '../../types';
 
-export const useExtractionFields = () => {
+import type { UseQueryOptions } from '@tanstack/react-query';
+
+export const useExtractionFields = (options?: Omit<UseQueryOptions<StandardExtractionFieldResponse[]>, 'queryKey' | 'queryFn'>) => {
   return useQuery({
     queryKey: ['extraction-fields'],
     queryFn: () => extractionFieldsService.list(),
+    ...options,
   });
 };
 

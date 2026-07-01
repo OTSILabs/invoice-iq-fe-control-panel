@@ -67,7 +67,6 @@ export function App() {
                   {isPlatformContent && (
                     <>
                       <Route path="data-types/:code" element={<DataTypeDetail />} />
-                      <Route path="data-types/create" element={<DataTypeFormPage mode="create" />} />
                       <Route path="data-types/:code/edit" element={<DataTypeFormPage mode="edit" />} />
                       <Route path="field-categories/:code" element={<FieldCategoryDetails />} />
                       <Route path="field-categories/create" element={<FieldCategoryFormPage mode="create" />} />

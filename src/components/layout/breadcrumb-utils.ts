@@ -71,50 +71,52 @@ function resolveSegmentTitle(
     return route.title === "Manage Teams" ? "Team Members" : route.title
   }
 
+  const isCreateOrNew = segments[index] === "create" || segments[index] === "new"
+
   // 2. Dynamic org ID — resolve from cache, fallback to async
-  const isOrgChild = index > 0 && segments[index - 1] === "organizations" && segments[index] !== "create"
+  const isOrgChild = index > 0 && segments[index - 1] === "organizations" && !isCreateOrNew
   if (isOrgChild) {
     return `DYNAMIC_ORG_${segments[index]}`
   }
 
   // Dynamic data type — resolve from cache, fallback to code
-  const isDataTypeChild = index > 0 && segments[index - 1] === "data-types"
+  const isDataTypeChild = index > 0 && segments[index - 1] === "data-types" && !isCreateOrNew
   if (isDataTypeChild) {
     return `DYNAMIC_DATATYPE_${segments[index]}`
   }
 
   // Dynamic validation rule — resolve from cache, fallback to code
-  const isValidationRuleChild = index > 0 && segments[index - 1] === "validation-rules"
+  const isValidationRuleChild = index > 0 && segments[index - 1] === "validation-rules" && !isCreateOrNew
   if (isValidationRuleChild) {
     return `DYNAMIC_VALIDATION_${segments[index]}`
   }
 
   // Dynamic normalization rule — resolve from cache, fallback to code
-  const isNormalizationRuleChild = index > 0 && segments[index - 1] === "normalization-rules"
+  const isNormalizationRuleChild = index > 0 && segments[index - 1] === "normalization-rules" && !isCreateOrNew
   if (isNormalizationRuleChild) {
     return `DYNAMIC_NORMALIZATION_${segments[index]}`
   }
 
   // Dynamic extraction template — resolve from cache, fallback to code/ID
-  const isTemplateChild = index > 1 && segments[index - 1] === "templates" && segments[index - 2] === "extraction-management"
+  const isTemplateChild = index > 1 && segments[index - 1] === "templates" && segments[index - 2] === "extraction-management" && !isCreateOrNew
   if (isTemplateChild) {
     return `DYNAMIC_TEMPLATE_${segments[index]}`
   }
 
   // Dynamic extraction field — resolve from cache, fallback to ID
-  const isFieldChild = index > 1 && segments[index - 1] === "fields" && segments[index - 2] === "extraction-management"
+  const isFieldChild = index > 1 && segments[index - 1] === "fields" && segments[index - 2] === "extraction-management" && !isCreateOrNew
   if (isFieldChild) {
     return `DYNAMIC_FIELD_${segments[index]}`
   }
 
   // Dynamic derived template — resolve from cache, fallback to ID
-  const isDerivedChild = index > 1 && segments[index - 1] === "derived" && segments[index - 2] === "extraction-management"
+  const isDerivedChild = index > 1 && segments[index - 1] === "derived" && segments[index - 2] === "extraction-management" && !isCreateOrNew
   if (isDerivedChild) {
     return `DYNAMIC_DERIVED_${segments[index]}`
   }
 
   // Dynamic reference list registry — resolve from cache
-  const isReferenceRegistryChild = index > 0 && segments[index - 1] === "reference-lists"
+  const isReferenceRegistryChild = index > 0 && segments[index - 1] === "reference-lists" && !isCreateOrNew
   if (isReferenceRegistryChild) {
     return `DYNAMIC_REFERENCE_${segments[index]}`
   }

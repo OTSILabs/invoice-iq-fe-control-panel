@@ -58,7 +58,13 @@ export function ValidationRuleFormPage({ mode }: { mode: "create" | "edit" }) {
       : DEFAULT_VALIDATION_RULE_VALUES,
   })
 
-  const backToList = () => navigate("/platform-standard-content/validation-rules")
+  const backToList = () => {
+    if (window.history.length > 2) {
+      navigate(-1)
+    } else {
+      navigate("/platform-standard-content/validation-rules")
+    }
+  }
 
   const formatJSONField = (fieldName: "parameter_schema_json" | "engine_config_json") => {
     const val = getValues(fieldName)

@@ -39,7 +39,13 @@ export function FieldCategoryFormPage({ mode }: { mode: "create" | "edit" }) {
       : DEFAULT_FIELD_CATEGORY_VALUES,
   })
 
-  const backToList = () => navigate("/platform-standard-content/field-categories")
+  const backToList = () => {
+    if (window.history.length > 2) {
+      navigate(-1)
+    } else {
+      navigate("/platform-standard-content/field-categories")
+    }
+  }
 
   const onSubmit = async (values: FieldCategoryFormValues) => {
     const example_fields = values.example_fields_raw

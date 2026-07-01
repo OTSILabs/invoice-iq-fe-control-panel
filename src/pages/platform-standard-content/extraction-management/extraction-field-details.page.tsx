@@ -283,7 +283,7 @@ export function ExtractionFieldDetailsPage() {
                 <div className="flex flex-wrap gap-1.5">
                   {(fieldItem.allowed_static_list?.length ?? 0) > 0 ? (
                     fieldItem.allowed_static_list!.map((val: string, idx: number) => (
-                      <SemanticBadge key={idx} tone="neutral" className="font-medium">
+                      <SemanticBadge key={`${val}_${idx}`} tone="neutral" className="font-medium">
                         {val}
                       </SemanticBadge>
                     ))
@@ -321,7 +321,7 @@ export function ExtractionFieldDetailsPage() {
               <div className="flex flex-wrap gap-1.5">
                 {(fieldItem.labels?.length ?? 0) > 0 ? (
                   fieldItem.labels!.map((lbl: string, idx: number) => (
-                    <SemanticBadge key={idx} tone="neutral" className="font-medium">
+                    <SemanticBadge key={`${lbl}_${idx}`} tone="neutral" className="font-medium">
                       {lbl}
                     </SemanticBadge>
                   ))
@@ -337,7 +337,7 @@ export function ExtractionFieldDetailsPage() {
               <div className="flex flex-wrap gap-1.5">
                 {(fieldItem.examples?.length ?? 0) > 0 ? (
                   fieldItem.examples!.map((ex: string, idx: number) => (
-                    <SemanticBadge key={idx} tone="neutral" className="font-medium">
+                    <SemanticBadge key={`${ex}_${idx}`} tone="neutral" className="font-medium">
                       {ex}
                     </SemanticBadge>
                   ))
@@ -355,7 +355,7 @@ export function ExtractionFieldDetailsPage() {
               {(fieldItem.extraction_instructions?.length ?? 0) > 0 ? (
                 <ol className="space-y-2">
                   {fieldItem.extraction_instructions!.map((inst: string, idx: number) => (
-                    <li key={idx} className="flex gap-2 text-sm">
+                    <li key={inst} className="flex gap-2 text-sm">
                       <span className="text-muted-foreground shrink-0">{idx + 1}.</span>
                       <span>{inst}</span>
                     </li>

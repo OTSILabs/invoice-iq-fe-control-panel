@@ -58,7 +58,13 @@ export function NormalizationRuleFormPage({ mode }: { mode: "create" | "edit" })
       : DEFAULT_NORMALIZATION_RULE_VALUES,
   })
 
-  const backToList = () => navigate("/platform-standard-content/normalization-rules")
+  const backToList = () => {
+    if (window.history.length > 2) {
+      navigate(-1)
+    } else {
+      navigate("/platform-standard-content/normalization-rules")
+    }
+  }
 
   const formatJSONField = (fieldName: "parameter_schema_json" | "engine_config_json") => {
     const val = getValues(fieldName)

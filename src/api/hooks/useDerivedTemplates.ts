@@ -1,11 +1,13 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import type { UseQueryOptions } from '@tanstack/react-query';
 import { derivedTemplatesService } from '../services/derived-templates.service';
-import type { StandardDerivedTemplateCreateRequest, StandardDerivedTemplateUpdateRequest } from '../../types';
+import type { StandardDerivedTemplateCreateRequest, StandardDerivedTemplateUpdateRequest, StandardDerivedTemplateResponse } from '../../types';
 
-export const useDerivedTemplates = () => {
+export const useDerivedTemplates = (options?: Omit<UseQueryOptions<StandardDerivedTemplateResponse[]>, 'queryKey' | 'queryFn'>) => {
   return useQuery({
     queryKey: ['derived-templates'],
     queryFn: () => derivedTemplatesService.list(),
+    ...options,
   });
 };
 

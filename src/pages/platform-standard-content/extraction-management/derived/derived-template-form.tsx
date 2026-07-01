@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, Plus, Save, X } from "lucide-react";
@@ -114,9 +114,10 @@ export function DerivedTemplateForm({ mode, template, onCancel, onSuccess }: Der
           derived_template_id: template.derived_template_id,
           erp_type: template.erp_type || "",
           document_type_code: template.document_type_code || "",
-          derived_field_ids: (template as any).field_membership?.map((fm: any) => 
-            fm.field_id || fm.field_code || (fm.derived_template_field_id ? fm.derived_template_field_id.split(':').pop() : "")
-          ).filter(Boolean) || [],
+          derived_field_ids: (template as any).field_membership?.flatMap((fm: any) => {
+            const val = fm.field_id || fm.field_code || (fm.derived_template_field_id ? fm.derived_template_field_id.split(':').pop() : "")
+            return val ? [val] : []
+          }) || [],
           name: template.name,
           description: template.description || "",
           is_active: template.is_active ?? true,
@@ -135,11 +136,7 @@ export function DerivedTemplateForm({ mode, template, onCancel, onSuccess }: Der
   const selectedErpType = form.watch("erp_type");
   const selectedDocTypeCode = form.watch("document_type_code");
 
-  useEffect(() => {
-    if (!isEdit && selectedErpType && selectedDocTypeCode) {
-      form.setValue("derived_template_id", `${selectedErpType}:${selectedDocTypeCode}`, { shouldValidate: true });
-    }
-  }, [selectedErpType, selectedDocTypeCode, isEdit, form]);
+
 
   const onSubmit = useCallback(async (values: DerivedTemplateFormValues) => {
     try {
@@ -211,6 +208,7 @@ export function DerivedTemplateForm({ mode, template, onCancel, onSuccess }: Der
                         onChange={(e) => {
                           field.onChange(e);
                           form.setValue("document_type_code", "");
+                          form.setValue("derived_template_id", "");
                         }}
                       >
                         <option value="" disabled>Select ERP Type</option>
@@ -237,6 +235,16 @@ export function DerivedTemplateForm({ mode, template, onCancel, onSuccess }: Der
                         placeholder="e.g. PO_INVOICE"
                         disabled={!selectedErpType || isSaving}
                         {...field}
+                        onChange={(e) => {
+                          field.onChange(e);
+                          const erpType = form.getValues("erp_type");
+                          const docType = e.target.value;
+                          if (erpType && docType) {
+                            form.setValue("derived_template_id", `${erpType}:${docType}`, { shouldValidate: true });
+                          } else {
+                            form.setValue("derived_template_id", "");
+                          }
+                        }}
                       />
                     )}
                   />

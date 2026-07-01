@@ -40,7 +40,13 @@ export function ErpSettingFormPage({ mode }: { mode: "create" | "edit" }) {
       : DEFAULT_ERP_SETTING_VALUES,
   })
 
-  const backToList = () => navigate("/erp-settings")
+  const backToList = () => {
+    if (window.history.length > 2) {
+      navigate(-1)
+    } else {
+      navigate("/erp-settings")
+    }
+  }
 
   const onSubmit = (vals: ErpSettingFormValues) => {
     if (isEdit) {

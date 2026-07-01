@@ -43,7 +43,13 @@ export function ReferenceValueFormPage({ mode }: { mode: "create" | "edit" }) {
       : DEFAULT_VALUE_VALUES,
   })
 
-  const backToRegistry = () => navigate(`/platform-standard-content/reference-lists/${key}`)
+  const backToRegistry = () => {
+    if (window.history.length > 2) {
+      navigate(-1)
+    } else {
+      navigate(`/platform-standard-content/reference-lists/${key}`)
+    }
+  }
 
   const onSubmit = async (values: ReferenceValueFormValues) => {
     let attributes = null

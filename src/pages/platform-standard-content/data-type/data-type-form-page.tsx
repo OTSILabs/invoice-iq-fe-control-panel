@@ -43,7 +43,13 @@ export function DataTypeFormPage({ mode }: { mode: "create" | "edit" }) {
       : DEFAULT_CREATE_DATA_TYPE_VALUES,
   })
 
-  const backToList = () => navigate("/platform-standard-content/data-types")
+  const backToList = () => {
+    if (window.history.length > 2) {
+      navigate(-1)
+    } else {
+      navigate("/platform-standard-content/data-types")
+    }
+  }
 
   const onSubmit = (data: CreateDataTypeFormValues) => {
     if (isEdit && dataType) {

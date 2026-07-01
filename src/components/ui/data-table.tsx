@@ -200,9 +200,9 @@ export function DataTable<TData, TValue = unknown>({
     pageSize,
   }));
 
-  const [prevData, setPrevData] = useState(data);
-  if (!isControlled && data !== prevData) {
-    setPrevData(data);
+  const prevDataRef = useRef(data);
+  if (!isControlled && data !== prevDataRef.current) {
+    prevDataRef.current = data;
     setClientPagination((prev) => ({ ...prev, pageIndex: 0 }));
   }
 
