@@ -134,6 +134,8 @@ export function getFieldCode(field: unknown) {
   const record = asRecord(field);
   const value =
     record.field_id ||
+    (asRecord(record.field).field_id) ||
+    (asRecord(record.field).id) ||
     record.derived_template_field_id ||
     record.field_code ||
     record.code ||
