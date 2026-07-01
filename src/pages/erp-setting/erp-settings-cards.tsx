@@ -1,12 +1,11 @@
 import { useState } from "react"
 import { format } from "date-fns"
-import { Edit2, Trash2 } from "lucide-react"
+import {  Trash2 } from "lucide-react"
 import { toast } from "sonner"
 import {
   Card,
   CardHeader,
   CardTitle,
-  CardDescription,
   CardContent,
   CardFooter,
 } from "@/components/ui/card"
@@ -16,9 +15,21 @@ import type { ErpSetting } from "@/types"
 import { EmptyState } from "@/components/invoice-ui/design-system"
 
 const SENSITIVE_KEYS = [
-  "password", "pass", "pwd", "secret", "token", "access_token", "refresh_token",
-  "api_key", "apikey", "auth", "authorization", "username", "user_name",
-  "client_secret", "private_key",
+  "password",
+  "pass",
+  "pwd",
+  "secret",
+  "token",
+  "access_token",
+  "refresh_token",
+  "api_key",
+  "apikey",
+  "auth",
+  "authorization",
+  "username",
+  "user_name",
+  "client_secret",
+  "private_key",
 ]
 const MASK_VALUE = "********"
 
@@ -28,7 +39,10 @@ const isSensitiveKey = (key = "") =>
 function maskSensitiveSegmentsInString(val = "") {
   if (typeof val !== "string") return val
   SENSITIVE_KEYS.forEach((key) => {
-    const pattern = new RegExp(`(\\b${key.replace(/_/g, "[_\\s-]?")}\\b\\s*[:=]\\s*)([^,;\\s]+)`, "gi")
+    const pattern = new RegExp(
+      `(\\b${key.replace(/_/g, "[_\\s-]?")}\\b\\s*[:=]\\s*)([^,;\\s]+)`,
+      "gi"
+    )
     val = val.replace(pattern, `$1${MASK_VALUE}`)
   })
   return val
@@ -47,36 +61,14 @@ function maskJsonValues(val: unknown, key = ""): unknown {
 
 const getFormattedDate = (value: string) => {
   try {
-    return format(new Date(value), "dd MMM yyyy, hh:mm a")
+    return format(new Date(value), "dd MMM yyyy")
   } catch {
     return "N/A"
   }
 }
 
-function MetaDateItem({
-  label,
-  value,
-  align = "left",
-}: {
-  label: string
-  value?: string | null
-  align?: "left" | "right"
-}) {
-  if (!value) return null
-  return (
-    <div className={align === "right" ? "flex flex-col text-right" : "flex flex-col"}>
-      <span className="text-[10px] font-medium tracking-wider text-muted-foreground/80">
-        {label}
-      </span>
-      <span className="text-xs font-medium text-foreground/85">
-        {getFormattedDate(value)}
-      </span>
-    </div>
-  )
-}
-
 const JSONRenderer = ({ value }: { value: unknown }) => (
-  <pre className="scrollbar-thin h-48 overflow-auto rounded-lg bg-slate-950 p-4 font-mono text-[12px] text-emerald-300 shadow-inner ring-1 ring-white/10 select-all">
+  <pre className="h-32 scrollbar-thin overflow-y-auto rounded-lg border border-zinc-900 bg-black p-3.5 font-mono text-[11px] break-all whitespace-pre-wrap text-emerald-400 select-all">
     <code>{JSON.stringify(value, null, 2)}</code>
   </pre>
 )
@@ -93,51 +85,77 @@ function ErpSettingCard({
   const [isEnabled, setIsEnabled] = useState(Boolean(record.is_enabled ?? true))
 
   return (
-    <Card className="surface-card flex h-full flex-col overflow-hidden p-0">
-      <CardHeader className="border-b border-border/60 bg-muted/15 p-5">
-        <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0">
-            <CardTitle className="truncate text-base font-semibold text-foreground">
-              {record.display_name || `${record.erp_type.toUpperCase()} Integration`}
+    <Card className="group flex h-full flex-col overflow-hidden rounded-xl border border-border/50 bg-card p-0 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/20 hover:shadow-[0_4px_20px_color-mix(in_oklch,var(--foreground)_6%,transparent)]  [--card-spacing:16px]">
+      <CardHeader className="border-b border-border/40 bg-muted/5 p-3">
+        <div className="flex items-start justify-between gap-3 min-w-0 w-full">
+          <div className="min-w-0 flex-1">
+            <CardTitle className="truncate text-sm font-semibold tracking-tight text-foreground">
+              {record.display_name ||
+                `${record.erp_type.toUpperCase()} Integration`}
             </CardTitle>
-            <CardDescription className="mt-0.5 text-xs font-medium tracking-wider text-primary/80">
-              {record.erp_type}
-            </CardDescription>
+            <div className="mt-1 flex items-center">
+              <span className="inline-flex items-center rounded-full bg-primary/10 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-primary ring-1 ring-inset ring-primary/20">
+                {record.erp_type}
+              </span>
+            </div>
           </div>
-          <div className="flex shrink-0 items-center gap-2">
-            <span className="text-xs text-muted-foreground">
+          <div className="flex shrink-0 items-center gap-1.5 pt-0.5">
+            <span className="text-[11px] font-medium text-muted-foreground">
               {isEnabled ? "Enabled" : "Disabled"}
             </span>
             <Switch
               checked={isEnabled}
               disabled
+              className="scale-75"
               onCheckedChange={(checked) => {
                 setIsEnabled(checked)
-                toast.success(`ERP setting ${checked ? "enabled" : "disabled"} successfully!`)
+                toast.success(
+                  `ERP setting ${checked ? "enabled" : "disabled"} successfully!`
+                )
               }}
             />
           </div>
         </div>
-        <div className="mt-3 flex items-start justify-between gap-4 rounded-lg bg-muted/35 p-3 ring-1 ring-border/45">
-          <MetaDateItem label="Created" value={record.created_at} />
-          <MetaDateItem label="Updated" value={record.updated_at} align="right" />
+        <div className=" flex items-center justify-between text-[10px] text-muted-foreground/75">
+          <span>
+            Created:
+            {record.created_at ? getFormattedDate(record.created_at) : "N/A"}
+          </span>
+          <span>
+            Updated:
+            {record.updated_at ? getFormattedDate(record.updated_at) : "N/A"}
+          </span>
         </div>
       </CardHeader>
 
-      <CardContent className="flex-1 p-4">
-        <div className={`transition-all duration-200 ${isEnabled ? "" : "blur-[2px] opacity-70"}`}>
+      <CardContent className="flex-1 p-4 py-1">
+        <div
+          className={`transition-all duration-200 ${isEnabled ? "" : "opacity-70 blur-[2px]"}`}
+        >
           <JSONRenderer value={maskJsonValues(record.settings || {})} />
         </div>
       </CardContent>
 
-      <CardFooter className="flex items-center justify-end gap-2 border-t border-border/60 bg-muted/20 p-4">
-        <Button variant="outline" size="sm" onClick={() => onEdit(record)} className="gap-1.5 text-xs" disabled>
-          <Edit2 className="size-3.5" />
+      <CardFooter className="flex items-center gap-2 border-t border-border/40 p-4">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => onEdit(record)}
+          className="h-8 flex-1 text-xs"
+          disabled
+        >
+          {/* <Edit2 className="size-3" /> */}
           Edit
         </Button>
-        <Button variant="destructive" size="sm" onClick={() => onDelete(record)} className="gap-1.5 text-xs" disabled>
-          <Trash2 className="size-3.5" />
-          Delete
+
+        <Button
+          variant="destructive"
+         size="sm"
+          onClick={() => onDelete(record)}
+          className="h-8 w-8"
+          disabled
+        >
+          <Trash2 className="size-3" />
         </Button>
       </CardFooter>
     </Card>
@@ -163,7 +181,7 @@ export function ErpSettingsCards({
   }
 
   return (
-    <div className="grid animate-in gap-4 duration-200 fade-in sm:grid-cols-2 lg:grid-cols-3">
+    <div className="grid animate-in gap-4 duration-200 fade-in sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
       {records.map((record) => (
         <ErpSettingCard
           key={record.erp_id}
