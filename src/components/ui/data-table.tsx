@@ -459,7 +459,19 @@ export function DataTable<TData, TValue = unknown>({
         pageSizeOptions={pageSizeOptions}
         onPageChange={(page) => {
           table.setPageIndex(page - 1);
-          tableContainerRef.current?.scrollIntoView({ behavior: "smooth" });
+          const scrollTarget = tableContainerRef.current?.closest(".table-container") || 
+                               tableContainerRef.current?.closest(".surface-card") || 
+                               tableContainerRef.current;
+          if (scrollTarget) {
+            const rect = scrollTarget.getBoundingClientRect();
+            const scrollTop = window.scrollY || document.documentElement.scrollTop;
+            const absoluteTop = rect.top + scrollTop;
+            if (absoluteTop < 400) {
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            } else {
+              scrollTarget.scrollIntoView({ behavior: "smooth" });
+            }
+          }
         }}
         onPageSizeChange={(size) => {
           table.setPageSize(size);
