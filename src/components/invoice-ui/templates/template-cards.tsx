@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import {
   CalendarDays,
   ChevronRight,
-  Copy,
   Edit2,
   FileText,
   ListChecks,
@@ -10,7 +9,6 @@ import {
   MoreVertical,
   Network,
   Percent,
-  Trash2,
 } from "lucide-react";
 
 import type { ApiRecord } from "@/api/api.helpers";
@@ -33,7 +31,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Switch } from "@/components/ui/switch";
 import {
   Tooltip,
   TooltipContent,
@@ -44,7 +41,6 @@ import { cn, humanizeDateTime } from "@/lib/utils";
 import {
   getTemplateCode,
   getTemplateFieldCount,
-  getTemplateIsActive,
   getTemplateIsDefault,
   getTemplateIsEditable,
   getTemplateName,
@@ -84,16 +80,8 @@ function TemplateStatusBadges({ template }: { template: ApiRecord }) {
 
 export function TemplateCards({
   templates = EMPTY_TEMPLATES,
-  onCloneTemplate,
-  onDeleteTemplate,
-  onToggleActive,
-  togglingTemplateCode,
 }: {
   templates?: ApiRecord[];
-  onCloneTemplate?: (template: ApiRecord) => void;
-  onDeleteTemplate?: (template: ApiRecord) => void;
-  onToggleActive?: (template: ApiRecord, nextIsActive: boolean) => void;
-  togglingTemplateCode?: string | null;
 }) {
   if (!templates.length) {
     return (
@@ -112,7 +100,6 @@ export function TemplateCards({
         const templateName = getTemplateName(template);
         const fieldCount = getTemplateFieldCount(template);
         const isDefault = getTemplateIsDefault(template);
-        const isActive = getTemplateIsActive(template);
         const isEditable = getTemplateIsEditable(template);
         const canManageTemplate = Boolean(
           templateCode && isEditable && !isDefault,
@@ -163,7 +150,7 @@ export function TemplateCards({
 
                 {templateCode ? (
                   <div className="flex shrink-0 items-center gap-2">
-                    {canManageTemplate ? (
+                    {/* {canManageTemplate ? (
                       <Switch
                         checked={isActive}
                         disabled={togglingTemplateCode === templateCode}
@@ -172,7 +159,7 @@ export function TemplateCards({
                           onToggleActive?.(template, checked)
                         }
                       />
-                    ) : null}
+                    ) : null} */}
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button
@@ -196,13 +183,13 @@ export function TemplateCards({
                             </Link>
                           </DropdownMenuItem>
                         ) : null}
-                        <DropdownMenuItem
+                        {/* <DropdownMenuItem
                           onSelect={() => onCloneTemplate?.(template)}
                         >
                           <Copy className="size-4" data-icon="inline-start" />
                           Clone Template
-                        </DropdownMenuItem>
-                        {canManageTemplate ? (
+                        </DropdownMenuItem> */}
+                        {/* {canManageTemplate ? (
                           <DropdownMenuItem
                             className="text-destructive focus:text-destructive"
                             onSelect={() => onDeleteTemplate?.(template)}
@@ -213,7 +200,7 @@ export function TemplateCards({
                             />
                             Delete Template
                           </DropdownMenuItem>
-                        ) : null}
+                        ) : null} */}
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </div>

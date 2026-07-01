@@ -15,7 +15,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Eye, GripVertical, ListChecks, X } from "lucide-react";
+import { Eye, GripVertical, ListChecks } from "lucide-react";
 import {
   useMemo,
   useRef,
@@ -39,7 +39,6 @@ import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
 import {
   Drawer,
-  DrawerClose,
   DrawerContent,
   DrawerDescription,
   DrawerHeader,
@@ -634,7 +633,7 @@ function FieldDetailsDrawer({
                   {headerDescription}
                 </DrawerDescription>
               </div>
-              <DrawerClose asChild>
+              {/* <DrawerClose asChild>
                 <Button
                   type="button"
                   variant="ghost"
@@ -644,7 +643,7 @@ function FieldDetailsDrawer({
                 >
                   <X className="size-4" />
                 </Button>
-              </DrawerClose>
+              </DrawerClose> */}
             </div>
           </DrawerHeader>
 
@@ -699,7 +698,6 @@ function FieldTableRow<TField extends FieldListTableRecord>({
     getFieldBadgeData(field);
   const updatedLabel = getDateValue(field.updated_at, "dd MMM yy");
   const createdLabel = getDateValue(field.created_at, "dd MMM yy");
-  const isStandard = getFieldIsStandard(field);
   const auditLabel = updatedLabel
     ? `Updated ${updatedLabel}`
     : createdLabel
@@ -721,7 +719,6 @@ function FieldTableRow<TField extends FieldListTableRecord>({
         className={cn(
           "transition-[background-color,box-shadow,opacity,transform] duration-150 ease-out hover:bg-muted/25",
           isExpanded && "bg-muted/15",
-          isStandard && "bg-primary/[0.025]",
           isDragging && "bg-primary/5 shadow-md",
         )}
       >
@@ -785,7 +782,7 @@ function FieldTableRow<TField extends FieldListTableRecord>({
 
             <Button
               type="button"
-              variant="outline"
+              variant="ghost"
               size="icon-sm"
               aria-label="View field details"
               className="size-7"

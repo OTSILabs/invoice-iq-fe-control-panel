@@ -1,11 +1,10 @@
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import {
   ArrowLeft,
-  Copy,
+  // Copy,
   Edit2,
-  Info,
+  // Info,
   Search,
-  Trash2,
   X,
 } from "lucide-react";
 import {
@@ -68,14 +67,9 @@ import { TemplateActiveStateDialog } from "./components/TemplateActiveStateDialo
 import {
   PageDescriptiveSection,
   PageTitle,
+  PageDescription,
 } from "@/components/invoice-ui/typography";
 
-import {
-  Alert,
-  AlertAction,
-  AlertDescription,
-  AlertTitle,
-} from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -218,8 +212,6 @@ function TemplateDetailsHeader({
   template,
   canManageTemplate,
   editHref,
-  showHeaderCloneAction,
-  setDialogs,
 }: {
   template: unknown;
   canManageTemplate: boolean;
@@ -232,7 +224,8 @@ function TemplateDetailsHeader({
       <div className="flex flex-col gap-5 lg:flex-row items-center lg:justify-between">
         <div className="flex min-w-0 items-start gap-4">
           <PageDescriptiveSection>
-            <PageTitle title={getTemplateName(template)} />
+            <PageTitle title="Template Details" />
+            <PageDescription description={getTemplateName(template)} />
           </PageDescriptiveSection>
         </div>
 
@@ -245,7 +238,7 @@ function TemplateDetailsHeader({
                   Edit
                 </Link>
               </Button>
-              <Button
+              {/* <Button
                 type="button"
                 variant="outline"
                 size="sm"
@@ -254,11 +247,11 @@ function TemplateDetailsHeader({
               >
                 <Trash2 className="size-3.5" />
                 Delete
-              </Button>
+              </Button> */}
             </>
           ) : null}
 
-          {showHeaderCloneAction ? (
+          {/* {showHeaderCloneAction ? (
             <Button
               type="button"
               variant="outline"
@@ -268,10 +261,10 @@ function TemplateDetailsHeader({
               <Copy className="size-4" data-icon="inline-start" />
               Clone
             </Button>
-          ) : null}
+          ) : null} */}
 
           <Button variant="outline" size="sm" asChild>
-            <Link to={APP_ROUTES.TEMPLATES}>
+            <Link to={APP_ROUTES.TEMPLATES + "?tab=templates"}>
               <ArrowLeft className="size-4" data-icon="inline-start" />
               Back
             </Link>
@@ -287,8 +280,6 @@ function TemplateFieldsSection({
   isFieldFilterActive,
   saveSortOrder,
   canManageTemplate,
-  editField,
-  removeField,
   updateTemplateSortOrderMutation,
 }: {
   filteredTemplateFields: FieldListTableRecord[];
@@ -315,34 +306,6 @@ function TemplateFieldsSection({
           isFieldFilterActive
             ? "No fields match the current search or selected filters."
             : "Add a field to this template to build the extraction schema."
-        }
-        className="rounded-md border border-border shadow-none overflow-hidden"
-        renderActions={({ field }) =>
-          canManageTemplate ? (
-            <>
-              <Button
-                type="button"
-                variant="outline"
-                size="icon-sm"
-                className="size-7"
-                aria-label={`Edit ${getFieldLabel(field)}`}
-                onClick={() => editField(field)}
-              >
-                <Edit2 className="size-3.5" />
-              </Button>
-
-              <Button
-                type="button"
-                variant="outline"
-                size="icon-sm"
-                className="size-7 text-destructive hover:bg-destructive/10 hover:text-destructive"
-                aria-label={`Remove ${getFieldLabel(field)}`}
-                onClick={() => removeField(field)}
-              >
-                <Trash2 className="size-3.5" />
-              </Button>
-            </>
-          ) : null
         }
         onSortOrderChange={saveSortOrder}
       />
@@ -427,7 +390,6 @@ export default function TemplateDetailsPage() {
   });
   const canManageTemplate = Boolean(
     resolvedTemplateCode &&
-    !getTemplateIsStandard(template) &&
     getTemplateIsEditable(template) &&
     !getTemplateIsDefault(template),
   );
@@ -474,7 +436,7 @@ export default function TemplateDetailsPage() {
     }
 
     deleteTemplateMutation.mutate(resolvedTemplateCode, {
-      onSuccess: () => navigate(APP_ROUTES.TEMPLATES),
+      onSuccess: () => navigate(APP_ROUTES.TEMPLATES + "?tab=templates"),
     });
   };
 
@@ -562,7 +524,7 @@ export default function TemplateDetailsPage() {
           description="The selected template is not available."
           actions={
             <Button variant="outline" asChild>
-              <Link to={APP_ROUTES.TEMPLATES}>
+              <Link to={APP_ROUTES.TEMPLATES + "?tab=templates"}>
                 <ArrowLeft className="size-4" data-icon="inline-start" />
                 Back to Templates
               </Link>
@@ -641,7 +603,6 @@ function TemplateDetailsContent({
   options,
 }: any) {
   const {
-    isStandardTemplate = false,
     showHeaderCloneAction = false,
     isFieldFilterActive = false,
     canManageTemplate = false,
@@ -655,7 +616,7 @@ function TemplateDetailsContent({
         showHeaderCloneAction={showHeaderCloneAction}
         setDialogs={setDialogs}
       />
-      {isStandardTemplate ? (
+      {/* {isStandardTemplate ? (
         <Alert className="pr-4 sm:pr-40">
           <Info className="size-4" />
           <AlertTitle>Standard template</AlertTitle>
@@ -674,7 +635,7 @@ function TemplateDetailsContent({
             </Button>
           </AlertAction>
         </Alert>
-      ) : null}
+      ) : null} */}
 
       <Card className="surface-card gap-0 py-0">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="gap-0 sadcnx">

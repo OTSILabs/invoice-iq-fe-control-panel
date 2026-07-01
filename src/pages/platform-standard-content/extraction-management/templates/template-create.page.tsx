@@ -30,7 +30,7 @@ export default function TemplateCreatePage() {
         </PageDescriptiveSection>
 
         <Button variant="outline" asChild>
-          <Link to={APP_ROUTES.TEMPLATES}>
+          <Link to={APP_ROUTES.TEMPLATES + "?tab=templates"}>
             <ArrowLeft className="size-4" data-icon="inline-start" />
             Back to Templates
           </Link>
@@ -39,8 +39,8 @@ export default function TemplateCreatePage() {
 
       <TemplateForm
         mode="create"
-        onCancel={() => navigate(APP_ROUTES.TEMPLATES)}
-        onSuccess={() => navigate(APP_ROUTES.TEMPLATES)}
+        onCancel={() => navigate(APP_ROUTES.TEMPLATES + "?tab=templates")}
+        onSuccess={() => navigate(APP_ROUTES.TEMPLATES + "?tab=templates")}
       />
     </PageContainers>
   );

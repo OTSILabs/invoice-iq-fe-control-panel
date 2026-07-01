@@ -49,7 +49,7 @@ export default function TemplateEditPage() {
         </PageDescriptiveSection>
 
         <Button variant="outline" asChild>
-          <Link to={APP_ROUTES.TEMPLATES}>
+          <Link to={APP_ROUTES.TEMPLATES + "?tab=templates"}>
             <ArrowLeft className="size-4" data-icon="inline-start" />
             Back to Templates
           </Link>
@@ -59,8 +59,8 @@ export default function TemplateEditPage() {
       <TemplateForm
         mode="edit"
         template={template}
-        onCancel={() => navigate(APP_ROUTES.TEMPLATES)}
-        onSuccess={() => navigate(APP_ROUTES.TEMPLATES)}
+        onCancel={() => navigate(APP_ROUTES.TEMPLATES + "?tab=templates")}
+        onSuccess={() => navigate(APP_ROUTES.TEMPLATES + "?tab=templates")}
       />
     </PageContainers>
   );

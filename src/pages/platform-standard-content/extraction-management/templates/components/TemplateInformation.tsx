@@ -1,5 +1,4 @@
 import type { ApiRecord } from "@/api/api.helpers";
-import { Switch } from "@/components/ui/switch";
 import { IqActiveStatusBadge, IqContentTypeBadge } from "@/components/invoice-ui/iq-status-badges";
 import { DetailGrid } from "@/components/ui/detail-grid";
 
@@ -13,9 +12,6 @@ import { getTemplateCode, getTemplateContentType, getTemplateIsActive } from "@/
 
 export function TemplateInformation({
   template,
-  canManageTemplate,
-  isActiveStatePending,
-  onActiveStateChange,
 }: {
   template: ApiRecord;
   canManageTemplate: boolean;
@@ -33,7 +29,7 @@ export function TemplateInformation({
       content: (
         <div className="flex min-w-0 flex-wrap items-center gap-3">
           <IqActiveStatusBadge template={template} />
-          {canManageTemplate ? (
+          {/* {canManageTemplate ? (
             <label className="flex items-center gap-2 text-xs font-medium text-muted-foreground cursor-pointer">
               <Switch
                 checked={isActive}
@@ -45,7 +41,7 @@ export function TemplateInformation({
               />
               {isActive ? "Disable template" : "Activate template"}
             </label>
-          ) : null}
+          ) : null} */}
           {isActive && activeSince ? (
             <span className="text-xs text-muted-foreground">
               Active since {activeSince}
