@@ -147,6 +147,7 @@ export function FieldRow({
   onToggle,
   dragHandleProps,
   isDragging,
+  readonly,
 }: {
   item: CategorizedFieldSelectorItem;
   selected: boolean;
@@ -155,6 +156,7 @@ export function FieldRow({
   onToggle: (itemId: string) => void;
   dragHandleProps?: DragHandleProps;
   isDragging?: boolean;
+  readonly?: boolean;
 }) {
   const typeLabel = item.metadata?.type || item.metadata?.contentType;
 
@@ -182,7 +184,7 @@ export function FieldRow({
       className={cn(
         "group rounded-md border border-border/80 bg-card px-2.5 py-2 shadow-[0_1px_1px_rgba(15,23,42,0.03)] outline-none transition-all duration-150 focus-within:border-ring focus-within:ring-2 focus-within:ring-ring/25",
         isDragging && "relative z-20 opacity-80 shadow-md",
-        disabled && "cursor-not-allowed opacity-55",
+        !readonly && disabled && "cursor-not-allowed opacity-55",
       )}
     >
       <div className="flex items-center gap-2">
@@ -210,9 +212,9 @@ export function FieldRow({
           aria-selected={selected}
           onClick={(e) => {
             e.stopPropagation();
-            if (!disabled) onToggle(item.id);
+            if (!disabled && !readonly) onToggle(item.id);
           }}
-          className="min-w-0 flex-1 text-left"
+          className={cn("min-w-0 flex-1 text-left", readonly ? "cursor-default" : "cursor-pointer")}
         >
           <div className="flex min-w-0 items-center gap-1.5">
             <span className="truncate text-xs font-medium leading-5 text-foreground">
@@ -239,18 +241,20 @@ export function FieldRow({
             </Badge>
           ) : null}
           <FieldDetailsHoverCard item={item} />
-          <Switch
-            size="sm"
-            checked={selected}
-            disabled={disabled}
-            aria-label={`${selected ? "Remove" : "Select"} ${item.label}`}
-            onClick={(event) => event.stopPropagation()}
-            onCheckedChange={() => {
-              if (!disabled) {
-                onToggle(item.id);
-              }
-            }}
-          />
+          {!readonly ? (
+            <Switch
+              size="sm"
+              checked={selected}
+              disabled={disabled}
+              aria-label={`${selected ? "Remove" : "Select"} ${item.label}`}
+              onClick={(event) => event.stopPropagation()}
+              onCheckedChange={() => {
+                if (!disabled) {
+                  onToggle(item.id);
+                }
+              }}
+            />
+          ) : null}
         </div>
       </div>
     </li>
@@ -293,6 +297,7 @@ export function CategoryFieldsList({
   category,
   selectedSet,
   isLocked,
+  readonly,
   sensors,
   handleDragEnd,
   toggleItem,
@@ -302,6 +307,7 @@ export function CategoryFieldsList({
   category: CategorizedFieldSelectorCategory;
   selectedSet: Set<string>;
   isLocked: boolean;
+  readonly?: boolean;
   sensors: any;
   handleDragEnd: (event: DragEndEvent) => void;
   toggleItem: (itemId: string) => void;
@@ -324,6 +330,7 @@ export function CategoryFieldsList({
                       dragDisabled={isLocked}
                       dragHandleProps={dragHandleProps}
                       isDragging={isDragging}
+                      readonly={readonly}
                       onToggle={toggleItem}
                     />
                   )}

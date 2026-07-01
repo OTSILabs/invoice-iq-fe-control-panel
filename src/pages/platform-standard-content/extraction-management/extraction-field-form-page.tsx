@@ -246,8 +246,9 @@ export function ExtractionFieldFormPage({ mode }: { mode: "create" | "edit" }) {
       </PageHeader>
 
       <SectionCard
+    contentClassName="p-0"
         title={
-          <span className="flex items-center gap-2">
+          <span className="flex items-center gap-2 ">
             <FileText className="size-4 text-primary" />
             Field configuration
           </span>

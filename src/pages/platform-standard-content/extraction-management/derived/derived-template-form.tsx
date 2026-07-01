@@ -64,7 +64,7 @@ export function DerivedTemplateForm({ mode, template, onCancel, onSuccess }: Der
         description: f.description,
         categoryId: categoryId,
         metadata: {
-          type: f.data_type,
+          type: f.data_type_code || f.data_type?.data_type_code || "",
           position: f.header_item || "Header",
         },
       };

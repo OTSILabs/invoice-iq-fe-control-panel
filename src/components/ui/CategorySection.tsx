@@ -80,6 +80,7 @@ export function CategorySection({
         categorySelectionLabel={categorySelectionLabel}
         toggleCategorySelection={toggleCategorySelection}
         stickyTop={stickyTop}
+        readonly={readonly}
       />
 
       <CollapsibleContent className="overflow-visible bg-background/50 group-last/section:rounded-b-[inherit]">
@@ -114,6 +115,7 @@ export function CategorySection({
             category={category}
             selectedSet={selectedSet}
             isLocked={isLocked}
+            readonly={readonly}
             sensors={sensors}
             handleDragEnd={handleDragEnd}
             toggleItem={toggleItem}

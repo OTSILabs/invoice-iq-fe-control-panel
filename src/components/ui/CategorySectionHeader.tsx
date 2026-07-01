@@ -19,6 +19,7 @@ export function CategorySectionHeader({
   categorySelectionLabel,
   toggleCategorySelection,
   stickyTop,
+  readonly,
 }: {
   category: CategorizedFieldSelectorCategory;
   open: boolean;
@@ -32,6 +33,7 @@ export function CategorySectionHeader({
   categorySelectionLabel: string;
   toggleCategorySelection: () => void;
   stickyTop?: string;
+  readonly?: boolean;
 }) {
   return (
     <div
@@ -42,14 +44,16 @@ export function CategorySectionHeader({
     >
       <div className="flex items-center justify-between gap-4">
         <div className="flex min-w-0 items-center gap-3">
-          <Checkbox
-            id={`category-select-${category.id}`}
-            checked={categoryCheckboxChecked}
-            disabled={isCategorySelectionDisabled}
-            aria-label={categorySelectionLabel}
-            onCheckedChange={toggleCategorySelection}
-            onClick={(event) => event.stopPropagation()}
-          />
+          {!readonly ? (
+            <Checkbox
+              id={`category-select-${category.id}`}
+              checked={categoryCheckboxChecked}
+              disabled={isCategorySelectionDisabled}
+              aria-label={categorySelectionLabel}
+              onCheckedChange={toggleCategorySelection}
+              onClick={(event) => event.stopPropagation()}
+            />
+          ) : null}
           <CollapsibleTrigger asChild>
             <button
               type="button"
@@ -73,14 +77,22 @@ export function CategorySectionHeader({
 
         <div className="flex shrink-0 items-center gap-3 pl-4">
           <div className="flex items-center gap-1.5">
-            <span className="text-[10px] font-bold text-primary">
-              {selectedCount}
-            </span>
-            {typeof fieldTotal === "number" ? (
+            {!readonly ? (
+              <>
+                <span className="text-[10px] font-bold text-primary">
+                  {selectedCount}
+                </span>
+                {typeof fieldTotal === "number" ? (
+                  <span className="text-[10px] font-medium text-muted-foreground">
+                    / {fieldTotal}
+                  </span>
+                ) : null}
+              </>
+            ) : (
               <span className="text-[10px] font-medium text-muted-foreground">
-                / {fieldTotal}
+                {selectedCount || fieldTotal || 0} { (selectedCount || fieldTotal || 0) === 1 ? "field" : "fields" }
               </span>
-            ) : null}
+            )}
           </div>
           {isCategoryLoading || categoryBulkAction ? (
             <output

@@ -201,7 +201,7 @@ function buildFieldSelectorItem(
 		categoryId: getFieldCategoryCode(record),
 		metadata: {
 			position: getNullableString(record.header_item),
-			type: getNullableString(record.data_type_code || record.data_type),
+			type: getNullableString(record.data_type_code || (record.data_type as any)?.data_type_code || record.data_type),
 			contentType: getNullableString(record.content_type),
 		},
 		details: {

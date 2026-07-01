@@ -14,7 +14,7 @@ import type {
   ExtractionTemplatesListParams,
   ExtractionTemplateUpdateRequest,
   FieldCategoriesListParams,
-  TemplateFieldOrderRequest,
+  // TemplateFieldOrderRequest,
   TemplateMembershipUpdateRequest,
   TemplatePathId,
 } from "./templates.types";
@@ -240,62 +240,62 @@ export const useSetTemplateActive = () => {
   });
 };
 
-export const useUpdateTemplateSortOrder = () => {
-  const queryClient = useQueryClient();
+// const useUpdateTemplateSortOrder = () => {
+//   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: ({
-      data,
-      fieldCodes,
-      fieldIds,
-      templateCode,
-      templateId,
-    }: TemplateIdInput & {
-      data?: TemplateFieldOrderRequest;
-      fieldCodes?: string[];
-      fieldIds?: string[];
-    }) => {
-      const resolvedTemplateId = resolveTemplateId({
-        templateId,
-        templateCode,
-      });
+//   return useMutation({
+//     mutationFn: ({
+//       data,
+//       fieldCodes,
+//       fieldIds,
+//       templateCode,
+//       templateId,
+//     }: TemplateIdInput & {
+//       data?: TemplateFieldOrderRequest;
+//       fieldCodes?: string[];
+//       fieldIds?: string[];
+//     }) => {
+//       const resolvedTemplateId = resolveTemplateId({
+//         templateId,
+//         templateCode,
+//       });
 
-      return templatesService.reorderTemplateFields(
-        resolvedTemplateId,
-        data ?? { field_ids: fieldIds ?? fieldCodes ?? [] },
-      );
-    },
-    onMutate: () => {
-      const toastId = toast.loading("Saving field order...", {
-        closeButton: false,
-      });
+//       return templatesService.reorderTemplateFields(
+//         resolvedTemplateId,
+//         data ?? { field_ids: fieldIds ?? fieldCodes ?? [] },
+//       );
+//     },
+//     onMutate: () => {
+//       const toastId = toast.loading("Saving field order...", {
+//         closeButton: false,
+//       });
 
-      return { toastId };
-    },
-    onSuccess: (_, variables, context) => {
-      const resolvedTemplateId = variables.templateId ?? variables.templateCode;
+//       return { toastId };
+//     },
+//     onSuccess: (_, variables, context) => {
+//       const resolvedTemplateId = variables.templateId ?? variables.templateCode;
 
-      queryClient.invalidateQueries({
-        queryKey: templateQueryKeys.templatesRoot(),
-      });
-      if (resolvedTemplateId) {
-        queryClient.invalidateQueries({
-          queryKey: templateQueryKeys.template(resolvedTemplateId),
-        });
-      }
-      toast.success("Field order saved successfully", {
-        id: context?.toastId,
-        closeButton: true,
-      });
-    },
-    onError: (error: Error, _variables, context) => {
-      toast.error(error.message || "Failed to save field order", {
-        id: context?.toastId,
-        closeButton: true,
-      });
-    },
-  });
-};
+//       queryClient.invalidateQueries({
+//         queryKey: templateQueryKeys.templatesRoot(),
+//       });
+//       if (resolvedTemplateId) {
+//         queryClient.invalidateQueries({
+//           queryKey: templateQueryKeys.template(resolvedTemplateId),
+//         });
+//       }
+//       toast.success("Field order saved successfully", {
+//         id: context?.toastId,
+//         closeButton: true,
+//       });
+//     },
+//     onError: (error: Error, _variables, context) => {
+//       toast.error(error.message || "Failed to save field order", {
+//         id: context?.toastId,
+//         closeButton: true,
+//       });
+//     },
+//   });
+// };
 
 
 

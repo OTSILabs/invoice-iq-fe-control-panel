@@ -1,11 +1,7 @@
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import {
   ArrowLeft,
-  // Copy,
   Edit2,
-  // Info,
-  Search,
-  X,
 } from "lucide-react";
 import {
   useCallback,
@@ -20,30 +16,17 @@ import {
   useSetTemplateActive,
   useTemplateByCode,
   useUpdateTemplate,
-  useUpdateTemplateSortOrder,
 } from "@/api/templates/templates.hooks";
+import { useExtractionFields } from "@/api/hooks/useExtractionFields";
 import { EmptyState } from "@/components/invoice-ui/design-system";
 import { PageContainers } from "@/components/invoice-ui/page-containers";
-import {
-  FilterDropdown,
-  FilterDropdownContent,
-  FilterDropdownTrigger,
-} from "@/components/invoice-ui/filter-dropdown";
-import {
-  type FilterGroup,
-  type FilterValue,
-} from "@/components/invoice-ui/filter-dropdown-context";
-import {
-  FieldsListTable,
-  type FieldListTableRecord,
-} from "@/components/invoice-ui/templates/fields-list-table";
+import { CategorizedFieldSelector } from "@/components/ui/categorized-field-selector";
+import type { CategorizedFieldSelectorCategory } from "@/components/ui/categorized-field-selector.utils";
 import {
   buildTemplateUpdatePayload,
   getFieldCode,
-  getFieldLabel,
   getTemplateCode,
   getTemplateFieldCodes,
-  getTemplateFieldCount,
   getTemplateIsActive,
   getTemplateIsDefault,
   getTemplateIsEditable,
@@ -51,10 +34,6 @@ import {
   getTemplateName,
   normalizeTemplateDetail,
   resolveTemplateFields,
-  getFieldShortDescription,
-  getFieldLongDescription,
-  getFieldExamples,
-  getFieldInstructions,
 } from "@/components/invoice-ui/templates/template-data";
 import {
   TemplateCloneDialog,
@@ -78,7 +57,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import { Input } from "@/components/ui/input";
 
 import {
   Tabs,
@@ -100,14 +78,6 @@ const TEMPLATE_DETAILS_TABS = {
   FIELDS: "fields",
 } as const;
 
-
-
-const FIELD_FILTER_GROUP_IDS = {
-  POSITION: "position",
-  CONTENT_TYPE: "content_type",
-  DATA_TYPE: "data_type",
-} as const;
-
 type TemplateDetailsTab =
   (typeof TEMPLATE_DETAILS_TABS)[keyof typeof TEMPLATE_DETAILS_TABS];
 
@@ -123,90 +93,41 @@ function getTemplateMembershipFields(tpl: unknown) {
   return resolveTemplateFields(tpl);
 }
 
-function getFieldFilterGroups(fields: unknown[]) {
-  const positions = new Set<string>();
-  const contentTypes = new Set<string>();
-  const dataTypes = new Set<string>();
-
-  fields.forEach((f: any) => {
-    const pos = f?.header_item ?? f?.header ?? null;
-    if (pos) positions.add(String(pos));
-
-    const ct = f?.content_type ?? f?.field_content_type ?? null;
-    if (ct) contentTypes.add(String(ct));
-
-    const dt = f?.data_type ?? f?.field_type ?? null;
-    if (dt) dataTypes.add(String(dt));
-  });
-
-  const makeOptions = (set: Set<string>) =>
-    Array.from(set).map((value) => ({ value: String(value), label: String(value) }));
-
-  const groups: FilterGroup[] = [];
-
-  groups.push({
-    id: FIELD_FILTER_GROUP_IDS.POSITION,
-    label: "Position",
-    options: makeOptions(positions),
-  });
-
-  groups.push({
-    id: FIELD_FILTER_GROUP_IDS.CONTENT_TYPE,
-    label: "Content type",
-    options: makeOptions(contentTypes),
-  });
-
-  groups.push({
-    id: FIELD_FILTER_GROUP_IDS.DATA_TYPE,
-    label: "Data type",
-    options: makeOptions(dataTypes),
-  });
-
-  return groups;
-}
-
-function matchesFieldSearch(field: unknown, search: string) {
-  if (!search) return true;
-  const needle = search.toLowerCase();
-  const label = getFieldLabel(field).toLowerCase();
-  const code = getFieldCode(field).toLowerCase();
-  const short = String(getFieldShortDescription(field) ?? "").toLowerCase();
-  const long = String(getFieldLongDescription(field) ?? "").toLowerCase();
-  const examples = (getFieldExamples(field) ?? []).join(" ").toLowerCase();
-  const instr = (getFieldInstructions(field) ?? []).join(" ").toLowerCase();
-
+function TemplateFieldsSection({
+  categories,
+  knownItems,
+  selectedIds,
+}: {
+  categories: CategorizedFieldSelectorCategory[];
+  knownItems: any[];
+  selectedIds: string[];
+}) {
   return (
-    label.includes(needle) ||
-    code.includes(needle) ||
-    short.includes(needle) ||
-    long.includes(needle) ||
-    examples.includes(needle) ||
-    instr.includes(needle)
+    <TabsContent value={TEMPLATE_DETAILS_TABS.FIELDS} className="m-0 p-3 border-0 rounded-xl">
+      <CategorizedFieldSelector
+        categories={categories}
+        knownItems={knownItems}
+        selectedIds={selectedIds}
+        onSelectedChange={() => {}}
+        readonly={true}
+        loadCategoryItems={async (category: any) => {
+          const items = knownItems.filter((i: any) => i.categoryId === category.id);
+          return { items, total: items.length };
+        }}
+        getCategoryItemsQueryKey={(category) => ["template-items", category.id]}
+        loadSearchItems={async (search) => {
+          const s = search.toLowerCase();
+          const items = knownItems.filter(i => 
+            i.label.toLowerCase().includes(s) || 
+            (i.description && i.description.toLowerCase().includes(s))
+          );
+          return { items, total: items.length };
+        }}
+        getSearchItemsQueryKey={(search) => ["template-search", search]}
+      />
+    </TabsContent>
   );
-}
-
-function matchesFieldFilters(field: any, filters: Record<string, string[]>) {
-  if (!filters || !Object.keys(filters).length) return true;
-
-  for (const [groupId, values] of Object.entries(filters)) {
-    if (!values.length) continue;
-
-    const valuesSet = new Set(values.map(String));
-
-    if (groupId === FIELD_FILTER_GROUP_IDS.POSITION) {
-      const val = field?.header_item ?? field?.header ?? "";
-      if (!valuesSet.has(String(val))) return false;
-    } else if (groupId === FIELD_FILTER_GROUP_IDS.CONTENT_TYPE) {
-      const val = field?.content_type ?? field?.field_content_type ?? "";
-      if (!valuesSet.has(String(val))) return false;
-    } else if (groupId === FIELD_FILTER_GROUP_IDS.DATA_TYPE) {
-      const val = field?.data_type ?? field?.field_type ?? "";
-      if (!valuesSet.has(String(val))) return false;
-    }
-  }
-
-  return true;
-}
+};
 
 function TemplateDetailsHeader({
   template,
@@ -275,43 +196,6 @@ function TemplateDetailsHeader({
   );
 }
 
-function TemplateFieldsSection({
-  filteredTemplateFields,
-  isFieldFilterActive,
-  saveSortOrder,
-  canManageTemplate,
-  updateTemplateSortOrderMutation,
-}: {
-  filteredTemplateFields: FieldListTableRecord[];
-  isFieldFilterActive: boolean;
-  saveSortOrder: (fieldCodes: string[]) => void;
-  canManageTemplate: boolean;
-  editField: (f: FieldListTableRecord) => void;
-  removeField: (f: FieldListTableRecord) => void;
-  updateTemplateSortOrderMutation: any;
-}) {
-  return (
-    <TabsContent value={TEMPLATE_DETAILS_TABS.FIELDS} className="m-0 p-3 border-0 rounded-xl">
-      <FieldsListTable<FieldListTableRecord>
-        fields={filteredTemplateFields}
-        categories={[]}
-        options={{
-          sortable: true,
-          isSortOrderSaving: updateTemplateSortOrderMutation.isPending,
-          isSortingDisabled: !canManageTemplate || isFieldFilterActive,
-          showSortSequenceInSubtitle: false,
-        }}
-        emptyTitle={isFieldFilterActive ? "No matching fields" : "No fields assigned"}
-        emptyDescription={
-          isFieldFilterActive
-            ? "No fields match the current search or selected filters."
-            : "Add a field to this template to build the extraction schema."
-        }
-        onSortOrderChange={saveSortOrder}
-      />
-    </TabsContent>
-  );
-}
 
 
 export default function TemplateDetailsPage() {
@@ -330,13 +214,10 @@ export default function TemplateDetailsPage() {
     deleteOpen: false,
     deletingField: null,
   });
-  const [fieldSearch, setFieldSearch] = useState("");
-  const [fieldFilters, setFieldFilters] = useState<FilterValue>({});
   const cloneTemplateMutation = useCloneTemplate();
   const deleteTemplateMutation = useDeleteTemplate();
   const updateTemplateMutation = useUpdateTemplate();
   const setTemplateActiveMutation = useSetTemplateActive();
-  const updateTemplateSortOrderMutation = useUpdateTemplateSortOrder();
   const tabParam = searchParams.get("tab");
   const activeTab = isTemplateDetailsTab(tabParam)
     ? tabParam
@@ -367,23 +248,71 @@ export default function TemplateDetailsPage() {
       () => getTemplateMembershipFields(template),
       [template],
   );
-  
-  const fieldFilterGroups = useMemo(
-    () => getFieldFilterGroups(templateFields),
-    [templateFields],
-  );
-  const filteredTemplateFields = useMemo(() => {
-    const search = fieldSearch.trim();
 
-    return templateFields.filter(
-      (field) =>
-        matchesFieldSearch(field, search) &&
-        matchesFieldFilters(field, fieldFilters),
-    );
-  }, [fieldFilters, fieldSearch, templateFields]);
-  const isFieldFilterActive =
-    fieldSearch.trim().length > 0 ||
-    Object.values(fieldFilters).some((values: any) => values.length > 0);
+  const { data: rawExtractionFields = [] } = useExtractionFields();
+  
+  const extractionFields = useMemo(() => {
+    return rawExtractionFields.filter((f: any) => {
+      const mode = f.field_source_mode?.toUpperCase();
+      return !mode || mode === "EXTRACTED" || mode === "STANDARD" || mode === "BOTH";
+    });
+  }, [rawExtractionFields]);
+
+  const selectedIds = useMemo(() => {
+    return templateFields.flatMap((f) => {
+      const code = getFieldCode(f);
+      return code ? [code] : [];
+    });
+  }, [templateFields]);
+
+  const fieldCategories = useMemo(() => {
+    const categoriesMap = new Map<string, any>();
+    
+    const selectedFields = extractionFields.filter((field) => selectedIds.includes(field.field_id));
+
+    selectedFields.forEach(field => {
+      if (field.field_category) {
+        categoriesMap.set(field.field_category.field_category_code, field.field_category);
+      }
+    });
+
+    const extractedCategories = Array.from(categoriesMap.values()).map(cat => ({
+      id: cat.field_category_code,
+      label: cat.ui_label || cat.field_category_code,
+      description: cat.description,
+      sortOrder: cat.sort_sequence,
+      activeFieldCount: selectedFields.filter(f => f.field_category?.field_category_code === cat.field_category_code).length,
+    }));
+
+    return extractedCategories.sort((a, b) => {
+      const sortDifference = (a.sortOrder || Number.MAX_SAFE_INTEGER) - (b.sortOrder || Number.MAX_SAFE_INTEGER);
+      return sortDifference || a.label.localeCompare(b.label);
+    });
+  }, [extractionFields, selectedIds]);
+
+  const knownFieldItems = useMemo(() => {
+    const fieldByCode = new Map<string, any>();
+
+    extractionFields.forEach((field) => {
+      if (selectedIds.includes(field.field_id)) {
+        const code = field.field_id;
+        if (code && !fieldByCode.has(code)) {
+          fieldByCode.set(code, {
+            id: field.field_id,
+            label: field.field_label || field.field_id,
+            description: field.field_long_description || field.short_desc || "",
+            categoryId: field.field_category?.field_category_code || "uncategorized",
+            metadata: {
+              type: field.data_type_code || field.data_type?.data_type_code || "",
+              position: field.header_item || "Header",
+            },
+          });
+        }
+      }
+    });
+
+    return [...fieldByCode.values()];
+  }, [extractionFields, selectedIds]);
   const resolvedTemplateCode = getTemplateCode(template) || templateCode;
   const editHref = APP_ROUTES.getRoute(APP_ROUTES.TEMPLATE_EDIT, {
     templateCode: resolvedTemplateCode,
@@ -393,8 +322,6 @@ export default function TemplateDetailsPage() {
     getTemplateIsEditable(template) &&
     !getTemplateIsDefault(template),
   );
-  const displayedFieldCount =
-    getTemplateFieldCount(template) || templateFields.length;
   const isLoading = templateQuery.isLoading;
   const isTemplateAvailable = Object.keys(template).length > 0;
   const isStandardTemplate = getTemplateIsStandard(template);
@@ -468,29 +395,7 @@ export default function TemplateDetailsPage() {
     );
   };
 
-  const saveSortOrder = (fieldCodes: string[]) => {
-    if (!canManageTemplate || !resolvedTemplateCode || !fieldCodes.length) {
-      return;
-    }
 
-    updateTemplateSortOrderMutation.mutate({
-      templateCode: resolvedTemplateCode,
-      fieldCodes,
-    });
-  };
-
-  const editField = (field: FieldListTableRecord) => {
-    const fieldCode = getFieldCode(field);
-    if (!resolvedTemplateCode || !fieldCode) return;
-    navigate(APP_ROUTES.getRoute(APP_ROUTES.TEMPLATE_FIELD_EDIT, {
-      templateCode: resolvedTemplateCode,
-      fieldId: fieldCode,
-    }));
-  };
-
-  const removeField = (field: FieldListTableRecord) => {
-    setDialogs((prev) => ({ ...prev, deletingField: field }));
-  };
 
   const updateTemplateActiveState = () => {
     if (!canManageTemplate || !resolvedTemplateCode) {
@@ -544,17 +449,9 @@ export default function TemplateDetailsPage() {
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         editHref={editHref}
-        fieldFilterGroups={fieldFilterGroups}
-        fieldFilters={fieldFilters}
-        setFieldFilters={setFieldFilters}
-        fieldSearch={fieldSearch}
-        setFieldSearch={setFieldSearch}
-        filteredTemplateFields={filteredTemplateFields}
-        displayedFieldCount={displayedFieldCount}
-        saveSortOrder={saveSortOrder}
-        editField={editField}
-        removeField={removeField}
-        updateTemplateSortOrderMutation={updateTemplateSortOrderMutation}
+        fieldCategories={fieldCategories}
+        knownFieldItems={knownFieldItems}
+        selectedIds={selectedIds}
         updateTemplateMutation={updateTemplateMutation}
         removeFieldFromTemplate={removeFieldFromTemplate}
         cloneTemplateMutation={cloneTemplateMutation}
@@ -566,7 +463,6 @@ export default function TemplateDetailsPage() {
         options={{
           isStandardTemplate,
           showHeaderCloneAction,
-          isFieldFilterActive,
           canManageTemplate,
         }}
       />
@@ -581,17 +477,9 @@ function TemplateDetailsContent({
   activeTab,
   setActiveTab,
   editHref,
-  fieldFilterGroups,
-  fieldFilters,
-  setFieldFilters,
-  fieldSearch,
-  setFieldSearch,
-  filteredTemplateFields,
-  displayedFieldCount,
-  saveSortOrder,
-  editField,
-  removeField,
-  updateTemplateSortOrderMutation,
+  fieldCategories,
+  knownFieldItems,
+  selectedIds,
   updateTemplateMutation,
   removeFieldFromTemplate,
   cloneTemplateMutation,
@@ -604,7 +492,6 @@ function TemplateDetailsContent({
 }: any) {
   const {
     showHeaderCloneAction = false,
-    isFieldFilterActive = false,
     canManageTemplate = false,
   } = options || {};
   return (
@@ -654,46 +541,10 @@ function TemplateDetailsContent({
                 >
                   Fields
                   <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-semibold text-primary">
-                    {displayedFieldCount}
+                    {selectedIds.length}
                   </span>
                 </TabsTrigger>
               </TabsList>
-
-              {activeTab === TEMPLATE_DETAILS_TABS.FIELDS ? (
-                <FilterDropdown
-                  groups={fieldFilterGroups}
-                  value={fieldFilters}
-                  onValueChange={setFieldFilters}
-                >
-                  <div className="flex w-full min-w-0 flex-col gap-2 pb-2 md:w-auto md:flex-row md:items-center md:justify-end md:pb-3 p-4">
-                    <div className="relative min-w-0 md:w-64">
-                      <Search className="pointer-events-none absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
-                      <Input
-                        value={fieldSearch}
-                        onChange={(event: any) => setFieldSearch(event.target.value)}
-                        placeholder="Search fields"
-                        aria-label="Search fields"
-                        className="h-8 w-full pl-8 pr-8 text-sm"
-                      />
-                      {fieldSearch ? (
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon-xs"
-                          className="absolute right-1 top-1/2 size-6 -translate-y-1/2 text-muted-foreground"
-                          aria-label="Clear field search"
-                          onClick={() => setFieldSearch("")}
-                        >
-                          <X className="size-3.5" />
-                        </Button>
-                      ) : null}
-                    </div>
-
-                    <FilterDropdownTrigger />
-                    <FilterDropdownContent />
-                  </div>
-                </FilterDropdown>
-              ) : null}
             </CardTitle>
           </CardHeader>
 
@@ -711,13 +562,9 @@ function TemplateDetailsContent({
             </TabsContent>
 
             <TemplateFieldsSection
-              filteredTemplateFields={filteredTemplateFields as FieldListTableRecord[]}
-              isFieldFilterActive={isFieldFilterActive}
-              saveSortOrder={saveSortOrder}
-              canManageTemplate={canManageTemplate}
-              editField={editField}
-              removeField={removeField}
-              updateTemplateSortOrderMutation={updateTemplateSortOrderMutation}
+              categories={fieldCategories}
+              knownItems={knownFieldItems}
+              selectedIds={selectedIds}
             />
           </CardContent>
         </Tabs>

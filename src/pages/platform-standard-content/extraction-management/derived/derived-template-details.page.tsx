@@ -1,6 +1,6 @@
 import { Link, useParams, useSearchParams } from "react-router-dom";
-import { ArrowLeft, Edit2, Search, X } from "lucide-react";
-import { useState, useMemo, useCallback } from "react";
+import { ArrowLeft, Edit2 } from "lucide-react";
+import { useMemo, useCallback } from "react";
 import { PageContainers } from "@/components/invoice-ui/page-containers";
 import { PageLoader } from "@/components/layout/PageLoader";
 import {
@@ -12,35 +12,15 @@ import { Button } from "@/components/ui/button";
 import { useUser } from "@/hooks/use-user";
 import { APP_ROUTES } from "@/config/routes-helper";
 import { useDerivedTemplate } from "@/api/hooks/useDerivedTemplates";
+import { useExtractionFields } from "@/api/hooks/useExtractionFields";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DetailGrid } from "@/components/ui/detail-grid";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Input } from "@/components/ui/input";
-import {
-  FilterDropdown,
-  FilterDropdownContent,
-  FilterDropdownTrigger,
-} from "@/components/invoice-ui/filter-dropdown";
-import type { FilterGroup, FilterValue } from "@/components/invoice-ui/filter-dropdown-context";
-import { FieldsListTable, type FieldListTableRecord } from "@/components/invoice-ui/templates/fields-list-table";
-import {
-  getFieldLabel,
-  getFieldCode,
-  getFieldShortDescription,
-  getFieldLongDescription,
-  getFieldExamples,
-  getFieldInstructions,
-} from "@/components/invoice-ui/templates/template-data";
+import { CategorizedFieldSelector } from "@/components/ui/categorized-field-selector";
 
 const TEMPLATE_DETAILS_TABS = {
   DETAILS: "details",
   FIELDS: "fields",
-} as const;
-
-const FIELD_FILTER_GROUP_IDS = {
-  POSITION: "position",
-  CONTENT_TYPE: "content_type",
-  DATA_TYPE: "data_type",
 } as const;
 
 type TemplateDetailsTab = (typeof TEMPLATE_DETAILS_TABS)[keyof typeof TEMPLATE_DETAILS_TABS];
@@ -49,99 +29,11 @@ function isTemplateDetailsTab(value: string | null): value is TemplateDetailsTab
   return value === TEMPLATE_DETAILS_TABS.DETAILS || value === TEMPLATE_DETAILS_TABS.FIELDS;
 }
 
-// --- Module-scope helpers ---
-function getFieldFilterGroups(fields: unknown[]) {
-  const positions = new Set<string>();
-  const contentTypes = new Set<string>();
-  const dataTypes = new Set<string>();
-
-  fields.forEach((f: any) => {
-    const pos = f?.header_item ?? f?.header ?? null;
-    if (pos) positions.add(String(pos));
-
-    const ct = f?.content_type ?? f?.field_content_type ?? null;
-    if (ct) contentTypes.add(String(ct));
-
-    const dt = f?.data_type ?? f?.field_type ?? null;
-    if (dt) dataTypes.add(String(dt));
-  });
-
-  const makeOptions = (set: Set<string>) =>
-    Array.from(set).map((value) => ({ value: String(value), label: String(value) }));
-
-  const groups: FilterGroup[] = [];
-
-  groups.push({
-    id: FIELD_FILTER_GROUP_IDS.POSITION,
-    label: "Position",
-    options: makeOptions(positions),
-  });
-
-  groups.push({
-    id: FIELD_FILTER_GROUP_IDS.CONTENT_TYPE,
-    label: "Content type",
-    options: makeOptions(contentTypes),
-  });
-
-  groups.push({
-    id: FIELD_FILTER_GROUP_IDS.DATA_TYPE,
-    label: "Data type",
-    options: makeOptions(dataTypes),
-  });
-
-  return groups;
-}
-
-function matchesFieldSearch(field: unknown, search: string) {
-  if (!search) return true;
-  const needle = search.toLowerCase();
-  const label = getFieldLabel(field).toLowerCase();
-  const code = getFieldCode(field).toLowerCase();
-  const short = String(getFieldShortDescription(field) ?? "").toLowerCase();
-  const long = String(getFieldLongDescription(field) ?? "").toLowerCase();
-  const examples = (getFieldExamples(field) ?? []).join(" ").toLowerCase();
-  const instr = (getFieldInstructions(field) ?? []).join(" ").toLowerCase();
-
-  return (
-    label.includes(needle) ||
-    code.includes(needle) ||
-    short.includes(needle) ||
-    long.includes(needle) ||
-    examples.includes(needle) ||
-    instr.includes(needle)
-  );
-}
-
-function matchesFieldFilters(field: any, filters: Record<string, string[]>) {
-  if (!filters || !Object.keys(filters).length) return true;
-
-  for (const [groupId, values] of Object.entries(filters)) {
-    if (!values.length) continue;
-
-    const valuesSet = new Set(values.map(String));
-
-    if (groupId === FIELD_FILTER_GROUP_IDS.POSITION) {
-      const val = field?.header_item ?? field?.header ?? "";
-      if (!valuesSet.has(String(val))) return false;
-    } else if (groupId === FIELD_FILTER_GROUP_IDS.CONTENT_TYPE) {
-      const val = field?.content_type ?? field?.field_content_type ?? "";
-      if (!valuesSet.has(String(val))) return false;
-    } else if (groupId === FIELD_FILTER_GROUP_IDS.DATA_TYPE) {
-      const val = field?.data_type ?? field?.field_type ?? "";
-      if (!valuesSet.has(String(val))) return false;
-    }
-  }
-
-  return true;
-}
-
 export default function DerivedTemplateDetailsPage() {
   const { derivedTemplateId = "" } = useParams();
   const { isMounted } = useUser();
   const [searchParams, setSearchParams] = useSearchParams();
   const templateQuery = useDerivedTemplate(derivedTemplateId);
-  const [fieldSearch, setFieldSearch] = useState("");
-  const [fieldFilters, setFieldFilters] = useState<FilterValue>({});
 
   const tabParam = searchParams.get("tab");
   const activeTab = isTemplateDetailsTab(tabParam) ? tabParam : TEMPLATE_DETAILS_TABS.DETAILS;
@@ -158,21 +50,68 @@ export default function DerivedTemplateDetailsPage() {
   const backUrl = APP_ROUTES.TEMPLATES + "?tab=derived";
 
   const template = templateQuery.data;
-  const templateFields = useMemo(() => template?.field_membership || [], [template]);
-  
-  const fieldFilterGroups = useMemo(() => getFieldFilterGroups(templateFields), [templateFields]);
-  const filteredTemplateFields = useMemo(() => {
-    const search = fieldSearch.trim();
-    return templateFields.filter(
-      (field: any) =>
-        matchesFieldSearch(field, search) &&
-        matchesFieldFilters(field, fieldFilters),
-    );
-  }, [fieldFilters, fieldSearch, templateFields]);
-  
-  const isFieldFilterActive =
-    fieldSearch.trim().length > 0 ||
-    Object.values(fieldFilters).some((values: any) => values.length > 0);
+  const { data: extractionFields = [] } = useExtractionFields();
+
+  const derivedFields = useMemo(() => {
+    return extractionFields.filter(f => {
+      const mode = f.field_source_mode?.toUpperCase();
+      return mode === "DERIVED" || mode === "BOTH";
+    });
+  }, [extractionFields]);
+
+  const knownItems = useMemo(() => {
+    return derivedFields.map((f: any) => {
+      const categoryId = f.field_category?.field_category_code || f.category_code || "uncategorized";
+      return {
+        id: f.field_id,
+        label: f.name || f.field_label || f.field_id,
+        description: f.description || f.short_desc || f.field_long_description,
+        categoryId: categoryId,
+        metadata: {
+          type: f.data_type_code || f.data_type?.data_type_code || "",
+          position: f.header_item || "Header",
+        },
+      };
+    });
+  }, [derivedFields]);
+
+  const categories = useMemo(() => {
+    const categoriesMap = new Map<string, any>();
+    
+    derivedFields.forEach((field: any) => {
+      if (field.field_category) {
+        categoriesMap.set(field.field_category.field_category_code, field.field_category);
+      }
+    });
+
+    const extractedCategories = Array.from(categoriesMap.values()).map(cat => ({
+      id: cat.field_category_code,
+      label: cat.ui_label || cat.field_category_code,
+      description: cat.description,
+      sortOrder: cat.sort_sequence || Number.MAX_SAFE_INTEGER,
+      activeFieldCount: derivedFields.filter((f: any) => f.field_category?.field_category_code === cat.field_category_code).length,
+    }));
+
+    const uncategorizedCount = derivedFields.filter((f: any) => !f.field_category).length;
+    if (uncategorizedCount > 0) {
+      extractedCategories.push({
+        id: "uncategorized",
+        label: "Uncategorized",
+        description: "",
+        sortOrder: Number.MAX_SAFE_INTEGER,
+        activeFieldCount: uncategorizedCount,
+      });
+    }
+
+    return extractedCategories.sort((a, b) => {
+      const sortDifference = a.sortOrder - b.sortOrder;
+      return sortDifference || a.label.localeCompare(b.label);
+    });
+  }, [derivedFields]);
+
+  const selectedIds = useMemo(() => {
+    return (template?.field_membership || []).map((m: any) => m.field_id);
+  }, [template]);
 
   if (!isMounted) {
     return null;
@@ -227,45 +166,10 @@ export default function DerivedTemplateDetailsPage() {
                 >
                   Fields
                   <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-semibold text-primary">
-                    {templateFields.length}
+                    {selectedIds.length}
                   </span>
                 </TabsTrigger>
               </TabsList>
-
-              {activeTab === TEMPLATE_DETAILS_TABS.FIELDS ? (
-                <FilterDropdown
-                  groups={fieldFilterGroups}
-                  value={fieldFilters}
-                  onValueChange={setFieldFilters}
-                >
-                  <div className="flex w-full min-w-0 flex-col gap-2 pb-2 md:w-auto md:flex-row md:items-center md:justify-end md:pb-3 p-4">
-                    <div className="relative min-w-0 md:w-64">
-                      <Search className="pointer-events-none absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
-                      <Input
-                        value={fieldSearch}
-                        onChange={(event: any) => setFieldSearch(event.target.value)}
-                        placeholder="Search fields"
-                        aria-label="Search fields"
-                        className="h-8 w-full pl-8 pr-8 text-sm"
-                      />
-                      {fieldSearch ? (
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon-xs"
-                          className="absolute right-1 top-1/2 size-6 -translate-y-1/2 text-muted-foreground"
-                          aria-label="Clear field search"
-                          onClick={() => setFieldSearch("")}
-                        >
-                          <X className="size-3.5" />
-                        </Button>
-                      ) : null}
-                    </div>
-                    <FilterDropdownTrigger />
-                    <FilterDropdownContent />
-                  </div>
-                </FilterDropdown>
-              ) : null}
             </CardTitle>
           </CardHeader>
 
@@ -333,22 +237,26 @@ export default function DerivedTemplateDetailsPage() {
             </TabsContent>
 
             <TabsContent value={TEMPLATE_DETAILS_TABS.FIELDS} className="m-0 p-3 border-0 rounded-xl">
-              <FieldsListTable<FieldListTableRecord>
-                fields={filteredTemplateFields as FieldListTableRecord[]}
-                categories={[]}
-                options={{
-                  sortable: true,
-                  isSortingDisabled: true,
-                  showSortSequenceInSubtitle: false,
+              <CategorizedFieldSelector
+                categories={categories}
+                knownItems={knownItems}
+                selectedIds={selectedIds}
+                onSelectedChange={() => {}}
+                readonly={true}
+                loadCategoryItems={async (category: any) => {
+                  const items = knownItems.filter((i: any) => i.categoryId === category.id);
+                  return { items, total: items.length };
                 }}
-                emptyTitle={isFieldFilterActive ? "No matching fields" : "No derived fields assigned"}
-                emptyDescription={
-                  isFieldFilterActive
-                    ? "No fields match the current search or selected filters."
-                    : "No fields are currently configured for this derived template."
-                }
-                className="rounded-md border border-border shadow-none overflow-hidden"
-                renderActions={() => null}
+                getCategoryItemsQueryKey={(category) => ["derived-items", category.id]}
+                loadSearchItems={async (search) => {
+                  const s = search.toLowerCase();
+                  const items = knownItems.filter(i => 
+                    i.label.toLowerCase().includes(s) || 
+                    (i.description && i.description.toLowerCase().includes(s))
+                  );
+                  return { items, total: items.length };
+                }}
+                getSearchItemsQueryKey={(search) => ["derived-search", search]}
               />
             </TabsContent>
           </CardContent>
