@@ -259,7 +259,7 @@ export function ExtractionManagement() {
                   </Button>
                 </div>
               </div>
-              <TemplateCards templates={filteredTemplates as any} />
+              <TemplateCards templates={filteredTemplates as any} isLoading={isLoading || isFetching} />
             </TabsContent>
 
             <TabsContent value="derived" className="m-0 focus:outline-none flex flex-col gap-4">
@@ -289,6 +289,7 @@ export function ExtractionManagement() {
               <DerivedTemplateCards 
                 templates={filteredDerived as any}
                 onDeleteTemplate={(template) => requestDeleteDerived((template as any).derived_template_id)}
+                isLoading={isLoading || isFetching}
               />
             </TabsContent>
           </>

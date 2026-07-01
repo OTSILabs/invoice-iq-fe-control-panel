@@ -98,10 +98,35 @@ function TemplateCardTitle({
 export function DerivedTemplateCards({
   templates = EMPTY_TEMPLATES,
   onDeleteTemplate,
+  isLoading = false,
 }: {
   templates?: ApiRecord[];
   onDeleteTemplate?: (template: ApiRecord) => void;
+  isLoading?: boolean;
 }) {
+  if (isLoading) {
+    return (
+      <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+        {Array.from({ length: 3 }).map((_, index) => (
+          <Card key={index} className="h-[200px] w-full bg-card border border-border/50 rounded-xl overflow-hidden flex flex-col animate-pulse">
+            <CardHeader className="gap-3 border-b border-border/60 bg-muted/15 p-4 flex-1">
+              <div className="h-5 bg-muted-foreground/15 rounded w-1/2" />
+              <div className="h-3 bg-muted-foreground/10 rounded w-3/4" />
+            </CardHeader>
+            <CardContent className="p-4 flex-1 space-y-2.5">
+              <div className="h-3 bg-muted-foreground/10 rounded w-full" />
+              <div className="h-3 bg-muted-foreground/10 rounded w-5/6" />
+            </CardContent>
+            <CardFooter className="p-4 border-t border-border/60 flex justify-between items-center">
+              <div className="h-4 bg-muted-foreground/10 rounded w-1/4" />
+              <div className="h-4 bg-muted-foreground/10 rounded w-1/6" />
+            </CardFooter>
+          </Card>
+        ))}
+      </div>
+    );
+  }
+
   if (!templates.length) {
     return (
       <EmptyState
