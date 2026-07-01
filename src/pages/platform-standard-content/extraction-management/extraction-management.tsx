@@ -271,6 +271,7 @@ export function ExtractionManagement() {
                 searchText={state.searchText}
                 onSearchChange={setSearchText}
                 onRefresh={handleRefetch}
+                onView={(derived) => navigate(`/platform-standard-content/extraction-management/derived/${derived.derived_template_id}`)}
               />
             </TabsContent>
           </>

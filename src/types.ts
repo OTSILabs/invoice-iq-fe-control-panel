@@ -486,6 +486,7 @@ export interface DerivedTableProps {
   searchText: string
   onSearchChange: (value: string) => void
   onRefresh: () => void
+  onView?: (item: StandardDerivedTemplateResponse) => void
 }
 
 export interface ExtractionManagementState {
