@@ -134,7 +134,7 @@ export function DerivedTemplateForm({ mode, template, onCancel, onSuccess }: Der
   });
 
   const selectedErpType = form.watch("erp_type");
-  const selectedDocTypeCode = form.watch("document_type_code");
+  // const selectedDocTypeCode = form.watch("document_type_code");
 
 
 

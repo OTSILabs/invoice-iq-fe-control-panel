@@ -24,7 +24,6 @@ import type {
   Plan,
   Tenant,
   DataType,
-  StandardDerivedTemplateResponse,
   StandardExtractionFieldResponse,
   FieldCategoryResponse,
   NormalizationRule,
