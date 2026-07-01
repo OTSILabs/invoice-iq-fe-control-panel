@@ -88,7 +88,7 @@ type FieldListTableProps<TField extends FieldListTableRecord> = {
 };
 
 function getFieldCode(field: FieldListTableRecord) {
-  return field.field_id;
+  return field.field_id || (field as any).derived_template_field_id || (field as any).field_code;
 }
 
 function getFieldCodes(fields: FieldListTableRecord[]) {
@@ -123,7 +123,7 @@ function toOptionalDisplayValue(value: unknown) {
 }
 
 function getFieldLabel(field: FieldListTableRecord) {
-  return getTrimmedValue(field.field_label) || field.field_id;
+  return getTrimmedValue(field.field_label) || getTrimmedValue((field as any).field_name) || getFieldCode(field);
 }
 
 function getFieldShortDescription(field: FieldListTableRecord) {

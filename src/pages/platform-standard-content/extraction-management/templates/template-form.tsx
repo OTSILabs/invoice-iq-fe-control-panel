@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, Plus, Save, X } from "lucide-react";
@@ -52,6 +52,7 @@ const tagListSchema = z.array(
 );
 
 const templateSchema = z.object({
+	template_id: z.string().trim().min(1, "Template ID is required."),
 	name: z
 		.string()
 		.trim()
@@ -75,7 +76,8 @@ function asRecord(value: unknown): ApiRecord {
 }
 
 function getDefaultValues(template: TemplateRecord | null | undefined) {
-	return {
+	const values = {
+		template_id: template ? getTemplateCode(template) : "",
 		name: template ? getTemplateName(template) : "",
 		description: getTemplateDescription(template),
 		business_process_tags: getTemplateTags(template, "business_process_tags"),
@@ -83,6 +85,8 @@ function getDefaultValues(template: TemplateRecord | null | undefined) {
 		taxation_tags: getTemplateTags(template, "taxation_tags"),
 		existing_field_ids: getTemplateFieldCodes(template),
 	};
+	console.log("getDefaultValues result:", values, "from template:", template);
+	return values;
 }
 
 function getTemplateDescription(template: TemplateRecord | null | undefined) {
@@ -135,6 +139,9 @@ function buildExistingFields(fieldIds: string[]): TemplateMembershipInput[] {
 			result.push({
 				field_id: trimmed,
 				sort_sequence: sequence++,
+				is_required: true,
+				validation_rules: [],
+				normalization_rules: [],
 			});
 		}
 	}
@@ -281,12 +288,19 @@ export function TemplateForm({
 	const [createdFields, setCreatedFields] = useState<ApiRecord[]>([]);
 	const createTemplate = useCreateTemplate();
 	const updateTemplate = useUpdateTemplate();
-	const { data: extractionFields = [], isLoading: isExtractionFieldsLoading } = useExtractionFields();
+	const { data: rawExtractionFields = [], isLoading: isExtractionFieldsLoading } = useExtractionFields();
+	
+	const extractionFields = useMemo(() => {
+		return rawExtractionFields.filter((f: any) => {
+			const mode = f.field_source_mode?.toUpperCase();
+			return !mode || mode === "EXTRACTED" || mode === "STANDARD" || mode === "BOTH";
+		});
+	}, [rawExtractionFields]);
 	const templateCode = template ? getTemplateCode(template) : "";
 	const isPending = createTemplate.isPending || updateTemplate.isPending;
 	const form = useForm<TemplateFormValues, unknown, TemplateFormValues>({
 		resolver: zodResolver(templateSchema),
-		defaultValues: getDefaultValues(template),
+		values: getDefaultValues(template),
 	});
 
 
@@ -374,9 +388,7 @@ export function TemplateForm({
 		return allCodes;
 	}, [knownFieldItems]);
 
-	useEffect(() => {
-		form.reset(getDefaultValues(template));
-	}, [template, form.reset]);
+
 
 	const handleFieldCreated = (response?: unknown, payload?: ApiRecord) => {
 		const createdField = asRecord(
@@ -411,12 +423,13 @@ export function TemplateForm({
 		const payload:
 			| ExtractionTemplateCreateRequest
 			| ExtractionTemplateUpdateRequest = {
+			template_id: values.template_id,
 			name: values.name.trim(),
 			description: values.description.trim() || null,
 			business_process_tags: normalizeTags(values.business_process_tags),
 			document_type_tags: normalizeTags(values.document_type_tags),
 			taxation_tags: normalizeTags(values.taxation_tags),
-			existing_fields: buildExistingFields(values.existing_field_ids),
+			field_membership: buildExistingFields(values.existing_field_ids),
 		};
 
 		if (isEditMode && templateCode) {
@@ -483,7 +496,7 @@ function TemplateFormContent({
 				<div className="p-4 sm:p-5">
 					<form id={formId} onSubmit={form.handleSubmit(submit)} noValidate>
 						<FieldGroup className="gap-5">
-							<TemplateFormDetails control={form.control} />
+							<TemplateFormDetails control={form.control} isEditMode={isEditMode} />
 
 							<Controller
 								name="existing_field_ids"

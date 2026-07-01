@@ -87,7 +87,7 @@ export function normalizeTemplateFieldsResponse(response: unknown) {
 export function getTemplateCode(template: unknown) {
   const record = asRecord(template);
   const value =
-    record.template_id || record.template_code || record.code || record.id;
+    record.derived_template_id || record.template_id || record.template_code || record.code || record.id;
 
   return typeof value === "string" || typeof value === "number"
     ? String(value)
@@ -127,10 +127,6 @@ export function getTemplateIsStandard(template: unknown) {
 export function getTemplateIsEditable(template: unknown) {
   const record = asRecord(template);
 
-  if (getTemplateIsStandard(template)) {
-    return false;
-  }
-
   return record.is_editable !== false;
 }
 
@@ -138,6 +134,7 @@ export function getFieldCode(field: unknown) {
   const record = asRecord(field);
   const value =
     record.field_id ||
+    record.derived_template_field_id ||
     record.field_code ||
     record.code ||
     record.id ||

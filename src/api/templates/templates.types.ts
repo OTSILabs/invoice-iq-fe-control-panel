@@ -114,6 +114,8 @@ export interface TemplateMembershipInput extends ApiRecord {
   header_item?: Nullable<string>;
   source_mode?: Nullable<string>;
   sort_sequence?: Nullable<number>;
+  validation_rules?: unknown[];
+  normalization_rules?: unknown[];
 }
 
 export interface NewTemplateFieldInput extends CustomFieldRequest {
@@ -145,19 +147,18 @@ export interface ExtractionTemplateCreateRequest extends ApiRecord {
   business_process_tags?: string[];
   document_type_tags?: string[];
   taxation_tags?: string[];
-  existing_fields?: TemplateMembershipInput[];
-  new_fields?: NewTemplateFieldInput[];
+  field_membership?: TemplateMembershipInput[];
   is_active?: boolean;
 }
 
 export interface ExtractionTemplateUpdateRequest extends ApiRecord {
+  template_id?: Nullable<string>;
   name?: Nullable<string>;
   description?: Nullable<string>;
   business_process_tags?: Nullable<string[]>;
   document_type_tags?: Nullable<string[]>;
   taxation_tags?: Nullable<string[]>;
-  existing_fields?: Nullable<TemplateMembershipInput[]>;
-  new_fields?: Nullable<NewTemplateFieldInput[]>;
+  field_membership?: Nullable<TemplateMembershipInput[]>;
   is_active?: Nullable<boolean>;
 }
 

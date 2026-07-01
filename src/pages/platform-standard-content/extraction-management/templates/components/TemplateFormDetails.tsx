@@ -17,12 +17,34 @@ function RequiredLabel({ children }: { children: React.ReactNode }) {
 
 export function TemplateFormDetails({
   control,
+  isEditMode,
 }: {
   control: Control<TemplateFormValues>;
+  isEditMode: boolean;
 }) {
   return (
     <>
       <div className="grid gap-5 lg:grid-cols-2">
+        <Controller
+          name="template_id"
+          control={control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <RequiredLabel>Template ID</RequiredLabel>
+              <Input
+                {...field}
+                placeholder="e.g. default_invoice"
+                readOnly={isEditMode}
+                className={isEditMode ? "opacity-50 cursor-not-allowed bg-muted" : ""}
+                aria-invalid={fieldState.invalid}
+              />
+              {fieldState.invalid ? (
+                <FieldError errors={[fieldState.error]} />
+              ) : null}
+            </Field>
+          )}
+        />
+
         <Controller
           name="name"
           control={control}

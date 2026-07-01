@@ -24,8 +24,8 @@ import { useExtractionTemplates } from "@/api/hooks/useExtractionTemplates";
 import { useDerivedTemplates, useDeleteDerivedTemplate } from "@/api/hooks/useDerivedTemplates";
 
 import { TemplateCards } from "@/components/invoice-ui/templates/template-cards";
+import { DerivedTemplateCards } from "@/components/invoice-ui/templates/derived-template-cards";
 import { FieldsTable } from "./components/fields-table";
-import { DerivedTable } from "./components/derived-table";
 
 type Action =
   | { type: "SET_ACTIVE_TAB"; payload: string }
@@ -262,16 +262,33 @@ export function ExtractionManagement() {
               <TemplateCards templates={filteredTemplates as any} />
             </TabsContent>
 
-            <TabsContent value="derived" className="m-0 focus:outline-none">
-              <DerivedTable
-                data={filteredDerived}
-                isLoading={isLoading || isFetching}
-                isFetching={isFetching}
-                onDelete={requestDeleteDerived}
-                searchText={state.searchText}
-                onSearchChange={setSearchText}
-                onRefresh={handleRefetch}
-                onView={(derived) => navigate(`/platform-standard-content/extraction-management/derived/${derived.derived_template_id}`)}
+            <TabsContent value="derived" className="m-0 focus:outline-none flex flex-col gap-4">
+              <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between px-1">
+                <h3 className="text-xs font-semibold  text-muted-foreground ">
+                  Derived Templates ({filteredDerived.length})
+                </h3>
+                <div className="flex items-center gap-2">
+                  <SearchInput
+                    value={state.searchText}
+                    onChange={setSearchText}
+                    disabled={isLoading}
+                    placeholder="Search templates..."
+                    className="w-full sm:w-64"
+                  />
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={handleRefetch}
+                    className="h-9 w-9 shrink-0 cursor-pointer"
+                    disabled={isFetching}
+                  >
+                    <RefreshCw className={cn("size-4", isFetching && "animate-spin")} />
+                  </Button>
+                </div>
+              </div>
+              <DerivedTemplateCards 
+                templates={filteredDerived as any}
+                onDeleteTemplate={(template) => requestDeleteDerived((template as any).derived_template_id)}
               />
             </TabsContent>
           </>
