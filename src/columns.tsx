@@ -12,14 +12,11 @@ import { MaskedValue } from "@/components/ui/copyable-field"
 import { EditableValueCell } from "@/pages/organization/components/editable-value-cell"
 import { EditableValueCell as ProfileEditableValueCell } from "@/pages/organization/components/profile-editable-value-cell"
 import { TenantActionsDropdown } from "@/pages/organization/components/tenant-actions-dropdown"
-import { SemanticBadge, type SemanticTone } from "@/components/invoice-ui/design-system"
 import {
-  MoreVertical,
-  Eye,
-  Edit,
-  Edit2,
-  Trash2,
-} from "lucide-react"
+  SemanticBadge,
+  type SemanticTone,
+} from "@/components/invoice-ui/design-system"
+import { MoreVertical, Eye, Edit, Edit2, Trash2 } from "lucide-react"
 import type {
   Plan,
   Tenant,
@@ -48,10 +45,15 @@ export { RoleBadge } from "@/components/invoice-ui/role-badge"
 // User role parsing utility
 export const getRolesList = (u: PlatformUser | null | undefined): string[] => {
   if (!u) return []
-  const raw = Array.isArray(u.roles) ? u.roles : Array.isArray(u.role_names) ? u.role_names : [u.role, u.role_name]
+  const raw = Array.isArray(u.roles)
+    ? u.roles
+    : Array.isArray(u.role_names)
+      ? u.role_names
+      : [u.role, u.role_name]
   return raw.reduce<string[]>((acc, r: unknown) => {
     if (r) {
-      const name = typeof r === "string" ? r : (r as { name?: string })?.name || ""
+      const name =
+        typeof r === "string" ? r : (r as { name?: string })?.name || ""
       if (name) acc.push(name)
     }
     return acc
@@ -64,15 +66,19 @@ export const planColumns: CustomColumnDef<Plan>[] = [
     accessorKey: "plan_type",
     header: "Plan Type",
     width: 140,
-    cell: ({ row }) => <span className="text-xs font-semibold text-foreground">{row.original.plan_type}</span>,
+    cell: ({ row }) => (
+      <span className="text-xs font-semibold text-foreground">
+        {row.original.plan_type || "—"}
+      </span>
+    ),
   },
-   {
+  {
     accessorKey: "price_per_invoice_currency",
     header: "Currency",
     width: 100,
     cell: ({ row }) => (
       <span className="text-xs font-semibold text-muted-foreground">
-        {row.original.price_per_invoice_currency}
+        {row.original.price_per_invoice_currency || "—"}
       </span>
     ),
   },
@@ -82,7 +88,7 @@ export const planColumns: CustomColumnDef<Plan>[] = [
     width: 100,
     cell: ({ row }) => (
       <span className="text-xs font-medium text-foreground">
-        {row.original.price_per_invoice_amount}
+        {row.original.price_per_invoice_amount ?? "—"}
       </span>
     ),
   },
@@ -90,7 +96,11 @@ export const planColumns: CustomColumnDef<Plan>[] = [
     accessorKey: "plan_interval",
     header: "Interval",
     width: 120,
-    cell: ({ row }) => <span className="text-xs text-muted-foreground">{row.original.plan_interval}</span>,
+    cell: ({ row }) => (
+      <span className="text-xs text-muted-foreground">
+        {row.original.plan_interval || "—"}
+      </span>
+    ),
   },
   {
     accessorKey: "is_active",
@@ -102,7 +112,11 @@ export const planColumns: CustomColumnDef<Plan>[] = [
     accessorKey: "description",
     header: "Description",
     width: 120,
-    cell: ({ row }) => <span className="block truncate text-xs text-muted-foreground">{row.original.description}</span>,
+    cell: ({ row }) => (
+      <span className="block truncate text-xs text-muted-foreground">
+        {row.original.description || "—"}
+      </span>
+    ),
   },
   {
     accessorKey: "created_at",
@@ -110,7 +124,9 @@ export const planColumns: CustomColumnDef<Plan>[] = [
     width: 140,
     cell: ({ row }) => (
       <span className="text-xs text-muted-foreground">
-        {row.original.created_at ? new Date(row.original.created_at).toLocaleDateString() : "N/A"}
+        {row.original.created_at
+          ? new Date(row.original.created_at).toLocaleDateString()
+          : "N/A"}
       </span>
     ),
   },
@@ -123,20 +139,33 @@ export const planColumns: CustomColumnDef<Plan>[] = [
         <div className="flex items-center" onClick={(e) => e.stopPropagation()}>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="h-8 w-8 p-0 cursor-pointer">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-8 w-8 cursor-pointer p-0"
+              >
                 <MoreVertical className="h-4 w-4 text-muted-foreground" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-45">
-              <DropdownMenuItem disabled className="text-xs cursor-not-allowed opacity-50 gap-1.5">
+              <DropdownMenuItem
+                disabled
+                className="cursor-not-allowed gap-1.5 text-xs opacity-50"
+              >
                 <Eye className="h-3.5 w-3.5 text-muted-foreground" />
                 View Details
               </DropdownMenuItem>
-              <DropdownMenuItem disabled className="text-xs cursor-not-allowed opacity-50 gap-1.5">
+              <DropdownMenuItem
+                disabled
+                className="cursor-not-allowed gap-1.5 text-xs opacity-50"
+              >
                 <Edit className="h-3.5 w-3.5 text-muted-foreground" />
                 Edit
               </DropdownMenuItem>
-              <DropdownMenuItem disabled className="text-xs cursor-not-allowed opacity-50 gap-1.5 text-red-600 focus:text-red-700">
+              <DropdownMenuItem
+                disabled
+                className="cursor-not-allowed gap-1.5 text-xs text-red-600 opacity-50 focus:text-red-700"
+              >
                 <Trash2 className="h-3.5 w-3.5" />
                 Delete
               </DropdownMenuItem>
@@ -151,7 +180,9 @@ export const planColumns: CustomColumnDef<Plan>[] = [
 // 2. Tenant list table columns
 export const getTenantColumns = (
   orgId: string,
-  setTenantAction: (action: { type: TenantActionType; tenant: Tenant } | null) => void
+  setTenantAction: (
+    action: { type: TenantActionType; tenant: Tenant } | null
+  ) => void
 ): CustomColumnDef<Tenant>[] => [
   {
     accessorKey: "slug",
@@ -162,10 +193,12 @@ export const getTenantColumns = (
       const slug = row.original.slug || "—"
       return (
         <div className="flex items-center gap-2.5 py-0.5">
-          <div className="h-6 w-6 rounded-md bg-primary/10 text-primary border border-primary/20 flex items-center justify-center text-[10px] leading-none font-semibold flex-shrink-0">
+          <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-md border border-primary/20 bg-primary/10 text-[10px] leading-none font-semibold text-primary">
             {getInitials(slug)}
           </div>
-          <span className="text-xs font-semibold text-foreground truncate">{slug}</span>
+          <span className="truncate text-xs font-semibold text-foreground">
+            {slug}
+          </span>
         </div>
       )
     },
@@ -187,7 +220,9 @@ export const getTenantColumns = (
     width: "20%",
     minWidth: 100,
     cell: ({ row }) => (
-      <span className="text-xs font-medium text-foreground truncate">{row.original.tenant_admin_full_name || "—"}</span>
+      <span className="truncate text-xs font-medium text-foreground">
+        {row.original.tenant_admin_full_name || "—"}
+      </span>
     ),
   },
   {
@@ -196,7 +231,9 @@ export const getTenantColumns = (
     width: "25%",
     minWidth: 120,
     cell: ({ row }) => (
-      <span className="text-xs text-muted-foreground truncate">{row.original.tenant_admin_email || "—"}</span>
+      <span className="truncate text-xs text-muted-foreground">
+        {row.original.tenant_admin_email || "—"}
+      </span>
     ),
   },
   {
@@ -204,7 +241,9 @@ export const getTenantColumns = (
     header: "Status",
     width: "15%",
     minWidth: 80,
-    cell: ({ row }) => <StatusBadge status={String(row.original.access_status || "inactive")} />,
+    cell: ({ row }) => (
+      <StatusBadge status={String(row.original.access_status || "inactive")} />
+    ),
   },
   {
     id: "actions",
@@ -235,23 +274,23 @@ export const getConfigurationsColumns = (
     width: 150,
     cell: ({ row }) => {
       const key = row.original.key
-      const metadata = apiKeysMetadata[key] || { defaultValue: "", isBoolean: false, isRequired: false, label: key, description: "" }
-      return (
-        <span className="text-xs text-foreground">
-          {metadata.label}
-        </span>
-      )
-    }
+      const metadata = apiKeysMetadata[key] || {
+        defaultValue: "",
+        isBoolean: false,
+        isRequired: false,
+        label: key,
+        description: "",
+      }
+      return <span className="text-xs text-foreground">{metadata.label}</span>
+    },
   },
   {
     accessorKey: "key",
     header: "Key",
     width: 150,
     cell: ({ row }) => (
-      <span className="text-xs text-foreground">
-        {row.original.key}
-      </span>
-    )
+      <span className="text-xs text-foreground">{row.original.key}</span>
+    ),
   },
   {
     accessorKey: "value",
@@ -260,8 +299,14 @@ export const getConfigurationsColumns = (
     cell: ({ row }) => {
       const isNewRow = (row.original as { isNewRow?: boolean }).isNewRow
       const key = row.original.key
-      const metadata = apiKeysMetadata[key] || { defaultValue: "", isBoolean: false, isRequired: false, label: key, description: "" }
-      
+      const metadata = apiKeysMetadata[key] || {
+        defaultValue: "",
+        isBoolean: false,
+        isRequired: false,
+        label: key,
+        description: "",
+      }
+
       if (isNewRow) {
         return (
           <EditableValueCell
@@ -275,13 +320,13 @@ export const getConfigurationsColumns = (
           />
         )
       }
-      
+
       if (metadata.referenceKey && row.original.value) {
         return (
           <div className="flex items-center">
             <Link
               to={`/platform-standard-content/reference-lists/${metadata.referenceKey}/${row.original.value}`}
-              className="text-xs font-semibold text-foreground hover:underline bg-muted/50 hover:bg-muted px-2 py-0.5 rounded border border-border transition-colors cursor-pointer text-left"
+              className="cursor-pointer rounded border border-border bg-muted/50 px-2 py-0.5 text-left text-xs font-semibold text-foreground transition-colors hover:bg-muted hover:underline"
               title="Click to view reference item details"
             >
               {String(row.original.value)}
@@ -289,9 +334,9 @@ export const getConfigurationsColumns = (
           </div>
         )
       }
-      
+
       return <MaskedValue value={String(row.original.value)} />
-    }
+    },
   },
 ]
 
@@ -306,10 +351,8 @@ export const getProfileColumns = (
     header: "Key",
     width: 150,
     cell: ({ row }) => (
-      <span className="text-xs text-foreground">
-        {row.original.key}
-      </span>
-    )
+      <span className="text-xs text-foreground">{row.original.key}</span>
+    ),
   },
   {
     id: "label",
@@ -317,13 +360,15 @@ export const getProfileColumns = (
     width: 150,
     cell: ({ row }) => {
       const key = row.original.key
-      const metadata = apiKeysMetadata[key] || { defaultValue: "", isBoolean: false, isRequired: false, label: key, description: "" }
-      return (
-        <span className="text-xs text-foreground">
-          {metadata.label}
-        </span>
-      )
-    }
+      const metadata = apiKeysMetadata[key] || {
+        defaultValue: "",
+        isBoolean: false,
+        isRequired: false,
+        label: key,
+        description: "",
+      }
+      return <span className="text-xs text-foreground">{metadata.label}</span>
+    },
   },
   {
     accessorKey: "value",
@@ -331,8 +376,14 @@ export const getProfileColumns = (
     width: 200,
     cell: ({ row }) => {
       const key = row.original.key
-      const metadata = apiKeysMetadata[key] || { defaultValue: "", isBoolean: false, isRequired: false, label: key, description: "" }
-      
+      const metadata = apiKeysMetadata[key] || {
+        defaultValue: "",
+        isBoolean: false,
+        isRequired: false,
+        label: key,
+        description: "",
+      }
+
       return (
         <ProfileEditableValueCell
           key={`${key}-${(row.original as { dbValue?: string }).dbValue || ""}`}
@@ -344,7 +395,7 @@ export const getProfileColumns = (
           onValueChange={handleValueChange}
         />
       )
-    }
+    },
   },
 ]
 
@@ -358,8 +409,8 @@ export const getDataTypeColumns = (
     header: "Code",
     width: 130,
     cell: ({ row }) => (
-      <span className=" text-xs font-semibold text-foreground">
-        {row.original.data_type_code}
+      <span className="text-xs font-semibold text-foreground">
+        {row.original.data_type_code || "—"}
       </span>
     ),
   },
@@ -369,7 +420,7 @@ export const getDataTypeColumns = (
     width: 130,
     cell: ({ row }) => (
       <span className="text-xs font-medium text-foreground">
-        {row.original.display_label}
+        {row.original.display_label || "—"}
       </span>
     ),
   },
@@ -381,9 +432,9 @@ export const getDataTypeColumns = (
     cell: ({ row }) => (
       <span
         className="block max-w-[170px] truncate text-xs text-muted-foreground"
-        title={row.original.description}
+        title={row.original.description || "—"}
       >
-        {row.original.description}
+        {row.original.description || "—"}
       </span>
     ),
   },
@@ -393,7 +444,7 @@ export const getDataTypeColumns = (
     width: 120,
     rowClassName: "hidden lg:table-cell",
     cell: ({ row }) => (
-      <span className="block max-w-[110px] truncate  text-xs text-muted-foreground">
+      <span className="block max-w-[110px] truncate text-xs text-muted-foreground">
         {row.original.sample_value || "—"}
       </span>
     ),
@@ -441,7 +492,11 @@ export const getDataTypeColumns = (
           <DropdownMenuContent align="end" className="w-45">
             <DropdownMenuItem
               className="cursor-pointer text-xs"
-              onClick={() => navigate(`/platform-standard-content/data-types/${row.original.data_type_code}`)}
+              onClick={() =>
+                navigate(
+                  `/platform-standard-content/data-types/${row.original.data_type_code}`
+                )
+              }
             >
               <Eye className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
               View Details
@@ -460,7 +515,6 @@ export const getDataTypeColumns = (
   },
 ]
 
-
 // 7. Extraction Fields table columns
 export const getFieldsTableColumns = (
   onEdit: (field: StandardExtractionFieldResponse) => void,
@@ -471,14 +525,22 @@ export const getFieldsTableColumns = (
     header: "Field ID",
     width: "20%",
     minWidth: "120px",
-    cell: ({ row }) => <span className=" text-xs font-semibold text-foreground truncate block">{row.original.field_id}</span>,
+    cell: ({ row }) => (
+      <span className="block truncate text-xs font-semibold text-foreground">
+        {row.original.field_id || "—"}
+      </span>
+    ),
   },
   {
     accessorKey: "field_label",
     header: "Label",
     width: "20%",
     minWidth: "130px",
-    cell: ({ row }) => <span className="text-xs font-medium text-foreground">{row.original.field_label}</span>,
+    cell: ({ row }) => (
+      <span className="text-xs font-medium text-foreground">
+        {row.original.field_label || "—"}
+      </span>
+    ),
   },
   {
     accessorKey: "data_type_code",
@@ -487,7 +549,7 @@ export const getFieldsTableColumns = (
     minWidth: "100px",
     cell: ({ row }) => (
       <SemanticBadge tone="neutral" className="">
-        {row.original.data_type_code}
+        {row.original.data_type_code || "—"}
       </SemanticBadge>
     ),
   },
@@ -496,7 +558,11 @@ export const getFieldsTableColumns = (
     header: "Category",
     width: "150px",
     minWidth: "120px",
-    cell: ({ row }) => <span className="text-xs text-muted-foreground truncate block">{row.original.field_category_code}</span>,
+    cell: ({ row }) => (
+      <span className="block truncate text-xs text-muted-foreground">
+        {row.original.field_category_code || "—"}
+      </span>
+    ),
   },
   {
     accessorKey: "header_item",
@@ -504,12 +570,15 @@ export const getFieldsTableColumns = (
     width: "100px",
     minWidth: "80px",
     cell: ({ row }) => {
-      const isHeader = row.original.header_item === "header";
+      const isHeader = row.original.header_item === "header"
       return (
-        <SemanticBadge tone={isHeader ? "accent" : "info"} className="capitalize">
-          {row.original.header_item}
+        <SemanticBadge
+          tone={isHeader ? "accent" : "info"}
+          className="capitalize"
+        >
+          {row.original.header_item || "—"}
         </SemanticBadge>
-      );
+      )
     },
   },
   {
@@ -517,7 +586,11 @@ export const getFieldsTableColumns = (
     header: "Value Mode",
     width: "130px",
     minWidth: "110px",
-    cell: ({ row }) => <span className="text-xs text-muted-foreground capitalize">{row.original.allowed_value_mode.replace("_", " ")}</span>,
+    cell: ({ row }) => (
+      <span className="text-xs text-muted-foreground capitalize">
+        {(row.original.allowed_value_mode || "—").replace("_", " ")}
+      </span>
+    ),
   },
   {
     id: "actions",
@@ -526,35 +599,35 @@ export const getFieldsTableColumns = (
     minWidth: "80px",
     cell: ({ row }) => (
       <div className="flex items-center" onClick={(e) => e.stopPropagation()}>
-      <div onClick={(e) => e.stopPropagation()}>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8 w-8 cursor-pointer p-0"
-            >
-              <MoreVertical className="h-4 w-4 text-muted-foreground" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-45">
-            <DropdownMenuItem
-              className="cursor-pointer text-xs"
-              onClick={() => onView && onView(row.original)}
-            >
-              <Eye className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
-              View 
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              className="cursor-pointer text-xs"
-              onClick={() => onEdit(row.original)}
-            >
-              <Edit className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
-              Edit
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+        <div onClick={(e) => e.stopPropagation()}>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-8 w-8 cursor-pointer p-0"
+              >
+                <MoreVertical className="h-4 w-4 text-muted-foreground" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-45">
+              <DropdownMenuItem
+                className="cursor-pointer text-xs"
+                onClick={() => onView && onView(row.original)}
+              >
+                <Eye className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
+                View
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="cursor-pointer text-xs"
+                onClick={() => onEdit(row.original)}
+              >
+                <Edit className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
+                Edit
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
     ),
   },
@@ -570,14 +643,22 @@ export const getFieldCategoriesColumns = (
     header: "Category Code",
     width: "25%",
     minWidth: "150px",
-    cell: ({ row }) => <span className=" text-xs font-semibold text-slate-700">{row.original.field_category_code}</span>,
+    cell: ({ row }) => (
+      <span className="text-xs font-semibold text-slate-700">
+        {row.original.field_category_code || "—"}
+      </span>
+    ),
   },
   {
     accessorKey: "ui_label",
     header: "UI Label",
     width: "25%",
     minWidth: "150px",
-    cell: ({ row }) => <span className="text-xs font-medium text-foreground">{row.original.ui_label}</span>,
+    cell: ({ row }) => (
+      <span className="text-xs font-medium text-foreground">
+        {row.original.ui_label || "—"}
+      </span>
+    ),
   },
   {
     accessorKey: "description",
@@ -585,8 +666,11 @@ export const getFieldCategoriesColumns = (
     width: "50%",
     minWidth: "250px",
     cell: ({ row }) => (
-      <span className="block truncate text-xs text-muted-foreground max-w-[450px]" title={row.original.description}>
-        {row.original.description}
+      <span
+        className="block max-w-[450px] truncate text-xs text-muted-foreground"
+        title={row.original.description || "—"}
+      >
+        {row.original.description || "—"}
       </span>
     ),
   },
@@ -611,7 +695,11 @@ export const getFieldCategoriesColumns = (
     width: "80px",
     minWidth: "70px",
     maxWidth: "80px",
-    cell: ({ row }) => <span className="text-xs text-muted-foreground font-semibold">{row.original.sort_sequence}</span>,
+    cell: ({ row }) => (
+      <span className="text-xs font-semibold text-muted-foreground">
+        {row.original.sort_sequence ?? "—"}
+      </span>
+    ),
   },
   {
     id: "actions",
@@ -623,17 +711,31 @@ export const getFieldCategoriesColumns = (
       <div className="flex items-center" onClick={(e) => e.stopPropagation()}>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 cursor-pointer">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 w-8 cursor-pointer p-0"
+            >
               <MoreVertical className="h-4 w-4 text-muted-foreground" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-45">
-            <DropdownMenuItem className="text-xs cursor-pointer" onClick={() => navigate(`/platform-standard-content/field-categories/${row.original.field_category_code}`)}>
-              <Eye className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
+            <DropdownMenuItem
+              className="cursor-pointer text-xs"
+              onClick={() =>
+                navigate(
+                  `/platform-standard-content/field-categories/${row.original.field_category_code}`
+                )
+              }
+            >
+              <Eye className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
               View Details
             </DropdownMenuItem>
-            <DropdownMenuItem className="text-xs cursor-pointer" onClick={() => handleOpenEdit(row.original)}>
-              <Edit2 className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
+            <DropdownMenuItem
+              className="cursor-pointer text-xs"
+              onClick={() => handleOpenEdit(row.original)}
+            >
+              <Edit2 className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
               Edit
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -654,8 +756,8 @@ export const getNormalizationRuleColumns = (
     header: "Code",
     width: 120,
     cell: ({ row }) => (
-      <span className=" text-xs font-semibold text-foreground">
-        {row.original.rule_code}
+      <span className="text-xs font-semibold text-foreground">
+        {row.original.rule_code || "—"}
       </span>
     ),
   },
@@ -665,7 +767,7 @@ export const getNormalizationRuleColumns = (
     width: 140,
     cell: ({ row }) => (
       <span className="text-xs font-medium text-foreground">
-        {row.original.display_label}
+        {row.original.display_label || "—"}
       </span>
     ),
   },
@@ -677,9 +779,9 @@ export const getNormalizationRuleColumns = (
     cell: ({ row }) => (
       <span
         className="block max-w-[170px] truncate text-xs text-muted-foreground"
-        title={row.original.description}
+        title={row.original.description || "—"}
       >
-        {row.original.description}
+        {row.original.description || "—"}
       </span>
     ),
   },
@@ -700,8 +802,8 @@ export const getNormalizationRuleColumns = (
     width: 110,
     rowClassName: "hidden lg:table-cell",
     cell: ({ row }) => (
-      <span className="text-xs text-muted-foreground ">
-        {row.original.engine_type}
+      <span className="text-xs text-muted-foreground">
+        {row.original.engine_type || "-"}
       </span>
     ),
   },
@@ -720,23 +822,39 @@ export const getNormalizationRuleColumns = (
     accessorKey: "status",
     header: "Status",
     width: 90,
-    cell: ({ row }) => <ActiveStatusBadge active={row.original.is_active} className="text-xxs px-2 py-0.5 font-semibold" />,
+    cell: ({ row }) => (
+      <ActiveStatusBadge
+        active={row.original.is_active}
+        className="text-xxs px-2 py-0.5 font-semibold"
+      />
+    ),
   },
   {
     id: "actions",
     header: "Action",
     width: 70,
     cell: ({ row }) => (
-      <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="flex items-center justify-center"
+        onClick={(e) => e.stopPropagation()}
+      >
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 cursor-pointer">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 w-8 cursor-pointer p-0"
+            >
               <MoreVertical className="h-4 w-4 text-muted-foreground" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-45 text-xs-fine">
+          <DropdownMenuContent align="end" className="text-xs-fine w-45">
             <DropdownMenuItem
-              onClick={() => navigate(`/platform-standard-content/normalization-rules/${row.original.rule_code}`)}
+              onClick={() =>
+                navigate(
+                  `/platform-standard-content/normalization-rules/${row.original.rule_code}`
+                )
+              }
               className="cursor-pointer gap-1.5"
             >
               <Eye className="h-3.5 w-3.5 text-muted-foreground" />
@@ -751,7 +869,7 @@ export const getNormalizationRuleColumns = (
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => setDeletingRule(row.original)}
-              className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50 gap-1.5"
+              className="cursor-pointer gap-1.5 text-red-600 focus:bg-red-50 focus:text-red-600"
             >
               <Trash2 className="h-3.5 w-3.5" />
               Delete
@@ -774,7 +892,7 @@ export const getValidationRuleColumns = (
     header: "Code",
     width: 120,
     cell: ({ row }) => (
-      <span className=" text-xs font-semibold text-foreground">
+      <span className="text-xs font-semibold text-foreground">
         {row.original.rule_code}
       </span>
     ),
@@ -797,9 +915,9 @@ export const getValidationRuleColumns = (
     cell: ({ row }) => (
       <span
         className="block max-w-[170px] truncate text-xs text-muted-foreground"
-        title={row.original.description}
+        title={row.original.description || "—"}
       >
-        {row.original.description}
+        {row.original.description || "—"}
       </span>
     ),
   },
@@ -809,7 +927,7 @@ export const getValidationRuleColumns = (
     width: 100,
     rowClassName: "hidden lg:table-cell",
     cell: ({ row }) => (
-      <span className="text-xs text-foreground ">
+      <span className="text-xs text-foreground">
         {row.original.rule_mode || "DECLARATIVE"}
       </span>
     ),
@@ -820,8 +938,8 @@ export const getValidationRuleColumns = (
     width: 110,
     rowClassName: "hidden lg:table-cell",
     cell: ({ row }) => (
-      <span className="text-xs text-muted-foreground ">
-        {row.original.engine_type}
+      <span className="text-xs text-muted-foreground">
+        {row.original.engine_type || "—"}
       </span>
     ),
   },
@@ -840,23 +958,39 @@ export const getValidationRuleColumns = (
     accessorKey: "status",
     header: "Status",
     width: 90,
-    cell: ({ row }) => <ActiveStatusBadge active={row.original.is_active} className="text-xxs px-2 py-0.5 font-semibold" />,
+    cell: ({ row }) => (
+      <ActiveStatusBadge
+        active={row.original.is_active}
+        className="text-xxs px-2 py-0.5 font-semibold"
+      />
+    ),
   },
   {
     id: "actions",
     header: "Action",
     width: 70,
     cell: ({ row }) => (
-      <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="flex items-center justify-center"
+        onClick={(e) => e.stopPropagation()}
+      >
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 cursor-pointer">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 w-8 cursor-pointer p-0"
+            >
               <MoreVertical className="h-4 w-4 text-muted-foreground" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-45 text-xs-fine">
+          <DropdownMenuContent align="end" className="text-xs-fine w-45">
             <DropdownMenuItem
-              onClick={() => navigate(`/platform-standard-content/validation-rules/${row.original.rule_code}`)}
+              onClick={() =>
+                navigate(
+                  `/platform-standard-content/validation-rules/${row.original.rule_code}`
+                )
+              }
               className="cursor-pointer gap-1.5"
             >
               <Eye className="h-3.5 w-3.5 text-muted-foreground" />
@@ -871,7 +1005,7 @@ export const getValidationRuleColumns = (
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => setDeletingRule(row.original)}
-              className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50 gap-1.5"
+              className="cursor-pointer gap-1.5 text-red-600 focus:bg-red-50 focus:text-red-600"
             >
               <Trash2 className="h-3.5 w-3.5" />
               Delete
@@ -894,8 +1028,8 @@ export const getReferenceListsColumns = (
     width: 220,
     minWidth: 150,
     cell: ({ row }) => (
-      <span className=" text-xs font-semibold text-foreground truncate block">
-        {row.original.registry_key}
+      <span className="block truncate text-xs font-semibold text-foreground">
+        {row.original.registry_key || "—"}
       </span>
     ),
   },
@@ -904,7 +1038,11 @@ export const getReferenceListsColumns = (
     header: "Display Label",
     width: 220,
     minWidth: 150,
-    cell: ({ row }) => <span className="text-xs font-medium text-foreground">{row.original.display_label}</span>,
+    cell: ({ row }) => (
+      <span className="text-xs font-medium text-foreground">
+        {row.original.display_label || "—"}
+      </span>
+    ),
   },
   {
     accessorKey: "source_type",
@@ -913,7 +1051,8 @@ export const getReferenceListsColumns = (
     minWidth: 100,
     cell: ({ row }) => {
       const type = row.original.source_type || "custom"
-      const tone: SemanticTone = type === "system" ? "info" : type === "standard" ? "accent" : "neutral"
+      const tone: SemanticTone =
+        type === "system" ? "info" : type === "standard" ? "accent" : "neutral"
       return (
         <SemanticBadge tone={tone} className="capitalize">
           {type}
@@ -927,7 +1066,10 @@ export const getReferenceListsColumns = (
     width: 320,
     minWidth: 200,
     cell: ({ row }) => (
-      <span className="block truncate text-xs text-muted-foreground max-w-[450px]" title={row.original.description || ""}>
+      <span
+        className="block max-w-[450px] truncate text-xs text-muted-foreground"
+        title={row.original.description || ""}
+      >
         {row.original.description || "—"}
       </span>
     ),
@@ -937,7 +1079,11 @@ export const getReferenceListsColumns = (
     header: "Sort",
     width: 100,
     minWidth: 80,
-    cell: ({ row }) => <span className="text-xs text-muted-foreground font-semibold">{row.original.sort_sequence}</span>,
+    cell: ({ row }) => (
+      <span className="text-xs font-semibold text-muted-foreground">
+        {row.original.sort_sequence ?? "—"}
+      </span>
+    ),
   },
   {
     id: "actions",
@@ -948,17 +1094,31 @@ export const getReferenceListsColumns = (
       <div className="flex items-center" onClick={(e) => e.stopPropagation()}>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 cursor-pointer">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 w-8 cursor-pointer p-0"
+            >
               <MoreVertical className="h-4 w-4 text-muted-foreground" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-45">
-            <DropdownMenuItem className="text-xs cursor-pointer" onClick={() => navigate(`/platform-standard-content/reference-lists/${row.original.registry_key}`)}>
-              <Eye className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
+            <DropdownMenuItem
+              className="cursor-pointer text-xs"
+              onClick={() =>
+                navigate(
+                  `/platform-standard-content/reference-lists/${row.original.registry_key}`
+                )
+              }
+            >
+              <Eye className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
               View Details
             </DropdownMenuItem>
-            <DropdownMenuItem className="text-xs cursor-pointer" onClick={() => handleOpenEdit(row.original)}>
-              <Edit2 className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
+            <DropdownMenuItem
+              className="cursor-pointer text-xs"
+              onClick={() => handleOpenEdit(row.original)}
+            >
+              <Edit2 className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
               Edit
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -980,8 +1140,8 @@ export const getReferenceListDetailsColumns = (
     width: 220,
     minWidth: 130,
     cell: ({ row }) => (
-      <span className=" text-xs font-semibold text-foreground truncate block">
-        {row.original.value_code}
+      <span className="block truncate text-xs font-semibold text-foreground">
+        {row.original.value_code || "—"}
       </span>
     ),
   },
@@ -990,7 +1150,11 @@ export const getReferenceListDetailsColumns = (
     header: "Display Label",
     width: 220,
     minWidth: 150,
-    cell: ({ row }) => <span className="text-xs font-medium text-foreground">{row.original.value_label}</span>,
+    cell: ({ row }) => (
+      <span className="text-xs font-medium text-foreground">
+        {row.original.value_label || "—"}
+      </span>
+    ),
   },
   {
     accessorKey: "description",
@@ -998,7 +1162,10 @@ export const getReferenceListDetailsColumns = (
     width: 320,
     minWidth: 200,
     cell: ({ row }) => (
-      <span className="block truncate text-xs text-muted-foreground max-w-[350px]" title={row.original.description || ""}>
+      <span
+        className="block max-w-[350px] truncate text-xs text-muted-foreground"
+        title={row.original.description || ""}
+      >
         {row.original.description || "—"}
       </span>
     ),
@@ -1009,13 +1176,18 @@ export const getReferenceListDetailsColumns = (
     width: 150,
     minWidth: 120,
     cell: ({ row }) => {
-      if (!row.original.attributes) return <span className="text-xs text-muted-foreground">—</span>
+      if (!row.original.attributes)
+        return <span className="text-xs text-muted-foreground">—</span>
       const keys = Object.keys(row.original.attributes)
       const count = keys.length
-      if (count === 0) return <span className="text-xs text-muted-foreground">—</span>
+      if (count === 0)
+        return <span className="text-xs text-muted-foreground">—</span>
       return (
-        <div className="flex items-center gap-1.5 flex-wrap">
-          <span className="text-[10px] font-bold text-muted-foreground bg-muted px-1.5 py-0.5 rounded-full shrink-0" title={`${count} attributes`}>
+        <div className="flex flex-wrap items-center gap-1.5">
+          <span
+            className="shrink-0 rounded-full bg-muted px-1.5 py-0.5 text-[10px] font-bold text-muted-foreground"
+            title={`${count} attributes`}
+          >
             {count}
           </span>
         </div>
@@ -1027,7 +1199,11 @@ export const getReferenceListDetailsColumns = (
     header: "Sort",
     width: 100,
     minWidth: 80,
-    cell: ({ row }) => <span className="text-xs text-muted-foreground font-semibold">{row.original.sort_sequence}</span>,
+    cell: ({ row }) => (
+      <span className="text-xs font-semibold text-muted-foreground">
+        {row.original.sort_sequence ?? "—"}
+      </span>
+    ),
   },
   {
     id: "actions",
@@ -1038,17 +1214,31 @@ export const getReferenceListDetailsColumns = (
       <div className="flex items-center" onClick={(e) => e.stopPropagation()}>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 cursor-pointer">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 w-8 cursor-pointer p-0"
+            >
               <MoreVertical className="h-4 w-4 text-muted-foreground" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-45">
-            <DropdownMenuItem className="text-xs cursor-pointer" onClick={() => navigate(`/platform-standard-content/reference-lists/${registryKey}/${row.original.value_code}`)}>
-              <Eye className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
+            <DropdownMenuItem
+              className="cursor-pointer text-xs"
+              onClick={() =>
+                navigate(
+                  `/platform-standard-content/reference-lists/${registryKey}/${row.original.value_code}`
+                )
+              }
+            >
+              <Eye className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
               View Details
             </DropdownMenuItem>
-            <DropdownMenuItem className="text-xs cursor-pointer" onClick={() => handleOpenEdit(row.original)}>
-              <Edit2 className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
+            <DropdownMenuItem
+              className="cursor-pointer text-xs"
+              onClick={() => handleOpenEdit(row.original)}
+            >
+              <Edit2 className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
               Edit
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -1065,7 +1255,7 @@ export const tenantEventsTableColumns: CustomColumnDef<any>[] = [
     header: "Event Type",
     width: "25%",
     cell: ({ row }) => (
-      <span className="text-xs font-semibold text-foreground ">
+      <span className="text-xs font-semibold text-foreground">
         {row.original.event_type || row.original.type || "Unknown"}
       </span>
     ),
@@ -1084,7 +1274,9 @@ export const tenantEventsTableColumns: CustomColumnDef<any>[] = [
     accessorKey: "status",
     header: "Status",
     width: "15%",
-    cell: ({ row }) => <ActiveStatusBadge status={row.original.status || "Completed"} />,
+    cell: ({ row }) => (
+      <ActiveStatusBadge status={row.original.status || "Completed"} />
+    ),
   },
   {
     accessorKey: "created_at",
@@ -1093,7 +1285,9 @@ export const tenantEventsTableColumns: CustomColumnDef<any>[] = [
     cell: ({ row }) => (
       <span className="text-xs text-muted-foreground">
         {row.original.created_at || row.original.timestamp
-          ? new Date(row.original.created_at || row.original.timestamp).toLocaleDateString()
+          ? new Date(
+              row.original.created_at || row.original.timestamp
+            ).toLocaleDateString()
           : "N/A"}
       </span>
     ),
@@ -1112,11 +1306,13 @@ export const getUsersColumns = (
     minWidth: "220px",
     cell: ({ row }) => (
       <div className="flex items-center gap-3">
-         <div className="h-6 w-6 rounded-md bg-primary/10 text-primary border border-primary/20 flex items-center justify-center text-[10px] leading-none font-semibold flex-shrink-0 uppercase">
+        <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-md border border-primary/20 bg-primary/10 text-[10px] leading-none font-semibold text-primary uppercase">
           {getInitials(row.original.full_name) || "U"}
         </div>
         <div className="min-w-0">
-          <p className="truncate text-xs font-medium text-foreground">{row.original.full_name}</p>
+          <p className="truncate text-xs font-medium text-foreground">
+            {row.original.full_name || "—"}
+          </p>
         </div>
       </div>
     ),
@@ -1126,7 +1322,11 @@ export const getUsersColumns = (
     header: "Email",
     width: "30%",
     minWidth: "220px",
-    cell: ({ row }) => <span className="block truncate text-xs text-muted-foreground">{row.original.email}</span>,
+    cell: ({ row }) => (
+      <span className="block truncate text-xs text-muted-foreground">
+        {row.original.email || "—"}
+      </span>
+    ),
   },
   {
     accessorKey: "roles",
@@ -1135,7 +1335,9 @@ export const getUsersColumns = (
     minWidth: "180px",
     cell: ({ row }) => (
       <div className="flex flex-wrap items-center gap-2">
-        {getRolesList(row.original).map((role) => <RoleBadge key={role} role={role} />)}
+        {getRolesList(row.original).map((role) => (
+          <RoleBadge key={role} role={role} />
+        ))}
       </div>
     ),
   },
@@ -1145,7 +1347,9 @@ export const getUsersColumns = (
     width: "140px",
     minWidth: "140px",
     rowClassName: "w-40",
-    cell: ({ row }) => <ActiveStatusBadge status={row.original.status || "ACTIVE"} />,
+    cell: ({ row }) => (
+      <ActiveStatusBadge status={row.original.status || "ACTIVE"} />
+    ),
   },
   {
     id: "actions",
@@ -1156,20 +1360,33 @@ export const getUsersColumns = (
       <div className="flex items-center" onClick={(e) => e.stopPropagation()}>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 cursor-pointer">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 w-8 cursor-pointer p-0"
+            >
               <MoreVertical className="h-4 w-4 text-muted-foreground" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-45">
-            <DropdownMenuItem className="text-xs cursor-pointer gap-1.5" onClick={() => navigate(`/users/${row.original.id}`)}>
+            <DropdownMenuItem
+              className="cursor-pointer gap-1.5 text-xs"
+              onClick={() => navigate(`/users/${row.original.id}`)}
+            >
               <Eye className="h-3.5 w-3.5 text-muted-foreground" />
               View Details
             </DropdownMenuItem>
-            <DropdownMenuItem className="text-xs cursor-pointer gap-1.5" onClick={() => handleOpenEditDialog(row.original)}>
+            <DropdownMenuItem
+              className="cursor-pointer gap-1.5 text-xs"
+              onClick={() => handleOpenEditDialog(row.original)}
+            >
               <Edit2 className="h-3.5 w-3.5 text-muted-foreground" />
               Edit
             </DropdownMenuItem>
-            <DropdownMenuItem disabled className="text-xs cursor-not-allowed opacity-50 gap-1.5 text-red-600 focus:text-red-600">
+            <DropdownMenuItem
+              disabled
+              className="cursor-not-allowed gap-1.5 text-xs text-red-600 opacity-50 focus:text-red-600"
+            >
               <Trash2 className="h-3.5 w-3.5" />
               Delete
             </DropdownMenuItem>
