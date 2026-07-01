@@ -44,10 +44,19 @@ Prefer reusable primitives before page-local styling:
 - `PageHeader` for title, description, and page-level actions
 - `SectionCard` for grouped form/detail content
 - `DataTable` for tabular data
-- `EmptyState` for no-data and no-results states (always use this instead of custom empty panels)
+- `EmptyState` for no-data and no-results states. Always use this shared component instead of custom empty panels. Use this pattern:
+  ```tsx
+  <EmptyState
+    icon={SomeIcon}
+    title={condition ? "No records match filters" : "No records"}
+    description={condition ? "Try adjusting your search or filters." : "Create the first record to get started."}
+    className="min-h-0 border-0 bg-transparent py-10"
+    actions={canCreate ? <Button size="sm">...</Button> : undefined}
+  />
+  ```
 - `StatCard` or existing stats card patterns for KPIs
 - `FilterBar` for search, filters, refresh, and table actions
-- `SegmentedFilter` for sub-filtering/filter options in toolbars (avoid using for top-level page routing navigation)
+- `SegmentedFilter` for sub-filtering/filter options in toolbars. Do not use for real section navigation or top-level page routing (use actual Tabs for that) to preserve standard visual styles.
 - `SemanticBadge` for non-status semantic labels
 - `StatusBadge` for active/inactive/pending/warning/error state badges
 
@@ -99,10 +108,12 @@ Semantic status colors are allowed for badges and destructive/success states, bu
   - Standard container gaps: `gap: clamp(0.75rem, 2vw, 1.5rem)`
   - Section spacing gaps: `gap: clamp(0.5rem, 1.5vw, 1.125rem)`
 - Prefer global override classes/selectors in `src/index.css` to refine layout details (e.g., metadata grids, nested cards, card padding) rather than making direct inline changes inside individual page TSX files. This preserves pristine page file sanity.
-- Table action menus and filter dropdowns must use portal containers (e.g., Radix/body portals) to avoid layout clipping inside tables/cards that have `overflow-hidden` boundaries.
+- Table action menus and filter dropdowns must use portal containers (e.g., Radix `<DropdownMenuPortal>` or body portals) to avoid layout clipping inside tables/cards that have `overflow-hidden` boundaries. Do not weaken table overflow globally to fix clipping. Action menus must appear above sticky table headers and pagination.
 - Keep page sections spaced with gaps, not excessive dividers.
-- Tables and large lists should sit in `table-container`.
+- Tables and large lists should sit in `table-container`. For the inner table wrapper, use `tableContainerClassName="border-0 rounded-none bg-transparent"`.
 - Search/filter/action rows should use `FilterBar` or `filter-toolbar`.
+  - Standard search input width: `w-full sm:w-72`
+  - Standard refresh icon button: `size-9` or `h-9 w-9`
 - Do not nest cards inside cards unless the inner card is a repeated item or a genuinely independent surface.
 - Do not add sticky footer bars for product credits or secondary metadata.
 
@@ -126,6 +137,7 @@ Tables should be modern and lightweight:
 - Keep row height comfortable.
 - Use subtle header backgrounds and muted uppercase labels.
 - Ensure the outer outline of the table container (the border of `.table-container`) is clearly defined (e.g., using `border border-border/65 dark:border-border/45`) to prevent a pale or washed-out appearance, while keeping inner row/header borders lightweight.
+- Keep table row backgrounds uniform. Do not use special background highlights (like `bg-primary/[0.025]`) to distinguish standard vs custom content, as this creates inconsistencies across different pages.
 - Keep action menus visible enough to discover.
 - Provide empty states for no records and no search results. Always use the shared `EmptyState` component for consistency.
 - Align pagination and table footer controls cleanly.
@@ -144,6 +156,10 @@ Use the shared field primitives instead of page-local border/background/focus cl
 - `dialog-toggle-row` for switch/checkbox rows with helper text
 
 Do not duplicate old field styling such as `rounded-lg border border-input bg-inherit` or `focus-visible:ring-primary/30`; the shared primitives own field surface, hover, focus, disabled, and dark-mode behavior.
+
+- Check field spacing is consistent: prefer `space-y-5`, `grid gap-5`, and `SectionCard`.
+- Avoid dense multi-column groups below mobile width.
+- Keep form footers right aligned and separated with subtle `border-t border-border/60`.
 
 Use `dialog-form-footer` for form action rows when a page form needs a compact submit/cancel footer.
 
@@ -202,6 +218,8 @@ Follow clean React architecture and React 19 practices:
 - **Dead Code Cleanup**: Remove unused files and components (such as unused UI templates) to keep the codebase maintainable and reduce linting/diagnostics noise.
 - **Reactive Breadcrumb Resolution**: Dynamic URL segment names (e.g., templates, fields) in breadcrumbs must be reactive. Return `DYNAMIC_*` placeholders in `breadcrumb-utils.ts` and resolve them in `AppBreadcrumb.tsx` using sub-components with `useQuery`, rather than executing direct `queryClient.getQueryData` reads during layout rendering which fail to update on load.
 - **API Endpoint Standards**: Enforce pluralization consistency (e.g., `/api/platform-standard-content/extraction-templates/...`). Never call `/api/withkey/...` endpoints; if present, stub or disable them to avoid security/caching side-effects.
+- **Standard Templates**: Standard templates are now editable. Do not block management or edit buttons based on the `isStandard` flag.
+- **Template Features**: The Clone, Delete, and Toggle Active features for templates are currently disabled/commented out by product requirements. Do not re-enable them unless explicitly asked.
 
 ## Implementation Discipline
 
@@ -218,7 +236,13 @@ Follow clean React architecture and React 19 practices:
 Run:
 
 ```bash
-pnpm typecheck
+npm run typecheck
 ```
 
-Known caveat: `pnpm build` may be blocked by local dependency/environment issues such as read-only `node_modules/.tmp` or missing packages. Do not claim build success unless it actually passes in the current environment.
+and verify full production build passes with:
+
+```bash
+npm run build
+```
+
+Known caveat: `npm run build` may be blocked by local dependency/environment issues such as read-only `node_modules/.tmp` or missing packages. Do not claim build success unless it actually passes in the current environment.
