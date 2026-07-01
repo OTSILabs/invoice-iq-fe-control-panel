@@ -67,9 +67,9 @@ export function ErpSettings() {
       </PageHeader>
 
       {isLoading || isFetching ? (
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {Array.from({ length: 3 }).map((_, idx) => (
-            <Skeleton key={idx} className="h-72 w-full rounded-xl" />
+        <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+          {Array.from({ length: 4 }).map((_, idx) => (
+            <Skeleton key={idx} className="h-60 w-full rounded-xl" />
           ))}
         </div>
       ) : isError ? (
