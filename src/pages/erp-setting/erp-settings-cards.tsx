@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { format } from "date-fns"
-import { Edit2, Trash2 } from "lucide-react"
+import {  Trash2 } from "lucide-react"
 import { toast } from "sonner"
 import {
   Card,
@@ -116,7 +116,7 @@ function ErpSettingCard({
             />
           </div>
         </div>
-        <div className="mt-2.5 flex items-center justify-between border-t border-border/40 pt-1 text-[10px] text-muted-foreground/75">
+        <div className=" flex items-center justify-between text-[10px] text-muted-foreground/75">
           <span>
             Created:
             {record.created_at ? getFormattedDate(record.created_at) : "N/A"}
@@ -144,7 +144,7 @@ function ErpSettingCard({
           className="h-8 flex-1 text-xs"
           disabled
         >
-          <Edit2 className="size-3" />
+          {/* <Edit2 className="size-3" /> */}
           Edit
         </Button>
 
