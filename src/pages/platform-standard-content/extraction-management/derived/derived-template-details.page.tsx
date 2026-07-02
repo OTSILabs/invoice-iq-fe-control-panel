@@ -1,3 +1,4 @@
+import { PageMetadata } from "@/components/layout/PageMetadata"
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import { ArrowLeft, Edit2 } from "lucide-react";
 import { useMemo, useCallback, useState } from "react";
@@ -140,6 +141,7 @@ export default function DerivedTemplateDetailsPage() {
 
   return (
     <PageContainers>
+      <PageMetadata title="Derived Template Details" description="Configure derived template settings." keywords="derived template details, custom bindings" />
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between mb-4">
         <PageDescriptiveSection>
           <PageTitle title="Derived Template Details" />

@@ -1,3 +1,4 @@
+import { PageMetadata } from "@/components/layout/PageMetadata"
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 
@@ -25,6 +26,7 @@ export default function DerivedTemplateCreatePage() {
 
   return (
     <PageContainers backgroundClassName="overflow-visible">
+      <PageMetadata title="Create Derived Template" description="Configure derived template settings." keywords="create derived template, custom bindings" />
       <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <PageDescriptiveSection>
           <PageTitle title="Derive Template" />

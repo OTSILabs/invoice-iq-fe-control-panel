@@ -1,3 +1,4 @@
+import { PageMetadata } from "@/components/layout/PageMetadata"
 import { useState, useMemo } from "react"
 import { Loader2, AlertCircle, RefreshCw, Plus, Tags } from "lucide-react"
 import { useNavigate } from "react-router-dom"
@@ -55,6 +56,7 @@ export function FieldCategories() {
 
   return (
     <PageShell>
+      <PageMetadata title="Field Categories" description="Organize extraction fields into logical categories for template selection." keywords="field categories, tags, taxonomy" />
       <PageHeader
         title="Field Categories"
         description="Organize document and invoice fields into standard categorizations."

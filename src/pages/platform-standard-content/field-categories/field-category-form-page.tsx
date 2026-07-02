@@ -1,3 +1,4 @@
+import { PageMetadata } from "@/components/layout/PageMetadata"
 import { useNavigate, useParams } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -102,6 +103,7 @@ export function FieldCategoryFormPage({ mode }: { mode: "create" | "edit" }) {
 
   return (
     <PageShell>
+      <PageMetadata title="Field Category Form" description="Organize extraction fields into logical categories." keywords="field category, tags, taxonomy" />
       <PageHeader
         title={isEdit ? "Edit Field Category" : "Create Field Category"}
         description={isEdit ? "Update this platform standard field category." : "Create a standard category to organize extraction fields."}

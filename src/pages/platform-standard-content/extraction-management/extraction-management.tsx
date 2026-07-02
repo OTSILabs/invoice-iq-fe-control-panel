@@ -1,3 +1,4 @@
+import { PageMetadata } from "@/components/layout/PageMetadata"
 import type { ExtractionManagementState, StandardDerivedTemplateResponse } from "@/types";
 import { useReducer, useMemo, useCallback, useEffect, useState } from "react";
 import { useNavigate, useSearchParams, Link } from "react-router-dom";
@@ -159,6 +160,7 @@ export function ExtractionManagement() {
 
   return (
     <PageShell>
+      <PageMetadata title="Extraction Manager" description="Define standard platform extraction templates, custom content fields, and layouts." keywords="extraction templates, fields layout, metadata manager" />
       <PageHeader
         title="Extraction Management"
         description="Configure document layout mappings, extraction fields, and derived templates globally."

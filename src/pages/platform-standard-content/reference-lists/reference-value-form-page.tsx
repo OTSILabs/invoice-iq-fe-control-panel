@@ -1,3 +1,4 @@
+import { PageMetadata } from "@/components/layout/PageMetadata"
 import { useNavigate, useParams } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -111,6 +112,7 @@ export function ReferenceValueFormPage({ mode }: { mode: "create" | "edit" }) {
 
   return (
     <PageShell>
+      <PageMetadata title="Reference Value Form" description="Configure reference value registry values." keywords="reference value, lookups" />
       <PageHeader
         title={isEdit ? "Edit Reference Value" : "Create Reference Value"}
         description={isEdit ? "Update label, sort order, and custom attributes for this lookup item." : "Append a new lookup value to this reference list."}

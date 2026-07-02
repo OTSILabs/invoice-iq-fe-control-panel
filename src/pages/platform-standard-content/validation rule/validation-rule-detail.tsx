@@ -1,3 +1,4 @@
+import { PageMetadata } from "@/components/layout/PageMetadata"
 import { useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { ArrowLeft, ShieldCheck, Trash2, Loader2 } from "lucide-react"
@@ -86,6 +87,7 @@ export function ValidationRuleDetail() {
 
   return (
     <PageShell>
+      <PageMetadata title="Validation Rule Details" description="Configure validation expressions and check bounds." keywords="validation rules, field constraints, quality checks" />
       {/* Header */}
       <PageHeader
         title="Validation Rule Details"

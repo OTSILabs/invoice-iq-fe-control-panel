@@ -1,3 +1,4 @@
+import { PageMetadata } from "@/components/layout/PageMetadata"
 import { useState, useMemo } from "react"
 import { Loader2, AlertCircle, RefreshCw, Plus, ListChecks } from "lucide-react"
 import { useNavigate } from "react-router-dom"
@@ -73,6 +74,7 @@ export function ReferenceLists() {
 
   return (
     <PageShell>
+      <PageMetadata title="Reference Lists" description="Configure reference lists and validation lookups for extracted values." keywords="reference lists, database lookups, validation" />
       <PageHeader
         title="Reference Lists"
         description="Manage system lookup tables, catalogs, and reference lists."

@@ -1,3 +1,4 @@
+import { PageMetadata } from "@/components/layout/PageMetadata"
 import { useParams, useNavigate } from "react-router-dom"
 import { ArrowLeft, ListChecks, Loader2, AlertCircle, RefreshCw } from "lucide-react"
 
@@ -56,6 +57,7 @@ export function ReferenceValueDetails() {
 
   return (
     <PageShell>
+      <PageMetadata title="Reference Value Details" description="Configure reference value details." keywords="reference value, lookups" />
       {/* Header */}
       <PageHeader
         title="Reference Item Details"

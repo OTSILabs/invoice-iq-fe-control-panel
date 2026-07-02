@@ -1,3 +1,4 @@
+import { PageMetadata } from "@/components/layout/PageMetadata"
 import { useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { ArrowLeft, Loader2, Edit2 } from "lucide-react"
@@ -411,6 +412,7 @@ function GuidanceTab({ fieldItem }: { fieldItem: any }) {
 function AuditTab({ fieldItem }: { fieldItem: any }) {
   return (
     <div className="rounded-xl border bg-card divide-y">
+      <PageMetadata title="Extraction Field Details" description="Configure extraction field details." keywords="extraction field, template field" />
       <div className="px-5 py-4 grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div>
           <p className="text-xs text-muted-foreground mb-1 font-medium">Created At</p>

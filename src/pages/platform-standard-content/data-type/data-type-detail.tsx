@@ -1,3 +1,4 @@
+import { PageMetadata } from "@/components/layout/PageMetadata"
 import { useParams, useNavigate } from "react-router-dom"
 import { ArrowLeft, Database } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -50,6 +51,7 @@ export function DataTypeDetail() {
 
   return (
     <PageShell>
+      <PageMetadata title="Data Type Details" description="Configure standard data types and format mappings for data type." keywords="data type, format mapping, platform content" />
       {/* Header */}
       <PageHeader
         title="Data Type Details"

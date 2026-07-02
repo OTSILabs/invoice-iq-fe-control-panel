@@ -1,3 +1,4 @@
+import { PageMetadata } from "@/components/layout/PageMetadata"
 import { useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { ArrowLeft, ShieldCheck, Trash2, Loader2 } from "lucide-react"
@@ -86,6 +87,7 @@ export function NormalizationRuleDetail() {
 
   return (
     <PageShell>
+      <PageMetadata title="Normalization Rule Details" description="Configure formatting and normalization transformations." keywords="normalization rules, regex formatting" />
       {/* Header */}
       <PageHeader
         title="Normalization Rule Details"

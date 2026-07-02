@@ -1,3 +1,4 @@
+import { PageMetadata } from "@/components/layout/PageMetadata"
 import { useEffect, useMemo, useRef, useState, useReducer } from "react"
 import { createPortal } from "react-dom"
 import { useQueries } from "@tanstack/react-query"
@@ -151,6 +152,7 @@ export function TenantsPage() {
 
   return (
     <PageShell>
+      <PageMetadata title="Tenants" description="Monitor client tenant environments, database migration status, and system event logs." keywords="tenants, database migrations, environment status, events" />
       <PageHeader
         title="Tenants Management"
         description="Search organizations and view tenant details."

@@ -1,3 +1,4 @@
+import { PageMetadata } from "@/components/layout/PageMetadata"
 import { useState, useMemo } from "react"
 import { ShieldCheck, Plus, RefreshCw, Loader2 } from "lucide-react"
 import { useNavigate } from "react-router-dom"
@@ -77,6 +78,7 @@ export function ValidationRules() {
 
   return (
     <PageShell>
+      <PageMetadata title="Validation Rules" description="Configure validation expressions and check bounds for fields." keywords="validation rules, field constraints, quality checks" />
       <PageHeader
         title="Validation Rules"
         description="Define and manage declarative rules for data validation."

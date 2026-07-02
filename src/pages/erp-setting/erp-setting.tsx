@@ -1,3 +1,4 @@
+import { PageMetadata } from "@/components/layout/PageMetadata"
 import { useState, useMemo } from "react"
 import { AlertCircle, RefreshCw, Plus } from "lucide-react"
 import { useNavigate } from "react-router-dom"
@@ -40,6 +41,7 @@ export function ErpSettings() {
 
   return (
     <PageShell>
+      <PageMetadata title="ERP Settings" description="Configure ERP system connections, database variables, and integration parameters." keywords="erp settings, integrations, database config" />
       <PageHeader
         title="ERP Settings"
         description="Configure and maintain enterprise ERP integrations."

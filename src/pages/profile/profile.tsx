@@ -1,3 +1,4 @@
+import { PageMetadata } from "@/components/layout/PageMetadata"
 import { useState, useMemo } from "react"
 import { Key, LogIn, Edit2, Shield, Mail, User, Clock, Calendar } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -35,6 +36,7 @@ export function Profile() {
 
   return (
     <PageShell>
+      <PageMetadata title="My Profile" description="Configure control panel user accounts, roles, access permissions, and profiles." keywords="user profile, settings" />
       <PageHeader
         title="My Profile"
         description="Manage your account information, security settings, and audit activity."

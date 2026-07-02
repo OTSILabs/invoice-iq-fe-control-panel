@@ -1,3 +1,4 @@
+import { PageMetadata } from "@/components/layout/PageMetadata"
 import { useState, useMemo } from "react"
 import { Database, Plus, RefreshCw } from "lucide-react"
 import { useNavigate } from "react-router-dom"
@@ -45,6 +46,7 @@ export function DataTypes() {
 
   return (
     <PageShell>
+      <PageMetadata title="Data Types" description="Configure standard data types and format mappings for extraction templates." keywords="data types, format mapping, platform content" />
       <PageHeader
         title="Data Types"
         description="Configure and manage platform standard data types for fields."

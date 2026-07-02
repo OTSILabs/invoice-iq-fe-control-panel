@@ -1,3 +1,4 @@
+import { PageMetadata } from "@/components/layout/PageMetadata"
 import { useParams, useNavigate } from "react-router-dom"
 import { ArrowLeft, Tags, Loader2, AlertCircle, RefreshCw } from "lucide-react"
 
@@ -56,6 +57,7 @@ export function FieldCategoryDetails() {
 
   return (
     <PageShell>
+      <PageMetadata title="Field Category Details" description="Configure field category settings." keywords="field categories, tags, taxonomy" />
       {/* Header */}
       <PageHeader
         title="Field Category Details"

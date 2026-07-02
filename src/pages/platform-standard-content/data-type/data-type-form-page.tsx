@@ -1,3 +1,4 @@
+import { PageMetadata } from "@/components/layout/PageMetadata"
 import { useNavigate, useParams } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -110,6 +111,7 @@ export function DataTypeFormPage({ mode }: { mode: "create" | "edit" }) {
 
   return (
     <PageShell>
+      <PageMetadata title="Data Type Form" description="Configure standard data types and format mappings." keywords="data types, format mapping, platform content" />
       <PageHeader
         title={isEdit ? "Edit Data Type" : "Create Data Type"}
         description={isEdit ? "Update the platform standard data type configuration." : "Add a new platform standard data type for field validation."}

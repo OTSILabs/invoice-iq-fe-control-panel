@@ -1,3 +1,4 @@
+import { PageMetadata } from "@/components/layout/PageMetadata"
 import { usePlans } from "@/api/hooks/usePlans"
 import { planColumns as columns } from "@/columns"
 import { EmptyState, FilterBar, PageShell } from "@/components/invoice-ui/design-system"
@@ -75,6 +76,7 @@ export function Plans() {
 
   return (
     <PageShell>
+      <PageMetadata title="Plan" description="Configure pricing plans, invoice extraction limits, and service intervals." keywords="plans, billing, pricing, extraction limits" />
       <PageHeader
         title="Plans & Pricing"
         description="Manage your subscription configurations, features, and pricing tiers."

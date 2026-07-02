@@ -1,3 +1,4 @@
+import { PageMetadata } from "@/components/layout/PageMetadata"
 import { Controller, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useNavigate, useParams } from "react-router-dom"
@@ -160,6 +161,7 @@ export function NormalizationRuleFormPage({ mode }: { mode: "create" | "edit" })
 
   return (
     <PageShell>
+      <PageMetadata title="Normalization Rule Form" description="Configure normalization rule registry values." keywords="normalization rules, regex formatting" />
       <PageHeader
         title={isEdit ? "Edit Normalization Rule" : "Create Normalization Rule"}
         description={isEdit ? "Update configuration, engine settings, and supported targets." : "Add a declarative normalization rule to clean or transform extracted fields."}

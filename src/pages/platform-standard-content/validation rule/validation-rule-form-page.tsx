@@ -1,3 +1,4 @@
+import { PageMetadata } from "@/components/layout/PageMetadata"
 import { Controller, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useNavigate, useParams } from "react-router-dom"
@@ -224,6 +225,7 @@ function RuleFields({
 }: any) {
   return (
     <>
+      <PageMetadata title="Validation Rule Form" description="Configure validation rule registry values." keywords="validation rules, field constraints" />
       <div className="dialog-field-grid">
         <InputField
           label={isEdit ? "Rule Code (Read-only)" : "Rule Code"}

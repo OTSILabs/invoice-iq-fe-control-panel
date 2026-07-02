@@ -1,3 +1,4 @@
+import { PageMetadata } from "@/components/layout/PageMetadata"
 import { useNavigate, useParams } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -97,6 +98,7 @@ export function ReferenceListFormPage({ mode }: { mode: "create" | "edit" }) {
 
   return (
     <PageShell>
+      <PageMetadata title="Reference List Form" description="Configure reference list registry values." keywords="reference lists, database lookups, validation" />
       <PageHeader
         title={isEdit ? "Edit Reference List" : "Create Reference List"}
         description={isEdit ? "Update settings and sorting for this reference list registry." : "Create a platform lookup or reference list registry."}

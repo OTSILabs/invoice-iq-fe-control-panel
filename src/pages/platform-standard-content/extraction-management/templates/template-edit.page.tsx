@@ -1,3 +1,4 @@
+import { PageMetadata } from "@/components/layout/PageMetadata"
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 
@@ -42,6 +43,7 @@ export default function TemplateEditPage() {
 
   return (
     <PageContainers backgroundClassName="overflow-visible">
+      <PageMetadata title="Edit Template" description="Configure invoice extraction fields, schemas, and processing bounds." keywords="edit template, template schema" />
       <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <PageDescriptiveSection>
           <PageTitle title="Edit Template" />

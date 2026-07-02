@@ -1,3 +1,4 @@
+import { PageMetadata } from "@/components/layout/PageMetadata"
 import { useState, useMemo } from "react"
 import { useNavigate } from "react-router-dom"
 import { Loader2, AlertCircle, RefreshCw, Plus, Users as UsersIcon } from "lucide-react"
@@ -78,6 +79,7 @@ export function Users() {
 
   return (
     <PageShell>
+      <PageMetadata title="Users" description="Manage control panel user accounts, roles, access permissions, and profiles." keywords="users, team members, access roles, permissions" />
       <PageHeader
         title="Users"
         description="Manage system access accounts and user permissions."

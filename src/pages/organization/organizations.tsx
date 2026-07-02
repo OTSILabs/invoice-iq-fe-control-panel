@@ -1,3 +1,4 @@
+import { PageMetadata } from "@/components/layout/PageMetadata"
 import { useState, useMemo } from "react"
 import { Button } from "@/components/ui/button"
 import { useOrganizations } from "@/api/hooks/useOrganizations"
@@ -32,6 +33,7 @@ export function Organizations() {
 
   return (
     <PageShell>
+      <PageMetadata title="Organizations" description="Manage your client organizations, departments, and custom invoice processing profiles." keywords="organizations, client management, invoice processing" />
       <PageHeader
         title="Organizations"
         description="Manage and onboard organizations within your control panel."

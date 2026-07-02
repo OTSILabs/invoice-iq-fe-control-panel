@@ -1,3 +1,4 @@
+import { PageMetadata } from "@/components/layout/PageMetadata"
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 
@@ -23,6 +24,7 @@ export default function TemplateCreatePage() {
 
   return (
     <PageContainers backgroundClassName="overflow-visible">
+      <PageMetadata title="Create Template" description="Create a new invoice extraction template." keywords="create template, invoice iq" />
       <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <PageDescriptiveSection>
           <PageTitle title="Create Template" />

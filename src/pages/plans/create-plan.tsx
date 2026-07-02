@@ -1,3 +1,4 @@
+import { PageMetadata } from "@/components/layout/PageMetadata"
 import { useNavigate } from "react-router-dom"
 import { ArrowLeft, CreditCard } from "lucide-react"
 import { PlanForm } from "./plan-form"
@@ -11,6 +12,7 @@ export function CreatePlan() {
 
   return (
     <PageShell>
+      <PageMetadata title="Create Plan" description="Configure pricing plans, invoice extraction limits, and service intervals." keywords="create plan, billing, pricing" />
       <PageHeader
         title="Create Plan"
         description="Provide the required specifications to set up the billing plan."

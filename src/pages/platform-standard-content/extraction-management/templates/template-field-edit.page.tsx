@@ -1,3 +1,4 @@
+import { PageMetadata } from "@/components/layout/PageMetadata"
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, FileText } from "lucide-react";
 
@@ -68,6 +69,7 @@ export default function TemplateFieldEditPage() {
 
   return (
     <PageContainers backgroundClassName="overflow-visible">
+      <PageMetadata title="Edit Template Field" description="Configure field settings and matching constraints." keywords="edit template field, matching constraints" />
       <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <PageDescriptiveSection>
           <PageTitle title="Edit Template Field" />

@@ -1,3 +1,4 @@
+import { PageMetadata } from "@/components/layout/PageMetadata"
 import { useCallback, useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -236,6 +237,7 @@ export function ExtractionFieldFormPage({ mode }: { mode: "create" | "edit" }) {
 
   return (
     <PageShell>
+      <PageMetadata title="Extraction Field Form" description="Configure extraction field settings." keywords="extraction field, template field" />
       <PageHeader
         title={isEdit ? "Edit Extraction Field" : "Add Extraction Field"}
         description={isEdit ? "Update settings and constraints for this standard extraction field." : "Define a new standard platform content field for extraction layouts."}

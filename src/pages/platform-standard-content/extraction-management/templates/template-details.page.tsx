@@ -1,3 +1,4 @@
+import { PageMetadata } from "@/components/layout/PageMetadata"
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import {
   ArrowLeft,
@@ -521,6 +522,7 @@ function TemplateDetailsContent({
   } = options || {};
   return (
     <>
+      <PageMetadata title="Template Details" description="Configure invoice extraction fields, schemas, and processing bounds." keywords="template details, template schema" />
       <TemplateDetailsHeader
         template={template}
         canManageTemplate={canManageTemplate}
