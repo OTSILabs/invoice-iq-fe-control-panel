@@ -56,7 +56,7 @@ Prefer reusable primitives before page-local styling:
   ```
 - `StatCard` or existing stats card patterns for KPIs
 - `FilterBar` for search, filters, refresh, and table actions
-- `SegmentedFilter` for sub-filtering/filter options in toolbars. Do not use for real section navigation or top-level page routing (use actual Tabs for that) to preserve standard visual styles.
+- Select dropdown components (e.g., standard Radix or styled select elements) for sub-filtering/filter options in toolbars. Do not use SegmentedFilter (as it is not implemented); use actual Tabs for real section navigation to preserve standard visual styles.
 - `SemanticBadge` for non-status semantic labels
 - `StatusBadge` for active/inactive/pending/warning/error state badges
 
@@ -108,7 +108,7 @@ Semantic status colors are allowed for badges and destructive/success states, bu
   - Standard container gaps: `gap: clamp(0.75rem, 2vw, 1.5rem)`
   - Section spacing gaps: `gap: clamp(0.5rem, 1.5vw, 1.125rem)`
 - Prefer global override classes/selectors in `src/index.css` to refine layout details (e.g., metadata grids, nested cards, card padding) rather than making direct inline changes inside individual page TSX files. This preserves pristine page file sanity.
-- Table action menus and filter dropdowns must use portal containers (e.g., Radix `<DropdownMenuPortal>` or body portals) to avoid layout clipping inside tables/cards that have `overflow-hidden` boundaries. Do not weaken table overflow globally to fix clipping. Action menus must appear above sticky table headers and pagination.
+- Table action menus and filter dropdowns must use portal containers (e.g., Radix `<DropdownMenuPortal>` or body portals) to avoid layout clipping inside tables/cards that have `overflow-hidden` boundaries. Note: The shared `DropdownMenuContent` component in `src/components/ui/dropdown-menu.tsx` handles this automatically via Radix Portal. Do not weaken table overflow globally to fix clipping. Action menus must appear above sticky table headers and pagination.
 - Keep page sections spaced with gaps, not excessive dividers.
 - Tables and large lists should sit in `table-container`. For the inner table wrapper, use `tableContainerClassName="border-0 rounded-none bg-transparent"`.
 - Search/filter/action rows should use `FilterBar` or `filter-toolbar`.
@@ -216,7 +216,9 @@ Follow clean React architecture and React 19 practices:
 - **Hook Dependencies**: Maintain complete dependency arrays for hooks like `useCallback`, `useMemo`, and `useEffect`. If a dependency is recreated every render, stabilize it using `useCallback`/`useMemo` or move its definition inside the hook.
 - **State Management & Reducers**: Group conceptually-related state slices. If a component body has 5 or more `useState` calls, refactor them into a single `useReducer` state structure to prevent rendering fan-out and keep state updates cohesive.
 - **Dead Code Cleanup**: Remove unused files and components (such as unused UI templates) to keep the codebase maintainable and reduce linting/diagnostics noise.
-- **Reactive Breadcrumb Resolution**: Dynamic URL segment names (e.g., templates, fields) in breadcrumbs must be reactive. Return `DYNAMIC_*` placeholders in `breadcrumb-utils.ts` and resolve them in `AppBreadcrumb.tsx` using sub-components with `useQuery`, rather than executing direct `queryClient.getQueryData` reads during layout rendering which fail to update on load.
+- **Reactive Breadcrumb Resolution**: Dynamic URL segment names (e.g., templates, fields) in breadcrumbs must be reactive. Return `DYNAMIC_*` placeholders in `breadcrumb-utils.ts` and resolve them in `AppBreadcrumb.tsx` using sub-components with `useQuery`, rather than executing direct `queryClient.getQueryData` reads during layout rendering which fail to update on load. Ensure static keywords like `create` and `new` are explicitly excluded from dynamic segments to prevent 400 Bad Request queries.
+- **Smart Form Navigation**: Form cancel/back buttons should dynamically navigate back (`window.history.length > 2 ? navigate(-1) : navigate(fallbackRoute)`) instead of using hardcoded paths. This preserves UI state (tabs, filters, search values) on the list page.
+- **React Doctor Score Maintenance**: Maintain a 100/100 React Doctor score. Optimize performance issues (e.g., use `.flatMap` instead of `.map().filter(Boolean)`) and avoid anti-patterns (e.g., use `useRef` to track render-phase props instead of faking state updates with `useState`). Manage style exceptions using `react-doctor.config.json` in the root.
 - **API Endpoint Standards**: Enforce pluralization consistency (e.g., `/api/platform-standard-content/extraction-templates/...`). Never call `/api/withkey/...` endpoints; if present, stub or disable them to avoid security/caching side-effects.
 - **Standard Templates**: Standard templates are now editable. Do not block management or edit buttons based on the `isStandard` flag.
 - **Template Features**: The Clone, Delete, and Toggle Active features for templates are currently disabled/commented out by product requirements. Do not re-enable them unless explicitly asked.
