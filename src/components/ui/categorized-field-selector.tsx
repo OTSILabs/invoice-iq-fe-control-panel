@@ -467,53 +467,69 @@ function CategorizedFieldSelectorHeader(
   }
 CategorizedFieldSelectorHeader.displayName = "CategorizedFieldSelectorHeader";
 
-interface CategorizedFieldSelectorBodyProps {
-  isSearchMode: boolean;
-  sortedCategories: any[];
-  searchItems: any[];
-  searchTotal: number;
-  selectedIds: string[];
-  selectedSet: Set<string>;
+interface SelectorSearchState {
+  isMode: boolean;
+  query: string;
+  items: any[];
+  total: number;
+  isLoading: boolean;
+  isError: boolean;
+  normalizedQuery: string;
+}
+
+interface SelectorControlState {
   disabled: boolean;
   readonly: boolean;
-  isSearchLoading: boolean;
-  isSearchQueryError: boolean;
-  normalizedSearch: string;
+  loading: boolean;
+  isBulkProcessing: boolean;
+}
+
+interface CategorizedFieldSelectorBodyProps {
+  searchState: SelectorSearchState;
+  controlState: SelectorControlState;
+  sortedCategories: any[];
+  selectedIds: string[];
+  selectedSet: Set<string>;
   onSelectedChange: (ids: string[]) => void;
   onEdit?: (item: any) => void;
-  loading: boolean;
   knownItems: any[];
   loadCategoryItems: any;
   getCategoryItemsQueryKey: any;
   categoryStickyTop: string;
   uncategorizedSelectedItems: any[];
-  isBulkProcessing: boolean;
-  search: string;
 }
 
 function CategorizedFieldSelectorBody({
-  isSearchMode,
+  searchState,
+  controlState,
   sortedCategories,
-  searchItems,
-  searchTotal,
   selectedIds,
   selectedSet,
-  disabled,
-  readonly,
-  isSearchLoading,
-  isSearchQueryError,
-  normalizedSearch,
   onSelectedChange,
   onEdit,
-  loading,
   knownItems,
   loadCategoryItems,
   getCategoryItemsQueryKey,
   categoryStickyTop,
   uncategorizedSelectedItems,
-  isBulkProcessing,
-  search,
 }: CategorizedFieldSelectorBodyProps) {
+  const {
+    isMode: isSearchMode,
+    query: search,
+    items: searchItems,
+    total: searchTotal,
+    isLoading: isSearchLoading,
+    isError: isSearchQueryError,
+    normalizedQuery: normalizedSearch,
+  } = searchState;
+
+  const {
+    disabled,
+    readonly,
+    loading,
+    isBulkProcessing,
+  } = controlState;
+
   return (
     <div className="flex min-h-full flex-col gap-2 p-3">
       {isSearchMode ? (
@@ -752,29 +768,37 @@ export function CategorizedFieldSelector({
     setBulkAction(null);
   }
 
+  const searchState = React.useMemo(() => ({
+    isMode: isSearchMode,
+    query: search,
+    items: searchItems,
+    total: searchTotal,
+    isLoading: isSearchLoading,
+    isError: isSearchQueryError,
+    normalizedQuery: normalizedSearch,
+  }), [isSearchMode, search, searchItems, searchTotal, isSearchLoading, isSearchQueryError, normalizedSearch]);
+
+  const controlState = React.useMemo(() => ({
+    disabled,
+    readonly,
+    loading,
+    isBulkProcessing,
+  }), [disabled, readonly, loading, isBulkProcessing]);
+
   const selectorBody = (
     <CategorizedFieldSelectorBody
-      isSearchMode={isSearchMode}
+      searchState={searchState}
+      controlState={controlState}
       sortedCategories={sortedCategories}
-      searchItems={searchItems}
-      searchTotal={searchTotal}
       selectedIds={selectedIds}
       selectedSet={selectedSet}
-      disabled={disabled}
-      readonly={readonly}
-      isSearchLoading={isSearchLoading}
-      isSearchQueryError={isSearchQueryError}
-      normalizedSearch={normalizedSearch}
       onSelectedChange={onSelectedChange}
       onEdit={onEdit}
-      loading={loading}
       knownItems={knownItems}
       loadCategoryItems={loadCategoryItems}
       getCategoryItemsQueryKey={getCategoryItemsQueryKey}
       categoryStickyTop={categoryStickyTop}
       uncategorizedSelectedItems={uncategorizedSelectedItems}
-      isBulkProcessing={isBulkProcessing}
-      search={search}
     />
   );
 
