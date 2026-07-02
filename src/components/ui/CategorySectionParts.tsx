@@ -2,7 +2,7 @@ import * as React from "react";
 import { CSS } from "@dnd-kit/utilities";
 import { DndContext, closestCenter } from "@dnd-kit/core";
 import { useSortable, SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
-import { GripVertical, Info } from "lucide-react";
+import { GripVertical, Info, Pencil } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -145,6 +145,7 @@ export function FieldRow({
   disabled,
   dragDisabled,
   onToggle,
+  onEdit,
   dragHandleProps,
   isDragging,
   readonly,
@@ -154,6 +155,7 @@ export function FieldRow({
   disabled?: boolean;
   dragDisabled?: boolean;
   onToggle: (itemId: string) => void;
+  onEdit?: (item: CategorizedFieldSelectorItem) => void;
   dragHandleProps?: DragHandleProps;
   isDragging?: boolean;
   readonly?: boolean;
@@ -241,6 +243,21 @@ export function FieldRow({
             </Badge>
           ) : null}
           <FieldDetailsHoverCard item={item} />
+          {onEdit && (
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon-xs"
+              aria-label={`Edit ${item.label}`}
+              onClick={(event) => {
+                event.stopPropagation();
+                onEdit(item);
+              }}
+              className="size-6 shrink-0 rounded-sm text-muted-foreground transition-colors hover:bg-background/80 hover:text-foreground"
+            >
+              <Pencil className="size-3.5" aria-hidden="true" />
+            </Button>
+          )}
           {!readonly ? (
             <Switch
               size="sm"
@@ -301,6 +318,7 @@ export function CategoryFieldsList({
   sensors,
   handleDragEnd,
   toggleItem,
+  onEdit,
 }: {
   visibleItems: CategorizedFieldSelectorItem[];
   sortableItemIds: string[];
@@ -311,6 +329,7 @@ export function CategoryFieldsList({
   sensors: any;
   handleDragEnd: (event: DragEndEvent) => void;
   toggleItem: (itemId: string) => void;
+  onEdit?: (item: CategorizedFieldSelectorItem) => void;
 }) {
   return (
     <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
@@ -332,6 +351,7 @@ export function CategoryFieldsList({
                       isDragging={isDragging}
                       readonly={readonly}
                       onToggle={toggleItem}
+                      onEdit={onEdit}
                     />
                   )}
                 </SortableFieldRow>

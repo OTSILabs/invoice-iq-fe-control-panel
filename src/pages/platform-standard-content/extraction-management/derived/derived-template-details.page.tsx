@@ -1,6 +1,7 @@
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import { ArrowLeft, Edit2 } from "lucide-react";
-import { useMemo, useCallback } from "react";
+import { useMemo, useCallback, useState } from "react";
+import { ExtractionFieldFormDialog } from "../components/extraction-field-form-dialog";
 import { PageContainers } from "@/components/invoice-ui/page-containers";
 import { PageLoader } from "@/components/layout/PageLoader";
 import {
@@ -34,6 +35,13 @@ export default function DerivedTemplateDetailsPage() {
   const { isMounted } = useUser();
   const [searchParams, setSearchParams] = useSearchParams();
   const templateQuery = useDerivedTemplate(derivedTemplateId);
+  const [isFieldDialogOpen, setIsFieldDialogOpen] = useState(false);
+  const [editingFieldId, setEditingFieldId] = useState<string | undefined>(undefined);
+
+  const handleEditField = (item: any) => {
+    setEditingFieldId(item.id);
+    setIsFieldDialogOpen(true);
+  };
 
   const tabParam = searchParams.get("tab");
   const activeTab = isTemplateDetailsTab(tabParam) ? tabParam : TEMPLATE_DETAILS_TABS.DETAILS;
@@ -59,8 +67,16 @@ export default function DerivedTemplateDetailsPage() {
     });
   }, [extractionFields]);
 
+  const selectedIds = useMemo(() => {
+    return (template?.field_membership || []).flatMap((fm: any) => {
+      const val = fm.field_id || fm.field_code || (fm.derived_template_field_id ? fm.derived_template_field_id.split(':').pop() : "");
+      return val ? [val] : [];
+    });
+  }, [template]);
+
   const knownItems = useMemo(() => {
-    return derivedFields.map((f: any) => {
+    const selectedFields = derivedFields.filter(f => selectedIds.includes(f.field_id));
+    return selectedFields.map((f: any) => {
       const categoryId = f.field_category?.field_category_code || f.category_code || "uncategorized";
       return {
         id: f.field_id,
@@ -73,12 +89,13 @@ export default function DerivedTemplateDetailsPage() {
         },
       };
     });
-  }, [derivedFields]);
+  }, [derivedFields, selectedIds]);
 
   const categories = useMemo(() => {
     const categoriesMap = new Map<string, any>();
+    const selectedFields = derivedFields.filter(f => selectedIds.includes(f.field_id));
     
-    derivedFields.forEach((field: any) => {
+    selectedFields.forEach((field: any) => {
       if (field.field_category) {
         categoriesMap.set(field.field_category.field_category_code, field.field_category);
       }
@@ -89,10 +106,10 @@ export default function DerivedTemplateDetailsPage() {
       label: cat.ui_label || cat.field_category_code,
       description: cat.description,
       sortOrder: cat.sort_sequence || Number.MAX_SAFE_INTEGER,
-      activeFieldCount: derivedFields.filter((f: any) => f.field_category?.field_category_code === cat.field_category_code).length,
+      activeFieldCount: selectedFields.filter((f: any) => f.field_category?.field_category_code === cat.field_category_code).length,
     }));
 
-    const uncategorizedCount = derivedFields.filter((f: any) => !f.field_category).length;
+    const uncategorizedCount = selectedFields.filter((f: any) => !f.field_category).length;
     if (uncategorizedCount > 0) {
       extractedCategories.push({
         id: "uncategorized",
@@ -107,11 +124,7 @@ export default function DerivedTemplateDetailsPage() {
       const sortDifference = a.sortOrder - b.sortOrder;
       return sortDifference || a.label.localeCompare(b.label);
     });
-  }, [derivedFields]);
-
-  const selectedIds = useMemo(() => {
-    return (template?.field_membership || []).map((m: any) => m.field_id);
-  }, [template]);
+  }, [derivedFields, selectedIds]);
 
   if (!isMounted) {
     return null;
@@ -243,6 +256,7 @@ export default function DerivedTemplateDetailsPage() {
                 selectedIds={selectedIds}
                 onSelectedChange={() => {}}
                 readonly={true}
+                onEdit={handleEditField}
                 loadCategoryItems={async (category: any) => {
                   const items = knownItems.filter((i: any) => i.categoryId === category.id);
                   return { items, total: items.length };
@@ -262,6 +276,18 @@ export default function DerivedTemplateDetailsPage() {
           </CardContent>
         </Tabs>
       </Card>
+
+      <ExtractionFieldFormDialog
+        mode="edit"
+        fieldId={editingFieldId}
+        open={isFieldDialogOpen}
+        onOpenChange={(open) => {
+          setIsFieldDialogOpen(open);
+          if (!open) {
+            setEditingFieldId(undefined);
+          }
+        }}
+      />
     </PageContainers>
   );
 }

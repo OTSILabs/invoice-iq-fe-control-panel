@@ -29,6 +29,7 @@ export function CategorySection({
   getCategoryItemsQueryKey,
   onSelectedChange,
   stickyTop,
+  onEdit,
 }: CategorySectionProps) {
   const {
     open,
@@ -119,6 +120,7 @@ export function CategorySection({
             sensors={sensors}
             handleDragEnd={handleDragEnd}
             toggleItem={toggleItem}
+            onEdit={onEdit}
           />
         )}
       </CollapsibleContent>

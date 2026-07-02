@@ -22,6 +22,7 @@ import { EmptyState } from "@/components/invoice-ui/design-system";
 import { PageContainers } from "@/components/invoice-ui/page-containers";
 import { CategorizedFieldSelector } from "@/components/ui/categorized-field-selector";
 import type { CategorizedFieldSelectorCategory } from "@/components/ui/categorized-field-selector.utils";
+import { ExtractionFieldFormDialog } from "../components/extraction-field-form-dialog";
 import {
   buildTemplateUpdatePayload,
   getFieldCode,
@@ -97,10 +98,12 @@ function TemplateFieldsSection({
   categories,
   knownItems,
   selectedIds,
+  onEdit,
 }: {
   categories: CategorizedFieldSelectorCategory[];
   knownItems: any[];
   selectedIds: string[];
+  onEdit?: (item: any) => void;
 }) {
   return (
     <TabsContent value={TEMPLATE_DETAILS_TABS.FIELDS} className="m-0 p-3 border-0 rounded-xl">
@@ -110,6 +113,7 @@ function TemplateFieldsSection({
         selectedIds={selectedIds}
         onSelectedChange={() => {}}
         readonly={true}
+        onEdit={onEdit}
         loadCategoryItems={async (category: any) => {
           const items = knownItems.filter((i: any) => i.categoryId === category.id);
           return { items, total: items.length };
@@ -214,6 +218,13 @@ export default function TemplateDetailsPage() {
     deleteOpen: false,
     deletingField: null,
   });
+  const [isFieldDialogOpen, setIsFieldDialogOpen] = useState(false);
+  const [editingFieldId, setEditingFieldId] = useState<string | undefined>(undefined);
+
+  const handleEditField = (item: any) => {
+    setEditingFieldId(item.id);
+    setIsFieldDialogOpen(true);
+  };
   const cloneTemplateMutation = useCloneTemplate();
   const deleteTemplateMutation = useDeleteTemplate();
   const updateTemplateMutation = useUpdateTemplate();
@@ -465,6 +476,19 @@ export default function TemplateDetailsPage() {
           showHeaderCloneAction,
           canManageTemplate,
         }}
+        onEditField={handleEditField}
+      />
+
+      <ExtractionFieldFormDialog
+        mode="edit"
+        fieldId={editingFieldId}
+        open={isFieldDialogOpen}
+        onOpenChange={(open) => {
+          setIsFieldDialogOpen(open);
+          if (!open) {
+            setEditingFieldId(undefined);
+          }
+        }}
       />
     </PageContainers>
   );
@@ -488,6 +512,7 @@ function TemplateDetailsContent({
   deleteTemplate,
   setTemplateActiveMutation,
   updateTemplateActiveState,
+  onEditField,
   options,
 }: any) {
   const {
@@ -565,6 +590,7 @@ function TemplateDetailsContent({
               categories={fieldCategories}
               knownItems={knownFieldItems}
               selectedIds={selectedIds}
+              onEdit={onEditField}
             />
           </CardContent>
         </Tabs>

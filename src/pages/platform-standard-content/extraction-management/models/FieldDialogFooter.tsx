@@ -6,11 +6,13 @@ export function FieldDialogFooterNav({
   isSaving,
   handlePreviousStep,
   handleNextStep,
+  isLastStep,
 }: {
   isFirstStep: boolean;
   isSaving: boolean;
   handlePreviousStep: () => void;
   handleNextStep: () => void;
+  isLastStep?: boolean;
 }) {
   return (
     <>
@@ -23,15 +25,17 @@ export function FieldDialogFooterNav({
       >
         Back
       </Button>
-      <Button
-        type="button"
-        variant="default"
-        disabled={isSaving}
-        className="min-w-24 px-4 cursor-pointer"
-        onClick={handleNextStep}
-      >
-        Next
-      </Button>
+      {!isLastStep && (
+        <Button
+          type="button"
+          variant="default"
+          disabled={isSaving}
+          className="min-w-24 px-4 cursor-pointer"
+          onClick={handleNextStep}
+        >
+          Next
+        </Button>
+      )}
     </>
   );
 }

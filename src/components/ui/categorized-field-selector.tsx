@@ -56,6 +56,7 @@ export interface CategorizedFieldSelectorProps {
   actions?: React.ReactNode;
   panelHeight?: string;
   className?: string;
+  onEdit?: (item: CategorizedFieldSelectorItem) => void;
 }
 
 export type CategorySectionProps = {
@@ -70,6 +71,7 @@ export type CategorySectionProps = {
   getCategoryItemsQueryKey: CategorizedFieldSelectorProps["getCategoryItemsQueryKey"];
   onSelectedChange: (selectedIds: string[]) => void;
   stickyTop: string;
+  onEdit?: CategorizedFieldSelectorProps["onEdit"];
 };
 
 const EMPTY_KNOWN_ITEMS: CategorizedFieldSelectorItem[] = [];
@@ -122,6 +124,7 @@ function SearchResultsSection({
   error,
   search,
   onSelectedChange,
+  onEdit,
 }: {
   categories: CategorizedFieldSelectorCategory[];
   items: CategorizedFieldSelectorItem[];
@@ -134,6 +137,7 @@ function SearchResultsSection({
   error?: boolean;
   search: string;
   onSelectedChange: (selectedIds: string[]) => void;
+  onEdit?: (item: CategorizedFieldSelectorItem) => void;
 }) {
   const isLocked = disabled || readonly;
   const categoryById = React.useMemo(
@@ -244,6 +248,8 @@ function SearchResultsSection({
                   selected={selectedSet.has(item.id)}
                   disabled={isLocked || item.disabled}
                   onToggle={toggleItem}
+                  onEdit={onEdit}
+                  readonly={readonly}
                 />
               ))}
             </ul>
@@ -266,6 +272,7 @@ function UncategorizedSelectedSection({
   disabled,
   readonly,
   onSelectedChange,
+  onEdit,
 }: {
   items: CategorizedFieldSelectorItem[];
   selectedIds: string[];
@@ -273,6 +280,7 @@ function UncategorizedSelectedSection({
   disabled?: boolean;
   readonly?: boolean;
   onSelectedChange: (selectedIds: string[]) => void;
+  onEdit?: (item: CategorizedFieldSelectorItem) => void;
 }) {
   const selectedItems = items.filter((item) => selectedSet.has(item.id));
 
@@ -305,6 +313,8 @@ function UncategorizedSelectedSection({
             onToggle={(itemId) =>
               onSelectedChange(selectedIds.filter((id) => id !== itemId))
             }
+            onEdit={onEdit}
+            readonly={readonly}
           />
         ))}
       </div>
@@ -455,8 +465,119 @@ function CategorizedFieldSelectorHeader(
       </div>
     );
   }
-
 CategorizedFieldSelectorHeader.displayName = "CategorizedFieldSelectorHeader";
+
+interface CategorizedFieldSelectorBodyProps {
+  isSearchMode: boolean;
+  sortedCategories: any[];
+  searchItems: any[];
+  searchTotal: number;
+  selectedIds: string[];
+  selectedSet: Set<string>;
+  disabled: boolean;
+  readonly: boolean;
+  isSearchLoading: boolean;
+  isSearchQueryError: boolean;
+  normalizedSearch: string;
+  onSelectedChange: (ids: string[]) => void;
+  onEdit?: (item: any) => void;
+  loading: boolean;
+  knownItems: any[];
+  loadCategoryItems: any;
+  getCategoryItemsQueryKey: any;
+  categoryStickyTop: string;
+  uncategorizedSelectedItems: any[];
+  isBulkProcessing: boolean;
+  search: string;
+}
+
+function CategorizedFieldSelectorBody({
+  isSearchMode,
+  sortedCategories,
+  searchItems,
+  searchTotal,
+  selectedIds,
+  selectedSet,
+  disabled,
+  readonly,
+  isSearchLoading,
+  isSearchQueryError,
+  normalizedSearch,
+  onSelectedChange,
+  onEdit,
+  loading,
+  knownItems,
+  loadCategoryItems,
+  getCategoryItemsQueryKey,
+  categoryStickyTop,
+  uncategorizedSelectedItems,
+  isBulkProcessing,
+  search,
+}: CategorizedFieldSelectorBodyProps) {
+  return (
+    <div className="flex min-h-full flex-col gap-2 p-3">
+      {isSearchMode ? (
+        <SearchResultsSection
+          categories={sortedCategories}
+          items={searchItems}
+          total={searchTotal}
+          selectedIds={selectedIds}
+          selectedSet={selectedSet}
+          disabled={disabled || isBulkProcessing}
+          readonly={readonly}
+          loading={isSearchLoading}
+          error={isSearchQueryError}
+          search={normalizedSearch}
+          onSelectedChange={onSelectedChange}
+          onEdit={onEdit}
+        />
+      ) : loading ? (
+        <CategorySkeleton />
+      ) : sortedCategories.length ? (
+        <>
+          {sortedCategories.map((category) => (
+            <CategorySection
+              key={category.id}
+              category={category}
+              selectedIds={selectedIds}
+              selectedSet={selectedSet}
+              search={search}
+              knownItems={knownItems}
+              disabled={disabled || isBulkProcessing}
+              readonly={readonly}
+              loadCategoryItems={loadCategoryItems}
+              getCategoryItemsQueryKey={getCategoryItemsQueryKey}
+              onSelectedChange={onSelectedChange}
+              stickyTop={categoryStickyTop}
+              onEdit={onEdit}
+            />
+          ))}
+
+          <UncategorizedSelectedSection
+            items={uncategorizedSelectedItems}
+            selectedIds={selectedIds}
+            selectedSet={selectedSet}
+            disabled={disabled}
+            readonly={readonly}
+            onSelectedChange={onSelectedChange}
+            onEdit={onEdit}
+          />
+        </>
+      ) : (
+        <div className="flex min-h-48 flex-1 items-center justify-center rounded-md border border-dashed border-border/80 bg-muted/20 px-4 text-center">
+          <div>
+            <p className="text-[13px] font-medium text-foreground">
+              No field categories
+            </p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Categories will appear here when they are available.
+            </p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export function CategorizedFieldSelector({
   categories,
@@ -477,6 +598,7 @@ export function CategorizedFieldSelector({
   actions,
   panelHeight,
   className,
+  onEdit,
 }: CategorizedFieldSelectorProps) {
   const [search, setSearch] = React.useState("");
   const headerRef = React.useRef<HTMLDivElement>(null);
@@ -510,7 +632,7 @@ export function CategorizedFieldSelector({
   );
   const isBulkProcessing = bulkAction !== null;
   const isLocked = disabled || readonly || loading || isBulkProcessing;
-  const isSearchInputDisabled = disabled || readonly || isBulkProcessing;
+  const isSearchInputDisabled = disabled || loading || isBulkProcessing;
   const categoryStickyTop = panelHeight ? "0px" : `${headerHeight}px`;
   const {
     data: searchData,
@@ -631,64 +753,29 @@ export function CategorizedFieldSelector({
   }
 
   const selectorBody = (
-    <div className="flex min-h-full flex-col gap-2 p-3">
-      {isSearchMode ? (
-        <SearchResultsSection
-          categories={sortedCategories}
-          items={searchItems}
-          total={searchTotal}
-          selectedIds={selectedIds}
-          selectedSet={selectedSet}
-          disabled={disabled || isBulkProcessing}
-          readonly={readonly}
-          loading={isSearchLoading}
-          error={isSearchQueryError}
-          search={normalizedSearch}
-          onSelectedChange={onSelectedChange}
-        />
-      ) : loading ? (
-        <CategorySkeleton />
-      ) : sortedCategories.length ? (
-        <>
-          {sortedCategories.map((category) => (
-            <CategorySection
-              key={category.id}
-              category={category}
-              selectedIds={selectedIds}
-              selectedSet={selectedSet}
-              search={search}
-              knownItems={knownItems}
-              disabled={disabled || isBulkProcessing}
-              readonly={readonly}
-              loadCategoryItems={loadCategoryItems}
-              getCategoryItemsQueryKey={getCategoryItemsQueryKey}
-              onSelectedChange={onSelectedChange}
-              stickyTop={categoryStickyTop}
-            />
-          ))}
-
-          <UncategorizedSelectedSection
-            items={uncategorizedSelectedItems}
-            selectedIds={selectedIds}
-            selectedSet={selectedSet}
-            disabled={disabled}
-            readonly={readonly}
-            onSelectedChange={onSelectedChange}
-          />
-        </>
-      ) : (
-        <div className="flex min-h-48 flex-1 items-center justify-center rounded-md border border-dashed border-border/80 bg-muted/20 px-4 text-center">
-          <div>
-            <p className="text-[13px] font-medium text-foreground">
-              No field categories
-            </p>
-            <p className="mt-1 text-xs text-muted-foreground">
-              Categories will appear here when they are available.
-            </p>
-          </div>
-        </div>
-      )}
-    </div>
+    <CategorizedFieldSelectorBody
+      isSearchMode={isSearchMode}
+      sortedCategories={sortedCategories}
+      searchItems={searchItems}
+      searchTotal={searchTotal}
+      selectedIds={selectedIds}
+      selectedSet={selectedSet}
+      disabled={disabled}
+      readonly={readonly}
+      isSearchLoading={isSearchLoading}
+      isSearchQueryError={isSearchQueryError}
+      normalizedSearch={normalizedSearch}
+      onSelectedChange={onSelectedChange}
+      onEdit={onEdit}
+      loading={loading}
+      knownItems={knownItems}
+      loadCategoryItems={loadCategoryItems}
+      getCategoryItemsQueryKey={getCategoryItemsQueryKey}
+      categoryStickyTop={categoryStickyTop}
+      uncategorizedSelectedItems={uncategorizedSelectedItems}
+      isBulkProcessing={isBulkProcessing}
+      search={search}
+    />
   );
 
   return (

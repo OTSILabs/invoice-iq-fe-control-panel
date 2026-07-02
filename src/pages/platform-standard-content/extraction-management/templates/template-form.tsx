@@ -18,7 +18,7 @@ import type {
 	TemplateMembershipInput,
 	TemplateRecord,
 } from "@/api/templates/templates.types";
-import { TemplateFieldFormDialog } from "@/components/invoice-ui/templates/template-field-form-dialog";
+import { ExtractionFieldFormDialog } from "../components/extraction-field-form-dialog";
 import { SectionCard } from "@/components/invoice-ui/design-system";
 import {
 	getFieldCode,
@@ -485,6 +485,14 @@ function TemplateFormContent({
 	handleFieldCreated,
 }: any) {
 	const [isFieldDialogOpen, setIsFieldDialogOpen] = useState(false);
+	const [fieldDialogMode, setFieldDialogMode] = useState<"create" | "edit">("create");
+	const [editingFieldId, setEditingFieldId] = useState<string | undefined>(undefined);
+
+	const handleEditField = (item: any) => {
+		setEditingFieldId(item.id);
+		setFieldDialogMode("edit");
+		setIsFieldDialogOpen(true);
+	};
 
 	return (
 		<>
@@ -526,6 +534,7 @@ function TemplateFormContent({
 												getCategoryItemsQueryKey={(category: any) =>
 													templateQueryKeys.fieldCategoryFields(category.id)
 												}
+												onEdit={handleEditField}
 												actions={
 													<Button
 														type="button"
@@ -533,7 +542,11 @@ function TemplateFormContent({
 														size="sm"
 														className="h-7 px-2 text-xs"
 														disabled={isPending}
-														onClick={() => setIsFieldDialogOpen(true)}
+														onClick={() => {
+															setFieldDialogMode("create");
+															setEditingFieldId(undefined);
+															setIsFieldDialogOpen(true);
+														}}
 													>
 														<Plus className="size-3.5 shrink-0" aria-hidden="true" />
 														<span className="text-xs font-medium">Add Field</span>
@@ -566,7 +579,22 @@ function TemplateFormContent({
 				</div>
 			</SectionCard>
 
-			<TemplateFieldFormDialog mode="create" open={isFieldDialogOpen} onOpenChange={setIsFieldDialogOpen} onSuccess={handleFieldCreated} />
+			<ExtractionFieldFormDialog
+				mode={fieldDialogMode}
+				fieldId={editingFieldId}
+				open={isFieldDialogOpen}
+				onOpenChange={(open) => {
+					setIsFieldDialogOpen(open);
+					if (!open) {
+						setEditingFieldId(undefined);
+					}
+				}}
+				onSuccess={(data) => {
+					if (fieldDialogMode === "create") {
+						handleFieldCreated(data);
+					}
+				}}
+			/>
 		</>
 	);
 }

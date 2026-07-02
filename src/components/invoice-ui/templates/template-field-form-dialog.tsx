@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState, type ReactNode } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { v4 as uuidv4 } from "uuid";
@@ -13,14 +13,6 @@ import {
   useUpdateTemplateField,
   useUpdateTemplateFieldMembership,
 } from "@/api/templates/templates.hooks";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 import {
@@ -396,12 +388,6 @@ type TemplateFieldFormSurfaceProps = {
   onSuccess?: (response?: unknown, payload?: ApiRecord) => void;
 };
 
-type TemplateFieldFormDialogProps = Omit<TemplateFieldFormSurfaceProps, "enabled" | "onCancel"> & {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  children?: ReactNode;
-};
-
 export function TemplateFieldFormSurface({
   mode = "create",
   template = null,
@@ -650,54 +636,5 @@ export function TemplateFieldFormSurface({
           />
         </TemplateFieldDialogFooterWrapper>
     </>
-  );
-}
-
-export function TemplateFieldFormDialog({
-  mode = "create",
-  template = null,
-  field = null,
-  defaultFieldCategoryCode = null,
-  open,
-  onOpenChange,
-  onSuccess,
-  children,
-}: TemplateFieldFormDialogProps) {
-  const isEditMode = mode === "edit";
-
-  const handleDialogOpenChange = (nextOpen: boolean) => {
-    onOpenChange(nextOpen);
-  };
-
-  return (
-    <Dialog open={open} onOpenChange={handleDialogOpenChange}>
-      {children ? <DialogTrigger asChild>{children}</DialogTrigger> : null}
-      <DialogContent
-        showCloseButton={false}
-        className="grid h-[min(42rem,86vh)] grid-rows-[auto_minmax(0,1fr)_auto] gap-0 overflow-hidden p-0 sm:max-w-3xl"
-        onInteractOutside={(event) => event.preventDefault()}
-      >
-        <DialogHeader className="border-b px-5 py-4">
-          <DialogTitle>
-            {isEditMode ? "Edit Extraction Field" : "Add Custom Field"}
-          </DialogTitle>
-          <DialogDescription>
-            {isEditMode
-              ? "Update the field metadata and extraction guidance used to identify this business value."
-              : "Define a reusable field with the type, aliases, examples, and guidance needed for extraction."}
-          </DialogDescription>
-        </DialogHeader>
-
-        <TemplateFieldFormSurface
-          mode={mode}
-          template={template}
-          field={field}
-          defaultFieldCategoryCode={defaultFieldCategoryCode}
-          enabled={open}
-          onCancel={() => onOpenChange(false)}
-          onSuccess={onSuccess}
-        />
-      </DialogContent>
-    </Dialog>
   );
 }
