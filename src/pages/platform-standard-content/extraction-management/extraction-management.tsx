@@ -62,9 +62,15 @@ export function ExtractionManagement() {
   }, [urlTab, state.activeTab]);
 
   // Loading TanStack query data
-  const fieldsQuery = useExtractionFields();
-  const templatesQuery = useExtractionTemplates();
-  const derivedQuery = useDerivedTemplates();
+  const fieldsQuery = useExtractionFields({
+    enabled: state.activeTab === "fields",
+  });
+  const templatesQuery = useExtractionTemplates({
+    enabled: state.activeTab === "templates",
+  });
+  const derivedQuery = useDerivedTemplates({
+    enabled: state.activeTab === "derived",
+  });
   const deleteMutation = useDeleteDerivedTemplate();
 
   const handleDeleteDerived = useCallback(async () => {
