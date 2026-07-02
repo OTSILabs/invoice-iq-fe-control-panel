@@ -1,14 +1,8 @@
+import type { NavigationFooterProps } from "@/types";
 import { Button } from "@/components/ui/button";
 import { DialogClose } from "@/components/ui/dialog";
 
-interface NavigationFooterProps {
-  isFirstStep: boolean;
-  isLastStep: boolean;
-  isPending: boolean;
-  onCancel?: () => void;
-  handlePreviousStep: () => void;
-  handleNextStep: () => void;
-}
+
 
 export default function TemplateFieldDialogNavigation({
   isFirstStep,

@@ -1,3 +1,4 @@
+import type { CopyableFieldProps } from "@/types";
 import { useState } from "react"
 import { Eye, EyeOff } from "lucide-react"
 import { CopyToClipboard } from "./copy-to-clipboard"
@@ -5,11 +6,7 @@ import { CopyToClipboard } from "./copy-to-clipboard"
 export { CopyButton } from "./copy-button"
 export { MaskedValue } from "./masked-value"
 
-interface CopyableFieldProps {
-  value: string | number
-  label: string
-  isSensitive?: boolean
-}
+
 
 export function CopyableField({ value, label, isSensitive = false }: CopyableFieldProps) {
   const [show, setShow] = useState(!isSensitive)

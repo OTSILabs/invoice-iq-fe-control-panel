@@ -1,5 +1,5 @@
 import { APP_ROUTES } from "@/config/routes"
-import type { BreadcrumbEntry } from "./AppBreadcrumb"
+import type { BreadcrumbEntry } from "@/types"
 
 /**
  * Resolves a URL path into breadcrumb entries.

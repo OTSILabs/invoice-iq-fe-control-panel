@@ -1,4 +1,5 @@
-import { Controller, type UseFormReturn } from "react-hook-form";
+import type { TemplateFieldDialogDetailsStepProps } from "@/types";
+import { Controller } from "react-hook-form";
 import { Field, FieldError } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import {
@@ -19,12 +20,7 @@ const VALUE_TYPE_OPTIONS = [
 
 const FIELD_MESSAGE_CLASS = "text-xs leading-4";
 
-interface TemplateFieldDialogDetailsStepProps {
-  form: UseFormReturn<any>;
-  dataTypeOptions: any[];
-  fieldCategoryOptions: any[];
-  
-}
+
 
 export function TemplateFieldDialogDetailsStep({
   form,

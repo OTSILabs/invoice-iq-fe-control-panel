@@ -14,7 +14,7 @@ import {
   extractionFieldSchema,
   type ExtractionFieldFormValues,
 } from "@/schemas/extraction-schema"
-import type { FormStep } from "@/types"
+import type { FormStep, ExtractionFieldFormContentProps } from "@/types"
 import { FieldDialogDetailsStep, FieldDialogMeaningStep, FieldDialogRulesStep } from "../models/FieldDialogSteps"
 import { FieldDialogFooterNav, FieldDialogFooterSubmit } from "../models/FieldDialogFooter"
 import { FieldDialogSidebar } from "../models/FieldDialogSidebar"
@@ -55,12 +55,6 @@ const FIELD_FORM_STEPS: readonly FormStep[] = [
 
 const FIELD_FORM_STEP_FIELDS = FIELD_FORM_STEPS.flatMap((step) => step.fields)
 
-interface ExtractionFieldFormContentProps {
-  mode: "create" | "edit"
-  fieldId?: string
-  onOpenChange: (open: boolean) => void
-  onSuccess?: (response?: any, payload?: any) => void
-}
 
 function ExtractionFieldFormContent({
   mode,

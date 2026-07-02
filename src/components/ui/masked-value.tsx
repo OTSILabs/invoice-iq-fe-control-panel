@@ -1,10 +1,9 @@
+import type { MaskedValueProps } from "@/types";
 import { useState } from "react"
 import { Eye, EyeOff } from "lucide-react"
 import { CopyToClipboard } from "./copy-to-clipboard"
 
-interface MaskedValueProps {
-  value: string | number
-}
+
 
 export function MaskedValue({ value }: MaskedValueProps) {
   const [show, setShow] = useState(false)

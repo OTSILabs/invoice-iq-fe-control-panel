@@ -1,6 +1,13 @@
 import type * as React from "react"
-import type { UseFormRegister, FieldErrors } from "react-hook-form"
+import type { UseFormRegister, FieldErrors, UseFormReturn } from "react-hook-form"
 import type { ExtractionFieldFormValues } from "@/schemas/extraction-schema"
+import type { LucideIcon } from "lucide-react"
+import type { QueryKey } from "@tanstack/react-query"
+import type {
+  CategorizedFieldSelectorCategory,
+  CategorizedFieldSelectorItem,
+  CategorizedFieldSelectorLoadResult,
+} from "@/components/ui/categorized-field-selector.utils"
 
 export interface LoginPayload {
   email: string
@@ -691,3 +698,393 @@ export type ReplicationOptionKey =
   | "organisation_profiles";
 
 export type ReplicationSettings = Record<ReplicationOptionKey, boolean>;
+
+export interface SelectorSearchState {
+  isMode: boolean;
+  query: string;
+  items: any[];
+  total: number;
+  isLoading: boolean;
+  isError: boolean;
+  normalizedQuery: string;
+}
+
+export interface SelectorControlState {
+  disabled: boolean;
+  readonly: boolean;
+  loading: boolean;
+  isBulkProcessing: boolean;
+}
+
+export interface CategorizedFieldSelectorBodyProps {
+  searchState: SelectorSearchState;
+  controlState: SelectorControlState;
+  sortedCategories: any[];
+  selectedIds: string[];
+  selectedSet: Set<string>;
+  onSelectedChange: (ids: string[]) => void;
+  onEdit?: (item: any) => void;
+  knownItems: any[];
+  loadCategoryItems: any;
+  getCategoryItemsQueryKey: any;
+  categoryStickyTop: string;
+  uncategorizedSelectedItems: any[];
+}
+
+export interface ExtractionFieldFormContentProps {
+  mode: "create" | "edit"
+  fieldId?: string
+  onOpenChange: (open: boolean) => void
+  onSuccess?: (response?: any, payload?: any) => void
+}
+
+
+export interface SearchInputProps {
+  value: string
+  onChange: (value: string) => void
+  placeholder?: string
+  className?: string
+  disabled?: boolean
+}
+
+
+
+export interface StatsCardProps extends React.HTMLAttributes<HTMLDivElement> {
+  label: string
+  value: string | number
+  icon: LucideIcon
+}
+
+
+
+export interface FieldFormValues {
+  field_category_code: string;
+  field_label: string;
+  short_desc: string;
+  field_long_description: string;
+  extraction_instructions: string;
+  labels: string[];
+  examples: string;
+  data_type_code: string;
+  header_item: string;
+  allowed_static_list?: string[];
+}
+
+
+
+export interface TemplateFieldDialogDetailsStepProps {
+  form: UseFormReturn<any>;
+  dataTypeOptions: any[];
+  fieldCategoryOptions: any[];
+  
+}
+
+
+
+export interface TemplateFieldDialogMeaningStepProps {
+  form: UseFormReturn<any>;
+}
+
+
+
+export interface NavigationFooterProps {
+  isFirstStep: boolean;
+  isLastStep: boolean;
+  isPending: boolean;
+  onCancel?: () => void;
+  handlePreviousStep: () => void;
+  handleNextStep: () => void;
+}
+
+
+
+export interface TemplateFieldDialogRulesStepProps {
+  form: UseFormReturn<any>;
+}
+
+
+
+export interface TemplateFieldDialogSidebarProps {
+  activeStepIndex: number;
+  handleStepChange: (index: number) => void;
+  steps: readonly {
+    readonly title: string;
+    readonly description: string;
+    readonly fields: readonly string[];
+  }[];
+}
+
+
+
+export interface SubmitFooterProps {
+  isPending: boolean;
+  isEditMode: boolean;
+  isFormReadyToSubmit: boolean;
+  onSubmitClick: () => void;
+}
+
+
+
+export interface BreadcrumbEntry {
+  title: string
+  href: string
+  isLast: boolean
+}
+
+export interface Props {
+  breadcrumbs: BreadcrumbEntry[]
+}
+
+
+
+export interface PageHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
+  title: string
+  description?: string
+}
+
+
+
+export interface CategorizedFieldSelectorProps {
+  categories: CategorizedFieldSelectorCategory[];
+  selectedIds: string[];
+  onSelectedChange: (selectedIds: string[]) => void;
+  onSelectAll?: () => Promise<string[]> | string[];
+  onDeselectAll?: () => void;
+  loadSearchItems?: (
+    search: string,
+  ) => Promise<CategorizedFieldSelectorLoadResult | CategorizedFieldSelectorItem[]>;
+  getSearchItemsQueryKey?: (search: string) => QueryKey;
+  loadCategoryItems: (
+    category: CategorizedFieldSelectorCategory,
+  ) => Promise<CategorizedFieldSelectorLoadResult | CategorizedFieldSelectorItem[]>;
+  getCategoryItemsQueryKey: (
+    category: CategorizedFieldSelectorCategory,
+  ) => QueryKey;
+  knownItems?: CategorizedFieldSelectorItem[];
+  disabled?: boolean;
+  readonly?: boolean;
+  loading?: boolean;
+  error?: string;
+  helperText?: React.ReactNode;
+  actions?: React.ReactNode;
+  panelHeight?: string;
+  className?: string;
+  onEdit?: (item: CategorizedFieldSelectorItem) => void;
+}
+
+export interface SelectorHeaderProps {
+  searchId: string;
+  search: string;
+  setSearch: (val: string) => void;
+  searchOptions: SearchOptions;
+  bulkOptions: BulkOptions;
+  actions?: React.ReactNode;
+  isPending: boolean;
+}
+
+
+
+export interface CopyButtonProps {
+  value: string | number
+  label: string
+}
+
+
+
+export interface CopyToClipboardProps {
+  value: any
+  className?: string
+  isLoading?: boolean
+  iconSize?: string
+  title?: string
+}
+
+
+
+export interface CopyableFieldProps {
+  value: string | number
+  label: string
+  isSensitive?: boolean
+}
+
+
+
+export interface FilterProps {
+  filter: string;
+  onChange: (value: string) => void;
+  type: string;
+  header: string;
+}
+
+
+
+export interface ColsConfig {
+  default: number
+  sm?: number
+  lg?: number
+}
+
+export interface GridCtx {
+  cols: ColsConfig
+  total: number
+}
+
+export interface DetailGridProps {
+  cols?: ColsProp
+  children: React.ReactNode
+  className?: string
+}
+
+export interface DetailGridItemProps {
+  label: string
+  children: React.ReactNode
+  className?: string
+  /** injected by DetailGrid — do not pass manually */
+  _index?: number
+}
+
+
+
+export interface InputFieldProps extends React.InputHTMLAttributes<HTMLInputElement | HTMLSelectElement> {
+  label?: React.ReactNode
+  description?: React.ReactNode
+  containerClassName?: string
+  options?: { label: string; value: string | number }[]
+  error?: string
+  ref?: React.Ref<any>
+}
+
+
+
+export interface MaskedValueProps {
+  value: string | number
+}
+
+
+
+export interface PaginationComponentProps {
+  currentPage: number
+  totalItems: number
+  pageSize: number
+  pageSizeOptions?: number[]
+  onPageChange: (page: number) => void
+  onPageSizeChange?: (pageSize: number) => void
+  enablePagination?: boolean
+  className?: string
+}
+
+
+
+export interface TagInputProps {
+  value?: string[];
+  onChange: (value: string[]) => void;
+  disabled?: boolean;
+  placeholder?: string;
+  className?: string;
+}
+
+
+
+export interface MigrateButtonProps {
+  onMigrate: () => void
+  isPendingMigrate: boolean
+  label?: string
+}
+
+
+
+export interface RetryButtonProps {
+  onRetry: () => void
+  isPendingRetry: boolean
+  failed?: boolean
+  label?: string
+}
+
+
+
+export interface TenantDatabaseTabProps {
+  tenant: Tenant
+  onRetry: () => void
+  isPendingRetry: boolean
+  onMigrate: () => void
+  isPendingMigrate: boolean
+}
+
+
+
+export interface TenantDetailHeaderProps {
+  tenant: Tenant
+  orgId: string
+  onAction: (action: {
+    type: "activate" | "deactivate" | "block" | "unblock" | "expire" | "delete" | "assignPlan"
+    tenant: Tenant
+  }) => void
+  onRetry: () => void
+  isPendingRetry: boolean
+  onMigrate: () => void
+  isPendingMigrate: boolean
+}
+
+
+
+export interface TenantOverviewCardProps {
+  tenant: Tenant
+  orgId: string
+}
+
+
+
+export interface TenantOverviewTabProps {
+  tenant: Tenant
+  onAction: (action: {
+    type: "activate" | "deactivate" | "block" | "unblock" | "expire" | "delete" | "assignPlan"
+    tenant: Tenant
+  }) => void
+}
+
+
+
+export interface TenantTabsProps {
+  tenant: Tenant
+  onAction: (action: {
+    type:
+      | "activate"
+      | "deactivate"
+      | "block"
+      | "unblock"
+      | "expire"
+      | "delete"
+      | "assignPlan"
+    tenant: Tenant
+  }) => void
+  onRetry: () => void
+  isPendingRetry: boolean
+  onMigrate: () => void
+  isPendingMigrate: boolean
+}
+
+export type SearchOptions = {
+  canSearchFields: boolean;
+  isSearchInputDisabled: boolean;
+  isSearchMode: boolean;
+  isSearchQueryFetching: boolean;
+};
+
+export type BulkOptions = {
+  onSelectAll?: () => Promise<string[]> | string[];
+  isBulkCheckboxDisabled: boolean;
+  bulkCheckboxChecked: boolean | "indeterminate";
+  allFieldsSelected: boolean;
+  handleDeselectAll: () => void;
+  handleSelectAll: () => void;
+  someFieldsSelected: boolean;
+  bulkAction: "select-all" | "deselect-all" | null;
+  bulkSelectionLabel: string;
+  selectedIdsLength: number;
+  totalActiveFieldCount: number;
+};
+
+export type ColsShorthand = 2 | 3 | 4 | 6;
+export type ColsProp = ColsShorthand | ColsConfig;
+
+

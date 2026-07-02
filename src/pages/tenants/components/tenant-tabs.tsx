@@ -5,26 +5,9 @@ import { TenantEventsTable } from "@/pages/tenants/tenant-events-table"
 import { TenantOverviewTab } from "./tenant-overview-tab"
 import { TenantDatabaseTab } from "./tenant-database-tab"
 import { ProfileTable } from "@/pages/organization/components/profile-table"
-import type { Tenant } from "@/types"
+import type { TenantTabsProps } from "@/types"
 
-interface TenantTabsProps {
-  tenant: Tenant
-  onAction: (action: {
-    type:
-      | "activate"
-      | "deactivate"
-      | "block"
-      | "unblock"
-      | "expire"
-      | "delete"
-      | "assignPlan"
-    tenant: Tenant
-  }) => void
-  onRetry: () => void
-  isPendingRetry: boolean
-  onMigrate: () => void
-  isPendingMigrate: boolean
-}
+
 
 export function TenantTabs({
   tenant,

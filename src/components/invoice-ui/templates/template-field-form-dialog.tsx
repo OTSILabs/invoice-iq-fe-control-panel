@@ -1,3 +1,4 @@
+import type { FieldFormValues } from "@/types";
 import { useMemo, useRef, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -287,18 +288,7 @@ const fieldSchema = z.object({
   allowed_static_list: z.array(z.string().trim().min(1)).default([]),
 });
 
-interface FieldFormValues {
-  field_category_code: string;
-  field_label: string;
-  short_desc: string;
-  field_long_description: string;
-  extraction_instructions: string;
-  labels: string[];
-  examples: string;
-  data_type_code: string;
-  header_item: string;
-  allowed_static_list?: string[];
-}
+
 
 function getDefaultValues(
   field: unknown,

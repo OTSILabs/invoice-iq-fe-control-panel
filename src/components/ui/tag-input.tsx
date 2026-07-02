@@ -1,16 +1,11 @@
+import type { TagInputProps } from "@/types";
 import { useState } from "react";
 import { X } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
-interface TagInputProps {
-  value?: string[];
-  onChange: (value: string[]) => void;
-  disabled?: boolean;
-  placeholder?: string;
-  className?: string;
-}
+
 
 const EMPTY_VALUE: string[] = [];
 

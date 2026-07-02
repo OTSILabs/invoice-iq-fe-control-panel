@@ -1,13 +1,10 @@
 import { StatusBadge, ActiveStatusBadge } from "@/columns"
 import { CopyButton } from "@/components/ui/copyable-field"
 import { formatDate, getInitials } from "@/lib/utils"
-import type { Tenant } from "@/types"
+import type { TenantOverviewCardProps } from "@/types"
 import { DetailGrid } from "@/components/ui/detail-grid"
 
-interface TenantOverviewCardProps {
-  tenant: Tenant
-  orgId: string
-}
+
 
 export function TenantOverviewCard({ tenant, orgId }: TenantOverviewCardProps) {
   const initials = tenant.tenant_admin_full_name

@@ -1,3 +1,4 @@
+import type { FilterProps } from "@/types";
 import { Fragment, useMemo, useRef, useState } from "react";
 import {
   flexRender,
@@ -530,12 +531,7 @@ function DataTableBody<TData, TValue>({
   );
 }
 
-interface FilterProps {
-  filter: string;
-  onChange: (value: string) => void;
-  type: string;
-  header: string;
-}
+
 
 function Filter({ filter, onChange, type, header }: FilterProps) {
   return (

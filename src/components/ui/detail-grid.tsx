@@ -1,3 +1,4 @@
+import type { ColsConfig, GridCtx, DetailGridProps, DetailGridItemProps, ColsProp, ColsShorthand } from "@/types";
 import * as React from "react"
 import { use } from "react"
 import { cn } from "@/lib/utils"
@@ -18,15 +19,7 @@ import { cn } from "@/lib/utils"
 //     6  → { default: 2, sm: 3, lg: 6 }
 // ─────────────────────────────────────────────────────────────────────────────
 
-type ColsShorthand = 2 | 3 | 4 | 6
 
-interface ColsConfig {
-  default: number
-  sm?: number
-  lg?: number
-}
-
-type ColsProp = ColsShorthand | ColsConfig
 
 const shorthandMap: Record<ColsShorthand, ColsConfig> = {
   2: { default: 1, sm: 2 },
@@ -61,20 +54,13 @@ const lgColsClass: Record<number, string> = {
 
 // ── Context so Item knows its index and the resolved cols ────────────────────
 
-interface GridCtx {
-  cols: ColsConfig
-  total: number
-}
+
 
 const GridContext = React.createContext<GridCtx>({ cols: { default: 1 }, total: 0 })
 
 // ── DetailGrid ───────────────────────────────────────────────────────────────
 
-interface DetailGridProps {
-  cols?: ColsProp
-  children: React.ReactNode
-  className?: string
-}
+
 
 function DetailGrid({ cols = 3, children, className }: DetailGridProps) {
   const resolved: ColsConfig =
@@ -106,13 +92,7 @@ function DetailGrid({ cols = 3, children, className }: DetailGridProps) {
 
 // ── DetailGrid.Item ──────────────────────────────────────────────────────────
 
-interface DetailGridItemProps {
-  label: string
-  children: React.ReactNode
-  className?: string
-  /** injected by DetailGrid — do not pass manually */
-  _index?: number
-}
+
 
 function DetailGridItem({ label, children, className, _index = 0 }: DetailGridItemProps) {
   const { cols, total } = use(GridContext)

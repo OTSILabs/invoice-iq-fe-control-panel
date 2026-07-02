@@ -1,3 +1,4 @@
+import type { PaginationComponentProps } from "@/types";
 
 import { cn } from "@/lib/utils"
 import {
@@ -11,16 +12,7 @@ import {
 } from "@/components/ui/pagination"
 import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select"
 
-export interface PaginationComponentProps {
-  currentPage: number
-  totalItems: number
-  pageSize: number
-  pageSizeOptions?: number[]
-  onPageChange: (page: number) => void
-  onPageSizeChange?: (pageSize: number) => void
-  enablePagination?: boolean
-  className?: string
-}
+
 
 export function PaginationComponent({
   currentPage,

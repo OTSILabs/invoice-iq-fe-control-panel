@@ -1,17 +1,11 @@
+import type { InputFieldProps } from "@/types";
 import * as React from "react"
 import { Field, FieldLabel, FieldDescription } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { ChevronDown } from "lucide-react"
 import { cn } from "@/lib/utils"
 
-export interface InputFieldProps extends React.InputHTMLAttributes<HTMLInputElement | HTMLSelectElement> {
-  label?: React.ReactNode
-  description?: React.ReactNode
-  containerClassName?: string
-  options?: { label: string; value: string | number }[]
-  error?: string
-  ref?: React.Ref<any>
-}
+
 
 export const InputField = ({
   label,

@@ -1,12 +1,8 @@
+import type { SubmitFooterProps } from "@/types";
 import { Loader2Icon, PlusIcon, SaveIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-interface SubmitFooterProps {
-  isPending: boolean;
-  isEditMode: boolean;
-  isFormReadyToSubmit: boolean;
-  onSubmitClick: () => void;
-}
+
 
 export default function TemplateFieldDialogSubmit({
   isPending,

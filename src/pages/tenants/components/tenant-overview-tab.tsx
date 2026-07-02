@@ -1,16 +1,10 @@
 import { User, FileText, Building2, Info } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { formatDate } from "@/lib/utils"
-import type { Tenant } from "@/types"
+import type { TenantOverviewTabProps } from "@/types"
 import { ActiveStatusBadge } from "@/columns"
 
-interface TenantOverviewTabProps {
-  tenant: Tenant
-  onAction: (action: {
-    type: "activate" | "deactivate" | "block" | "unblock" | "expire" | "delete" | "assignPlan"
-    tenant: Tenant
-  }) => void
-}
+
 
 export function TenantOverviewTab({ tenant, onAction }: TenantOverviewTabProps) {
   return (

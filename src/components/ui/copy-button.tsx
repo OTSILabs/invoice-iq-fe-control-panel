@@ -1,9 +1,7 @@
+import type { CopyButtonProps } from "@/types";
 import { CopyToClipboard } from "./copy-to-clipboard"
 
-interface CopyButtonProps {
-  value: string | number
-  label: string
-}
+
 
 export function CopyButton({ value, label }: CopyButtonProps) {
   return (

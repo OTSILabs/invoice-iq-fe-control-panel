@@ -1,10 +1,8 @@
-import * as React from "react"
+import type { PageHeaderProps } from "@/types";
+
 import { cn } from "@/lib/utils"
 
-interface PageHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
-  title: string
-  description?: string
-}
+
 
 export function PageHeader({
   title,

@@ -1,4 +1,5 @@
-import { Controller, type UseFormReturn } from "react-hook-form";
+import type { TemplateFieldDialogRulesStepProps } from "@/types";
+import { Controller } from "react-hook-form";
 import { Field, FieldError } from "@/components/ui/field";
 import { Textarea } from "@/components/ui/textarea";
 import { TagInput } from "@/components/ui/tag-input";
@@ -7,9 +8,7 @@ import { ExtractionFieldLabels } from "./template-field-label";
 
 const FIELD_MESSAGE_CLASS = "text-xs leading-4";
 
-interface TemplateFieldDialogRulesStepProps {
-  form: UseFormReturn<any>;
-}
+
 
 export function TemplateFieldDialogRulesStep({
   form,

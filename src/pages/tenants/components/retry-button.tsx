@@ -1,12 +1,8 @@
+import type { RetryButtonProps } from "@/types";
 import { Loader2, RefreshCw } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
-interface RetryButtonProps {
-  onRetry: () => void
-  isPendingRetry: boolean
-  failed?: boolean
-  label?: string
-}
+
 
 export function RetryButton({
   onRetry,

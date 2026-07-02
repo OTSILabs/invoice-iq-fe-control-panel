@@ -1,3 +1,4 @@
+import type { CopyToClipboardProps } from "@/types";
 import * as React from "react"
 import { useState } from "react"
 import { Copy, Check } from "lucide-react"
@@ -5,13 +6,7 @@ import { Button } from "./button"
 import { toast } from "sonner"
 import { cn } from "@/lib/utils"
 
-export interface CopyToClipboardProps {
-  value: any
-  className?: string
-  isLoading?: boolean
-  iconSize?: string
-  title?: string
-}
+
 
 export function CopyToClipboard({
   value,

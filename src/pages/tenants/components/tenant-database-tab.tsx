@@ -1,15 +1,9 @@
 import { CopyableField } from "@/components/ui/copyable-field"
-import type { Tenant } from "@/types"
+import type { TenantDatabaseTabProps } from "@/types"
 import { MigrateButton } from "./migrate-button"
 import { RetryButton } from "./retry-button"
 
-interface TenantDatabaseTabProps {
-  tenant: Tenant
-  onRetry: () => void
-  isPendingRetry: boolean
-  onMigrate: () => void
-  isPendingMigrate: boolean
-}
+
 
 export function TenantDatabaseTab({
   tenant,

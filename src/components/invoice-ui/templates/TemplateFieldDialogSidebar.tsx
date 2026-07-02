@@ -1,14 +1,7 @@
+import type { TemplateFieldDialogSidebarProps } from "@/types";
 import { cn } from "@/lib/utils";
 
-interface TemplateFieldDialogSidebarProps {
-  activeStepIndex: number;
-  handleStepChange: (index: number) => void;
-  steps: readonly {
-    readonly title: string;
-    readonly description: string;
-    readonly fields: readonly string[];
-  }[];
-}
+
 
 export function TemplateFieldDialogSidebar({
   activeStepIndex,

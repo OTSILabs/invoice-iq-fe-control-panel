@@ -1,3 +1,4 @@
+import type { Props } from "@/types";
 import { Fragment } from "react"
 import { Link } from "react-router-dom"
 import { useQuery } from "@tanstack/react-query"
@@ -18,15 +19,9 @@ import { validationRulesService } from "@/api/services/validation-rules.service"
 import { normalizationRulesService } from "@/api/services/normalization-rules.service"
 import { referenceListsService } from "@/api/services/reference-lists.service"
 
-export interface BreadcrumbEntry {
-  title: string
-  href: string
-  isLast: boolean
-}
 
-interface Props {
-  breadcrumbs: BreadcrumbEntry[]
-}
+
+
 
 /**
  * Renders the full breadcrumb trail.

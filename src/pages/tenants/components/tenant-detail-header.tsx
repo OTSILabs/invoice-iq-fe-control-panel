@@ -1,23 +1,12 @@
 import { useNavigate } from "react-router-dom"
 import { ArrowLeft, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import type { Tenant } from "@/types"
+import type { TenantDetailHeaderProps } from "@/types"
 import { MigrateButton } from "./migrate-button"
 import { RetryButton } from "./retry-button"
 import { PageHeader } from "@/components/layout/PageHeader"
 
-interface TenantDetailHeaderProps {
-  tenant: Tenant
-  orgId: string
-  onAction: (action: {
-    type: "activate" | "deactivate" | "block" | "unblock" | "expire" | "delete" | "assignPlan"
-    tenant: Tenant
-  }) => void
-  onRetry: () => void
-  isPendingRetry: boolean
-  onMigrate: () => void
-  isPendingMigrate: boolean
-}
+
 
 export function TenantDetailHeader({
   tenant,

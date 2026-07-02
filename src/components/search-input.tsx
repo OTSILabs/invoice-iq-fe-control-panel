@@ -1,14 +1,9 @@
+import type { SearchInputProps } from "@/types";
 import { Search } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
 
-interface SearchInputProps {
-  value: string
-  onChange: (value: string) => void
-  placeholder?: string
-  className?: string
-  disabled?: boolean
-}
+
 
 export function SearchInput({
   value,

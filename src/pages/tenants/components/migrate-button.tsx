@@ -1,11 +1,8 @@
+import type { MigrateButtonProps } from "@/types";
 import { Loader2, ArrowUpRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
-interface MigrateButtonProps {
-  onMigrate: () => void
-  isPendingMigrate: boolean
-  label?: string
-}
+
 
 export function MigrateButton({
   onMigrate,

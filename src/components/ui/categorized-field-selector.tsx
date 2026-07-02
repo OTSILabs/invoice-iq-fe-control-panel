@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useQuery, type QueryKey } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { CategorySection, FieldRow } from "./CategorySection";
 import {
   AlertCircle,
@@ -9,6 +9,8 @@ import {
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
+import type { CategorizedFieldSelectorBodyProps, CategorizedFieldSelectorProps, SelectorHeaderProps } from "@/types";
+
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -31,33 +33,7 @@ export type {
   CategorizedFieldSelectorLoadResult,
 };
 
-export interface CategorizedFieldSelectorProps {
-  categories: CategorizedFieldSelectorCategory[];
-  selectedIds: string[];
-  onSelectedChange: (selectedIds: string[]) => void;
-  onSelectAll?: () => Promise<string[]> | string[];
-  onDeselectAll?: () => void;
-  loadSearchItems?: (
-    search: string,
-  ) => Promise<CategorizedFieldSelectorLoadResult | CategorizedFieldSelectorItem[]>;
-  getSearchItemsQueryKey?: (search: string) => QueryKey;
-  loadCategoryItems: (
-    category: CategorizedFieldSelectorCategory,
-  ) => Promise<CategorizedFieldSelectorLoadResult | CategorizedFieldSelectorItem[]>;
-  getCategoryItemsQueryKey: (
-    category: CategorizedFieldSelectorCategory,
-  ) => QueryKey;
-  knownItems?: CategorizedFieldSelectorItem[];
-  disabled?: boolean;
-  readonly?: boolean;
-  loading?: boolean;
-  error?: string;
-  helperText?: React.ReactNode;
-  actions?: React.ReactNode;
-  panelHeight?: string;
-  className?: string;
-  onEdit?: (item: CategorizedFieldSelectorItem) => void;
-}
+
 
 export type CategorySectionProps = {
   category: CategorizedFieldSelectorCategory;
@@ -322,36 +298,9 @@ function UncategorizedSelectedSection({
   );
 }
 
-type SearchOptions = {
-  canSearchFields: boolean;
-  isSearchInputDisabled: boolean;
-  isSearchMode: boolean;
-  isSearchQueryFetching: boolean;
-};
 
-type BulkOptions = {
-  onSelectAll?: () => Promise<string[]> | string[];
-  isBulkCheckboxDisabled: boolean;
-  bulkCheckboxChecked: boolean | "indeterminate";
-  allFieldsSelected: boolean;
-  handleDeselectAll: () => void;
-  handleSelectAll: () => void;
-  someFieldsSelected: boolean;
-  bulkAction: "select-all" | "deselect-all" | null;
-  bulkSelectionLabel: string;
-  selectedIdsLength: number;
-  totalActiveFieldCount: number;
-};
 
-interface SelectorHeaderProps {
-  searchId: string;
-  search: string;
-  setSearch: (val: string) => void;
-  searchOptions: SearchOptions;
-  bulkOptions: BulkOptions;
-  actions?: React.ReactNode;
-  isPending: boolean;
-}
+
 
 function CategorizedFieldSelectorHeader(
   { searchId, search, setSearch, searchOptions, bulkOptions, actions, ref, }: SelectorHeaderProps & { ref?: React.Ref<HTMLDivElement> },
@@ -467,37 +416,6 @@ function CategorizedFieldSelectorHeader(
   }
 CategorizedFieldSelectorHeader.displayName = "CategorizedFieldSelectorHeader";
 
-interface SelectorSearchState {
-  isMode: boolean;
-  query: string;
-  items: any[];
-  total: number;
-  isLoading: boolean;
-  isError: boolean;
-  normalizedQuery: string;
-}
-
-interface SelectorControlState {
-  disabled: boolean;
-  readonly: boolean;
-  loading: boolean;
-  isBulkProcessing: boolean;
-}
-
-interface CategorizedFieldSelectorBodyProps {
-  searchState: SelectorSearchState;
-  controlState: SelectorControlState;
-  sortedCategories: any[];
-  selectedIds: string[];
-  selectedSet: Set<string>;
-  onSelectedChange: (ids: string[]) => void;
-  onEdit?: (item: any) => void;
-  knownItems: any[];
-  loadCategoryItems: any;
-  getCategoryItemsQueryKey: any;
-  categoryStickyTop: string;
-  uncategorizedSelectedItems: any[];
-}
 
 function CategorizedFieldSelectorBody({
   searchState,
