@@ -16,6 +16,7 @@ import type {
   Row,
   Updater,
   RowSelectionState,
+  Table as ReactTable,
 } from "@tanstack/react-table";
 import {
   Table,
@@ -294,163 +295,18 @@ export function DataTable<TData, TValue = unknown>({
           tableScrollClassName
         )}
       >
-        <TableHeader className="border-b border-border/60 bg-muted/45 transition-colors">
-          {table.getHeaderGroups().map((headerGroup) => {
-            const isFilterable = headerGroup.headers.some((header) =>
-              header.column.getCanFilter(),
-            );
-
-            return (
-              <Fragment key={headerGroup.id}>
-                <TableRow key={headerGroup.id} className="hover:bg-transparent">
-                  {headerGroup.headers.map((header) => {
-                    const customColumnDef = header.column.columnDef as CustomColumnDef<TData, TValue>;
-                    return (
-                      <TableHead
-                        key={header.id}
-                        className={cn(
-                          "h-10 bg-transparent px-4 py-3 text-[0.68rem] font-semibold   text-muted-foreground",
-                          stickyHeader && "sticky top-0 z-10",
-                          getPinnedColumnClassName(header.column),
-                          customColumnDef.rowClassName,
-                        )}
-                        style={{
-                          ...getColumnStyle(header.column),
-                          ...getPinnedColumnStyle(header.column),
-                          zIndex: stickyHeader ? (header.column.getIsPinned() ? 31 : 30) : header.column.getIsPinned() ? 3 : undefined,
-                        }}
-                      >
-                        {header.isPlaceholder ? null : (
-                          <ColumnHeader header={header} />
-                        )}
-                      </TableHead>
-                    );
-                  })}
-                </TableRow>
-                {isFilterable && (
-                  <TableRow className="hover:bg-transparent border-t border-border/40">
-                    {headerGroup.headers.map((header) => {
-                      const customColumnDef = header.column.columnDef as CustomColumnDef<TData, TValue>;
-                      return (
-                        <TableHead
-                          key={header.id}
-                          className={cn(
-                            "bg-muted/10 px-4 py-2",
-                            stickyHeader && "sticky top-11 z-10",
-                            getPinnedColumnClassName(header.column),
-                            customColumnDef.rowClassName,
-                          )}
-                          style={{
-                            ...getColumnStyle(header.column),
-                            ...getPinnedColumnStyle(header.column),
-                            zIndex: stickyHeader ? (header.column.getIsPinned() ? 31 : 30) : header.column.getIsPinned() ? 3 : undefined,
-                          }}
-                        >
-                          {header.column.getCanFilter() && (
-                            <Filter
-                              filter={header.column.getFilterValue() as string}
-                              onChange={(val) => header.column.setFilterValue(val)}
-                              type={customColumnDef.filterFn as string}
-                              header={customColumnDef.header as string}
-                            />
-                          )}
-                        </TableHead>
-                      );
-                    })}
-                  </TableRow>
-                )}
-              </Fragment>
-            );
-          })}
-        </TableHeader>
-        <TableBody>
-          {isLoading ? (
-            Array.from({ length: 5 }).map((_, rowIndex) => (
-                  <TableRow key={rowIndex} className="border-b border-border/35 hover:bg-transparent">
-                {columns.map((col, colIndex) => {
-                  const customColumnDef = col as CustomColumnDef<TData, TValue>;
-                  return (
-                    <TableCell key={colIndex} className={cn("p-2", customColumnDef.rowClassName)}>
-                      <Skeleton className={cn(
-                        "h-4 rounded-md animate-pulse bg-muted-foreground/10",
-                        colIndex === 0 ? "w-2/3" : colIndex === 1 ? "w-1/2" : "w-3/4"
-                      )} />
-                    </TableCell>
-                  );
-                })}
-              </TableRow>
-            ))
-          ) : table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => {
-              const isClickable = Boolean(onRowClick);
-              const customOriginal = row.original as { rowClassName?: string };
-
-              return (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                  className={cn(
-                    "group/row border-b border-border/45 transition-colors hover:bg-muted/40 data-[state=selected]:bg-muted/50",
-                    customOriginal?.rowClassName,
-                    isClickable && "cursor-pointer focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring",
-                  )}
-                  role={isClickable ? "link" : undefined}
-                  tabIndex={isClickable ? 0 : undefined}
-                  onClick={isClickable ? () => onRowClick?.(row.original, row) : undefined}
-                  onKeyDown={
-                    isClickable
-                      ? (event) => {
-                        if (event.key === "Enter" || event.key === " ") {
-                          event.preventDefault();
-                          onRowClick?.(row.original, row);
-                        }
-                      }
-                      : undefined
-                  }
-                >
-                  {row.getVisibleCells().map((cell) => {
-                    const customColumnDef = cell.column.columnDef as CustomColumnDef<TData, TValue>;
-                    return (
-                      <TableCell
-                        key={cell.id}
-                        className={cn(
-                          "px-4 text-sm font-normal text-muted-foreground transition-colors truncate group-hover/row:text-foreground",
-                          getPinnedColumnClassName(cell.column),
-                          customColumnDef.rowClassName,
-                        )}
-                        style={{
-                          ...getColumnStyle(cell.column),
-                          ...getPinnedColumnStyle(cell.column),
-                          zIndex: cell.column.getIsPinned() ? 2 : undefined,
-                        }}
-                      >
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </TableCell>
-                    );
-                  })}
-                </TableRow>
-              );
-            })
-          ) : (
-            <TableRow className="hover:bg-transparent">
-              <TableCell colSpan={columns.length} className="h-48 text-center p-0">
-                {emptyState || (
-                  <div className="flex flex-col items-center justify-center py-12 px-4 text-center animate-in fade-in slide-in-from-bottom-2 duration-300">
-                    <div className="mb-3 rounded-xl bg-background p-3 text-muted-foreground/75 shadow-sm ring-1 ring-border/60">
-                      <FileX2 className="size-6" />
-                    </div>
-                    <p className="text-sm font-semibold text-foreground">
-                      {emptyMessage || "No records found"}
-                    </p>
-                    <p className="text-xs text-muted-foreground mt-1 max-w-70 mx-auto leading-relaxed">
-                      We couldn't find any data matching your request. Try adjusting your filters.
-                    </p>
-                  </div>
-                )}
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
+        <DataTableHeader
+          table={table}
+          stickyHeader={stickyHeader}
+        />
+        <DataTableBody
+          table={table}
+          columns={columns}
+          isLoading={isLoading}
+          onRowClick={onRowClick}
+          emptyState={emptyState}
+          emptyMessage={emptyMessage}
+        />
       </Table>
       <PaginationComponent
         currentPage={paginationState.pageIndex + 1}
@@ -480,6 +336,197 @@ export function DataTable<TData, TValue = unknown>({
         className="border-t border-border/60 bg-muted/20 px-4 py-3"
       />
     </div>
+  );
+}
+
+interface DataTableHeaderProps<TData, TValue> {
+  table: ReactTable<TData>;
+  stickyHeader?: boolean;
+}
+
+function DataTableHeader<TData, TValue>({
+  table,
+  stickyHeader = false,
+}: DataTableHeaderProps<TData, TValue>) {
+  return (
+    <TableHeader className="border-b border-border/60 bg-muted/45 transition-colors">
+      {table.getHeaderGroups().map((headerGroup) => {
+        const isFilterable = headerGroup.headers.some((header) =>
+          header.column.getCanFilter()
+        );
+
+        return (
+          <Fragment key={headerGroup.id}>
+            <TableRow key={headerGroup.id} className="hover:bg-transparent">
+              {headerGroup.headers.map((header) => {
+                const customColumnDef = header.column.columnDef as CustomColumnDef<TData, TValue>;
+                return (
+                  <TableHead
+                    key={header.id}
+                    className={cn(
+                      "h-10 bg-transparent px-4 py-3 text-[0.68rem] font-semibold   text-muted-foreground",
+                      stickyHeader && "sticky top-0 z-10",
+                      getPinnedColumnClassName(header.column),
+                      customColumnDef.rowClassName,
+                    )}
+                    style={{
+                      ...getColumnStyle(header.column),
+                      ...getPinnedColumnStyle(header.column),
+                      zIndex: stickyHeader ? (header.column.getIsPinned() ? 31 : 30) : header.column.getIsPinned() ? 3 : undefined,
+                    }}
+                  >
+                    {header.isPlaceholder ? null : (
+                      <ColumnHeader header={header} />
+                    )}
+                  </TableHead>
+                );
+              })}
+            </TableRow>
+            {isFilterable && (
+              <TableRow className="hover:bg-transparent border-t border-border/40">
+                {headerGroup.headers.map((header) => {
+                  const customColumnDef = header.column.columnDef as CustomColumnDef<TData, TValue>;
+                  return (
+                    <TableHead
+                      key={header.id}
+                      className={cn(
+                        "bg-muted/10 px-4 py-2",
+                        stickyHeader && "sticky top-11 z-10",
+                        getPinnedColumnClassName(header.column),
+                        customColumnDef.rowClassName,
+                      )}
+                      style={{
+                        ...getColumnStyle(header.column),
+                        ...getPinnedColumnStyle(header.column),
+                        zIndex: stickyHeader ? (header.column.getIsPinned() ? 31 : 30) : header.column.getIsPinned() ? 3 : undefined,
+                      }}
+                    >
+                      {header.column.getCanFilter() && (
+                        <Filter
+                          filter={header.column.getFilterValue() as string}
+                          onChange={(val) => header.column.setFilterValue(val)}
+                          type={customColumnDef.filterFn as string}
+                          header={customColumnDef.header as string}
+                        />
+                      )}
+                    </TableHead>
+                  );
+                })}
+              </TableRow>
+            )}
+          </Fragment>
+        );
+      })}
+    </TableHeader>
+  );
+}
+
+interface DataTableBodyProps<TData, TValue> {
+  table: ReactTable<TData>;
+  columns: CustomColumnDef<TData, TValue>[];
+  isLoading?: boolean;
+  onRowClick?: (rowData: TData, row: Row<TData>) => void;
+  emptyState?: React.ReactNode;
+  emptyMessage?: string;
+}
+
+function DataTableBody<TData, TValue>({
+  table,
+  columns,
+  isLoading,
+  onRowClick,
+  emptyState,
+  emptyMessage,
+}: DataTableBodyProps<TData, TValue>) {
+  return (
+    <TableBody>
+      {isLoading ? (
+        Array.from({ length: 5 }).map((_, rowIndex) => (
+          <TableRow key={rowIndex} className="border-b border-border/35 hover:bg-transparent">
+            {columns.map((col, colIndex) => {
+              const customColumnDef = col as CustomColumnDef<TData, TValue>;
+              return (
+                <TableCell key={colIndex} className={cn("p-2", customColumnDef.rowClassName)}>
+                  <Skeleton className={cn(
+                    "h-4 rounded-md animate-pulse bg-muted-foreground/10",
+                    colIndex === 0 ? "w-2/3" : colIndex === 1 ? "w-1/2" : "w-3/4"
+                  )} />
+                </TableCell>
+              );
+            })}
+          </TableRow>
+        ))
+      ) : table.getRowModel().rows?.length ? (
+        table.getRowModel().rows.map((row) => {
+          const isClickable = Boolean(onRowClick);
+          const customOriginal = row.original as { rowClassName?: string };
+
+          return (
+            <TableRow
+              key={row.id}
+              data-state={row.getIsSelected() && "selected"}
+              className={cn(
+                "group/row border-b border-border/45 transition-colors hover:bg-muted/40 data-[state=selected]:bg-muted/50",
+                customOriginal?.rowClassName,
+                isClickable && "cursor-pointer focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring",
+              )}
+              role={isClickable ? "link" : undefined}
+              tabIndex={isClickable ? 0 : undefined}
+              onClick={isClickable ? () => onRowClick?.(row.original, row) : undefined}
+              onKeyDown={
+                isClickable
+                  ? (event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                      event.preventDefault();
+                      onRowClick?.(row.original, row);
+                    }
+                  }
+                  : undefined
+              }
+            >
+              {row.getVisibleCells().map((cell) => {
+                const customColumnDef = cell.column.columnDef as CustomColumnDef<TData, TValue>;
+                return (
+                  <TableCell
+                    key={cell.id}
+                    className={cn(
+                      "px-4 text-sm font-normal text-muted-foreground transition-colors truncate group-hover/row:text-foreground",
+                      getPinnedColumnClassName(cell.column),
+                      customColumnDef.rowClassName,
+                    )}
+                    style={{
+                      ...getColumnStyle(cell.column),
+                      ...getPinnedColumnStyle(cell.column),
+                      zIndex: cell.column.getIsPinned() ? 2 : undefined,
+                    }}
+                  >
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
+                );
+              })}
+            </TableRow>
+          );
+        })
+      ) : (
+        <TableRow className="hover:bg-transparent">
+          <TableCell colSpan={columns.length} className="h-48 text-center p-0">
+            {emptyState || (
+              <div className="flex flex-col items-center justify-center py-12 px-4 text-center animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <div className="mb-3 rounded-xl bg-background p-3 text-muted-foreground/75 shadow-sm ring-1 ring-border/60">
+                  <FileX2 className="size-6" />
+                </div>
+                <p className="text-sm font-semibold text-foreground">
+                  {emptyMessage || "No records found"}
+                </p>
+                <p className="text-xs text-muted-foreground mt-1 max-w-70 mx-auto leading-relaxed">
+                  We couldn't find any data matching your request. Try adjusting your filters.
+                </p>
+              </div>
+            )}
+          </TableCell>
+        </TableRow>
+      )}
+    </TableBody>
   );
 }
 

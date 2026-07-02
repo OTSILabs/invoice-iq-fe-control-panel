@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useCallback } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, UseFormReturn } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, Plus, Save, X } from "lucide-react";
 import { z } from "zod";
@@ -194,93 +194,13 @@ export function DerivedTemplateForm({ mode, template, onCancel, onSuccess }: Der
       <div className="p-4 sm:p-5">
         <form id={formId} onSubmit={form.handleSubmit(onSubmit)} noValidate>
           <FieldGroup className="gap-5">
-            {!isEdit && (
-              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-                <Field>
-                  <FieldLabel>ERP Type</FieldLabel>
-                  <Controller
-                    control={form.control}
-                    name="erp_type"
-                    render={({ field }) => (
-                      <NativeSelect
-                        disabled={isSaving}
-                        value={field.value}
-                        onChange={(e) => {
-                          field.onChange(e);
-                          form.setValue("document_type_code", "");
-                          form.setValue("derived_template_id", "");
-                        }}
-                      >
-                        <option value="" disabled>Select ERP Type</option>
-                        {erpSettings?.map((erp: any) => (
-                          <option key={erp.erp_type} value={erp.erp_type}>
-                            {erp.display_name || erp.erp_type}
-                          </option>
-                        ))}
-                      </NativeSelect>
-                    )}
-                  />
-                  {form.formState.errors.erp_type && (
-                    <FieldError errors={[form.formState.errors.erp_type]} />
-                  )}
-                </Field>
-
-                <Field>
-                  <FieldLabel>Document Type Code</FieldLabel>
-                  <Controller
-                    control={form.control}
-                    name="document_type_code"
-                    render={({ field }) => (
-                      <Input
-                        placeholder="e.g. PO_INVOICE"
-                        disabled={!selectedErpType || isSaving}
-                        {...field}
-                        onChange={(e) => {
-                          field.onChange(e);
-                          const erpType = form.getValues("erp_type");
-                          const docType = e.target.value;
-                          if (erpType && docType) {
-                            form.setValue("derived_template_id", `${erpType}:${docType}`, { shouldValidate: true });
-                          } else {
-                            form.setValue("derived_template_id", "");
-                          }
-                        }}
-                      />
-                    )}
-                  />
-                  {form.formState.errors.document_type_code && (
-                    <FieldError errors={[form.formState.errors.document_type_code]} />
-                  )}
-                </Field>
-              </div>
-            )}
-
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-              <Field>
-                <FieldLabel>Derived Template ID</FieldLabel>
-                <Input
-                  placeholder="e.g. SAP:PO_INVOICE"
-                  disabled={true}
-                  {...form.register("derived_template_id")}
-                />
-                {form.formState.errors.derived_template_id && (
-                  <FieldError errors={[form.formState.errors.derived_template_id]} />
-                )}
-                <p className="text-xs text-muted-foreground mt-1">Auto-generated from ERP Type and Document Type Code.</p>
-              </Field>
-              
-              <Field>
-                <FieldLabel>Name</FieldLabel>
-                <Input
-                  placeholder="e.g. My Custom Invoice Template"
-                  disabled={isSaving}
-                  {...form.register("name")}
-                />
-                {form.formState.errors.name && (
-                  <FieldError errors={[form.formState.errors.name]} />
-                )}
-              </Field>
-            </div>
+            <TemplateIdentityFields
+              isEdit={isEdit}
+              isSaving={isSaving}
+              erpSettings={erpSettings}
+              selectedErpType={selectedErpType}
+              form={form}
+            />
 
             <Field>
               <FieldLabel>Select Derived Fields</FieldLabel>
@@ -290,33 +210,34 @@ export function DerivedTemplateForm({ mode, template, onCancel, onSuccess }: Der
                 render={({ field }) => {
                   const selectedIds = Array.isArray(field.value) ? field.value : [];
                   return (
-                  <CategorizedFieldSelector
-                    categories={categories as any}
-                    knownItems={knownItems as any}
-                    selectedIds={selectedIds}
-                    onSelectedChange={field.onChange}
-                    onSelectAll={() => {
-                      const allIds = knownItems.map((i: any) => i.id);
-                      field.onChange(allIds);
-                      return allIds;
-                    }}
-                    loadCategoryItems={async (category: any) => {
-                      const items = knownItems.filter((i: any) => i.categoryId === category.id);
-                      return { items, total: items.length };
-                    }}
-                    getCategoryItemsQueryKey={(category) => ["derived-items", category.id]}
-                    loadSearchItems={async (search) => {
-                      const s = search.toLowerCase();
-                      const items = knownItems.filter(i => 
-                        i.label.toLowerCase().includes(s) || 
-                        (i.description && i.description.toLowerCase().includes(s))
-                      );
-                      return { items, total: items.length };
-                    }}
-                    getSearchItemsQueryKey={(search) => ["derived-search", search]}
-                    disabled={isSaving}
-                  />
-                )}}
+                    <CategorizedFieldSelector
+                      categories={categories as any}
+                      knownItems={knownItems as any}
+                      selectedIds={selectedIds}
+                      onSelectedChange={field.onChange}
+                      onSelectAll={() => {
+                        const allIds = knownItems.map((i: any) => i.id);
+                        field.onChange(allIds);
+                        return allIds;
+                      }}
+                      loadCategoryItems={async (category: any) => {
+                        const items = knownItems.filter((i: any) => i.categoryId === category.id);
+                        return { items, total: items.length };
+                      }}
+                      getCategoryItemsQueryKey={(category) => ["derived-items", category.id]}
+                      loadSearchItems={async (search) => {
+                        const s = search.toLowerCase();
+                        const items = knownItems.filter(i => 
+                          i.label.toLowerCase().includes(s) || 
+                          (i.description && i.description.toLowerCase().includes(s))
+                        );
+                        return { items, total: items.length };
+                      }}
+                      getSearchItemsQueryKey={(search) => ["derived-search", search]}
+                      disabled={isSaving}
+                    />
+                  );
+                }}
               />
               {form.formState.errors.derived_field_ids && (
                 <FieldError errors={[form.formState.errors.derived_field_ids]} />
@@ -339,27 +260,158 @@ export function DerivedTemplateForm({ mode, template, onCancel, onSuccess }: Der
         </form>
       </div>
 
-      <div className="dialog-form-footer">
-        <Button
-          type="button"
-          variant="outline"
-          disabled={isSaving}
-          onClick={onCancel}
-        >
-          <X className="size-4" data-icon="inline-start" />
-          Cancel
-        </Button>
-        <Button type="submit" form={formId} disabled={isSaving}>
-          {isSaving ? (
-            <Loader2 className="size-4 animate-spin" data-icon="inline-start" />
-          ) : isEdit ? (
-            <Save className="size-4" data-icon="inline-start" />
-          ) : (
-            <Plus className="size-4" data-icon="inline-start" />
-          )}
-          {isEdit ? "Save Changes" : "Create Template"}
-        </Button>
-      </div>
+      <TemplateFormFooter
+        isSaving={isSaving}
+        isEdit={isEdit}
+        onCancel={onCancel}
+        formId={formId}
+      />
     </SectionCard>
+  );
+}
+
+interface TemplateIdentityFieldsProps {
+  isEdit: boolean;
+  isSaving: boolean;
+  erpSettings: any;
+  selectedErpType: string;
+  form: UseFormReturn<DerivedTemplateFormValues>;
+}
+
+function TemplateIdentityFields({
+  isEdit,
+  isSaving,
+  erpSettings,
+  selectedErpType,
+  form,
+}: TemplateIdentityFieldsProps) {
+  return (
+    <>
+      {!isEdit && (
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+          <Field>
+            <FieldLabel>ERP Type</FieldLabel>
+            <Controller
+              control={form.control}
+              name="erp_type"
+              render={({ field }) => (
+                <NativeSelect
+                  disabled={isSaving}
+                  value={field.value}
+                  onChange={(e) => {
+                    field.onChange(e);
+                    form.setValue("document_type_code", "");
+                    form.setValue("derived_template_id", "");
+                  }}
+                >
+                  <option value="" disabled>Select ERP Type</option>
+                  {erpSettings?.map((erp: any) => (
+                    <option key={erp.erp_type} value={erp.erp_type}>
+                      {erp.display_name || erp.erp_type}
+                    </option>
+                  ))}
+                </NativeSelect>
+              )}
+            />
+            {form.formState.errors.erp_type && (
+              <FieldError errors={[form.formState.errors.erp_type]} />
+            )}
+          </Field>
+
+          <Field>
+            <FieldLabel>Document Type Code</FieldLabel>
+            <Controller
+              control={form.control}
+              name="document_type_code"
+              render={({ field }) => (
+                <Input
+                  placeholder="e.g. PO_INVOICE"
+                  disabled={!selectedErpType || isSaving}
+                  {...field}
+                  onChange={(e) => {
+                    field.onChange(e);
+                    const erpType = form.getValues("erp_type");
+                    const docType = e.target.value;
+                    if (erpType && docType) {
+                      form.setValue("derived_template_id", `${erpType}:${docType}`, { shouldValidate: true });
+                    } else {
+                      form.setValue("derived_template_id", "");
+                    }
+                  }}
+                />
+              )}
+            />
+            {form.formState.errors.document_type_code && (
+              <FieldError errors={[form.formState.errors.document_type_code]} />
+            )}
+          </Field>
+        </div>
+      )}
+
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+        <Field>
+          <FieldLabel>Derived Template ID</FieldLabel>
+          <Input
+            placeholder="e.g. SAP:PO_INVOICE"
+            disabled={true}
+            {...form.register("derived_template_id")}
+          />
+          {form.formState.errors.derived_template_id && (
+            <FieldError errors={[form.formState.errors.derived_template_id]} />
+          )}
+          <p className="text-xs text-muted-foreground mt-1">Auto-generated from ERP Type and Document Type Code.</p>
+        </Field>
+        
+        <Field>
+          <FieldLabel>Name</FieldLabel>
+          <Input
+            placeholder="e.g. My Custom Invoice Template"
+            disabled={isSaving}
+            {...form.register("name")}
+          />
+          {form.formState.errors.name && (
+            <FieldError errors={[form.formState.errors.name]} />
+          )}
+        </Field>
+      </div>
+    </>
+  );
+}
+
+interface TemplateFormFooterProps {
+  isSaving: boolean;
+  isEdit: boolean;
+  onCancel: () => void;
+  formId: string;
+}
+
+function TemplateFormFooter({
+  isSaving,
+  isEdit,
+  onCancel,
+  formId,
+}: TemplateFormFooterProps) {
+  return (
+    <div className="dialog-form-footer">
+      <Button
+        type="button"
+        variant="outline"
+        disabled={isSaving}
+        onClick={onCancel}
+      >
+        <X className="size-4" data-icon="inline-start" />
+        Cancel
+      </Button>
+      <Button type="submit" form={formId} disabled={isSaving}>
+        {isSaving ? (
+          <Loader2 className="size-4 animate-spin" data-icon="inline-start" />
+        ) : isEdit ? (
+          <Save className="size-4" data-icon="inline-start" />
+        ) : (
+          <Plus className="size-4" data-icon="inline-start" />
+        )}
+        {isEdit ? "Save Changes" : "Create Template"}
+      </Button>
+    </div>
   );
 }

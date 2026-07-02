@@ -284,7 +284,6 @@ export function TemplateForm({
 }) {
 	const isEditMode = mode === "edit";
 	const formId = `template-form-${mode}`;
-	const [isFieldDialogOpen, setIsFieldDialogOpen] = useState(false);
 	const [createdFields, setCreatedFields] = useState<ApiRecord[]>([]);
 	const createTemplate = useCreateTemplate();
 	const updateTemplate = useUpdateTemplate();
@@ -463,10 +462,7 @@ export function TemplateForm({
 			loadCategoryItems={loadCategoryItems}
 			templateQueryKeys={templateQueryKeys}
 			isExtractionFieldsLoading={isExtractionFieldsLoading}
-			setIsFieldDialogOpen={setIsFieldDialogOpen}
-			isFieldDialogOpen={isFieldDialogOpen}
 			onCancel={onCancel}
-			onSuccess={onSuccess}
 			handleFieldCreated={handleFieldCreated}
 		/>
 	);
@@ -485,11 +481,11 @@ function TemplateFormContent({
 	loadCategoryItems,
 	templateQueryKeys,
 	isExtractionFieldsLoading,
-	setIsFieldDialogOpen,
-	isFieldDialogOpen,
 	onCancel,
 	handleFieldCreated,
 }: any) {
+	const [isFieldDialogOpen, setIsFieldDialogOpen] = useState(false);
+
 	return (
 		<>
 			<SectionCard className="overflow-visible" contentClassName="p-0">
