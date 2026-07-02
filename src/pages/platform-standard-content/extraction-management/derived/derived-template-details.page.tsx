@@ -158,7 +158,7 @@ export default function DerivedTemplateDetailsPage() {
           <Button asChild>
             <Link to={`/platform-standard-content/extraction-management/derived/${derivedTemplateId}/edit`}>
               <Edit2 className="size-4 mr-2" />
-              Edit Template
+              Edit
             </Link>
           </Button>
         </div>

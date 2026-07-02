@@ -205,7 +205,7 @@ export function DerivedTemplateCards({
                                 className="size-4"
                                 data-icon="inline-start"
                               />
-                              Edit Template
+                              Edit
                             </Link>
                           </DropdownMenuItem>
                         ) : null}
@@ -218,7 +218,7 @@ export function DerivedTemplateCards({
                               className="size-4"
                               data-icon="inline-start"
                             />
-                            Delete Template
+                            Delete
                           </DropdownMenuItem>
                         ) : null}
                       </DropdownMenuContent>

@@ -203,7 +203,7 @@ export function TemplateCards({
                                 className="size-4"
                                 data-icon="inline-start"
                               />
-                              Edit Template
+                              Edit
                             </Link>
                           </DropdownMenuItem>
                         ) : null}
