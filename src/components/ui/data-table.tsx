@@ -339,7 +339,7 @@ export function DataTable<TData, TValue = unknown>({
   );
 }
 
-interface DataTableHeaderProps<TData, TValue> {
+interface DataTableHeaderProps<TData> {
   table: ReactTable<TData>;
   stickyHeader?: boolean;
 }
@@ -347,7 +347,7 @@ interface DataTableHeaderProps<TData, TValue> {
 function DataTableHeader<TData, TValue>({
   table,
   stickyHeader = false,
-}: DataTableHeaderProps<TData, TValue>) {
+}: DataTableHeaderProps<TData>) {
   return (
     <TableHeader className="border-b border-border/60 bg-muted/45 transition-colors">
       {table.getHeaderGroups().map((headerGroup) => {

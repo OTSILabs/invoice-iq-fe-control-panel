@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useCallback } from "react";
-import { useForm, Controller, UseFormReturn } from "react-hook-form";
+import { useForm, Controller, type UseFormReturn } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, Plus, Save, X } from "lucide-react";
 import { z } from "zod";
