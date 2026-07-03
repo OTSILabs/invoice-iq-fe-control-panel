@@ -66,7 +66,7 @@ export function Profile() {
                   <p className="text-xs text-muted-foreground truncate">{user.email}</p>
                 </div>
 
-                <Button variant="outline" size="sm" className="h-8 cursor-pointer gap-1.5 text-xs font-medium shadow-none">
+                <Button variant="outline" size="sm" className="h-8  gap-1.5 text-xs font-medium shadow-none">
                   <Edit2 className="size-3.5" /> Edit Profile
                 </Button>
               </div>
@@ -107,7 +107,7 @@ export function Profile() {
                 variant="outline"
                 size="sm"
                 onClick={() => setIsChangingPassword(true)}
-                className="w-full h-8 text-xs font-semibold gap-1.5 border-primary/20 hover:bg-primary/10 text-primary bg-primary/5 cursor-pointer shadow-none"
+                className="w-full h-8 text-xs font-semibold gap-1.5 border-primary/20 hover:bg-primary/10 text-primary bg-primary/5  shadow-none"
               >
                 <Key className="size-3.5" /> Change Password
               </Button>
@@ -136,7 +136,7 @@ export function Profile() {
                 ))}
               </div>
               <div className="mt-5 pt-3 border-t border-border/45 flex justify-end">
-                <Button variant="ghost" size="sm" className="h-7 text-xs font-medium cursor-pointer">View Full Activity</Button>
+                <Button variant="ghost" size="sm" className="h-7 text-xs font-medium ">View Full Activity</Button>
               </div>
           </SectionCard>
         </div>

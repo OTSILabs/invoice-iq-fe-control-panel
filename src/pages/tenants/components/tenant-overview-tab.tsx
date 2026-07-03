@@ -75,7 +75,7 @@ export function TenantOverviewTab({ tenant, onAction }: TenantOverviewTabProps) 
               variant="outline"
               size="sm"
               onClick={() => onAction({ type: "assignPlan", tenant })}
-              className="w-full text-xs font-medium cursor-pointer"
+              className="w-full text-xs font-medium "
             >
               Manage Subscription
             </Button>
@@ -111,7 +111,7 @@ export function TenantOverviewTab({ tenant, onAction }: TenantOverviewTabProps) 
               variant="outline"
               size="sm"
               onClick={() => onAction({ type: tenant.governance_blocked ? "unblock" : "block", tenant })}
-              className="w-full text-xs font-medium cursor-pointer"
+              className="w-full text-xs font-medium "
             >
               {tenant.governance_blocked ? "Unblock Governance" : "Block Governance"}
             </Button>

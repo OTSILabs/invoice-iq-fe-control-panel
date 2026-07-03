@@ -15,7 +15,7 @@ export function MigrateButton({
       size="sm"
       onClick={onMigrate}
       disabled={isPendingMigrate}
-      className="text-xs font-semibold gap-1.5 cursor-pointer"
+      className="text-xs font-semibold gap-1.5 "
     >
       {isPendingMigrate ? (
         <Loader2 className="h-3.5 w-3.5 animate-spin" />

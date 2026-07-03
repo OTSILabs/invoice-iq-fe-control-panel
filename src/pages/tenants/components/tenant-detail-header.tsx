@@ -51,7 +51,7 @@ export function TenantDetailHeader({
               variant="outline"
               size="sm"
               onClick={() => onAction({ type: "deactivate", tenant })}
-              className="text-xs font-semibold text-amber-600 hover:text-amber-700 hover:bg-amber-50 dark:hover:bg-amber-950/20 border-amber-200/50 dark:border-amber-900/30 cursor-pointer"
+              className="text-xs font-semibold text-amber-600 hover:text-amber-700 hover:bg-amber-50 dark:hover:bg-amber-950/20 border-amber-200/50 dark:border-amber-900/30 "
             >
               Deactivate
             </Button>
@@ -59,7 +59,7 @@ export function TenantDetailHeader({
               variant="outline"
               size="sm"
               onClick={() => onAction({ type: "expire", tenant })}
-              className="text-xs font-semibold text-rose-600 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/20 border-rose-200/50 dark:border-rose-900/30 cursor-pointer"
+              className="text-xs font-semibold text-rose-600 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/20 border-rose-200/50 dark:border-rose-900/30 "
             >
               Expire
             </Button>
@@ -69,7 +69,7 @@ export function TenantDetailHeader({
             variant="outline"
             size="sm"
             onClick={() => onAction({ type: "activate", tenant })}
-            className="text-xs font-semibold text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-950/20 border-emerald-200/50 dark:border-emerald-900/30 cursor-pointer"
+            className="text-xs font-semibold text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-950/20 border-emerald-200/50 dark:border-emerald-900/30 "
           >
             Activate
           </Button>
@@ -80,7 +80,7 @@ export function TenantDetailHeader({
           variant="destructive"
           size="sm"
           onClick={() => onAction({ type: "delete", tenant })}
-          className="cursor-pointer text-xs font-semibold"
+          className=" text-xs font-semibold"
         >
           <Trash2 className="size-3.5 mr-1" />
           Delete
@@ -89,7 +89,7 @@ export function TenantDetailHeader({
         <Button
           variant="outline"
           size="sm"
-          className="font-medium gap-1.5 border-border shadow-sm cursor-pointer ml-1"
+          className="font-medium gap-1.5 border-border shadow-sm  ml-1"
           onClick={() => navigate(backUrl)}
         >
           <ArrowLeft className="h-4 w-4" />

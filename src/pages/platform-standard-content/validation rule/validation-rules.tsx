@@ -112,7 +112,7 @@ export function ValidationRules() {
                 variant="outline"
                 size="icon"
                 onClick={handleRefetch}
-                className="size-9 cursor-pointer"
+                className="size-9 "
                 disabled={isFetching}
               >
                 <RefreshCw
@@ -180,7 +180,7 @@ function ValidationRulesEmptyState({
       actions={!searchText && rulesLength === 0 ? (
         <Button
           onClick={onCreateClick}
-          className="cursor-pointer gap-1.5 rounded-lg px-4 py-2 text-xs font-semibold"
+          className=" gap-1.5 rounded-lg px-4 py-2 text-xs font-semibold"
           disabled={disabled}
         >
           <Plus className="size-3.5" /> Create Validation Rule
@@ -217,7 +217,7 @@ function DeleteValidationRuleDialog({
           <Button
             variant="outline"
             size="sm"
-            className="cursor-pointer"
+            className=""
             onClick={onClose}
             disabled={isDeleting}
           >
@@ -225,7 +225,7 @@ function DeleteValidationRuleDialog({
           </Button>
           <Button
             variant="destructive"
-            className="cursor-pointer"
+            className=""
             size="sm"
             onClick={onConfirm}
             disabled={isDeleting}

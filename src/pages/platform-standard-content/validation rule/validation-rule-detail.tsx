@@ -96,7 +96,7 @@ export function ValidationRuleDetail() {
           <Button
             variant="outline"
             size="sm"
-            className="font-medium gap-1.5 border-border shadow-sm cursor-pointer"
+            className="font-medium gap-1.5 border-border "
             onClick={() => navigate("/platform-standard-content/validation-rules")}
           >
             <ArrowLeft className="h-4 w-4" /> Back
@@ -104,7 +104,7 @@ export function ValidationRuleDetail() {
           <Button
             variant="destructive"
             size="sm"
-            className="font-medium gap-1.5 cursor-pointer shadow-sm"
+            className="font-medium gap-1.5 "
             onClick={() => setConfirmDeleteOpen(true)}
           >
             <Trash2 className="h-4 w-4" /> Delete
@@ -266,7 +266,7 @@ export function ValidationRuleDetail() {
               <Button
                 variant="outline"
                 size="sm"
-                className="cursor-pointer"
+                className=""
                 onClick={() => setConfirmDeleteOpen(false)}
                 disabled={isDeleting}
               >
@@ -274,7 +274,7 @@ export function ValidationRuleDetail() {
               </Button>
               <Button
                 variant="destructive"
-                className="cursor-pointer"
+                className=""
                 size="sm"
                 onClick={handleDelete}
                 disabled={isDeleting}
