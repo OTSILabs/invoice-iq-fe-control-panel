@@ -81,7 +81,7 @@ export function Plans() {
         title="Plans & Pricing"
         description="Manage your subscription configurations, features, and pricing tiers."
       >
-        <Button size="sm" onClick={() => navigate("/plan/create")} className="w-full gap-1.5 px-3 sm:w-auto cursor-pointer" disabled={isFetching}>
+        <Button size="sm" onClick={() => navigate("/plan/create")} className="w-full gap-1.5 px-3 sm:w-auto " disabled={isFetching}>
           <Plus className="size-4" /> Create Plan
         </Button>
       </PageHeader>
@@ -125,7 +125,7 @@ export function Plans() {
                   ))}
                 </SelectContent>
               </Select>
-              <Button variant="outline" size="icon" onClick={() => refetch()} className="size-9 shrink-0 cursor-pointer" disabled={isFetching}>
+              <Button variant="outline" size="icon" onClick={() => refetch()} className="size-9 shrink-0 " disabled={isFetching}>
                 <RefreshCw className={cn("size-4", isFetching && "animate-spin")} />
               </Button>
             </div>

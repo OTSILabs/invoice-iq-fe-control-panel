@@ -179,7 +179,7 @@ export function TenantsPage() {
                 ref={orgDropdownTriggerRef}
                 type="button"
                 onClick={() => dispatch({ type: "TOGGLE_DROPDOWN", open: !isOrgDropdownOpen })}
-                className="inline-flex h-9 w-full cursor-pointer items-center justify-between gap-2 rounded-lg border border-input bg-background/70 px-3 text-xs font-semibold text-foreground shadow-xs transition-colors hover:border-ring/35 sm:w-56"
+                className="inline-flex h-9 w-full cursor-pointer items-center justify-between gap-2 rounded-lg border border-input bg-background/70 px-3 text-xs font-semibold text-foreground transition-colors hover:border-ring/35 sm:w-56"
               >
                 <span className="flex items-center gap-2 truncate">
                   <Building className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
@@ -249,7 +249,7 @@ export function TenantsPage() {
             <Button
               size="sm"
               variant="outline"
-              className="h-9 text-xs font-semibold cursor-pointer shadow-sm inline-flex items-center gap-1.5 border-border"
+              className="h-9 text-xs font-semibold  shadow-sm inline-flex items-center gap-1.5 border-border"
               onClick={() => navigate(activeOrgId ? `/organizations/${activeOrgId}/tenants/create` : "/organizations/create")}
             >
               <Plus className="h-3.5 w-3.5" /> Add Tenant

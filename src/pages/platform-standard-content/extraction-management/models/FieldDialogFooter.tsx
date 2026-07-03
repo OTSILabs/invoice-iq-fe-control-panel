@@ -30,7 +30,7 @@ export function FieldDialogFooterNav({
           type="button"
           variant="default"
           disabled={isSaving}
-          className="min-w-24 px-4 cursor-pointer"
+          className="min-w-24 px-4 "
           onClick={handleNextStep}
         >
           Next
@@ -57,7 +57,7 @@ export function FieldDialogFooterSubmit({
     <Button
       type="button"
       disabled={isSaving}
-      className="min-w-24 px-4 cursor-pointer"
+      className="min-w-24 px-4 "
       onClick={onSubmitClick}
     >
       {isSaving ? (

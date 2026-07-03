@@ -80,7 +80,7 @@ export function DataTypes() {
                 variant="outline"
                 size="icon"
                 onClick={handleRefetch}
-                className="size-9 cursor-pointer"
+                className="size-9 "
                 disabled={isFetching}
               >
                 <RefreshCw
@@ -113,7 +113,7 @@ export function DataTypes() {
                 actions={!searchText && dataTypes.length === 0 ? (
                   <Button
                     onClick={() => navigate("/platform-standard-content/data-types/create")}
-                    className="cursor-pointer gap-1.5 rounded-lg px-4 py-2 text-xs font-semibold"
+                    className=" gap-1.5 rounded-lg px-4 py-2 text-xs font-semibold"
                     disabled={isFetching}
                   >
                     <Plus className="size-3.5" /> Create Data Type

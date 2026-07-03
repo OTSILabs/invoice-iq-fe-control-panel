@@ -114,8 +114,10 @@ export function UserCreate() {
                 />
                 <Button
                   type="button"
+                  variant="ghost"
+                  
                   onClick={() => setShowPassword((prev) => !prev)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 z-10 cursor-pointer text-muted-foreground transition-colors hover:text-foreground focus:outline-none"
+                  className="absolute right-1 top-1/2 -translate-y-1/2 z-10  text-muted-foreground transition-colors hover:text-foreground focus:outline-none"
                 >
                   {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
                 </Button>

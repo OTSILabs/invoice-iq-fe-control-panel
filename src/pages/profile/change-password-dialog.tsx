@@ -118,7 +118,7 @@ export function ChangePasswordDialog({ open, onOpenChange }: ChangePasswordDialo
                     variant="ghost"
                     size="sm"
                     onClick={() => setShowCurrent(!showCurrent)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2  text-muted-foreground transition-colors hover:text-foreground focus:outline-none"
+                    className="absolute right-1 top-1/2 -translate-y-1/2  text-muted-foreground transition-colors hover:text-foreground focus:outline-none"
                   >
                     {showCurrent ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
                   </Button>
@@ -148,7 +148,7 @@ export function ChangePasswordDialog({ open, onOpenChange }: ChangePasswordDialo
                     variant="ghost"
                     size="sm"
                     onClick={() => setShowNew(!showNew)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2  text-muted-foreground transition-colors hover:text-foreground focus:outline-none"
+                    className="absolute right-1 top-1/2 -translate-y-1/2  text-muted-foreground transition-colors hover:text-foreground focus:outline-none"
                   >
                     {showNew ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
                   </Button>
@@ -178,7 +178,7 @@ export function ChangePasswordDialog({ open, onOpenChange }: ChangePasswordDialo
                     variant="ghost"
                     size="sm"
                       onClick={() => setShowConfirm(!showConfirm)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2  text-muted-foreground transition-colors hover:text-foreground focus:outline-none"
+                    className="absolute right-1 top-1/2 -translate-y-1/2  text-muted-foreground transition-colors hover:text-foreground focus:outline-none"
                    
                   >
                     {showConfirm ? <EyeOff className="size-4" /> : <Eye className="size-4" />}

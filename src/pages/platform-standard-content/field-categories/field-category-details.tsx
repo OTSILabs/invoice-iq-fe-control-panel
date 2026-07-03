@@ -63,7 +63,7 @@ export function FieldCategoryDetails() {
         title="Field Category Details"
         description="View and manage field category details and standard configurations."
       >
-        <Button variant="outline" size="sm" className="font-medium gap-1.5 border-border shadow-sm cursor-pointer" onClick={() => navigate("/platform-standard-content/field-categories")}>
+        <Button variant="outline" size="sm" className="font-medium gap-1.5 border-border shadow-sm " onClick={() => navigate("/platform-standard-content/field-categories")}>
           <ArrowLeft className="h-4 w-4" /> Back
         </Button>
       </PageHeader>

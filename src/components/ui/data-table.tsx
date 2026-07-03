@@ -33,6 +33,7 @@ import { PaginationComponent } from "./pagination-component";
 import { Input } from "./input";
 
 import { ArrowDown, ArrowUp, Search, FileX2 } from "lucide-react";
+import { Button } from "./button";
 
 export type CustomColumnDef<TData, TValue = unknown> = ColumnDef<TData, TValue> & {
   width?: string | number;
@@ -562,16 +563,16 @@ function ColumnHeader<TData, TValue>({ header }: ColumnHeaderProps<TData, TValue
   }
 
   return (
-    <button
+    <Button
       type="button"
       className={cn(
-        "group/btn flex w-full cursor-pointer items-center gap-1.5 text-left text-[0.68rem] font-semibold  transition-colors",
+        "group/btn flex w-full  items-center gap-1.5 text-left text-[0.68rem] font-semibold  transition-colors",
         sorted ? "text-primary font-bold" : "text-muted-foreground hover:text-foreground",
         customColumnDef.rowClassName === "text-center" && "justify-center text-center"
       )}
       onClick={header.column.getToggleSortingHandler()}
     >
-      <span className="min-w-0 truncate">{content}</span>
+      <span className="min-w-0 truncate cursor-pointer">{content}</span>
       <div className={cn(
         "flex items-center justify-center p-0.5 rounded transition-colors",
         sorted ? "bg-primary/10 text-primary" : "text-muted-foreground group-hover/btn:text-foreground"
@@ -584,6 +585,6 @@ function ColumnHeader<TData, TValue>({ header }: ColumnHeaderProps<TData, TValue
           </div>
         )}
       </div>
-    </button>
+    </Button>
   );
 }

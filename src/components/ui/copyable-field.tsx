@@ -2,6 +2,7 @@ import type { CopyableFieldProps } from "@/types";
 import { useState } from "react"
 import { Eye, EyeOff } from "lucide-react"
 import { CopyToClipboard } from "./copy-to-clipboard"
+import { Button } from "./button";
 
 export { CopyButton } from "./copy-button"
 export { MaskedValue } from "./masked-value"
@@ -21,18 +22,18 @@ export function CopyableField({ value, label, isSensitive = false }: CopyableFie
         </span>
         <div className="flex items-center gap-1">
           {isSensitive && (
-            <button
+            <Button
               onClick={() => setShow(!show)}
-              className="h-6 w-6 rounded-md hover:bg-muted flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+              className="h-6 w-6 rounded-md hover:bg-muted flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors "
               title={show ? "Hide" : "Show"}
               type="button"
             >
               {show ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
-            </button>
+            </Button>
           )}
           <CopyToClipboard
             value={value}
-            className="h-6 w-6 rounded-md flex items-center justify-center hover:bg-muted hover:text-foreground text-muted-foreground transition-colors cursor-pointer"
+            className="h-6 w-6 rounded-md flex items-center justify-center hover:bg-muted hover:text-foreground text-muted-foreground transition-colors "
             iconSize="size-3.5"
           />
         </div>
