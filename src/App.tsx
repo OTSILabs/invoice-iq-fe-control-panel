@@ -5,28 +5,29 @@ import { BrowserRouter, Routes, Route, Navigate, useParams } from "react-router-
 import { LoginPage } from "./pages/login/login-page"
 import { APP_ROUTES } from "./config/routes"
 import { ProtectedRoute, PublicRoute } from "./lib/route-protector/auth-guards"
-import { OrganizationDetail } from "./pages/organization/organization-detail"
-import { OrganizationOnboardingPage } from "./pages/organization/organization-onboarding-page"
-import { TenantDetail } from "./pages/tenants/tenant-detail"
-import { DataTypeDetail } from "./pages/platform-standard-content/data-type/data-type-detail"
-import { DataTypeFormPage } from "./pages/platform-standard-content/data-type/data-type-form-page"
-import { FieldCategoryDetails } from "./pages/platform-standard-content/field-categories/field-category-details"
-import { FieldCategoryFormPage } from "./pages/platform-standard-content/field-categories/field-category-form-page"
-import { ReferenceListDetails } from "./pages/platform-standard-content/reference-lists/reference-list-details"
-import { ReferenceListFormPage } from "./pages/platform-standard-content/reference-lists/reference-list-form-page"
-import { ReferenceValueDetails } from "./pages/platform-standard-content/reference-lists/reference-value-details"
-import { ReferenceValueFormPage } from "./pages/platform-standard-content/reference-lists/reference-value-form-page"
-import { ValidationRuleFormPage } from "./pages/platform-standard-content/validation rule/validation-rule-form-page"
-import { ValidationRuleDetail } from "./pages/platform-standard-content/validation rule/validation-rule-detail"
-import { NormalizationRuleFormPage } from "./pages/platform-standard-content/normalization-rule/normalization-rule-form-page"
-import { NormalizationRuleDetail } from "./pages/platform-standard-content/normalization-rule/normalization-rule-detail"
-import { UserDetail } from "./pages/user/user-detail"
-import { UserCreate } from "./pages/user/user-create"
-import { UserEdit } from "./pages/user/user-edit"
-import { ErpSettingFormPage } from "./pages/erp-setting/erp-setting-form-page"
-import { ExtractionFieldFormPage } from "./pages/platform-standard-content/extraction-management/extraction-field-form-page"
-import { ExtractionFieldDetailsPage } from "./pages/platform-standard-content/extraction-management/extraction-field-details.page"
 import { Layout } from "./components/layout/layout"
+
+const OrganizationDetail = React.lazy(() => import("./pages/organization/organization-detail").then(m => ({ default: m.OrganizationDetail })))
+const OrganizationOnboardingPage = React.lazy(() => import("./pages/organization/organization-onboarding-page").then(m => ({ default: m.OrganizationOnboardingPage })))
+const TenantDetail = React.lazy(() => import("./pages/tenants/tenant-detail").then(m => ({ default: m.TenantDetail })))
+const DataTypeDetail = React.lazy(() => import("./pages/platform-standard-content/data-type/data-type-detail").then(m => ({ default: m.DataTypeDetail })))
+const DataTypeFormPage = React.lazy(() => import("./pages/platform-standard-content/data-type/data-type-form-page").then(m => ({ default: m.DataTypeFormPage })))
+const FieldCategoryDetails = React.lazy(() => import("./pages/platform-standard-content/field-categories/field-category-details").then(m => ({ default: m.FieldCategoryDetails })))
+const FieldCategoryFormPage = React.lazy(() => import("./pages/platform-standard-content/field-categories/field-category-form-page").then(m => ({ default: m.FieldCategoryFormPage })))
+const ReferenceListDetails = React.lazy(() => import("./pages/platform-standard-content/reference-lists/reference-list-details").then(m => ({ default: m.ReferenceListDetails })))
+const ReferenceListFormPage = React.lazy(() => import("./pages/platform-standard-content/reference-lists/reference-list-form-page").then(m => ({ default: m.ReferenceListFormPage })))
+const ReferenceValueDetails = React.lazy(() => import("./pages/platform-standard-content/reference-lists/reference-value-details").then(m => ({ default: m.ReferenceValueDetails })))
+const ReferenceValueFormPage = React.lazy(() => import("./pages/platform-standard-content/reference-lists/reference-value-form-page").then(m => ({ default: m.ReferenceValueFormPage })))
+const ValidationRuleFormPage = React.lazy(() => import("./pages/platform-standard-content/validation rule/validation-rule-form-page").then(m => ({ default: m.ValidationRuleFormPage })))
+const ValidationRuleDetail = React.lazy(() => import("./pages/platform-standard-content/validation rule/validation-rule-detail").then(m => ({ default: m.ValidationRuleDetail })))
+const NormalizationRuleFormPage = React.lazy(() => import("./pages/platform-standard-content/normalization-rule/normalization-rule-form-page").then(m => ({ default: m.NormalizationRuleFormPage })))
+const NormalizationRuleDetail = React.lazy(() => import("./pages/platform-standard-content/normalization-rule/normalization-rule-detail").then(m => ({ default: m.NormalizationRuleDetail })))
+const UserDetail = React.lazy(() => import("./pages/user/user-detail").then(m => ({ default: m.UserDetail })))
+const UserCreate = React.lazy(() => import("./pages/user/user-create").then(m => ({ default: m.UserCreate })))
+const UserEdit = React.lazy(() => import("./pages/user/user-edit").then(m => ({ default: m.UserEdit })))
+const ErpSettingFormPage = React.lazy(() => import("./pages/erp-setting/erp-setting-form-page").then(m => ({ default: m.ErpSettingFormPage })))
+const ExtractionFieldFormPage = React.lazy(() => import("./pages/platform-standard-content/extraction-management/extraction-field-form-page").then(m => ({ default: m.ExtractionFieldFormPage })))
+const ExtractionFieldDetailsPage = React.lazy(() => import("./pages/platform-standard-content/extraction-management/extraction-field-details.page").then(m => ({ default: m.ExtractionFieldDetailsPage })))
 
 const TemplateCreatePage = React.lazy(() => import("./pages/platform-standard-content/extraction-management/templates/template-create.page"))
 const TemplateDetailsPage = React.lazy(() => import("./pages/platform-standard-content/extraction-management/templates/template-details.page"))

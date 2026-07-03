@@ -1,5 +1,5 @@
 import type { FieldFormValues } from "@/types";
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { v4 as uuidv4 } from "uuid";
@@ -412,25 +412,21 @@ export function TemplateFieldFormSurface({
     () => getFieldCategoryOptions(fieldCategoriesQuery.data),
     [fieldCategoriesQuery.data],
   );
+  const defaultValues = useMemo(
+    () => getDefaultValues(field, defaultFieldCategoryCode),
+    [field, defaultFieldCategoryCode],
+  );
   const form = useForm<FieldFormValues>({
     resolver: zodResolver(fieldSchema),
     mode: "onChange",
     reValidateMode: "onChange",
-    defaultValues: getDefaultValues(field, defaultFieldCategoryCode),
+    values: defaultValues,
   });
   const watchedValues = useWatch({ control: form.control });
   const isFormReadyToSubmit = useMemo(
     () => fieldSchema.safeParse(watchedValues).success,
     [watchedValues],
   );
-
-  const prevEnabledRef = useRef(enabled);
-  if (enabled !== prevEnabledRef.current) {
-    prevEnabledRef.current = enabled;
-    if (enabled) {
-      form.reset(getDefaultValues(field, defaultFieldCategoryCode));
-    }
-  }
 
   const showStep = (stepIndex: number) => {
     form.clearErrors();

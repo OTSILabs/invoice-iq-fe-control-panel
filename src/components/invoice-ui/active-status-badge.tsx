@@ -12,7 +12,7 @@ export function ActiveStatusBadge({
   className?: string
 }) {
   const normalized = status ? status.toLowerCase().trim() : (active ?? true ? "active" : "inactive")
-  let tone: SemanticTone = "neutral"
+  let tone: SemanticTone
   if (color) {
     tone = color === "green"
       ? "success"

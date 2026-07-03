@@ -1,4 +1,4 @@
-import type { ComponentType } from "react"
+import React, { type ComponentType } from "react"
 import {
   Building2,
   CreditCard,
@@ -13,21 +13,22 @@ import {
   UserCheck,
 } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
-import { Organizations } from "@/pages/organization/organizations"
-import { Plans } from "@/pages/plans/plans"
-import { Users } from "@/pages/user/users"
-import { ErpSettings } from "@/pages/erp-setting/erp-setting"
-import { CreatePlan } from "@/pages/plans/create-plan"
-import { Profile } from "@/pages/profile/profile"
+
+const Organizations = React.lazy(() => import("@/pages/organization/organizations").then(m => ({ default: m.Organizations })))
+const Plans = React.lazy(() => import("@/pages/plans/plans").then(m => ({ default: m.Plans })))
+const Users = React.lazy(() => import("@/pages/user/users").then(m => ({ default: m.Users })))
+const ErpSettings = React.lazy(() => import("@/pages/erp-setting/erp-setting").then(m => ({ default: m.ErpSettings })))
+const CreatePlan = React.lazy(() => import("@/pages/plans/create-plan").then(m => ({ default: m.CreatePlan })))
+const Profile = React.lazy(() => import("@/pages/profile/profile").then(m => ({ default: m.Profile })))
 
 // Import Platform Standard Content pages
-import { DataTypes } from "@/pages/platform-standard-content/data-type/data-types"
-import { FieldCategories } from "@/pages/platform-standard-content/field-categories/field-categories"
-import { ReferenceLists } from "@/pages/platform-standard-content/reference-lists/reference-lists"
-import { ValidationRules } from "@/pages/platform-standard-content/validation rule/validation-rules"
-import { NormalizationRules } from "@/pages/platform-standard-content/normalization-rule/normalization-rules"
-import { ExtractionManagement } from "@/pages/platform-standard-content/extraction-management"
-import { TenantsPage } from "@/pages/tenants/tenants-page"
+const DataTypes = React.lazy(() => import("@/pages/platform-standard-content/data-type/data-types").then(m => ({ default: m.DataTypes })))
+const FieldCategories = React.lazy(() => import("@/pages/platform-standard-content/field-categories/field-categories").then(m => ({ default: m.FieldCategories })))
+const ReferenceLists = React.lazy(() => import("@/pages/platform-standard-content/reference-lists/reference-lists").then(m => ({ default: m.ReferenceLists })))
+const ValidationRules = React.lazy(() => import("@/pages/platform-standard-content/validation rule/validation-rules").then(m => ({ default: m.ValidationRules })))
+const NormalizationRules = React.lazy(() => import("@/pages/platform-standard-content/normalization-rule/normalization-rules").then(m => ({ default: m.NormalizationRules })))
+const ExtractionManagement = React.lazy(() => import("@/pages/platform-standard-content/extraction-management").then(m => ({ default: m.ExtractionManagement })))
+const TenantsPage = React.lazy(() => import("@/pages/tenants/tenants-page").then(m => ({ default: m.TenantsPage })))
 
 export type AppSubRoute = {
   path: string
