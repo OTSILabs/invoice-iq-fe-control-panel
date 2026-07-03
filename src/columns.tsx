@@ -835,7 +835,7 @@ export const getNormalizationRuleColumns = (
     width: 70,
     cell: ({ row }) => (
       <div
-        className="flex items-center justify-center"
+        className="flex items-center"
         onClick={(e) => e.stopPropagation()}
       >
         <DropdownMenu>
@@ -971,7 +971,7 @@ export const getValidationRuleColumns = (
     width: 70,
     cell: ({ row }) => (
       <div
-        className="flex items-center justify-center"
+        className="flex items-center"
         onClick={(e) => e.stopPropagation()}
       >
         <DropdownMenu>

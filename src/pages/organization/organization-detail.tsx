@@ -58,7 +58,7 @@ export function OrganizationDetail() {
         <Button
           variant="outline"
           size="sm"
-          className="gap-1.5 font-medium"
+          className="gap-1.5 font-medium cursor-pointer"
           onClick={() => navigate("/organizations")}
         >
           <ArrowLeft className="h-3.5 w-3.5" /> Back
