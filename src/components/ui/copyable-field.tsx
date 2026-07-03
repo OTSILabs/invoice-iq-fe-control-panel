@@ -23,6 +23,7 @@ export function CopyableField({ value, label, isSensitive = false }: CopyableFie
         <div className="flex items-center gap-1">
           {isSensitive && (
             <Button
+            variant="ghost"
               onClick={() => setShow(!show)}
               className="h-6 w-6 rounded-md hover:bg-muted flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors "
               title={show ? "Hide" : "Show"}
