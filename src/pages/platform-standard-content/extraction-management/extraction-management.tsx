@@ -204,15 +204,15 @@ export function ExtractionManagement() {
 
       <Tabs value={state.activeTab} onValueChange={handleTabChange} className="w-full">
         <TabsList variant="line" className="border-b border-border w-full justify-start [&>button]:flex-none mb-4">
-          <TabsTrigger value="fields" className="cursor-pointer gap-1.5">
+          <TabsTrigger value="fields" className="gap-1.5">
             <FileText className="size-4" />
             Extraction Fields
           </TabsTrigger>
-          <TabsTrigger value="templates" className="cursor-pointer gap-1.5">
+          <TabsTrigger value="templates" className="gap-1.5">
             <LayoutGrid className="size-4" />
             Base Templates
           </TabsTrigger>
-          <TabsTrigger value="derived" className="cursor-pointer gap-1.5">
+          <TabsTrigger value="derived" className="gap-1.5">
             <Layers className="size-4" />
             Derived Templates
           </TabsTrigger>

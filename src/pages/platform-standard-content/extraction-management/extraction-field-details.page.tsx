@@ -99,7 +99,6 @@ export function ExtractionFieldDetailsPage() {
             <TabsTrigger
               key={t.value}
               value={t.value}
-              className="cursor-pointer"
             >
               {t.label}
             </TabsTrigger>

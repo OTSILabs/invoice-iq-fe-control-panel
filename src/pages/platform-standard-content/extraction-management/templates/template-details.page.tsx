@@ -558,13 +558,13 @@ function TemplateDetailsContent({
               <TabsList variant="line" className="border-b border-border w-full justify-start [&>button]:flex-none">
                 <TabsTrigger
                   value={TEMPLATE_DETAILS_TABS.DETAILS}
-                  className="cursor-pointer gap-1.5 px-3"
+                  className="gap-1.5 px-3"
                 >
                   Details
                 </TabsTrigger>
                 <TabsTrigger
                   value={TEMPLATE_DETAILS_TABS.FIELDS}
-                  className="cursor-pointer gap-1.5 px-3"
+                  className="gap-1.5 px-3"
                 >
                   Fields
                   <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-semibold text-primary">
