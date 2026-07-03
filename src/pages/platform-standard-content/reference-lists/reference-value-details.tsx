@@ -63,7 +63,7 @@ export function ReferenceValueDetails() {
         title="Reference Item Details"
         description="View detailed specifications of the selected lookup registry value."
       >
-        <Button variant="outline" size="sm" className="font-medium gap-1.5 border-border shadow-sm cursor-pointer" onClick={() => navigate(`/platform-standard-content/reference-lists/${key}`)}>
+        <Button variant="outline" size="sm" className="font-medium gap-1.5 border-border shadow-sm " onClick={() => navigate(`/platform-standard-content/reference-lists/${key}`)}>
           <ArrowLeft className="h-4 w-4" /> Back to registry
         </Button>
       </PageHeader>

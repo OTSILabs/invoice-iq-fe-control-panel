@@ -112,13 +112,13 @@ export function UserCreate() {
                   className="pr-10"
                   {...register("password")}
                 />
-                <button
+                <Button
                   type="button"
                   onClick={() => setShowPassword((prev) => !prev)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 z-10 cursor-pointer text-muted-foreground transition-colors hover:text-foreground focus:outline-none"
                 >
                   {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
-                </button>
+                </Button>
               </div>
               {errors.password?.message && (
                 <span className="block px-1 text-[11px] font-medium text-destructive">

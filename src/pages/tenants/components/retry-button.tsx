@@ -12,8 +12,8 @@ export function RetryButton({
 }: RetryButtonProps) {
   const displayLabel = label || (failed ? "Retry Provisioning Setup" : "Force Provisioning Retry")
   const className = failed
-    ? "text-xs font-semibold gap-1.5 border-amber-200 bg-amber-50/50 hover:bg-amber-100 text-amber-800 dark:border-amber-900/30 dark:bg-amber-950/20 dark:text-amber-400 cursor-pointer"
-    : "text-xs font-semibold gap-1.5 text-muted-foreground cursor-pointer"
+    ? "text-xs font-semibold gap-1.5 border-amber-200 bg-amber-50/50 hover:bg-amber-100 text-amber-800 dark:border-amber-900/30 dark:bg-amber-950/20 dark:text-amber-400 "
+    : "text-xs font-semibold gap-1.5 text-muted-foreground "
 
   return (
     <Button

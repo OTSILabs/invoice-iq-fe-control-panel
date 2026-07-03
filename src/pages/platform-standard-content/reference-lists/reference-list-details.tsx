@@ -145,7 +145,7 @@ export function ReferenceListDetails() {
         title="Reference List Details"
         description="View and manage lookup tables, versions, and reference values."
       >
-        <Button variant="outline" size="sm" className="font-medium gap-1.5 border-border shadow-sm cursor-pointer" onClick={() => navigate("/platform-standard-content/reference-lists")}>
+        <Button variant="outline" size="sm" className="font-medium gap-1.5 border-border  " onClick={() => navigate("/platform-standard-content/reference-lists")}>
           <ArrowLeft className="h-4 w-4" /> Back
         </Button>
       </PageHeader>
@@ -171,7 +171,7 @@ export function ReferenceListDetails() {
                 variant="outline"
                 size="icon"
                 onClick={handleRefetch}
-                className="h-9 w-9 cursor-pointer shrink-0 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px"
+                className="h-9 w-9  shrink-0 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px"
                 disabled={isValuesFetching}
               >
                 <RefreshCw className={cn("size-4", isValuesFetching && "animate-spin")} />
@@ -179,7 +179,7 @@ export function ReferenceListDetails() {
               <Button
                 size="sm"
                 onClick={() => navigate(`/platform-standard-content/reference-lists/${key}/values/create`)}
-                className="font-medium px-3 gap-1 shadow-none transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px cursor-pointer shrink-0"
+                className="font-medium px-3 gap-1 shadow-none transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px  shrink-0"
                 disabled={isValuesFetching}
               >
                 <Plus className="h-4 w-4" /> Add Value
@@ -211,7 +211,7 @@ export function ReferenceListDetails() {
                 actions={values.length === 0 ? (
                   <Button
                     onClick={() => navigate(`/platform-standard-content/reference-lists/${key}/values/create`)}
-                    className="cursor-pointer gap-1.5 rounded-lg px-4 py-2 text-xs font-semibold"
+                    className=" gap-1.5 rounded-lg px-4 py-2 text-xs font-semibold"
                     disabled={isValuesFetching}
                   >
                     <Plus className="size-3.5" /> Add Value

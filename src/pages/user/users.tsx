@@ -148,7 +148,7 @@ export function Users() {
                 variant="outline"
                 size="icon"
                 onClick={handleRefetch}
-                className="h-9 w-9 cursor-pointer shrink-0"
+                className="h-9 w-9  shrink-0"
                 disabled={isFetchingUsers}
               >
                 <RefreshCw className={cn("size-4", isFetchingUsers && "animate-spin")} />

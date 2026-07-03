@@ -26,6 +26,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Link } from "react-router-dom"
+import { Button } from "@/components/ui/button"
 
 const createOptions = [
   {
@@ -102,12 +103,12 @@ export function SidebarCreateButton() {
     <Tooltip delayDuration={0}>
       <TooltipTrigger asChild>
         <DropdownMenuTrigger asChild>
-          <button
+          <Button
             type="button"
-            className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground shadow-sm transition-all duration-200 hover:bg-sidebar-primary/90"
+            className="flex h-9 w-9 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground shadow-sm transition-all duration-200 hover:bg-sidebar-primary/90"
           >
             <Plus className="h-5 w-5" />
-          </button>
+          </Button>
         </DropdownMenuTrigger>
       </TooltipTrigger>
       <TooltipContent side="right" className="text-xs font-semibold">
@@ -116,9 +117,9 @@ export function SidebarCreateButton() {
     </Tooltip>
   ) : (
     <DropdownMenuTrigger asChild>
-      <button
+      <Button
         type="button"
-        className="flex h-9 w-full cursor-pointer items-center justify-between rounded-lg bg-sidebar-primary px-3 text-xs font-semibold text-sidebar-primary-foreground shadow-sm transition-all duration-200 hover:bg-sidebar-primary/90"
+        className="flex h-9 w-full  items-center justify-between rounded-lg bg-sidebar-primary px-3 text-xs font-semibold text-sidebar-primary-foreground shadow-sm transition-all duration-200 hover:bg-sidebar-primary/90"
       >
         <div className="flex items-center gap-1.5">
           <Plus className="h-4 w-4" />
@@ -129,7 +130,7 @@ export function SidebarCreateButton() {
         ) : (
           <ChevronRight className="h-3.5 w-3.5 opacity-70" />
         )}
-      </button>
+      </Button>
     </DropdownMenuTrigger>
   )
 

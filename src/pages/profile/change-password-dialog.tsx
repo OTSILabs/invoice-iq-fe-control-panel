@@ -113,13 +113,15 @@ export function ChangePasswordDialog({ open, onOpenChange }: ChangePasswordDialo
                     className="pr-10"
                     {...register("current_password")}
                   />
-                  <button
+                  <Button
                     type="button"
+                    variant="ghost"
+                    size="sm"
                     onClick={() => setShowCurrent(!showCurrent)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-muted-foreground transition-colors hover:text-foreground focus:outline-none"
+                    className="absolute right-3 top-1/2 -translate-y-1/2  text-muted-foreground transition-colors hover:text-foreground focus:outline-none"
                   >
                     {showCurrent ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
-                  </button>
+                  </Button>
                 </div>
                 {errors.current_password && (
                   <span className="px-1 text-[11px] font-medium text-destructive block mt-1">
@@ -141,13 +143,15 @@ export function ChangePasswordDialog({ open, onOpenChange }: ChangePasswordDialo
                     className="pr-10"
                     {...register("new_password")}
                   />
-                  <button
+                  <Button
                     type="button"
+                    variant="ghost"
+                    size="sm"
                     onClick={() => setShowNew(!showNew)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-muted-foreground transition-colors hover:text-foreground focus:outline-none"
+                    className="absolute right-3 top-1/2 -translate-y-1/2  text-muted-foreground transition-colors hover:text-foreground focus:outline-none"
                   >
                     {showNew ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
-                  </button>
+                  </Button>
                 </div>
                 {errors.new_password && (
                   <span className="px-1 text-[11px] font-medium text-destructive block mt-1">
@@ -169,13 +173,16 @@ export function ChangePasswordDialog({ open, onOpenChange }: ChangePasswordDialo
                     className="pr-10"
                     {...register("confirm_password")}
                   />
-                  <button
+                  <Button
                     type="button"
-                    onClick={() => setShowConfirm(!showConfirm)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-muted-foreground transition-colors hover:text-foreground focus:outline-none"
+                    variant="ghost"
+                    size="sm"
+                      onClick={() => setShowConfirm(!showConfirm)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2  text-muted-foreground transition-colors hover:text-foreground focus:outline-none"
+                   
                   >
                     {showConfirm ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
-                  </button>
+                  </Button>
                 </div>
                 {errors.confirm_password && (
                   <span className="px-1 text-[11px] font-medium text-destructive block mt-1">
@@ -238,7 +245,7 @@ export function ChangePasswordDialog({ open, onOpenChange }: ChangePasswordDialo
             <Button
               type="button"
               variant="outline"
-              className="transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px cursor-pointer"
+              className="transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px "
               onClick={handleCancel}
             >
               Cancel
@@ -246,7 +253,7 @@ export function ChangePasswordDialog({ open, onOpenChange }: ChangePasswordDialo
             <Button
               type="submit"
               disabled={isUpdatingPassword}
-              className="transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px cursor-pointer"
+              className="transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px "
             >
               {isUpdatingPassword && <RefreshCw className="mr-1.5 size-3.5 animate-spin" />}
               Update Password
