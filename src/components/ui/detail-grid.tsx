@@ -75,7 +75,7 @@ function DetailGrid({ cols = 3, children, className }: DetailGridProps) {
     resolved.lg ? lgColsClass[resolved.lg] : "",
   ].filter(Boolean).join(" ")
 
-  const contextValue = React.useMemo(() => ({ cols: resolved, total }), [resolved, total])
+  const contextValue = { cols: resolved, total }
 
   return (
     <GridContext.Provider value={contextValue}>

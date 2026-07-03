@@ -51,6 +51,7 @@ export const referenceListsService = {
   },
 
   listPublications: async (_apiKey?: string): Promise<ReferenceListRegistryPublicationResponse[]> => {
+    void _apiKey;
     return [];
   }
 };

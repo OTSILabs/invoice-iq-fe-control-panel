@@ -39,7 +39,6 @@ export type CustomColumnDef<TData, TValue = unknown> = ColumnDef<TData, TValue> 
   minWidth?: string | number;
   maxWidth?: string | number;
   rowClassName?: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   columns?: CustomColumnDef<TData, any>[];
   filterFn?: unknown;
 }
@@ -87,7 +86,6 @@ function withColumnSizing<TData, TValue>(
       ...(parsedWidth && columnDef.size == null ? { size: parsedWidth } : {}),
       ...(parsedMinWidth && columnDef.minSize == null ? { minSize: parsedMinWidth } : {}),
       ...(parsedMaxWidth && columnDef.maxSize == null ? { maxSize: parsedMaxWidth } : {}),
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ...(columnDef.columns ? { columns: withColumnSizing(columnDef.columns as any) } : {}),
     };
   });

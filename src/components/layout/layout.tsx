@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useEffect, Suspense } from "react"
 import { Outlet, useLocation, useNavigate } from "react-router-dom"
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
 import { TooltipProvider } from "@/components/ui/tooltip"
@@ -7,9 +7,18 @@ import { Toaster } from "@/components/ui/sonner"
 import { AppSidebar } from "./app-sidebar"
 import { AppBreadcrumb } from "./AppBreadcrumb"
 import { TopLoader } from "./TopLoader"
+import { PageLoader } from "./PageLoader"
 import { resolveBreadcrumbs } from "@/components/layout/breadcrumb-utils"
 
 import { clearSession } from "@/lib/auth-store"
+
+import { useDataTypes } from "@/api/hooks/data-types"
+import { useValidationRules } from "@/api/hooks/validation-rules"
+import { useNormalizationRules } from "@/api/hooks/normalization-rules"
+import { useExtractionTemplates } from "@/api/hooks/useExtractionTemplates"
+import { useExtractionFields } from "@/api/hooks/useExtractionFields"
+import { useDerivedTemplates } from "@/api/hooks/useDerivedTemplates"
+import { useReferenceLists } from "@/api/hooks/useReferenceLists"
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Root layout — wraps every authenticated page.
@@ -23,6 +32,15 @@ import { clearSession } from "@/lib/auth-store"
 export function Layout() {
   const location = useLocation()
   const navigate = useNavigate()
+
+  // ── Warm up TanStack Query cache ──────────────────────────────────────────
+  useDataTypes()
+  useValidationRules()
+  useNormalizationRules()
+  useExtractionTemplates()
+  useExtractionFields()
+  useDerivedTemplates()
+  useReferenceLists()
 
   // ── Auth logout listener ──────────────────────────────────────────────────
   useEffect(() => {
@@ -74,7 +92,9 @@ export function Layout() {
 
             {/* ── Page content ── */}
             <main className="flex-1 overflow-auto bg-background">
-              <Outlet />
+              <Suspense fallback={<PageLoader />}>
+                <Outlet />
+              </Suspense>
             </main>
 
           </SidebarInset>
