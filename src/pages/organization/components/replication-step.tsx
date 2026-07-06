@@ -78,7 +78,7 @@ export function ReplicationStep({
           type="button"
           variant="outline"
           size="sm"
-          className="flex w-full cursor-pointer items-center justify-center gap-1.5 font-medium"
+          className="flex w-full  items-center justify-center gap-1.5 font-medium"
           disabled={isReplicating}
           onClick={onSkip}
         >
@@ -88,7 +88,7 @@ export function ReplicationStep({
         <Button
           type="button"
           size="sm"
-          className="flex w-full cursor-pointer items-center justify-center gap-1.5 font-medium"
+          className="flex w-full  items-center justify-center gap-1.5 font-medium"
           disabled={isReplicating}
           onClick={onReplicate}
         >

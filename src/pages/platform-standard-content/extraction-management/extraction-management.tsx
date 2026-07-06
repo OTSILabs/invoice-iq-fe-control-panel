@@ -175,7 +175,7 @@ export function ExtractionManagement() {
           <Button
             size="sm"
             onClick={() => navigate("/platform-standard-content/extraction-management/fields/create")}
-            className="font-medium px-3 gap-1  transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px cursor-pointer shrink-0"
+            className="font-medium px-3 gap-1  transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px  shrink-0"
           >
             <Plus className="h-4 w-4" /> Add Field
           </Button>
@@ -184,7 +184,7 @@ export function ExtractionManagement() {
           <Link to="/platform-standard-content/extraction-management/templates/new">
             <Button
               size="sm"
-              className="font-medium px-3 gap-1  transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px cursor-pointer shrink-0"
+              className="font-medium px-3 gap-1  transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px  shrink-0"
             >
               <Plus className="h-4 w-4" /> Add Template
             </Button>
@@ -194,7 +194,7 @@ export function ExtractionManagement() {
           <Link to="/platform-standard-content/extraction-management/derived/new">
             <Button
               size="sm"
-              className="font-medium px-3 gap-1  transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px cursor-pointer shrink-0"
+              className="font-medium px-3 gap-1  transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px  shrink-0"
             >
               <Plus className="h-4 w-4" /> Derive Template
             </Button>
@@ -204,15 +204,15 @@ export function ExtractionManagement() {
 
       <Tabs value={state.activeTab} onValueChange={handleTabChange} className="w-full">
         <TabsList variant="line" className="border-b border-border w-full justify-start [&>button]:flex-none mb-4">
-          <TabsTrigger value="fields" className="cursor-pointer gap-1.5">
+          <TabsTrigger value="fields" className="gap-1.5">
             <FileText className="size-4" />
             Extraction Fields
           </TabsTrigger>
-          <TabsTrigger value="templates" className="cursor-pointer gap-1.5">
+          <TabsTrigger value="templates" className="gap-1.5">
             <LayoutGrid className="size-4" />
             Base Templates
           </TabsTrigger>
-          <TabsTrigger value="derived" className="cursor-pointer gap-1.5">
+          <TabsTrigger value="derived" className="gap-1.5">
             <Layers className="size-4" />
             Derived Templates
           </TabsTrigger>
@@ -260,7 +260,7 @@ export function ExtractionManagement() {
                     variant="outline"
                     size="icon"
                     onClick={handleRefetch}
-                    className="h-9 w-9 shrink-0 cursor-pointer"
+                    className="h-9 w-9 shrink-0 "
                     disabled={isFetching}
                   >
                     <RefreshCw className={cn("size-4", isFetching && "animate-spin")} />
@@ -287,7 +287,7 @@ export function ExtractionManagement() {
                     variant="outline"
                     size="icon"
                     onClick={handleRefetch}
-                    className="h-9 w-9 shrink-0 cursor-pointer"
+                    className="h-9 w-9 shrink-0"
                     disabled={isFetching}
                   >
                     <RefreshCw className={cn("size-4", isFetching && "animate-spin")} />
@@ -342,10 +342,10 @@ function DeleteDerivedTemplateDialog({
           </p>
         </div>
         <DialogFooter className="dialog-form-footer">
-          <Button variant="outline" size="sm" className="cursor-pointer" onClick={onClose} disabled={isDeleting}>
+          <Button variant="outline" size="sm" className="" onClick={onClose} disabled={isDeleting}>
             Cancel
           </Button>
-          <Button variant="destructive" size="sm" className="cursor-pointer gap-1.5" onClick={onConfirm} disabled={isDeleting}>
+          <Button variant="destructive" size="sm" className=" gap-1.5" onClick={onConfirm} disabled={isDeleting}>
             {isDeleting && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
             Delete
           </Button>

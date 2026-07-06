@@ -85,7 +85,7 @@ export function PlanSelectionSection({
               type="button"
               variant="ghost"
               size="icon"
-              className="size-8 cursor-pointer rounded-full text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+              className="size-8  rounded-full text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
               onClick={() => setIsCreatingPlan(false)}
             >
               <Minus className="size-4" />

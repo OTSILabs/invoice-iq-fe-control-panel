@@ -50,7 +50,7 @@ export function ErpSettings() {
           variant="outline"
           size="icon"
           onClick={handleRefetch}
-          className="h-9 w-9 shrink-0 cursor-pointer"
+          className="h-9 w-9 shrink-0 "
           disabled={isFetching}
         >
           <RefreshCw
@@ -116,14 +116,14 @@ export function ErpSettings() {
               <Button
                 variant="outline"
                 size="sm"
-                className="cursor-pointer"
+                className=""
                 onClick={() => setDeletingRecord(null)}
               >
                 Cancel
               </Button>
               <Button
                 variant="destructive"
-                className="cursor-pointer"
+                className=""
                 size="sm"
                 onClick={() => {
                   toast.success("ERP setting deleted successfully!")

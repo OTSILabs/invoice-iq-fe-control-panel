@@ -85,7 +85,7 @@ export function NormalizationRules() {
         <Button
           size="sm"
           onClick={() => navigate("/platform-standard-content/normalization-rules/create")}
-          className="w-full gap-1.5 px-3 sm:w-auto cursor-pointer"
+          className="w-full gap-1.5 px-3 sm:w-auto "
           disabled={isFetching}
         >
           <Plus className="size-4" /> Create Normalization Rule
@@ -111,7 +111,7 @@ export function NormalizationRules() {
                 variant="outline"
                 size="icon"
                 onClick={handleRefetch}
-                className="size-9 cursor-pointer"
+                className="size-9 "
                 disabled={isFetching}
               >
                 <RefreshCw
@@ -180,7 +180,7 @@ function NormalizationRulesEmptyState({
       actions={!searchText && rulesLength === 0 ? (
         <Button
           onClick={onCreateClick}
-          className="cursor-pointer gap-1.5 rounded-lg px-4 py-2 text-xs font-semibold"
+          className=" gap-1.5 rounded-lg px-4 py-2 text-xs font-semibold"
           disabled={disabled}
         >
           <Plus className="size-3.5" /> Create Rule
@@ -217,7 +217,7 @@ function DeleteNormalizationRuleDialog({
           <Button
             variant="outline"
             size="sm"
-            className="cursor-pointer"
+            className=""
             onClick={onClose}
             disabled={isDeleting}
           >
@@ -225,7 +225,7 @@ function DeleteNormalizationRuleDialog({
           </Button>
           <Button
             variant="destructive"
-            className="cursor-pointer gap-1.5"
+            className=" gap-1.5"
             size="sm"
             onClick={onConfirm}
             disabled={isDeleting}

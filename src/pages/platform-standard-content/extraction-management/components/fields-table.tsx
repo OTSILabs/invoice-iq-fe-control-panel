@@ -42,7 +42,7 @@ export function FieldsTable({
               variant="outline"
               size="icon"
               onClick={onRefresh}
-              className="h-9 w-9 shrink-0 cursor-pointer"
+              className="h-9 w-9 shrink-0 "
               disabled={isFetching}
             >
               <RefreshCw

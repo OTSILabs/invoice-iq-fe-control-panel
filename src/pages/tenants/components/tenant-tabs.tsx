@@ -27,19 +27,19 @@ export function TenantTabs({
   return (
     <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
              <TabsList variant="line" className="border-b border-border w-full justify-start  [&>button]:flex-none">
-        <TabsTrigger value="overview" className="cursor-pointer">
+        <TabsTrigger value="overview" >
           Overview
         </TabsTrigger>
-        <TabsTrigger value="configuration" className="cursor-pointer">
+        <TabsTrigger value="configuration" >
           Configurations
         </TabsTrigger>
-        <TabsTrigger value="profile" className="cursor-pointer">
+        <TabsTrigger value="profile" >
           Profile
         </TabsTrigger>
-        <TabsTrigger value="database" className="cursor-pointer">
+        <TabsTrigger value="database" >
           Database
         </TabsTrigger>
-        <TabsTrigger value="events" className="cursor-pointer">
+        <TabsTrigger value="events" >
           Events
         </TabsTrigger>
       </TabsList>

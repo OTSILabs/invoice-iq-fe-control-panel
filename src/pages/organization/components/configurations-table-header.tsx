@@ -24,7 +24,9 @@ export function ConfigurationsTableHeader({
       <div className="flex items-center gap-2">
         <Button
           size="sm"
-          className="h-8 text-xs shadow-none cursor-pointer"
+          variant="default"
+          type="button"
+          className="h-8 text-xs shadow-none "
           onClick={onSave}
           disabled={isSaving || !hasChanges}
         >

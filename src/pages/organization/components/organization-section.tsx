@@ -88,7 +88,7 @@ export function OrganizationSection({
                   type="button"
                   variant="outline"
                   size="sm"
-                  className="h-9 shrink-0 cursor-pointer text-xs text-muted-foreground hover:text-foreground"
+                  className="h-9 shrink-0  text-xs text-muted-foreground hover:text-foreground"
                   onClick={() => handleToggleCreatingOrg(false)}
                 >
                   Select existing

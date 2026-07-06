@@ -64,7 +64,7 @@ export function FieldCategories() {
         <Button
           size="sm"
           onClick={() => navigate("/platform-standard-content/field-categories/create")}
-          className="w-full sm:w-auto font-medium px-3 shadow-none gap-1.5 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px cursor-pointer"
+          className="w-full sm:w-auto font-medium px-3 shadow-none gap-1.5 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px "
           disabled={isFetching}
         >
           <Plus className="h-4 w-4" /> Add Category
@@ -90,7 +90,7 @@ export function FieldCategories() {
                 variant="outline"
                 size="icon"
                 onClick={handleRefetch}
-                className="h-9 w-9 cursor-pointer shrink-0 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px"
+                className="h-9 w-9  shrink-0 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px"
                 disabled={isFetching}
               >
                 <RefreshCw className={cn("size-4", isFetching && "animate-spin")} />
@@ -122,7 +122,7 @@ export function FieldCategories() {
                 actions={categories.length === 0 ? (
                   <Button
                     onClick={() => navigate("/platform-standard-content/field-categories/create")}
-                    className="cursor-pointer gap-1.5 rounded-lg px-4 py-2 text-xs font-semibold"
+                    className=" gap-1.5 rounded-lg px-4 py-2 text-xs font-semibold"
                     disabled={isFetching}
                   >
                     <Plus className="size-3.5" /> Add Category

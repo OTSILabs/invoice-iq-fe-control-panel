@@ -74,17 +74,19 @@ export function LoginForm({
                   disabled={isPending}
                   className="h-11 rounded-lg bg-background/60 pr-10 font-mono transition-all duration-200 focus-visible:bg-background"
                 />
-                <button
+                <Button
                   type="button"
+                  variant="ghost"
+                  size="icon-sm"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer text-muted-foreground transition-colors hover:text-foreground focus:outline-none"
+                  className="absolute top-1/2 right-1 -translate-y-1/2  text-muted-foreground transition-colors hover:text-foreground focus:outline-none"
                 >
                   {showPassword ? (
                     <EyeOff className="size-4" />
                   ) : (
                     <Eye className="size-4" />
                   )}
-                </button>
+                </Button>
               </div>
             </div>
 

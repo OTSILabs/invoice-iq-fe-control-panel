@@ -67,7 +67,7 @@ export function ExtractionFieldDetailsPage() {
           onClick={() =>
             navigate("/platform-standard-content/extraction-management?tab=fields")
           }
-          className="gap-2 shrink-0 cursor-pointer"
+          className="gap-2 shrink-0"
         >
           <ArrowLeft className="h-4 w-4" /> Back
         </Button>
@@ -78,7 +78,7 @@ export function ExtractionFieldDetailsPage() {
               `/platform-standard-content/extraction-management/fields/${fieldItem.field_id}/edit`
             )
           }
-          className="gap-2 shrink-0 cursor-pointer"
+          className="gap-2 shrink-0 "
         >
           <Edit2 className="h-4 w-4" /> Edit Field
         </Button>
@@ -99,7 +99,6 @@ export function ExtractionFieldDetailsPage() {
             <TabsTrigger
               key={t.value}
               value={t.value}
-              className="cursor-pointer"
             >
               {t.label}
             </TabsTrigger>

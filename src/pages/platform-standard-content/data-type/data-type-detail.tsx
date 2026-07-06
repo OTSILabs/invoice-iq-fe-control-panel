@@ -60,7 +60,7 @@ export function DataTypeDetail() {
         <Button
           variant="outline"
           size="sm"
-          className="font-medium gap-1.5 border-border shadow-sm cursor-pointer"
+          className="font-medium gap-1.5 border-border shadow-sm "
           onClick={() => navigate("/platform-standard-content/data-types")}
         >
           <ArrowLeft className="h-4 w-4" /> Back
