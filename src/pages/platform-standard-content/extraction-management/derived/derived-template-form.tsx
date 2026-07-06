@@ -16,6 +16,7 @@ import { useExtractionFields } from "@/api/hooks/useExtractionFields";
 import { useErpSettings } from "@/api/hooks/useErp";
 import type { StandardDerivedTemplateResponse } from "@/types";
 import { toast } from "sonner";
+import { RequiredLabel } from "@/components/invoice-ui/templates/RequiredLabel";
 
 const derivedTemplateSchema = z.object({
   derived_template_id: z.string().trim().optional(),
@@ -203,7 +204,7 @@ export function DerivedTemplateForm({ mode, template, onCancel, onSuccess }: Der
             />
 
             <Field>
-              <FieldLabel>Select Derived Fields</FieldLabel>
+              <RequiredLabel>Select Derived Fields</RequiredLabel>
               <Controller
                 control={form.control}
                 name="derived_field_ids"
@@ -290,7 +291,7 @@ function TemplateIdentityFields({
       {!isEdit && (
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
           <Field>
-            <FieldLabel>ERP Type</FieldLabel>
+            <RequiredLabel>ERP Type</RequiredLabel>
             <Controller
               control={form.control}
               name="erp_type"
@@ -319,7 +320,7 @@ function TemplateIdentityFields({
           </Field>
 
           <Field>
-            <FieldLabel>Document Type Code</FieldLabel>
+            <RequiredLabel>Document Type Code</RequiredLabel>
             <Controller
               control={form.control}
               name="document_type_code"
@@ -363,7 +364,7 @@ function TemplateIdentityFields({
         </Field>
         
         <Field>
-          <FieldLabel>Name</FieldLabel>
+          <RequiredLabel>Name</RequiredLabel>
           <Input
             placeholder="e.g. My Custom Invoice Template"
             disabled={isSaving}
