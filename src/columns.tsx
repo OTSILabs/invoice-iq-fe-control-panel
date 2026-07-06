@@ -1064,8 +1064,8 @@ export const getReferenceListsColumns = (
   {
     accessorKey: "description",
     header: "Description",
-    width: 320,
-    minWidth: 200,
+    width: 220,
+    minWidth: 150,
     cell: ({ row }) => (
       <span
         className="block max-w-[450px] truncate text-xs text-muted-foreground"
