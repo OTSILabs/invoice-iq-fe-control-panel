@@ -141,6 +141,7 @@ export function Plans() {
             stickyHeader
             fillAvailableHeight
             tableContainerClassName="border-0 rounded-none bg-transparent"
+            onRowClick={(plan) => navigate(`/plan/${plan.id}`)}
             emptyState={
               <div className="flex flex-col items-center justify-center px-4 py-10 text-center animate-in fade-in slide-in-from-bottom-2 duration-300">
                 <EmptyState

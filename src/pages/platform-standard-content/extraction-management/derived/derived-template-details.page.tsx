@@ -75,8 +75,12 @@ export default function DerivedTemplateDetailsPage() {
     });
   }, [template]);
 
+  const selectedIdsSet = useMemo(() => {
+    return new Set(selectedIds);
+  }, [selectedIds]);
+
   const knownItems = useMemo(() => {
-    const selectedFields = derivedFields.filter(f => selectedIds.includes(f.field_id));
+    const selectedFields = derivedFields.filter(f => selectedIdsSet.has(f.field_id));
     return selectedFields.map((f: any) => {
       const categoryId = f.field_category?.field_category_code || f.category_code || "uncategorized";
       return {
@@ -90,11 +94,11 @@ export default function DerivedTemplateDetailsPage() {
         },
       };
     });
-  }, [derivedFields, selectedIds]);
+  }, [derivedFields, selectedIdsSet]);
 
   const categories = useMemo(() => {
     const categoriesMap = new Map<string, any>();
-    const selectedFields = derivedFields.filter(f => selectedIds.includes(f.field_id));
+    const selectedFields = derivedFields.filter(f => selectedIdsSet.has(f.field_id));
     
     selectedFields.forEach((field: any) => {
       if (field.field_category) {
@@ -125,7 +129,7 @@ export default function DerivedTemplateDetailsPage() {
       const sortDifference = a.sortOrder - b.sortOrder;
       return sortDifference || a.label.localeCompare(b.label);
     });
-  }, [derivedFields, selectedIds]);
+  }, [derivedFields, selectedIdsSet]);
 
   if (!isMounted) {
     return null;

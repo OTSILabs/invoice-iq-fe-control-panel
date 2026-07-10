@@ -8,6 +8,14 @@ export const usePlans = () => {
   });
 };
 
+export const usePlan = (id: string, enabled = true) => {
+  return useQuery({
+    queryKey: ['plan', id],
+    queryFn: () => plansService.getById(id),
+    enabled: !!id && enabled,
+  });
+};
+
 const useCreatePlan = () => {
   const queryClient = useQueryClient();
   

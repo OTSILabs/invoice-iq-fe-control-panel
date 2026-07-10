@@ -139,7 +139,10 @@ export function filterItems(items: CategorizedFieldSelectorItem[], search: strin
     return items;
   }
 
-  return items.filter((item) => getItemSearchText(item).includes(query));
+  const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const regex = new RegExp(escapedQuery);
+
+  return items.filter((item) => regex.test(getItemSearchText(item)));
 }
 
 export function arraysEqual(left: string[], right: string[]) {
@@ -188,7 +191,8 @@ export function insertCategorySelectedId(
   categoryItemIds: string[],
   itemId: string,
 ) {
-  if (selectedIds.includes(itemId)) {
+  const selectedIdsSet = new Set(selectedIds);
+  if (selectedIdsSet.has(itemId)) {
     return selectedIds;
   }
 
@@ -201,7 +205,7 @@ export function insertCategorySelectedId(
   const previousSelectedId = categoryItemIds
     .slice(0, itemIndex)
     .reverse()
-    .find((id) => selectedIds.includes(id));
+    .find((id) => selectedIdsSet.has(id));
 
   if (previousSelectedId) {
     const insertIndex = selectedIds.indexOf(previousSelectedId) + 1;
@@ -215,7 +219,7 @@ export function insertCategorySelectedId(
 
   const nextSelectedId = categoryItemIds
     .slice(itemIndex + 1)
-    .find((id) => selectedIds.includes(id));
+    .find((id) => selectedIdsSet.has(id));
 
   if (nextSelectedId) {
     const insertIndex = selectedIds.indexOf(nextSelectedId);
@@ -236,9 +240,10 @@ export function mergeCategorySelectedIds(
   nextCategorySelectedIds: string[],
 ) {
   const nextCategorySelectedIdSet = new Set(nextCategorySelectedIds);
+  const categoryItemIdSet = new Set(categoryItemIds);
   let nextSelectedIds = selectedIds.filter(
     (id) =>
-      !categoryItemIds.includes(id) || nextCategorySelectedIdSet.has(id),
+      !categoryItemIdSet.has(id) || nextCategorySelectedIdSet.has(id),
   );
 
   nextCategorySelectedIds.forEach((id) => {

@@ -277,10 +277,14 @@ export default function TemplateDetailsPage() {
     });
   }, [templateFields]);
 
+  const selectedIdsSet = useMemo(() => {
+    return new Set(selectedIds);
+  }, [selectedIds]);
+
   const fieldCategories = useMemo(() => {
     const categoriesMap = new Map<string, any>();
     
-    const selectedFields = extractionFields.filter((field) => selectedIds.includes(field.field_id));
+    const selectedFields = extractionFields.filter((field) => selectedIdsSet.has(field.field_id));
 
     selectedFields.forEach(field => {
       if (field.field_category) {
@@ -300,13 +304,13 @@ export default function TemplateDetailsPage() {
       const sortDifference = (a.sortOrder || Number.MAX_SAFE_INTEGER) - (b.sortOrder || Number.MAX_SAFE_INTEGER);
       return sortDifference || a.label.localeCompare(b.label);
     });
-  }, [extractionFields, selectedIds]);
+  }, [extractionFields, selectedIdsSet]);
 
   const knownFieldItems = useMemo(() => {
     const fieldByCode = new Map<string, any>();
 
     extractionFields.forEach((field) => {
-      if (selectedIds.includes(field.field_id)) {
+      if (selectedIdsSet.has(field.field_id)) {
         const code = field.field_id;
         if (code && !fieldByCode.has(code)) {
           fieldByCode.set(code, {
@@ -324,7 +328,7 @@ export default function TemplateDetailsPage() {
     });
 
     return [...fieldByCode.values()];
-  }, [extractionFields, selectedIds]);
+  }, [extractionFields, selectedIdsSet]);
   const resolvedTemplateCode = getTemplateCode(template) || templateCode;
   const editHref = APP_ROUTES.getRoute(APP_ROUTES.TEMPLATE_EDIT, {
     templateCode: resolvedTemplateCode,

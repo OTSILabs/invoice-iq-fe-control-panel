@@ -96,6 +96,7 @@ export function useCategorySectionState({
   const orderedItems = React.useMemo(() => orderItems(items, orderedItemIds), [items, orderedItemIds]);
   const itemById = React.useMemo(() => new Map(orderedItems.map((item) => [item.id, item])), [orderedItems]);
   const categoryItemIds = React.useMemo(() => orderedItems.map((item) => item.id), [orderedItems]);
+  const selectedIdsSet = React.useMemo(() => new Set(selectedIds), [selectedIds]);
   const selectedInCategory = selectedIds.filter((id) => itemById.has(id));
   const visibleItems = filterItems(orderedItems, search);
   const sortableItemIds = visibleItems.map((item) => item.id);
@@ -115,7 +116,7 @@ export function useCategorySectionState({
   const fieldTotal = category.activeFieldCount ?? categoryData?.total ?? (isCategorySuccess ? items.length : null);
   const selectedCount = selectedInCategory.length || selectedIds.filter((id) => knownSelectedSet.has(id)).length;
   const categorySelectionTotal = selectableItemIds.length || fieldTotal || selectedCount || 0;
-  const selectedSelectableCount = selectableItemIds.length ? selectableItemIds.filter((id) => selectedIds.includes(id)).length : selectedCount;
+  const selectedSelectableCount = selectableItemIds.length ? selectableItemIds.filter((id) => selectedIdsSet.has(id)).length : selectedCount;
   const allCategorySelected = categorySelectionTotal > 0 && selectedSelectableCount >= categorySelectionTotal;
   const someCategorySelected = selectedSelectableCount > 0 && !allCategorySelected;
   const categoryCheckboxChecked: boolean | "indeterminate" = allCategorySelected ? true : someCategorySelected ? "indeterminate" : false;
@@ -189,12 +190,12 @@ export function useCategorySectionState({
         }
       }
 
-      const nextSelectedSet = new Set(selectedIds.filter((id) => selectionItemIds.includes(id)));
+      const selectionItemIdSet = new Set(selectionItemIds);
+      const nextSelectedSet = new Set(selectedIds.filter((id) => selectionItemIdSet.has(id)));
       let nextSelectedIds: string[];
 
       if (action === "deselect-all") {
         selectionSelectableItemIds.forEach((id) => nextSelectedSet.delete(id));
-        const selectionItemIdSet = new Set(selectionItemIds);
 
         nextSelectedIds = selectedIds.filter((id) => !selectionItemIdSet.has(id) || nextSelectedSet.has(id));
       } else {
@@ -233,7 +234,7 @@ export function useCategorySectionState({
       nextItemIds.splice(oldIndex, 1);
       nextItemIds.splice(newIndex, 0, String(active.id));
 
-      const nextSelectedIds = replaceCategorySelectedIds(selectedIds, categoryItemIds, nextItemIds.filter((id) => selectedIds.includes(id)));
+      const nextSelectedIds = replaceCategorySelectedIds(selectedIds, categoryItemIds, nextItemIds.filter((id) => selectedIdsSet.has(id)));
 
       if (!arraysEqual(selectedIds, nextSelectedIds)) {
         onSelectedChange(nextSelectedIds);

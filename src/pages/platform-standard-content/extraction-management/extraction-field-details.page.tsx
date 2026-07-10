@@ -320,8 +320,8 @@ function DataValidationTab({ fieldItem }: { fieldItem: any }) {
             <p className="text-xs text-muted-foreground mb-2 font-medium">Allowed Values</p>
             <div className="flex flex-wrap gap-1.5">
               {(fieldItem.allowed_static_list?.length ?? 0) > 0 ? (
-                fieldItem.allowed_static_list!.map((val: string, idx: number) => (
-                  <SemanticBadge key={`${val}_${idx}`} tone="neutral" className="font-medium">
+                fieldItem.allowed_static_list!.map((val: string) => (
+                  <SemanticBadge key={val} tone="neutral" className="font-medium">
                     {val}
                   </SemanticBadge>
                 ))
@@ -359,8 +359,8 @@ function GuidanceTab({ fieldItem }: { fieldItem: any }) {
         <p className="text-xs text-muted-foreground mb-3 font-medium">Alternate Labels</p>
         <div className="flex flex-wrap gap-1.5">
           {(fieldItem.labels?.length ?? 0) > 0 ? (
-            fieldItem.labels!.map((lbl: string, idx: number) => (
-              <SemanticBadge key={`${lbl}_${idx}`} tone="neutral" className="font-medium">
+            fieldItem.labels!.map((lbl: string) => (
+              <SemanticBadge key={lbl} tone="neutral" className="font-medium">
                 {lbl}
               </SemanticBadge>
             ))
@@ -375,8 +375,8 @@ function GuidanceTab({ fieldItem }: { fieldItem: any }) {
         <p className="text-xs text-muted-foreground mb-3 font-medium">Examples</p>
         <div className="flex flex-wrap gap-1.5">
           {(fieldItem.examples?.length ?? 0) > 0 ? (
-            fieldItem.examples!.map((ex: string, idx: number) => (
-              <SemanticBadge key={`${ex}_${idx}`} tone="neutral" className="font-medium">
+            fieldItem.examples!.map((ex: string) => (
+              <SemanticBadge key={ex} tone="neutral" className="font-medium">
                 {ex}
               </SemanticBadge>
             ))

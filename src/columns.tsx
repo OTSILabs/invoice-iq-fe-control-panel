@@ -135,7 +135,7 @@ export const planColumns: CustomColumnDef<Plan>[] = [
     id: "actions",
     header: "Actions",
     width: 80,
-    cell: () => {
+    cell: ({ row }) => {
       return (
         <div className="flex items-center" onClick={(e) => e.stopPropagation()}>
           <DropdownMenu>
@@ -150,11 +150,13 @@ export const planColumns: CustomColumnDef<Plan>[] = [
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-45">
               <DropdownMenuItem
-                disabled
-                className="cursor-not-allowed gap-1.5 text-xs opacity-50"
+                asChild
+                className="gap-1.5 text-xs cursor-pointer"
               >
-                <Eye className="h-3.5 w-3.5 text-muted-foreground" />
-                View Details
+                <Link to={`/plan/${row.original.id}`}>
+                  <Eye className="h-3.5 w-3.5 text-muted-foreground" />
+                  View Details
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem
                 disabled

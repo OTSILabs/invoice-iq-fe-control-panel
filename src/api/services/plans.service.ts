@@ -11,5 +11,20 @@ export const plansService = {
   create: async (payload: any): Promise<any> => {
     const response = await api.post<any>('/plans', payload);
     return response.data;
+  },
+
+  getById: async (id: string): Promise<any> => {
+    try {
+      const response = await api.get<any>(`/plans/${id}`);
+      return response.data;
+    } catch (error) {
+      // Fallback: Retrieve all plans and filter by id locally
+      const allPlans = await plansService.getAll();
+      const plan = allPlans.find((p) => p.id === id);
+      if (!plan) {
+        throw new Error("Plan not found", { cause: error });
+      }
+      return plan;
+    }
   }
 };
