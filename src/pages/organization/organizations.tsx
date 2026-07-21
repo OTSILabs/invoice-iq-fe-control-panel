@@ -1,7 +1,7 @@
 import { PageMetadata } from "@/components/layout/PageMetadata"
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { useOrganizations } from "@/api/hooks/useOrganizations"
+import { useOrganizations, useOrganizationsTotal } from "@/api/hooks/useOrganizations"
 import { Plus, Building2, UserCheck, BarChart3, Search } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { OrgCard } from "./components/org-card"
@@ -10,26 +10,37 @@ import { PageHeader } from "@/components/layout/PageHeader"
 import { StatsCard } from "@/components/StatsCard"
 import { EmptyState, PageShell } from "@/components/invoice-ui/design-system"
 
+const PAGE_SIZE = 50
+
 export function Organizations() {
   const navigate = useNavigate()
-  const { data: organizations = [], isLoading } = useOrganizations()
   const [searchQuery, setSearchQuery] = useState("")
+  const [debouncedQuery, setDebouncedQuery] = useState("")
+  const [page, setPage] = useState(0)
 
-  const filtered = useMemo(() => {
-    const query = searchQuery.toLowerCase().trim()
-    if (!query) return organizations
-    return organizations.filter(org =>
-      org.name.toLowerCase().includes(query) ||
-      org.slug?.toLowerCase().includes(query) ||
-      String(org.id).includes(query)
-    )
-  }, [organizations, searchQuery])
+  useEffect(() => {
+    const t = setTimeout(() => {
+      setDebouncedQuery(searchQuery)
+      setPage(0)
+    }, 350)
+    return () => clearTimeout(t)
+  }, [searchQuery])
+
+  const queryParams = {
+    search: debouncedQuery,
+    limit: PAGE_SIZE,
+    offset: page * PAGE_SIZE,
+  }
+
+  const { data: organizations = [], isLoading } = useOrganizations(queryParams)
+  const { data: total = 0 } = useOrganizationsTotal(queryParams)
 
   const totalTenants = useMemo(() =>
     organizations.reduce((sum, org) => sum + (org.tenant_count ?? 0), 0)
   , [organizations])
 
-  const hasOrgs = organizations.length > 0
+  const isTrulyEmpty = total === 0 && !debouncedQuery
+  const hasResults = organizations.length > 0
 
   return (
     <PageShell>
@@ -39,9 +50,9 @@ export function Organizations() {
         description="Manage and onboard organizations within your control panel."
       />
 
-      {hasOrgs && (
+      {hasResults && (
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-          <StatsCard label="Total organizations" value={organizations.length} icon={Building2} />
+          <StatsCard label="Total organizations" value={total} icon={Building2} />
           <StatsCard label="Total tenants" value={totalTenants} icon={UserCheck} />
           <StatsCard
             label="Avg tenants / org"
@@ -51,7 +62,7 @@ export function Organizations() {
         </div>
       )}
 
-      {isLoading ? null : !hasOrgs ? (
+      {isLoading ? null : isTrulyEmpty ? (
         <EmptyState
           icon={Building2}
           title="No organizations yet"
@@ -83,9 +94,9 @@ export function Organizations() {
             </div>
           </div>
 
-          {filtered.length > 0 ? (
+          {hasResults ? (
             <div className="grid grid-cols-1 gap-3 px-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
-              {filtered.map(org => <OrgCard key={org.id} org={org} />)}
+              {organizations.map(org => <OrgCard key={org.id} org={org} />)}
             </div>
           ) : (
             <div className="p-4">

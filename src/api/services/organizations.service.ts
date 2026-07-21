@@ -2,10 +2,15 @@ import api from "../../lib/axios"
 import type { Organization, Tenant, Configuration, ProfileEntry } from "../../types"
 
 export const organizationsService = {
-  getAll: async (): Promise<Organization[]> => {
-    const response = await api.get<{ items:Organization[]}>("/organisations")
-    return response.data.items
+  getAll: async (params?: {
+    limit?: number
+    offset?: number
+    search?: string
+  }): Promise<{ items: Organization[]; total: number }> => {
+    const response = await api.get<{ items: Organization[]; total: number }>("/organisations", { params })
+    return response.data
   },
+
 
   getById: async (id: string): Promise<Organization> => {
     const response = await api.get<Organization>(`/organisations/${id}`)

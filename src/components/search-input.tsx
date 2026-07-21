@@ -1,9 +1,7 @@
 import type { SearchInputProps } from "@/types";
-import { Search } from "lucide-react"
+import { Search, X } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
-
-
 
 export function SearchInput({
   value,
@@ -26,9 +24,18 @@ export function SearchInput({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className={cn("h-9 w-full pl-9 ", bgClass || "bg-inherit dark:bg-inherit")}
+        className={cn("h-9 w-full pl-9", value ? "pr-8" : "", bgClass || "bg-inherit dark:bg-inherit")}
         disabled={disabled}
       />
+      {value && !disabled && (
+        <button
+          type="button"
+          onClick={() => onChange("")}
+          className="absolute right-3 text-muted-foreground hover:text-foreground"
+        >
+          <X className="size-4" />
+        </button>
+      )}
     </div>
   )
 }

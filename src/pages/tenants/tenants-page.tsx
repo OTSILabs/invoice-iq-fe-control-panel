@@ -58,6 +58,7 @@ export function TenantsPage() {
   const [tenantAction, setTenantAction] = useState<{ type: TenantActionType; tenant: Tenant } | null>(null)
   const orgDropdownTriggerRef = useRef<HTMLButtonElement>(null)
 
+  console.log(organizations,"organizations")
   // Derive active organization ID: default to first organization if no selection is made
   const activeOrgId = selectedOrgId || organizations[0]?.id || ""
   

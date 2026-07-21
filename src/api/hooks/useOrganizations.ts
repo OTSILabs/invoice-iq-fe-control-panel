@@ -1,15 +1,32 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { organizationsService } from "../services/organizations.service"
 
-export const useOrganizations = () => {
+
+
+
+export const useOrganizations = (params?: {
+  limit?: number
+  offset?: number
+  search?: string
+}) => {
   return useQuery({
-    queryKey: ["organizations"],
-    queryFn: () => organizationsService.getAll(),
+    queryKey: ["organizations", params],
+    queryFn: () => organizationsService.getAll(params),
+    select: (data) => data.items,
   })
 }
 
-
-
+export const useOrganizationsTotal = (params?: {
+  limit?: number
+  offset?: number
+  search?: string
+}) => {
+  return useQuery({
+    queryKey: ["organizations", params],
+    queryFn: () => organizationsService.getAll(params),
+    select: (data) => data.total,
+  })
+}
 // Coordinated onboarding mutation hook
 export const useOnboardOrganizationAndTenant = () => {
   const queryClient = useQueryClient()
