@@ -1,6 +1,6 @@
 import { PageMetadata } from "@/components/layout/PageMetadata"
 import { useState, useMemo } from "react"
-import { AlertCircle, RefreshCw, Plus } from "lucide-react"
+import { AlertCircle, RefreshCw, Plus, Loader2 } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -14,7 +14,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 
-import { useErpSettings } from "@/api/hooks/useErp"
+import { useErpSettings, useDeleteErpSettingMutation } from "@/api/hooks/useErp"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { ErpSettingsCards } from "./erp-settings-cards"
 import type { ErpSetting } from "@/types"
@@ -29,6 +29,7 @@ export function ErpSettings() {
     isFetching,
     refetch,
   } = useErpSettings()
+  const { mutate: deleteSetting, isPending: isDeleting } = useDeleteErpSettingMutation()
 
   const [deletingRecord, setDeletingRecord] = useState<ErpSetting | null>(null)
 
@@ -37,6 +38,23 @@ export function ErpSettings() {
   const handleRefetch = async () => {
     await refetch()
     toast.success("ERP Settings refreshed")
+  }
+
+  const handleDeleteConfirm = () => {
+    if (!deletingRecord) return
+    deleteSetting(deletingRecord.erp_id, {
+      onSuccess: () => {
+        toast.success("ERP setting deleted successfully!")
+        setDeletingRecord(null)
+      },
+      onError: (err: any) => {
+        const msg =
+          err?.response?.data?.detail ||
+          err?.message ||
+          "Failed to delete ERP setting"
+        toast.error(msg)
+      },
+    })
   }
 
   return (
@@ -99,7 +117,7 @@ export function ErpSettings() {
       )}
 
       {deletingRecord && (
-        <Dialog open={!!deletingRecord} onOpenChange={(open) => !open && setDeletingRecord(null)}>
+        <Dialog open={!!deletingRecord} onOpenChange={(open) => !open && !isDeleting && setDeletingRecord(null)}>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Delete ERP Setting</DialogTitle>
@@ -116,20 +134,19 @@ export function ErpSettings() {
               <Button
                 variant="outline"
                 size="sm"
-                className=""
+                disabled={isDeleting}
                 onClick={() => setDeletingRecord(null)}
               >
                 Cancel
               </Button>
               <Button
                 variant="destructive"
-                className=""
+                className="gap-1.5"
                 size="sm"
-                onClick={() => {
-                  toast.success("ERP setting deleted successfully!")
-                  setDeletingRecord(null)
-                }}
+                disabled={isDeleting}
+                onClick={handleDeleteConfirm}
               >
+                {isDeleting && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
                 Delete
               </Button>
             </DialogFooter>

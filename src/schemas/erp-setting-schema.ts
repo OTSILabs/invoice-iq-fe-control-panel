@@ -13,6 +13,7 @@ const isValid = (v: unknown): boolean => {
 
 export const erpSettingSchema = z.object({
   erp_type: z.string().trim().min(1, "ERP type is required."),
+  is_enabled: z.boolean(),
   settingsInput: z.string().min(2, "Settings JSON is required.").superRefine((val, ctx) => {
     try {
       const parsed = JSON.parse(val)
@@ -35,5 +36,6 @@ export type ErpSettingFormValues = z.infer<typeof erpSettingSchema>
 
 export const DEFAULT_ERP_SETTING_VALUES: ErpSettingFormValues = {
   erp_type: "",
+  is_enabled: true,
   settingsInput: "{\n  \n}",
 }
