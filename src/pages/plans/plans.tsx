@@ -8,49 +8,48 @@ import { Button } from "@/components/ui/button"
 import { DataTable } from "@/components/ui/data-table"
 import { cn } from "@/lib/utils"
 import { AlertCircle, CreditCard, Loader2, Plus, RefreshCw } from "lucide-react"
-import { useMemo, useState } from "react"
+import { useState, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
-const normalizePlanType = (type: string) => {
-  const lower = String(type).toLowerCase()
-  return lower === "free trail" ? "free trial" : lower
-}
-
 export function Plans() {
-  const { data: plans = [], isLoading, isError, refetch, isFetching } = usePlans()
   const navigate = useNavigate()
   const [searchText, setSearchText] = useState("")
+  const [debouncedSearch, setDebouncedSearch] = useState("")
   const [status, setStatus] = useState("all")
   const [planTypeFilter, setPlanTypeFilter] = useState("all")
+  const [page, setPage] = useState(0)
+  const pageSize = 10
+  const debounceTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
 
-  const statusFiltered = useMemo(() => {
-    const q = searchText.trim().toLowerCase()
-    return plans.filter((p) => {
-      const active = p.is_active !== false
-      if (status === "active" && !active) return false
-      if (status === "inactive" && active) return false
-      return !q || [p.plan_type, p.plan_interval, p.price_per_invoice_currency, p.price_per_invoice_amount, p.description]
-        .some((v) => v && String(v).toLowerCase().includes(q))
-    })
-  }, [plans, searchText, status])
+  const handleSearchChange = (val: string) => {
+    setSearchText(val)
+    setPage(0)
+    clearTimeout(debounceTimer.current)
+    debounceTimer.current = setTimeout(() => setDebouncedSearch(val), 350)
+  }
 
-  // const typeCounts = useMemo(() =>
-  //   statusFiltered.reduce((acc, p) => {
-  //     acc.all++
-  //     const t = normalizePlanType(p.plan_type)
-  //     if (t === "basic") acc.basic++
-  //     else if (t === "free trial") acc.freeTrial++
-  //     return acc
-  //   }, { all: 0, basic: 0, freeTrial: 0 }),
-  // [statusFiltered])
+  const handleStatusChange = (val: string) => {
+    setStatus(val)
+    setPage(0)
+  }
 
-  const filteredPlans = useMemo(() =>
-    planTypeFilter === "all"
-      ? statusFiltered
-      : statusFiltered.filter((p) => normalizePlanType(p.plan_type) === normalizePlanType(planTypeFilter)),
-  [planTypeFilter, statusFiltered])
+  const handleTypeChange = (val: string) => {
+    setPlanTypeFilter(val)
+    setPage(0)
+  }
+
+  const { data: plansResult, isLoading, isError, refetch, isFetching } = usePlans({
+    search: debouncedSearch,
+    status: status !== "all" ? status : undefined,
+    plan_type: planTypeFilter !== "all" ? planTypeFilter : undefined,
+    limit: pageSize,
+    offset: page * pageSize,
+  })
+
+  const plans = plansResult ?? []
+  const total = plansResult?.total ?? plans.length
 
   if (isLoading) return (
     <PageShell className="min-h-[60vh] items-center justify-center">
@@ -90,18 +89,18 @@ export function Plans() {
         <div className="flex min-h-0 flex-1 flex-col p-0">
           <FilterBar className="relative z-40 overflow-visible p-5 border-b border-border/40">
             <h3 className="text-xs font-semibold  text-muted-foreground ">
-              Billing Plans ({filteredPlans.length})
+              Billing Plans ({total})
             </h3>
 
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center w-full sm:w-auto mt-3 sm:mt-0">
               <SearchInput 
                 value={searchText} 
-                onChange={setSearchText} 
+                onChange={handleSearchChange} 
                 disabled={isFetching} 
                 placeholder="Search plans..." 
                 className="w-full sm:w-64" 
               />
-              <Select value={planTypeFilter} onValueChange={setPlanTypeFilter} disabled={isFetching}>
+              <Select value={planTypeFilter} onValueChange={handleTypeChange} disabled={isFetching}>
                 <SelectTrigger className="h-9 w-full text-xs font-medium sm:w-44 bg-background/50">
                   <SelectValue placeholder="All Plan Types" />
                 </SelectTrigger>
@@ -115,7 +114,7 @@ export function Plans() {
                   ))}
                 </SelectContent>
               </Select>
-              <Select value={status} onValueChange={setStatus} disabled={isFetching}>
+              <Select value={status} onValueChange={handleStatusChange} disabled={isFetching}>
                 <SelectTrigger className="h-9 w-full text-xs font-medium sm:w-44 bg-background/50">
                   <SelectValue placeholder="All Statuses" />
                 </SelectTrigger>
@@ -132,12 +131,15 @@ export function Plans() {
           </FilterBar>
 
           <DataTable
-            data={filteredPlans}
+            data={plans}
             columns={columns}
             isLoading={isLoading || isFetching}
             enablePagination
-            pageSize={10}
-            totalItems={filteredPlans.length}
+            manualPagination
+            pageSize={pageSize}
+            totalItems={total}
+            page={page + 1}
+            onPageChange={(p) => setPage(p - 1)}
             stickyHeader
             fillAvailableHeight
             tableContainerClassName="border-0 rounded-none bg-transparent"
@@ -149,7 +151,7 @@ export function Plans() {
                   title={searchText || status !== "all" || planTypeFilter !== "all" ? "No plans match filters" : "No subscription plans"}
                   description={searchText || status !== "all" || planTypeFilter !== "all" ? "We couldn't find any plans matching your search or filters. Try clearing them to see all plans." : "Create your first billing plan to manage subscription configurations."}
                   className="min-h-0 border-0 bg-transparent py-6"
-                  actions={plans.length === 0 ? (
+                  actions={plans.length === 0 && status === "all" && planTypeFilter === "all" && !searchText ? (
                     <Button onClick={() => navigate("/plan/create")} size="sm" disabled={isFetching}>
                       <Plus className="size-3.5" /> Create Plan
                     </Button>

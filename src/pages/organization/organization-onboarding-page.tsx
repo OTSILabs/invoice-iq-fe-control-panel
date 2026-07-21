@@ -1,25 +1,21 @@
-import { useEffect, useState } from "react"
-import { useQuery } from "@tanstack/react-query"
-import { FormProvider, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useNavigate, useParams } from "react-router-dom"
 import { ArrowLeft, Loader2, Plus } from "lucide-react"
+import { useEffect, useState } from "react"
+import { FormProvider, useForm } from "react-hook-form"
+import { useNavigate, useParams } from "react-router-dom"
 
-import { plansService } from "@/api/services/plans.service"
 import {
   useOnboardOrganizationAndTenant,
   useOrganizationDetail,
   useOrganizations,
   useReplicateMasterData,
 } from "@/api/hooks/useOrganizations"
-import { PageHeader } from "@/components/layout/PageHeader"
+import { usePlans } from "@/api/hooks/usePlans"
 import { PageShell, SectionCard } from "@/components/invoice-ui/design-system"
+import { PageHeader } from "@/components/layout/PageHeader"
 import { Button } from "@/components/ui/button"
 import { InputField } from "@/components/ui/input-field"
 import { toast } from "@/lib/toast"
-import { OrganizationSection } from "./components/organization-section"
-import { PlanSelectionSection } from "./components/plan-selection-section"
-import { ReplicationStep } from "./components/replication-step"
 import {
   DEFAULT_FORM_VALUES,
   DEFAULT_REPLICATION_SETTINGS,
@@ -27,13 +23,16 @@ import {
   type FormValues,
 } from "@/schemas/onboarding-schema"
 import type { CreatedTenantState, ReplicationSettings } from "@/types"
+import { OrganizationSection } from "./components/organization-section"
+import { PlanSelectionSection } from "./components/plan-selection-section"
+import { ReplicationStep } from "./components/replication-step"
 
 export function OrganizationOnboardingPage() {
   const { orgId = "" } = useParams<{ orgId: string }>()
   const navigate = useNavigate()
   const { data: organizations = [], isLoading: isOrgsLoading } = useOrganizations()
   const { data: organization, isLoading: isOrgDetailLoading } = useOrganizationDetail(orgId)
-  const { data: plans, isLoading: isPlansLoading } = useQuery({ queryKey: ["plans"], queryFn: plansService.getAll })
+const { data: plans = [], isLoading: isPlansLoading } = usePlans()
   const { mutate: onboardTenant, isPending } = useOnboardOrganizationAndTenant()
   const { mutate: replicateMasterData, isPending: isReplicating } = useReplicateMasterData()
 

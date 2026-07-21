@@ -16,7 +16,7 @@ import {useQuery, useMutation, useQueryClient} from "@tanstack/react-query";
 import {plansService} from "@/api/services/plans.service";
 import {organizationsService} from "@/api/services/organizations.service";
 import {toast} from "sonner";
-import type {Plan, AssignPlanDialogProps} from "@/types";
+import type { AssignPlanDialogProps} from "@/types";
 
 
 
@@ -31,11 +31,11 @@ export function AssignPlanDialog({ tenant, onClose, onSuccess, orgId }: AssignPl
   );
   const [reason, setReason] = useState("");
 
-  const { data: plans = [], isLoading: isPlansLoading } = useQuery<Plan[]>({
-    queryKey: ["plans"],
-    queryFn: plansService.getAll,
-    enabled: !!tenant,
-  });
+const { data: plans = [], isLoading: isPlansLoading } = useQuery({
+  queryKey: ["plans"],
+  queryFn: () => plansService.getAll(),
+  enabled: !!tenant,
+});
 
   const assignPlanMutation = useMutation({
     mutationFn: (payload: { plan_id: string; valid_from: string; valid_to: string; reason: string }) =>

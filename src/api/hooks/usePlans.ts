@@ -1,12 +1,18 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { plansService } from '../services/plans.service';
 
-export const usePlans = () => {
+export const usePlans = (params?: {
+  limit?: number
+  offset?: number
+  search?: string
+  status?: string
+  plan_type?: string
+}) => {
   return useQuery({
-    queryKey: ['plans'],
-    queryFn: () => plansService.getAll(),
-  });
-};
+    queryKey: ["plans", params],
+    queryFn: () => plansService.getAll(params),
+  })
+}
 
 export const usePlan = (id: string, enabled = true) => {
   return useQuery({
