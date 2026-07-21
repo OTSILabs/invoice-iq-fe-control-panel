@@ -9,8 +9,9 @@ import { SearchInput } from "@/components/search-input"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { StatsCard } from "@/components/StatsCard"
 import { EmptyState, PageShell } from "@/components/invoice-ui/design-system"
+import { PaginationComponent } from "@/components/ui/pagination-component"
 
-const PAGE_SIZE = 50
+const PAGE_SIZE = 10
 
 export function Organizations() {
   const navigate = useNavigate()
@@ -41,6 +42,9 @@ export function Organizations() {
 
   const isTrulyEmpty = total === 0 && !debouncedQuery
   const hasResults = organizations.length > 0
+  console.log(hasResults,'hasResults')
+  const totalPages = Math.ceil(total / PAGE_SIZE)
+  console.log(totalPages,total,PAGE_SIZE)
 
   return (
     <PageShell>
@@ -95,9 +99,22 @@ export function Organizations() {
           </div>
 
           {hasResults ? (
-            <div className="grid grid-cols-1 gap-3 px-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
-              {organizations.map(org => <OrgCard key={org.id} org={org} />)}
-            </div>
+            <>
+              <div className="grid grid-cols-1 gap-3 px-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+                {organizations.map(org => <OrgCard key={org.id} org={org} />)}
+              </div>
+
+            
+                <PaginationComponent
+                  currentPage={page + 1}
+                  totalItems={total}
+                  pageSize={PAGE_SIZE}
+                  onPageChange={(p) => setPage(p - 1)}
+                  enablePagination
+                  className="border-t border-border/60 bg-muted/20 px-4 py-3 mt-4"
+                />
+           
+            </>
           ) : (
             <div className="p-4">
               <EmptyState

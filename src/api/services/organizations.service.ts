@@ -11,6 +11,7 @@ export const organizationsService = {
     return response.data
   },
 
+  
 
   getById: async (id: string): Promise<Organization> => {
     const response = await api.get<Organization>(`/organisations/${id}`)
