@@ -10,7 +10,7 @@ import { SearchInput } from "@/components/search-input"
 import { useValidationRules, useDeleteValidationRuleMutation } from "@/api/hooks/validation-rules"
 import type { ValidationRule, DeleteValidationRuleDialogProps } from "@/types";
 import { cn } from "@/lib/utils"
-import { getValidationRuleColumns } from "@/columns"
+import { getValidationRuleColumns } from "@/columns-data"
 import {
   Dialog,
   DialogContent,
@@ -61,7 +61,7 @@ export function ValidationRules() {
   }
 
   const columns = useMemo(
-    () => getValidationRuleColumns(navigate, (rule) => navigate(`/platform-standard-content/validation-rules/${rule.rule_code}/edit`), setDeletingRule),
+    () => getValidationRuleColumns(navigate, (rule: ValidationRule) => navigate(`/platform-standard-content/validation-rules/${rule.rule_code}/edit`), setDeletingRule),
     [navigate]
   )
 

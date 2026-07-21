@@ -43,7 +43,7 @@ export function LoginForm({
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={isPending}
-                className="h-11 rounded-lg bg-background/60 transition-all duration-200 focus-visible:bg-background"
+                className="h-11 rounded-lg bg-background/60 transition-[background-color,box-shadow] duration-200 focus-visible:bg-background"
               />
             </div>
 
@@ -72,7 +72,7 @@ export function LoginForm({
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   disabled={isPending}
-                  className="h-11 rounded-lg bg-background/60 pr-10 font-mono transition-all duration-200 focus-visible:bg-background"
+                  className="h-11 rounded-lg bg-background/60 pr-10 font-mono transition-[background-color,box-shadow] duration-200 focus-visible:bg-background"
                 />
                 <Button
                   type="button"
@@ -104,7 +104,7 @@ export function LoginForm({
               <Button
                 type="submit"
                 disabled={isPending}
-                className="h-11 w-full rounded-lg font-medium shadow-md transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 active:shadow-sm"
+                className="h-11 w-full rounded-lg font-medium shadow-md transition-[transform,box-shadow,background-color] duration-200 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 active:shadow-sm"
               >
                 {isPending ? (
                   <>

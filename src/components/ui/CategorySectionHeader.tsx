@@ -38,7 +38,7 @@ export function CategorySectionHeader({
   return (
     <div
       className={cn(
-        "sticky z-10 border-b border-transparent bg-background px-4 py-2.5 transition-all group-first/section:rounded-t-[inherit] group-data-[state=open]/section:border-border group-data-[state=open]/section:bg-muted/30 group-data-[state=open]/section:shadow-[0_1px_2px_rgba(15,23,42,0.02)]",
+        "sticky z-10 border-b border-transparent bg-background px-4 py-2.5 transition-[background-color,border-color,box-shadow] group-first/section:rounded-t-[inherit] group-data-[state=open]/section:border-border group-data-[state=open]/section:bg-muted/30 group-data-[state=open]/section:shadow-[0_1px_2px_rgba(15,23,42,0.02)]",
         stickyTop,
       )}
     >

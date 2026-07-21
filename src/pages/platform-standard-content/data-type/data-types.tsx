@@ -1,5 +1,6 @@
 import { PageMetadata } from "@/components/layout/PageMetadata"
 import { useState, useMemo } from "react"
+import type { DataType } from "@/types"
 import { Database, Plus, RefreshCw } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { toast } from "sonner"
@@ -9,7 +10,7 @@ import { DataTable } from "@/components/ui/data-table"
 import { SearchInput } from "@/components/search-input"
 import { useDataTypes } from "@/api/hooks/data-types"
 import { cn } from "@/lib/utils"
-import { getDataTypeColumns } from "@/columns"
+import { getDataTypeColumns } from "@/columns-data"
 import { EmptyState, FilterBar, PageShell } from "@/components/invoice-ui/design-system"
 
 export function DataTypes() {
@@ -31,7 +32,7 @@ export function DataTypes() {
     }
   }
 
-  const columns = useMemo(() => getDataTypeColumns(navigate, (dataType) => navigate(`/platform-standard-content/data-types/${dataType.data_type_code}/edit`)), [navigate])
+  const columns = useMemo(() => getDataTypeColumns(navigate, (dataType: DataType) => navigate(`/platform-standard-content/data-types/${dataType.data_type_code}/edit`)), [navigate])
 
   const filteredData = useMemo(() => {
     const q = searchText.trim().toLowerCase()

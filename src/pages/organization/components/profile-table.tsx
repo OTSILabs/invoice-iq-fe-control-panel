@@ -5,7 +5,7 @@ import { useEntityProfile, useUpdateEntityProfile, useProfileKeys } from "@/api/
 import { toast } from "sonner"
 import { ProfileTableHeader } from "./profile-table-header"
 import { useEntityKeysMetadata } from "./use-entity-keys-metadata"
-import { getProfileColumns } from "@/columns"
+import { getProfileColumns } from "@/columns-data"
 
 
 

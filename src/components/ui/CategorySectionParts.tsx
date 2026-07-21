@@ -184,7 +184,7 @@ export function FieldRow({
   return (
     <li
       className={cn(
-        "group rounded-md border border-border/80 bg-card px-2.5 py-2 shadow-[0_1px_1px_rgba(15,23,42,0.03)] outline-none transition-all duration-150 focus-within:border-ring focus-within:ring-2 focus-within:ring-ring/25",
+        "group rounded-md border border-border/80 bg-card px-2.5 py-2 shadow-[0_1px_1px_rgba(15,23,42,0.03)] outline-none transition-[border-color,box-shadow,background-color] duration-150 focus-within:border-ring focus-within:ring-2 focus-within:ring-ring/25",
         isDragging && "relative z-20 opacity-80 shadow-md",
         !readonly && disabled && "cursor-not-allowed opacity-55",
       )}

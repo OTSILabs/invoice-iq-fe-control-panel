@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query"
 import { Activity } from "lucide-react"
 import { DataTable } from "@/components/ui/data-table"
 import { organizationsService } from "@/api/services/organizations.service"
-import { tenantEventsTableColumns } from "@/columns"
+import { tenantEventsTableColumns } from "@/columns-data"
 import { EmptyState, FilterBar } from "@/components/invoice-ui/design-system"
 
 

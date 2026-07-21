@@ -222,26 +222,24 @@ export function useCategorySectionState({
       return;
     }
 
-    setOrderedItemIds((currentItemIds) => {
-      const oldIndex = currentItemIds.indexOf(String(active.id));
-      const newIndex = currentItemIds.indexOf(String(over.id));
+    const oldIndex = orderedItemIds.indexOf(String(active.id));
+    const newIndex = orderedItemIds.indexOf(String(over.id));
 
-      if (oldIndex < 0 || newIndex < 0) {
-        return currentItemIds;
-      }
+    if (oldIndex < 0 || newIndex < 0) {
+      return;
+    }
 
-      const nextItemIds = [...currentItemIds];
-      nextItemIds.splice(oldIndex, 1);
-      nextItemIds.splice(newIndex, 0, String(active.id));
+    const nextItemIds = [...orderedItemIds];
+    nextItemIds.splice(oldIndex, 1);
+    nextItemIds.splice(newIndex, 0, String(active.id));
 
-      const nextSelectedIds = replaceCategorySelectedIds(selectedIds, categoryItemIds, nextItemIds.filter((id) => selectedIdsSet.has(id)));
+    setOrderedItemIds(nextItemIds);
 
-      if (!arraysEqual(selectedIds, nextSelectedIds)) {
-        onSelectedChange(nextSelectedIds);
-      }
+    const nextSelectedIds = replaceCategorySelectedIds(selectedIds, categoryItemIds, nextItemIds.filter((id) => selectedIdsSet.has(id)));
 
-      return nextItemIds;
-    });
+    if (!arraysEqual(selectedIds, nextSelectedIds)) {
+      onSelectedChange(nextSelectedIds);
+    }
   }
 
   return {

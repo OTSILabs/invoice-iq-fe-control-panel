@@ -5,7 +5,7 @@ import { useEntityConfigurations, useUpdateEntityConfigurations, useConfiguratio
 import { toast } from "sonner"
 import { ConfigurationsTableHeader } from "./configurations-table-header"
 import { useEntityKeysMetadata } from "./use-entity-keys-metadata"
-import { getConfigurationsColumns } from "@/columns"
+import { getConfigurationsColumns } from "@/columns-data"
 
 
 

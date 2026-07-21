@@ -1,5 +1,6 @@
 import { PageMetadata } from "@/components/layout/PageMetadata"
 import { useState, useMemo } from "react"
+import type { PlatformUser } from "@/types"
 import { useNavigate } from "react-router-dom"
 import { Loader2, AlertCircle, RefreshCw, Plus, Users as UsersIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -10,7 +11,8 @@ import { toast } from "sonner"
 import { usePlatformUsers, usePlatformRoles } from "@/api/hooks/useUsers"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { SearchInput } from "@/components/search-input"
-import { getUsersColumns, getRolesList } from "@/columns"
+import { getUsersColumns } from "@/columns-data"
+import { getRolesList } from "@/columns-data"
 import { EmptyState, FilterBar, PageShell } from "@/components/invoice-ui/design-system"
 
 export function Users() {
@@ -40,7 +42,7 @@ export function Users() {
     await Promise.all([refetchUsers(), refetchRoles()])
     toast.success("Users refreshed")
   }
-  const columns = useMemo(() => getUsersColumns(navigate, (user) => navigate(`/users/${user.id}/edit`)), [navigate])
+  const columns = useMemo(() => getUsersColumns(navigate, (user: PlatformUser) => navigate(`/users/${user.id}/edit`)), [navigate])
   const filteredUsers = useMemo(() => {
     const q = filters.searchText.trim().toLowerCase()
     return users.filter((u) => {
@@ -49,7 +51,7 @@ export function Users() {
       if (filters.status === "inactive" && active) return false
 
       const rList = getRolesList(u)
-      if (filters.roleFilter !== "all" && !rList.some((r) => r.toLowerCase() === filters.roleFilter)) return false
+      if (filters.roleFilter !== "all" && !rList.some((r: string) => r.toLowerCase() === filters.roleFilter)) return false
 
       return !q || [u.full_name, u.email, rList.join(", ")].some((v) => v && String(v).toLowerCase().includes(q))
     })
@@ -87,7 +89,7 @@ export function Users() {
         <Button
           size="sm"
           onClick={() => navigate("/users/create")}
-          className="w-full sm:w-auto font-medium px-3 shadow-none gap-1.5 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px"
+          className="w-full sm:w-auto font-medium px-3 shadow-none gap-1.5 transition-[transform,box-shadow,background-color] duration-200 hover:-translate-y-0.5 active:translate-y-px"
           disabled={isFetchingUsers}
         >
           <Plus className="h-4 w-4" /> Add User

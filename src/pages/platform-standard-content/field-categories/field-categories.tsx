@@ -1,5 +1,6 @@
 import { PageMetadata } from "@/components/layout/PageMetadata"
 import { useState, useMemo } from "react"
+import type { FieldCategoryResponse } from "@/types"
 import { Loader2, AlertCircle, RefreshCw, Plus, Tags } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { toast } from "sonner"
@@ -11,7 +12,7 @@ import { cn } from "@/lib/utils"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { SearchInput } from "@/components/search-input"
 import { useFieldCategories } from "@/api/hooks/useFieldCategories"
-import { getFieldCategoriesColumns } from "@/columns"
+import { getFieldCategoriesColumns } from "@/columns-data"
 import { EmptyState, FilterBar, PageShell } from "@/components/invoice-ui/design-system"
 
 export function FieldCategories() {
@@ -30,7 +31,7 @@ export function FieldCategories() {
     })
   }, [categories, searchText])
 
-  const columns = useMemo(() => getFieldCategoriesColumns(navigate, (category) => navigate(`/platform-standard-content/field-categories/${category.field_category_code}/edit`)), [navigate])
+  const columns = useMemo(() => getFieldCategoriesColumns(navigate, (category: FieldCategoryResponse) => navigate(`/platform-standard-content/field-categories/${category.field_category_code}/edit`)), [navigate])
 
   if (isLoading) return (
     <PageShell className="min-h-[60vh] items-center justify-center">
@@ -64,7 +65,7 @@ export function FieldCategories() {
         <Button
           size="sm"
           onClick={() => navigate("/platform-standard-content/field-categories/create")}
-          className="w-full sm:w-auto font-medium px-3 shadow-none gap-1.5 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px "
+          className="w-full sm:w-auto font-medium px-3 shadow-none gap-1.5 transition-[transform,box-shadow,background-color] duration-200 hover:-translate-y-0.5 active:translate-y-px "
           disabled={isFetching}
         >
           <Plus className="h-4 w-4" /> Add Category
@@ -90,7 +91,7 @@ export function FieldCategories() {
                 variant="outline"
                 size="icon"
                 onClick={handleRefetch}
-                className="h-9 w-9  shrink-0 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px"
+                className="h-9 w-9  shrink-0 transition-[transform,box-shadow,background-color] duration-200 hover:-translate-y-0.5 active:translate-y-px"
                 disabled={isFetching}
               >
                 <RefreshCw className={cn("size-4", isFetching && "animate-spin")} />

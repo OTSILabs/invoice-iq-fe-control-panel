@@ -24,6 +24,7 @@ export function SearchInput({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
+        aria-label={placeholder || "Search"}
         className={cn("h-9 w-full pl-9", value ? "pr-8" : "", bgClass || "bg-inherit dark:bg-inherit")}
         disabled={disabled}
       />

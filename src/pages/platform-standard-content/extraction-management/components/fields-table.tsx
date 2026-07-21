@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils"
 import type { FieldsTableProps } from "@/types"
 import { RefreshCw } from "lucide-react"
 import { useMemo } from "react"
-import { getFieldsTableColumns } from "@/columns"
+import { getFieldsTableColumns } from "@/columns-data"
 
 export function FieldsTable({
   data,

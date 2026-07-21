@@ -13,8 +13,8 @@ import { EmptyState, PageShell, SemanticBadge } from "@/components/invoice-ui/de
 import { DetailGrid } from "@/components/ui/detail-grid"
 
 import { useReferenceListDetail, useReferenceValues } from "@/api/hooks/useReferenceLists"
-import type { RegistryDetailsCardProps } from "@/types";
-import { getReferenceListDetailsColumns } from "@/columns"
+import type { RegistryDetailsCardProps, ReferenceValueResponse } from "@/types";
+import { getReferenceListDetailsColumns } from "@/columns-data"
 
 const formatDate = (dateStr?: string) => {
   if (!dateStr) return "—"
@@ -36,7 +36,7 @@ function RegistryDetailsCard({ registry }: RegistryDetailsCardProps) {
     <div className="surface-card w-full overflow-hidden">
         <div className="flex flex-col gap-3 border-b border-border/45 px-5 py-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary ring-1 ring-primary/15">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary ring-1 ring-primary/15">
               <ListChecks className="h-5 w-5" />
             </div>
             <div className="min-w-0">
@@ -102,7 +102,7 @@ export function ReferenceListDetails() {
   }, [values, searchText])
 
   const columns = useMemo(
-    () => getReferenceListDetailsColumns(navigate, key, (valueItem) => navigate(`/platform-standard-content/reference-lists/${key}/${valueItem.value_code}/edit`)),
+    () => getReferenceListDetailsColumns(navigate, key, (valueItem: ReferenceValueResponse) => navigate(`/platform-standard-content/reference-lists/${key}/${valueItem.value_code}/edit`)),
     [navigate, key]
   )
 
@@ -171,7 +171,7 @@ export function ReferenceListDetails() {
                 variant="outline"
                 size="icon"
                 onClick={handleRefetch}
-                className="h-9 w-9  shrink-0 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px"
+                className="h-9 w-9  shrink-0 transition-[transform,box-shadow,background-color] duration-200 hover:-translate-y-0.5 active:translate-y-px"
                 disabled={isValuesFetching}
               >
                 <RefreshCw className={cn("size-4", isValuesFetching && "animate-spin")} />
@@ -179,7 +179,7 @@ export function ReferenceListDetails() {
               <Button
                 size="sm"
                 onClick={() => navigate(`/platform-standard-content/reference-lists/${key}/values/create`)}
-                className="font-medium px-3 gap-1 shadow-none transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px  shrink-0"
+                className="font-medium px-3 gap-1 shadow-none transition-[transform,box-shadow,background-color] duration-200 hover:-translate-y-0.5 active:translate-y-px  shrink-0"
                 disabled={isValuesFetching}
               >
                 <Plus className="h-4 w-4" /> Add Value

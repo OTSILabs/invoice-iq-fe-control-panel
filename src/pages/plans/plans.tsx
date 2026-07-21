@@ -1,6 +1,6 @@
 import { PageMetadata } from "@/components/layout/PageMetadata"
 import { usePlans } from "@/api/hooks/usePlans"
-import { planColumns as columns } from "@/columns"
+import { planColumns as columns } from "@/columns-data"
 import { EmptyState, FilterBar, PageShell } from "@/components/invoice-ui/design-system"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { SearchInput } from "@/components/search-input"

@@ -10,7 +10,7 @@ import { SearchInput } from "@/components/search-input"
 import { useNormalizationRules, useDeleteNormalizationRuleMutation } from "@/api/hooks/normalization-rules"
 import type { NormalizationRule, DeleteNormalizationRuleDialogProps } from "@/types";
 import { cn } from "@/lib/utils"
-import { getNormalizationRuleColumns } from "@/columns"
+import { getNormalizationRuleColumns } from "@/columns-data"
 import {
   Dialog,
   DialogContent,
@@ -61,7 +61,7 @@ export function NormalizationRules() {
   }
 
   const columns = useMemo(
-    () => getNormalizationRuleColumns(navigate, (rule) => navigate(`/platform-standard-content/normalization-rules/${rule.rule_code}/edit`), setDeletingRule),
+    () => getNormalizationRuleColumns(navigate, (rule: NormalizationRule) => navigate(`/platform-standard-content/normalization-rules/${rule.rule_code}/edit`), setDeletingRule),
     [navigate]
   )
 

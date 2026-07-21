@@ -105,7 +105,7 @@ export function SidebarCreateButton() {
         <DropdownMenuTrigger asChild>
           <Button
             type="button"
-            className="flex h-9 w-9 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground shadow-sm transition-all duration-200 hover:bg-sidebar-primary/90"
+            className="flex h-9 w-9 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground shadow-sm transition-[background-color,box-shadow] duration-200 hover:bg-sidebar-primary/90"
           >
             <Plus className="h-5 w-5" />
           </Button>
@@ -119,7 +119,7 @@ export function SidebarCreateButton() {
     <DropdownMenuTrigger asChild>
       <Button
         type="button"
-        className="flex h-9 w-full  items-center justify-between rounded-lg bg-sidebar-primary px-3 text-xs font-semibold text-sidebar-primary-foreground shadow-sm transition-all duration-200 hover:bg-sidebar-primary/90"
+        className="flex h-9 w-full  items-center justify-between rounded-lg bg-sidebar-primary px-3 text-xs font-semibold text-sidebar-primary-foreground shadow-sm transition-[background-color,box-shadow] duration-200 hover:bg-sidebar-primary/90"
       >
         <div className="flex items-center gap-1.5">
           <Plus className="h-4 w-4" />

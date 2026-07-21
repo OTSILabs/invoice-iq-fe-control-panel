@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { usePlatformUser } from "@/api/hooks/useUsers"
 import { getInitials } from "@/lib/utils"
-import { ActiveStatusBadge, RoleBadge, getRolesList } from "@/columns"
+import { ActiveStatusBadge, RoleBadge } from "@/columns"
+import { getRolesList } from "@/columns-data"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { PageShell } from "@/components/invoice-ui/design-system"
 import { DetailGrid } from "@/components/ui/detail-grid"
@@ -85,7 +86,7 @@ export function UserDetail() {
       <div className="surface-card w-full overflow-hidden">
           <div className="flex flex-col gap-3 border-b border-border/45 px-5 py-4">
             <div className="flex items-center gap-3">
-              <Avatar className="h-10 w-10 rounded-lg border bg-background flex-shrink-0">
+              <Avatar className="h-10 w-10 rounded-lg border bg-background shrink-0">
                 <AvatarFallback className="rounded-lg bg-primary/8 text-sm font-semibold text-primary">
                   {getInitials(user.full_name) || "U"}
                 </AvatarFallback>
@@ -147,7 +148,7 @@ export function UserDetail() {
           <div className="flex flex-col gap-2 border-t border-border/45 bg-card px-5 py-5">
             <p className="text-xs text-muted-foreground">Assigned Roles</p>
             <div className="flex flex-wrap gap-1.5">
-              {getRolesList(user).map((role) => <RoleBadge key={role} role={role} />)}
+              {getRolesList(user).map((role: string) => <RoleBadge key={role} role={role} />)}
             </div>
           </div>
       </div>

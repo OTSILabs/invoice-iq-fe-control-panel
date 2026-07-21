@@ -67,7 +67,7 @@ export function TenantOverviewCard({ tenant, orgId }: TenantOverviewCardProps) {
         {/* Hero */}
         <div className="flex flex-col gap-3 border-b border-border/45 px-5 py-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary/10 text-sm font-semibold text-primary ring-1 ring-primary/15">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-sm font-semibold text-primary ring-1 ring-primary/15">
               {initials}
             </div>
             <div className="min-w-0">

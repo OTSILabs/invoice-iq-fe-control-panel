@@ -121,7 +121,7 @@ function ErpSettingCard({
   }
 
   return (
-    <Card className="group flex h-full flex-col overflow-hidden rounded-xl border border-border/50 bg-card p-0 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/20 hover:shadow-[0_4px_20px_color-mix(in_oklch,var(--foreground)_6%,transparent)]  [--card-spacing:16px]">
+    <Card className="group flex h-full flex-col overflow-hidden rounded-xl border border-border/50 bg-card p-0 shadow-sm transition-[transform,box-shadow,border-color,background-color] duration-300 hover:-translate-y-0.5 hover:border-primary/20 hover:shadow-[0_4px_20px_color-mix(in_oklch,var(--foreground)_6%,transparent)] [--card-spacing:16px]">
       <CardHeader className="border-b border-border/40 bg-muted/5 p-3">
         <div className="flex items-start justify-between gap-3 min-w-0 w-full">
           <div className="min-w-0 flex-1">

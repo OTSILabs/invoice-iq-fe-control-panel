@@ -12,7 +12,7 @@ import type { Tenant, TenantActionType } from "@/types"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { TenantActionDialog } from "./tenant-actions/tenant-action-dialog"
-import { getTenantColumns } from "@/columns"
+import { getTenantColumns } from "@/columns-data"
 import { EmptyState, FilterBar, PageShell } from "@/components/invoice-ui/design-system"
 
 interface OrgDropdownState {

@@ -1,5 +1,6 @@
 import { PageMetadata } from "@/components/layout/PageMetadata"
 import { useState, useMemo } from "react"
+import type { ReferenceListRegistryResponse } from "@/types"
 import { Loader2, AlertCircle, RefreshCw, Plus, ListChecks } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { toast } from "sonner"
@@ -11,7 +12,7 @@ import { cn } from "@/lib/utils"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { SearchInput } from "@/components/search-input"
 import { useReferenceLists, useReferenceListPublications } from "@/api/hooks/useReferenceLists"
-import { getReferenceListsColumns } from "@/columns"
+import { getReferenceListsColumns } from "@/columns-data"
 import { EmptyState, FilterBar, PageShell } from "@/components/invoice-ui/design-system"
 
 export function ReferenceLists() {
@@ -46,7 +47,7 @@ export function ReferenceLists() {
   }, [registries, searchText])
 
   const columns = useMemo(
-    () => getReferenceListsColumns(navigate, (registry) => navigate(`/platform-standard-content/reference-lists/${registry.registry_key}/edit`)),
+    () => getReferenceListsColumns(navigate, (registry: ReferenceListRegistryResponse) => navigate(`/platform-standard-content/reference-lists/${registry.registry_key}/edit`)),
     [navigate]
   )
 
@@ -82,7 +83,7 @@ export function ReferenceLists() {
         <Button
           size="sm"
           onClick={() => navigate("/platform-standard-content/reference-lists/create")}
-          className="w-full sm:w-auto font-medium px-3 shadow-none gap-1.5 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px "
+          className="w-full sm:w-auto font-medium px-3 shadow-none gap-1.5 transition-[transform,box-shadow,background-color] duration-200 hover:-translate-y-0.5 active:translate-y-px "
           disabled={isFetching}
         >
           <Plus className="h-4 w-4" /> Add Reference List
@@ -108,7 +109,7 @@ export function ReferenceLists() {
                 variant="outline"
                 size="icon"
                 onClick={handleRefetch}
-                className="h-9 w-9  shrink-0 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px"
+                className="h-9 w-9  shrink-0 transition-[transform,box-shadow,background-color] duration-200 hover:-translate-y-0.5 active:translate-y-px"
                 disabled={isFetching}
               >
                 <RefreshCw className={cn("size-4", isFetching && "animate-spin")} />

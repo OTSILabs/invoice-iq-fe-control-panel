@@ -2,7 +2,8 @@ import { Link } from "react-router-dom"
 import { UserCheck, ArrowRight, Calendar, Globe } from "lucide-react"
 import { getInitials } from "@/lib/utils"
 import type { Organization } from "@/types"
-import { ActiveStatusBadge } from "@/columns"
+import { ActiveStatusBadge } from "@/columns-data"
+
 
 export function OrgCard({ org }: { org: Organization }) {
   const initials = org.name ? getInitials(org.name) : "OR"
@@ -18,7 +19,7 @@ export function OrgCard({ org }: { org: Organization }) {
   return (
     <Link
       to={`/organizations/${org.id}`}
-      className="group relative flex flex-col overflow-hidden rounded-xl border border-border/50 bg-card transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/20 hover:shadow-[0_4px_20px_color-mix(in_oklch,var(--foreground)_6%,transparent)]"
+      className="group relative flex flex-col overflow-hidden rounded-xl border border-border/50 bg-card transition-[transform,box-shadow,border-color,background-color] duration-200 hover:-translate-y-0.5 hover:border-primary/20 hover:shadow-[0_4px_20px_color-mix(in_oklch,var(--foreground)_6%,transparent)]"
     >
       {/* top section */}
       <div className="flex items-start justify-between gap-3 p-4 pb-3">

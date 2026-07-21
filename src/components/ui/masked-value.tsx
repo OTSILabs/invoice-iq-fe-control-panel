@@ -19,14 +19,14 @@ export function MaskedValue({ value }: MaskedValueProps) {
         variant="ghost"
         size="icon"
         onClick={() => setShow((v) => !v)}
-        className="flex-shrink-0 text-muted-foreground hover:text-foreground transition-colors "
+        className="shrink-0 text-muted-foreground hover:text-foreground transition-colors "
        
       >
         {show ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
       </Button>
       <CopyToClipboard
         value={value}
-        className="flex-shrink-0 text-muted-foreground hover:text-foreground transition-colors "
+        className="shrink-0 text-muted-foreground hover:text-foreground transition-colors "
         iconSize="size-3.5"
       />
     </div>

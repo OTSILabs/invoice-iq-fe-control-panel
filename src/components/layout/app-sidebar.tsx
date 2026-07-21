@@ -48,7 +48,7 @@ function SidebarLogoHeader() {
     <button
       type="button"
       className={cn(
-        "relative flex h-14 w-full cursor-pointer items-center border-b border-sidebar-border/60 bg-transparent p-0 text-left transition-all duration-200 outline-none select-none",
+        "relative flex h-14 w-full cursor-pointer items-center border-b border-sidebar-border/60 bg-transparent p-0 text-left transition-[opacity,margin-left,max-width] duration-200 outline-none select-none",
         isCollapsed ? "justify-center" : "px-4"
       )}
       onMouseEnter={() => setHovered(true)}
@@ -71,7 +71,7 @@ function SidebarLogoHeader() {
       {/* App name — visible when expanded */}
       <span
         className={cn(
-          "overflow-hidden text-sm font-semibold tracking-tight whitespace-nowrap text-sidebar-foreground transition-all duration-200",
+          "overflow-hidden text-sm font-semibold tracking-tight whitespace-nowrap text-sidebar-foreground transition-[max-width,margin-left,opacity] duration-200",
           open && !isMobile
             ? "ml-3 max-w-[120px] opacity-100"
             : "ml-0 max-w-0 opacity-0"
@@ -82,7 +82,7 @@ function SidebarLogoHeader() {
 
       <div
         className={cn(
-          "absolute flex items-center justify-center rounded-md p-1 text-sidebar-foreground/50 transition-all duration-200 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+          "absolute flex items-center justify-center rounded-md p-1 text-sidebar-foreground/50 transition-[opacity,background-color,color] duration-200 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
           open && !isMobile
             ? "right-4 opacity-100"
             : cn(
@@ -178,7 +178,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     }
                   }}
                   className={cn(
-                    "h-9 w-full cursor-pointer justify-between rounded-lg text-sm font-medium transition-all duration-200",
+                    "h-9 w-full cursor-pointer justify-between rounded-lg text-sm font-medium transition-[background-color,color,box-shadow] duration-200",
                     hasActiveChild && !isCollapsed
                       ? "bg-sidebar-accent text-sidebar-accent-foreground shadow-sm ring-1 ring-sidebar-border"
                       : "text-sidebar-foreground/72 hover:bg-sidebar-accent/65 hover:text-sidebar-accent-foreground"
@@ -236,7 +236,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                             key={child.path}
                             to={child.path}
                             className={cn(
-                              "flex h-8 min-w-0 items-center gap-2 rounded-md px-2 text-xs font-medium transition-all duration-200",
+                              "flex h-8 min-w-0 items-center gap-2 rounded-md px-2 text-xs font-medium transition-[background-color,color,box-shadow] duration-200",
                               isChildActive
                                 ? "bg-sidebar-accent text-sidebar-accent-foreground shadow-sm ring-1 ring-sidebar-border/80"
                                 : "text-sidebar-foreground/68 hover:bg-sidebar-accent/65 hover:text-sidebar-accent-foreground"
@@ -271,7 +271,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 asChild
                 isActive={isActive}
                 className={cn(
-                  "h-9 rounded-lg text-sm font-medium transition-all duration-200 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-0! data-active:bg-sidebar-accent! data-active:text-sidebar-accent-foreground!",
+                  "h-9 rounded-lg text-sm font-medium transition-[background-color,color,box-shadow] duration-200 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-0! data-active:bg-sidebar-accent! data-active:text-sidebar-accent-foreground!",
                   isActive
                     ? "bg-sidebar-accent text-sidebar-accent-foreground shadow-sm ring-1 ring-sidebar-border"
                     : "rounded-lg text-sidebar-foreground/72 hover:bg-sidebar-accent/65 hover:text-sidebar-accent-foreground"

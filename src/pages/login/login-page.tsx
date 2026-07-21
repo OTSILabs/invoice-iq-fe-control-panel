@@ -5,7 +5,7 @@ import { LoginForm } from "./login-form";
 
 export function LoginPage() {
   return (
-    <div className="flex min-h-screen w-full items-center justify-center bg-background p-6 md:p-10">
+    <div className="flex min-h-dvh w-full items-center justify-center bg-background p-6 md:p-10">
       <PageMetadata title="Login" description="Log in to your Invoice IQ control panel." keywords="login, authentication, invoice iq" />
       <div className="w-full max-w-95 flex flex-col items-center">
         {/* Simple Enterprise Header */}

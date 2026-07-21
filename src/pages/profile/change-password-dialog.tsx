@@ -245,7 +245,7 @@ export function ChangePasswordDialog({ open, onOpenChange }: ChangePasswordDialo
             <Button
               type="button"
               variant="outline"
-              className="transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px "
+              className="transition-[transform,box-shadow,background-color] duration-200 hover:-translate-y-0.5 active:translate-y-px "
               onClick={handleCancel}
             >
               Cancel
@@ -253,7 +253,7 @@ export function ChangePasswordDialog({ open, onOpenChange }: ChangePasswordDialo
             <Button
               type="submit"
               disabled={isUpdatingPassword}
-              className="transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px "
+              className="transition-[transform,box-shadow,background-color] duration-200 hover:-translate-y-0.5 active:translate-y-px "
             >
               {isUpdatingPassword && <RefreshCw className="mr-1.5 size-3.5 animate-spin" />}
               Update Password

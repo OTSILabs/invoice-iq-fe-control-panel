@@ -63,8 +63,10 @@ const GridContext = React.createContext<GridCtx>({ cols: { default: 1 }, total: 
 
 
 function DetailGrid({ cols = 3, children, className }: DetailGridProps) {
-  const resolved: ColsConfig =
-    typeof cols === "number" ? shorthandMap[cols as ColsShorthand] : cols
+  const resolved = React.useMemo<ColsConfig>(
+    () => (typeof cols === "number" ? shorthandMap[cols as ColsShorthand] : cols),
+    [cols]
+  )
 
   const items = React.Children.toArray(children)
   const total = items.length
@@ -75,7 +77,7 @@ function DetailGrid({ cols = 3, children, className }: DetailGridProps) {
     resolved.lg ? lgColsClass[resolved.lg] : "",
   ].filter(Boolean).join(" ")
 
-  const contextValue = { cols: resolved, total }
+  const contextValue = React.useMemo(() => ({ cols: resolved, total }), [resolved, total])
 
   return (
     <GridContext.Provider value={contextValue}>

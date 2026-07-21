@@ -1,5 +1,5 @@
 import type { FilterProps } from "@/types";
-import { Fragment, useMemo, useRef, useState } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import {
   flexRender,
   getFilteredRowModel,
@@ -202,10 +202,12 @@ export function DataTable<TData, TValue = unknown>({
   }));
 
   const prevDataRef = useRef(data);
-  if (!isControlled && data !== prevDataRef.current) {
-    prevDataRef.current = data;
-    setClientPagination((prev) => ({ ...prev, pageIndex: 0 }));
-  }
+  useEffect(() => {
+    if (!isControlled && data !== prevDataRef.current) {
+      prevDataRef.current = data;
+      setClientPagination((prev) => ({ ...prev, pageIndex: 0 }));
+    }
+  }, [data, isControlled]);
 
   const paginationState = isControlled
     ? { pageIndex: page - 1, pageSize }
@@ -276,7 +278,7 @@ export function DataTable<TData, TValue = unknown>({
     <div
       ref={tableContainerRef}
       className={cn(
-        "min-w-full overflow-hidden text-card-foreground flex flex-col transition-all duration-200",
+        "min-w-full overflow-hidden text-card-foreground flex flex-col transition-[background-color,box-shadow,transform] duration-200",
         fillAvailableHeight && "flex-1 min-h-0",
         containerClassName,
       )}
@@ -541,7 +543,7 @@ function Filter({ filter, onChange, type, header }: FilterProps) {
         value={filter || ""}
         placeholder={`Filter ${header}...`}
         onChange={(e) => onChange(e.target.value)}
-        className="h-8 rounded-md bg-background/70 pl-8 text-xs transition-all"
+        className="h-8 rounded-md bg-background/70 pl-8 text-xs transition-[background-color,box-shadow]"
       />
     </div>
   );

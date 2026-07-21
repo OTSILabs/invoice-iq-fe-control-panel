@@ -121,7 +121,7 @@ export function TenantOverviewTab({ tenant, onAction }: TenantOverviewTabProps) 
 
       {tenant.last_error && (
         <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-xl text-destructive flex items-start gap-2.5">
-          <Info className="h-4.5 w-4.5 mt-0.5 flex-shrink-0" />
+          <Info className="h-4.5 w-4.5 mt-0.5 shrink-0" />
           <div className="space-y-1">
             <span className="text-xs font-bold   block">Last Provisioning Error Logged</span>
             <p className="text-xs font-mono break-all">{tenant.last_error}</p>

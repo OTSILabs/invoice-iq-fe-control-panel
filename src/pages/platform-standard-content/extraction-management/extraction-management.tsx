@@ -175,7 +175,7 @@ export function ExtractionManagement() {
           <Button
             size="sm"
             onClick={() => navigate("/platform-standard-content/extraction-management/fields/create")}
-            className="font-medium px-3 gap-1  transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px  shrink-0"
+            className="font-medium px-3 gap-1  transition-[transform,box-shadow,background-color] duration-200 hover:-translate-y-0.5 active:translate-y-px  shrink-0"
           >
             <Plus className="h-4 w-4" /> Add Field
           </Button>
@@ -184,7 +184,7 @@ export function ExtractionManagement() {
           <Link to="/platform-standard-content/extraction-management/templates/new">
             <Button
               size="sm"
-              className="font-medium px-3 gap-1  transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px  shrink-0"
+              className="font-medium px-3 gap-1  transition-[transform,box-shadow,background-color] duration-200 hover:-translate-y-0.5 active:translate-y-px  shrink-0"
             >
               <Plus className="h-4 w-4" /> Add Template
             </Button>
@@ -194,7 +194,7 @@ export function ExtractionManagement() {
           <Link to="/platform-standard-content/extraction-management/derived/new">
             <Button
               size="sm"
-              className="font-medium px-3 gap-1  transition-all duration-200 hover:-translate-y-0.5 active:translate-y-px  shrink-0"
+              className="font-medium px-3 gap-1  transition-[transform,box-shadow,background-color] duration-200 hover:-translate-y-0.5 active:translate-y-px  shrink-0"
             >
               <Plus className="h-4 w-4" /> Derive Template
             </Button>

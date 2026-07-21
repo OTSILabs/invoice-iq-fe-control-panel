@@ -143,7 +143,7 @@ export function TemplateCards({
           <Card
             key={templateCode || templateName}
             className={cn(
-              "surface-card group h-full gap-0 overflow-hidden py-0 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_2px_4px_color-mix(in_oklch,var(--foreground)_8%,transparent),0_20px_48px_color-mix(in_oklch,var(--foreground)_8%,transparent)]",
+              "surface-card group h-full gap-0 overflow-hidden py-0 transition-[transform,box-shadow,border-color,background-color] duration-200 hover:-translate-y-0.5 hover:shadow-[0_2px_4px_color-mix(in_oklch,var(--foreground)_8%,transparent),0_20px_48px_color-mix(in_oklch,var(--foreground)_8%,transparent)]",
             )}
           >
             <CardHeader className="gap-0 border-b border-border/60 bg-muted/15 p-4">

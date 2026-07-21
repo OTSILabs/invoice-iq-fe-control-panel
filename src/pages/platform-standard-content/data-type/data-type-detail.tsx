@@ -71,7 +71,7 @@ export function DataTypeDetail() {
       <div className="surface-card w-full overflow-hidden">
           <div className="flex flex-col gap-3 border-b border-border/45 px-5 py-4">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary ring-1 ring-primary/15">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary ring-1 ring-primary/15">
                 <Database className="h-5 w-5" />
               </div>
               <div className="min-w-0">

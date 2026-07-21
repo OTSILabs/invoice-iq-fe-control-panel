@@ -6,7 +6,7 @@ import { DataTable } from "@/components/ui/data-table"
 import type { Tenant, OrganizationTenantsTabProps, TenantActionType } from "@/types";
 import { TenantActionDialog } from "@/pages/tenants/tenant-actions/tenant-action-dialog"
 import { useOrganizationTenants } from "@/api/hooks/useOrganizations"
-import { getTenantColumns } from "@/columns"
+import { getTenantColumns } from "@/columns-data"
 import { EmptyState, FilterBar } from "@/components/invoice-ui/design-system"
 
 export function OrganizationTenantsTab({ orgId }: OrganizationTenantsTabProps) {
