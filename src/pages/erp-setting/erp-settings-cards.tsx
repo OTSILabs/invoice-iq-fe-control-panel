@@ -1,6 +1,6 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { format } from "date-fns"
-import {  Trash2 } from "lucide-react"
+import { Loader2, Trash2 } from "lucide-react"
 import { toast } from "sonner"
 import {
   Card,
@@ -13,6 +13,7 @@ import { Switch } from "@/components/ui/switch"
 import { Button } from "@/components/ui/button"
 import type { ErpSetting } from "@/types"
 import { EmptyState } from "@/components/invoice-ui/design-system"
+import { useUpdateErpSettingMutation } from "@/api/hooks/useErp"
 
 const SENSITIVE_KEYS = [
   "password",
@@ -82,7 +83,42 @@ function ErpSettingCard({
   onEdit: (record: ErpSetting) => void
   onDelete: (record: ErpSetting) => void
 }) {
-  const [isEnabled, setIsEnabled] = useState(Boolean(record.is_enabled ?? true))
+  const [isEnabled, setIsEnabled] = useState(Boolean(record.is_enabled))
+
+  useEffect(() => {
+    setIsEnabled(Boolean(record.is_enabled))
+  }, [record.is_enabled])
+  const { mutate: updateSetting, isPending: isUpdating } = useUpdateErpSettingMutation()
+
+  const handleToggleEnabled = (checked: boolean) => {
+    setIsEnabled(checked)
+    updateSetting(
+      {
+        erpId: record.erp_id,
+        payload: {
+          erp_type: record.erp_type,
+          is_enabled: checked,
+        },
+      },
+      {
+        onSuccess: () => {
+          toast.success(
+            `ERP setting ${checked ? "enabled" : "disabled"} successfully!`
+          )
+        },
+        onError: (err: any) => {
+          setIsEnabled(!checked)
+          const detail = err?.response?.data?.detail
+          const msg = Array.isArray(detail)
+            ? detail.map((d: any) => d.msg || d.detail || JSON.stringify(d)).join(", ")
+            : typeof detail === "string"
+            ? detail
+            : err?.message || "Failed to update ERP setting status"
+          toast.error(msg)
+        },
+      }
+    )
+  }
 
   return (
     <Card className="group flex h-full flex-col overflow-hidden rounded-xl border border-border/50 bg-card p-0 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/20 hover:shadow-[0_4px_20px_color-mix(in_oklch,var(--foreground)_6%,transparent)]  [--card-spacing:16px]">
@@ -103,16 +139,12 @@ function ErpSettingCard({
             <span className="text-[11px] font-medium text-muted-foreground">
               {isEnabled ? "Enabled" : "Disabled"}
             </span>
+            {isUpdating && <Loader2 className="size-3 animate-spin text-muted-foreground" />}
             <Switch
               checked={isEnabled}
-              disabled
-              className="scale-75"
-              onCheckedChange={(checked) => {
-                setIsEnabled(checked)
-                toast.success(
-                  `ERP setting ${checked ? "enabled" : "disabled"} successfully!`
-                )
-              }}
+              disabled={isUpdating}
+              className="scale-75 cursor-pointer"
+              onCheckedChange={handleToggleEnabled}
             />
           </div>
         </div>
@@ -129,11 +161,7 @@ function ErpSettingCard({
       </CardHeader>
 
       <CardContent className="flex-1 p-4 py-1">
-        <div
-          className={`transition-all duration-200 ${isEnabled ? "" : "opacity-70 blur-[2px]"}`}
-        >
-          <JSONRenderer value={maskJsonValues(record.settings || {})} />
-        </div>
+        <JSONRenderer value={maskJsonValues(record.settings || {})} />
       </CardContent>
 
       <CardFooter className="flex items-center gap-2 border-t border-border/40 p-4">
@@ -141,19 +169,18 @@ function ErpSettingCard({
           variant="outline"
           size="sm"
           onClick={() => onEdit(record)}
-          className="h-8 flex-1 text-xs"
-          disabled
+          className="h-8 flex-1 text-xs cursor-pointer"
+          disabled={!isEnabled || isUpdating}
         >
-          {/* <Edit2 className="size-3" /> */}
           Edit
         </Button>
 
         <Button
           variant="destructive"
-         size="sm"
+          size="sm"
           onClick={() => onDelete(record)}
-          className="h-8 w-8"
-          disabled
+          className="h-8 w-8 cursor-pointer"
+          disabled={!isEnabled || isUpdating}
         >
           <Trash2 className="size-3" />
         </Button>

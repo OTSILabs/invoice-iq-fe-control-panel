@@ -113,6 +113,7 @@ export interface ErpSetting {
 
 export interface CreateErpSettingPayload {
   erp_type: string
+  is_enabled?: boolean
   settings: Record<string, unknown>
 }
 export interface Configuration {

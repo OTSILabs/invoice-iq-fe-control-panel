@@ -1,16 +1,17 @@
 import { useMemo } from "react"
-import { useForm } from "react-hook-form"
+import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useNavigate, useParams } from "react-router-dom"
 import { ArrowLeft, Loader2, PlugZap } from "lucide-react"
 import { toast } from "sonner"
 
-import { useCreateErpSettingMutation, useErpSettings } from "@/api/hooks/useErp"
+import { useCreateErpSettingMutation, useUpdateErpSettingMutation, useErpSettings } from "@/api/hooks/useErp"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { PageShell, SectionCard } from "@/components/invoice-ui/design-system"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
 import {
   DEFAULT_ERP_SETTING_VALUES,
@@ -24,10 +25,13 @@ export function ErpSettingFormPage({ mode }: { mode: "create" | "edit" }) {
   const isEdit = mode === "edit"
   const { data = [], isLoading, isError } = useErpSettings()
   const record = useMemo(() => data.find((item) => String(item.erp_id) === id), [data, id])
-  const { mutate: createErpSetting, isPending } = useCreateErpSettingMutation()
+  const { mutate: createErpSetting, isPending: isCreating } = useCreateErpSettingMutation()
+  const { mutate: updateErpSetting, isPending: isUpdating } = useUpdateErpSettingMutation()
+  const isPending = isCreating || isUpdating
 
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm<ErpSettingFormValues>({
@@ -35,6 +39,7 @@ export function ErpSettingFormPage({ mode }: { mode: "create" | "edit" }) {
     values: record
       ? {
           erp_type: record.erp_type,
+          is_enabled: Boolean(record.is_enabled ?? true),
           settingsInput: JSON.stringify(record.settings, null, 2),
         }
       : DEFAULT_ERP_SETTING_VALUES,
@@ -50,13 +55,36 @@ export function ErpSettingFormPage({ mode }: { mode: "create" | "edit" }) {
 
   const onSubmit = (vals: ErpSettingFormValues) => {
     if (isEdit) {
-      toast.success("ERP setting updated successfully!")
-      backToList()
+      if (!record) return
+      updateErpSetting(
+        {
+          erpId: record.erp_id,
+          payload: {
+            erp_type: vals.erp_type,
+            is_enabled: vals.is_enabled,
+            settings: JSON.parse(vals.settingsInput),
+          },
+        },
+        {
+          onSuccess: () => {
+            toast.success("ERP setting updated successfully!")
+            backToList()
+          },
+          onError: (err: unknown) => {
+            const msg = (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail
+            toast.error(msg || "Failed to update ERP setting")
+          },
+        }
+      )
       return
     }
 
     createErpSetting(
-      { erp_type: vals.erp_type, settings: JSON.parse(vals.settingsInput) },
+      {
+        erp_type: vals.erp_type,
+        is_enabled: vals.is_enabled,
+        settings: JSON.parse(vals.settingsInput),
+      },
       {
         onSuccess: () => {
           toast.success("ERP setting created successfully!")
@@ -122,6 +150,30 @@ export function ErpSettingFormPage({ mode }: { mode: "create" | "edit" }) {
               disabled={isEdit || isPending}
             />
             {errors.erp_type && <span className="block text-xs font-medium text-destructive">{errors.erp_type.message}</span>}
+          </div>
+
+          <div className="flex items-center justify-between rounded-lg border border-border/60 bg-muted/20 p-3.5">
+            <div className="space-y-0.5">
+              <Label htmlFor="is_enabled" className="text-sm font-medium text-foreground cursor-pointer">
+                Enable Integration
+              </Label>
+              <p className="text-xs text-muted-foreground">
+                Enable or disable this ERP configuration setting.
+              </p>
+            </div>
+            <Controller
+              name="is_enabled"
+              control={control}
+              render={({ field }) => (
+                <Switch
+                  id="is_enabled"
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                  disabled={isPending}
+                  className="cursor-pointer"
+                />
+              )}
+            />
           </div>
 
           <div className="space-y-1.5">
