@@ -3,8 +3,8 @@ import type { Organization, Tenant, Configuration, ProfileEntry } from "../../ty
 
 export const organizationsService = {
   getAll: async (): Promise<Organization[]> => {
-    const response = await api.get<Organization[]>("/organisations")
-    return response.data
+    const response = await api.get<{ items:Organization[]}>("/organisations")
+    return response.data.items
   },
 
   getById: async (id: string): Promise<Organization> => {
@@ -42,8 +42,8 @@ export const organizationsService = {
   },
 
   getTenants: async (orgId: string): Promise<Tenant[]> => {
-    const response = await api.get<Tenant[]>(`/organisations/${orgId}/tenants`)
-    return response.data
+    const response = await api.get<{ items:Tenant[]}>(`/organisations/${orgId}/tenants`)
+    return response.data?.items
   },
 
   getTenantById: async (tenantId: string): Promise<Tenant> => {

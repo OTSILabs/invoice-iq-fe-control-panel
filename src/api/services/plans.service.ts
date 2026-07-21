@@ -2,10 +2,10 @@ import api from '../../lib/axios';
 
 export const plansService = {
   getAll: async (): Promise<any[]> => {
-    const response = await api.get<any[]>('/plans');
+    const response = await api.get<{ items:any[]}>('/plans');
     // If the API wraps it in a data object (e.g., response.data.data), adjust accordingly.
     // For now, assuming response.data is an array of plans.
-    return response.data;
+    return response.data?.items;
   },
 
   create: async (payload: any): Promise<any> => {

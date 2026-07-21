@@ -3,8 +3,8 @@ import type { PlatformUser, PlatformRole, CreatePlatformUserPayload } from '../.
 
 export const usersService = {
   getPlatformUsers: async (): Promise<PlatformUser[]> => {
-    const response = await api.get<PlatformUser[]>('/platform-users');
-    return response.data;
+    const response = await api.get<{ items:PlatformUser[]}>('/platform-users');
+    return response.data?.items;
   },
 
   getPlatformRoles: async (): Promise<PlatformRole[]> => {
