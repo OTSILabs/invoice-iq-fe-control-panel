@@ -158,10 +158,13 @@ export const useOrganizationDetail = (id?: string) => {
   })
 }
 
-export const useOrganizationTenants = (id?: string) => {
+export const useOrganizationTenants = (
+  id?: string,
+  params?: { limit?: number; offset?: number; search?: string }
+) => {
   return useQuery({
-    queryKey: ["organizations", id, "tenants"],
-    queryFn: () => organizationsService.getTenants(id!),
+    queryKey: ["organizations", id, "tenants", params],
+    queryFn: () => organizationsService.getTenants(id!, params),
     enabled: !!id && id !== "create",
   })
 }

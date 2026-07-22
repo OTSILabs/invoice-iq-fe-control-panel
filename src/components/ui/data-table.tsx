@@ -223,56 +223,55 @@ export function DataTable<TData, TValue = unknown>({
 
     onSortingChange?.(nextSorting);
   };
-
-  const table = useReactTable({
-    data,
-    columns: tableColumns,
-    defaultColumn: {
-      enableColumnFilter: false,
-    },
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: enablePagination
-      ? getPaginationRowModel()
-      : undefined,
-    getSortedRowModel: manualSorting ? undefined : getSortedRowModel(),
-    manualPagination: manualPagination,
-    manualFiltering: manualFiltering,
-    manualSorting,
-    enableColumnFilters: true,
-    enableSorting,
-    getFilteredRowModel: getFilteredRowModel(),
-    onColumnFiltersChange: (updater) => {
-      const nextFilters =
-        typeof updater === "function" ? updater(columnFilters) : updater;
-      setColumnFilters(nextFilters);
-      onFilterChange?.(nextFilters);
-    },
-    onPaginationChange: (updater) => {
-      const nextPagination = typeof updater === "function"
-        ? updater(paginationState)
-        : updater;
-      if (isControlled) {
-        onPageChange(nextPagination.pageIndex + 1);
-        if (onPageSizeChange) {
-          onPageSizeChange(nextPagination.pageSize);
-        }
-      } else {
-        setClientPagination(nextPagination);
+const table = useReactTable({
+  data,
+  columns: tableColumns,
+  defaultColumn: {
+    enableColumnFilter: false,
+  },
+  getCoreRowModel: getCoreRowModel(),
+  getPaginationRowModel: enablePagination
+    ? getPaginationRowModel()
+    : undefined,
+  getSortedRowModel: manualSorting ? undefined : getSortedRowModel(),
+  manualPagination: manualPagination,
+  rowCount: manualPagination ? totalItems : undefined,
+  manualFiltering: manualFiltering,
+  manualSorting,
+  enableColumnFilters: true,
+  enableSorting,
+  getFilteredRowModel: getFilteredRowModel(),
+  onColumnFiltersChange: (updater) => {
+    const nextFilters =
+      typeof updater === "function" ? updater(columnFilters) : updater;
+    setColumnFilters(nextFilters);
+    onFilterChange?.(nextFilters);
+  },
+  onPaginationChange: (updater) => {
+    const nextPagination = typeof updater === "function"
+      ? updater(paginationState)
+      : updater;
+    if (isControlled) {
+      onPageChange(nextPagination.pageIndex + 1);
+      if (onPageSizeChange) {
+        onPageSizeChange(nextPagination.pageSize);
       }
-    },
-
-    onRowSelectionChange: onRowSelectionChange,
-    onSortingChange: handleSortingChange,
-    initialState: {
-      columnPinning,
-    },
-    state: {
-      columnFilters,
-      rowSelection,
-      sorting: sortingState,
-      pagination: paginationState,
-    },
-  });
+    } else {
+      setClientPagination(nextPagination);
+    }
+  },
+  onRowSelectionChange: onRowSelectionChange,
+  onSortingChange: handleSortingChange,
+  initialState: {
+    columnPinning,
+  },
+  state: {
+    columnFilters,
+    rowSelection,
+    sorting: sortingState,
+    pagination: paginationState,
+  },
+});
 
   return (
     <div
@@ -310,33 +309,39 @@ export function DataTable<TData, TValue = unknown>({
           emptyMessage={emptyMessage}
         />
       </Table>
-      <PaginationComponent
-        currentPage={paginationState.pageIndex + 1}
-        totalItems={manualPagination ? totalItems : table.getFilteredRowModel().rows.length}
-        pageSize={paginationState.pageSize}
-        pageSizeOptions={pageSizeOptions}
-        onPageChange={(page) => {
-          table.setPageIndex(page - 1);
-          const scrollTarget = tableContainerRef.current?.closest(".table-container") || 
-                               tableContainerRef.current?.closest(".surface-card") || 
-                               tableContainerRef.current;
-          if (scrollTarget) {
-            const rect = scrollTarget.getBoundingClientRect();
-            const scrollTop = window.scrollY || document.documentElement.scrollTop;
-            const absoluteTop = rect.top + scrollTop;
-            if (absoluteTop < 400) {
-              window.scrollTo({ top: 0, behavior: "smooth" });
-            } else {
-              scrollTarget.scrollIntoView({ behavior: "smooth" });
-            }
-          }
-        }}
-        onPageSizeChange={(size) => {
-          table.setPageSize(size);
-        }}
-        enablePagination={enablePagination}
-        className="border-t border-border/60 bg-muted/20 px-4 py-3"
-      />
+     <PaginationComponent
+  currentPage={paginationState.pageIndex + 1}
+  totalItems={manualPagination ? totalItems : table.getFilteredRowModel().rows.length}
+  pageSize={paginationState.pageSize}
+  pageSizeOptions={pageSizeOptions}
+  onPageChange={(page) => {
+    onPageChange(page); // ✅ FIX: Call parent callback to trigger data fetch
+    table.setPageIndex(page - 1);
+    const scrollTarget = tableContainerRef.current?.closest(".table-container") || 
+                         tableContainerRef.current?.closest(".surface-card") || 
+                         tableContainerRef.current;
+    if (scrollTarget) {
+      const rect = scrollTarget.getBoundingClientRect();
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const absoluteTop = rect.top + scrollTop;
+      if (absoluteTop < 400) {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        scrollTarget.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  }}
+  onPageSizeChange={(size) => {
+    if (isControlled) {
+      onPageChange(1);
+      onPageSizeChange?.(size);
+    } else {
+      table.setPageSize(size);
+    }
+  }}
+  enablePagination={enablePagination}
+  className="border-t border-border/60 bg-muted/20 px-4 py-3"
+/>
     </div>
   );
 }

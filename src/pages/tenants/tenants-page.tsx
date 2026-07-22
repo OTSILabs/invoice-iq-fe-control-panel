@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom"
 import type { Tenant, TenantActionType } from "@/types"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { SearchInput } from "@/components/search-input"
 import { TenantActionDialog } from "./tenant-actions/tenant-action-dialog"
 import { getTenantColumns } from "@/columns-data"
 import { EmptyState, FilterBar, PageShell } from "@/components/invoice-ui/design-system"
@@ -50,6 +51,8 @@ function orgDropdownReducer(state: OrgDropdownState, action: OrgDropdownAction):
   }
 }
 
+const PAGE_SIZE = 1
+
 export function TenantsPage() {
   const navigate = useNavigate()
   const { data: organizations = [], isLoading: isOrgsLoading } = useOrganizations()
@@ -58,22 +61,51 @@ export function TenantsPage() {
   const [tenantAction, setTenantAction] = useState<{ type: TenantActionType; tenant: Tenant } | null>(null)
   const orgDropdownTriggerRef = useRef<HTMLButtonElement>(null)
 
-  console.log(organizations,"organizations")
+  const [tenantSearch, setTenantSearch] = useState("")
+  const [debouncedTenantSearch, setDebouncedTenantSearch] = useState("")
+  const [page, setPage] = useState(0)
+  const debounceTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
+  const prevOrgIdRef = useRef<string>("")
+
+  const handleTenantSearchChange = (val: string) => {
+    setTenantSearch(val)
+    clearTimeout(debounceTimer.current)
+    debounceTimer.current = setTimeout(() => {
+      setDebouncedTenantSearch(val)
+      setPage(0)
+    }, 350)
+  }
+
   // Derive active organization ID: default to first organization if no selection is made
   const activeOrgId = selectedOrgId || organizations[0]?.id || ""
-  
+
+  // reset tenant page/search when switching organizations (no useEffect — done inline during render)
+  if (prevOrgIdRef.current !== activeOrgId && activeOrgId) {
+    prevOrgIdRef.current = activeOrgId
+    if (page !== 0) setPage(0)
+    if (tenantSearch !== "") setTenantSearch("")
+    if (debouncedTenantSearch !== "") setDebouncedTenantSearch("")
+  }
+
+  const tenantsParams = {
+    search: debouncedTenantSearch,
+    limit: PAGE_SIZE,
+    offset: page * PAGE_SIZE,
+  }
+
   // Fetch tenants for the active organization
   const [tenantsQuery] = useQueries({
     queries: [
       {
-        queryKey: ["organizations", activeOrgId, "tenants"],
-        queryFn: () => organizationsService.getTenants(activeOrgId),
+        queryKey: ["organizations", activeOrgId, "tenants", tenantsParams],
+        queryFn: () => organizationsService.getTenants(activeOrgId, tenantsParams),
         enabled: !!activeOrgId,
       },
     ],
   })
 
   const { data: tenants = [], isLoading: isTenantsLoading } = tenantsQuery
+  const totalTenants = (tenants as Tenant[] & { total?: number }).total ?? tenants.length
 
   // Get selected organization details
   const selectedOrg = useMemo(() => {
@@ -165,15 +197,22 @@ export function TenantsPage() {
         <FilterBar className="relative z-40 overflow-visible p-5">
           <div>
             <h3 className="text-xs font-semibold text-muted-foreground ">
-              Registered Tenants ({tenants.length})
+              Registered Tenants ({totalTenants})
             </h3>
             <p className="text-[12px] text-muted-foreground mt-1">
               Tenants under organization <strong className="text-primary">{selectedOrg?.name}</strong>. Click a row to view tenant details.
             </p>
           </div>
           
-          {/* Header actions (Dropdown and Add Tenant button side-by-side) */}
+          {/* Header actions (Search, Dropdown and Add Tenant button side-by-side) */}
           <div className="relative z-50 flex w-full flex-col gap-2.5 self-start sm:w-auto sm:flex-row sm:items-center sm:self-auto">
+            <SearchInput
+              value={tenantSearch}
+              onChange={handleTenantSearchChange}
+              placeholder="Search tenants..."
+              className="w-full sm:w-56"
+            />
+
             {/* Searchable Organization Dropdown placed inside the table card header */}
             <div className="relative w-full sm:w-auto">
               <button
@@ -263,8 +302,11 @@ export function TenantsPage() {
           columns={columns}
           isLoading={isTenantsLoading}
           enablePagination
-          pageSize={10}
-          totalItems={tenants.length}
+          manualPagination
+          pageSize={PAGE_SIZE}
+          totalItems={totalTenants}
+          page={page + 1}
+          onPageChange={(p) => setPage(p - 1)}
           stickyHeader
           tableContainerClassName="border-0 rounded-none bg-transparent"
           containerClassName="relative z-0 rounded-b-xl"

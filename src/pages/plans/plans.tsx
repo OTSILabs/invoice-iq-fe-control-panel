@@ -22,6 +22,7 @@ export function Plans() {
   const [page, setPage] = useState(0)
   const pageSize = 10
   const debounceTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
+  
 
   const handleSearchChange = (val: string) => {
     setSearchText(val)

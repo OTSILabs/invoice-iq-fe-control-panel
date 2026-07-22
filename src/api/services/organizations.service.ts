@@ -47,10 +47,18 @@ export const organizationsService = {
     return response.data
   },
 
-  getTenants: async (orgId: string): Promise<Tenant[]> => {
-    const response = await api.get<{ items:Tenant[]}>(`/organisations/${orgId}/tenants`)
-    return response.data?.items
-  },
+  getTenants: async (
+  orgId: string,
+  params?: { limit?: number; offset?: number; search?: string }
+): Promise<Tenant[] & { total?: number }> => {
+  const response = await api.get<{ items: Tenant[]; total: number }>(
+    `/organisations/${orgId}/tenants`,
+    params ? { params } : undefined
+  )
+  const items = response.data.items as Tenant[] & { total?: number }
+  items.total = response.data.total
+  return items
+},
 
   getTenantById: async (tenantId: string): Promise<Tenant> => {
     const response = await api.get<Tenant>(`/tenants/${tenantId}`)
