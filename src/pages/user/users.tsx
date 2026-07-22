@@ -12,12 +12,12 @@ import { usePlatformUsers, usePlatformRoles } from "@/api/hooks/useUsers"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { SearchInput } from "@/components/search-input"
 import { getUsersColumns } from "@/columns-data"
-import { getRolesList } from "@/columns-data"
 import { EmptyState, FilterBar, PageShell } from "@/components/invoice-ui/design-system"
 
 export function Users() {
-  const navigate = useNavigate()
-  const { data: users = [], isLoading: isLoadingUsers, isError: isErrorUsers, refetch: refetchUsers, isFetching: isFetchingUsers } = usePlatformUsers()
+
+
+
   const { data: roles = [], isLoading: isLoadingRoles, isError: isErrorRoles, refetch: refetchRoles } = usePlatformRoles()
 
   const [filters, setFilters] = useState({
@@ -25,6 +25,24 @@ export function Users() {
     status: "all",
     roleFilter: "all",
   })
+  const pageSize = 10;
+
+const [page, setPage] = useState(0);
+  const navigate = useNavigate()
+ const {
+  data: usersResult,
+  isLoading: isLoadingUsers,
+  isError: isErrorUsers,
+  refetch: refetchUsers,
+  isFetching: isFetchingUsers,
+} = usePlatformUsers({
+  search: filters.searchText,
+  limit: pageSize,
+  offset: page * pageSize,
+});
+const users = usersResult ?? [];
+const totalUsers = usersResult?.total ?? 0;
+
 
   // const roleCounts = useMemo(() => {
   //   const counts: Record<string, number> = { all: users.length }
@@ -43,19 +61,7 @@ export function Users() {
     toast.success("Users refreshed")
   }
   const columns = useMemo(() => getUsersColumns(navigate, (user: PlatformUser) => navigate(`/users/${user.id}/edit`)), [navigate])
-  const filteredUsers = useMemo(() => {
-    const q = filters.searchText.trim().toLowerCase()
-    return users.filter((u) => {
-      const active = u.status === "ACTIVE"
-      if (filters.status === "active" && !active) return false
-      if (filters.status === "inactive" && active) return false
-
-      const rList = getRolesList(u)
-      if (filters.roleFilter !== "all" && !rList.some((r: string) => r.toLowerCase() === filters.roleFilter)) return false
-
-      return !q || [u.full_name, u.email, rList.join(", ")].some((v) => v && String(v).toLowerCase().includes(q))
-    })
-  }, [users, filters])
+ 
 
   if (isLoadingUsers || isLoadingRoles) return (
     <PageShell className="min-h-[60vh] items-center justify-center">
@@ -78,6 +84,7 @@ export function Users() {
       </Button>
     </PageShell>
   )
+ 
 
   return (
     <PageShell>
@@ -100,7 +107,7 @@ export function Users() {
         <div className="flex min-h-0 flex-1 flex-col p-0">
           <FilterBar className="relative z-40 overflow-visible p-5 border-b border-border/40">
             <h3 className="text-xs font-semibold  text-muted-foreground">
-              User Accounts ({filteredUsers.length})
+              User Accounts ({totalUsers})
             </h3>
 
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center w-full lg:w-auto mt-3 sm:mt-0">
@@ -159,12 +166,15 @@ export function Users() {
           </FilterBar>
 
           <DataTable
-            data={filteredUsers}
+            data={users}
             columns={columns}
             isLoading={isLoadingUsers || isFetchingUsers}
             enablePagination
-            pageSize={10}
-            totalItems={filteredUsers.length}
+            pageSize={pageSize}
+            totalItems={totalUsers}
+             page={page + 1}
+            manualPagination
+            onPageChange={(page) => setPage(page - 1)}
             stickyHeader
             fillAvailableHeight
             tableContainerClassName="border-0 rounded-none bg-transparent"

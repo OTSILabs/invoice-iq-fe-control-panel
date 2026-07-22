@@ -2,10 +2,15 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { usersService } from '../services/users.service';
 import type { CreatePlatformUserPayload } from '../../types';
 
-export const usePlatformUsers = () => {
+export const usePlatformUsers = (params?: {
+  limit?: number;
+  offset?: number;
+  search?: string;
+}) => {
   return useQuery({
-    queryKey: ['platform-users'],
-    queryFn: () => usersService.getPlatformUsers(),
+    queryKey: ["platform-users", params],
+    queryFn: () => usersService.getPlatformUsers(params),
+    placeholderData: (previousData) => previousData,
   });
 };
 
