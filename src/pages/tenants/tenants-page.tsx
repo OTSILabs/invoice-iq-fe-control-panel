@@ -64,28 +64,18 @@ export function TenantsPage() {
   const [tenantSearch, setTenantSearch] = useState("")
   const [debouncedTenantSearch, setDebouncedTenantSearch] = useState("")
   const [page, setPage] = useState(0)
-  const debounceTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
-  const prevOrgIdRef = useRef<string>("")
 
-  const handleTenantSearchChange = (val: string) => {
-    setTenantSearch(val)
-    clearTimeout(debounceTimer.current)
-    debounceTimer.current = setTimeout(() => {
-      setDebouncedTenantSearch(val)
-      setPage(0)
-    }, 350)
-  }
+const handleTenantSearchChange = (val: string) => {
+  setTenantSearch(val)
+  setDebouncedTenantSearch(val)
+  setPage(0)
+}
 
   // Derive active organization ID: default to first organization if no selection is made
   const activeOrgId = selectedOrgId || organizations[0]?.id || ""
 
   // reset tenant page/search when switching organizations (no useEffect — done inline during render)
-  if (prevOrgIdRef.current !== activeOrgId && activeOrgId) {
-    prevOrgIdRef.current = activeOrgId
-    if (page !== 0) setPage(0)
-    if (tenantSearch !== "") setTenantSearch("")
-    if (debouncedTenantSearch !== "") setDebouncedTenantSearch("")
-  }
+
 
   const tenantsParams = {
     search: debouncedTenantSearch,
@@ -159,7 +149,7 @@ export function TenantsPage() {
   }, [isOrgDropdownOpen])
 
   // Loading state
-  if (isOrgsLoading || isTenantsLoading) {
+  if (isOrgsLoading) {
     return (
       <PageShell className="min-h-[60vh] items-center justify-center">
         <div className="flex flex-col items-center gap-2">

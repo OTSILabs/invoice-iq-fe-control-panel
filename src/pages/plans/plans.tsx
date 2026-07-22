@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button"
 import { DataTable } from "@/components/ui/data-table"
 import { cn } from "@/lib/utils"
 import { AlertCircle, CreditCard, Loader2, Plus, RefreshCw } from "lucide-react"
-import { useState, useRef } from "react"
+import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -16,20 +16,16 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 export function Plans() {
   const navigate = useNavigate()
   const [searchText, setSearchText] = useState("")
-  const [debouncedSearch, setDebouncedSearch] = useState("")
   const [status, setStatus] = useState("all")
   const [planTypeFilter, setPlanTypeFilter] = useState("all")
   const [page, setPage] = useState(0)
   const pageSize = 10
-  const debounceTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
-  
 
-  const handleSearchChange = (val: string) => {
-    setSearchText(val)
-    setPage(0)
-    clearTimeout(debounceTimer.current)
-    debounceTimer.current = setTimeout(() => setDebouncedSearch(val), 350)
-  }
+
+ const handleSearchChange = (val: string) => {
+  setSearchText(val)
+  setPage(0)
+}
 
   const handleStatusChange = (val: string) => {
     setStatus(val)
@@ -41,13 +37,13 @@ export function Plans() {
     setPage(0)
   }
 
-  const { data: plansResult, isLoading, isError, refetch, isFetching } = usePlans({
-    search: debouncedSearch,
-    status: status !== "all" ? status : undefined,
-    plan_type: planTypeFilter !== "all" ? planTypeFilter : undefined,
-    limit: pageSize,
-    offset: page * pageSize,
-  })
+ const { data: plansResult, isLoading, isError, refetch, isFetching } = usePlans({
+  search: searchText,
+  status: status !== "all" ? status : undefined,
+  plan_type: planTypeFilter !== "all" ? planTypeFilter : undefined,
+  limit: pageSize,
+  offset: page * pageSize,
+})
 
   const plans = plansResult ?? []
   const total = plansResult?.total ?? plans.length
@@ -94,12 +90,11 @@ export function Plans() {
             </h3>
 
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center w-full sm:w-auto mt-3 sm:mt-0">
-              <SearchInput 
-                value={searchText} 
-                onChange={handleSearchChange} 
-                disabled={isFetching} 
-                placeholder="Search plans..." 
-                className="w-full sm:w-64" 
+              <SearchInput
+                value={searchText}
+                onChange={handleSearchChange}
+                placeholder="Search plans..."
+                className="w-full sm:w-64"
               />
               <Select value={planTypeFilter} onValueChange={handleTypeChange} disabled={isFetching}>
                 <SelectTrigger className="h-9 w-full text-xs font-medium sm:w-44 bg-background/50">

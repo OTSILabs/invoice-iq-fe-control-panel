@@ -8,10 +8,11 @@ export const usePlans = (params?: {
   status?: string
   plan_type?: string
 }) => {
-  return useQuery({
-    queryKey: ["plans", params],
-    queryFn: () => plansService.getAll(params),
-  })
+ return useQuery({
+  queryKey: ["plans", params],
+  queryFn: () => plansService.getAll(params),
+  placeholderData: (previousData) => previousData,
+})
 }
 
 export const usePlan = (id: string, enabled = true) => {
