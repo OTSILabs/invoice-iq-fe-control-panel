@@ -111,7 +111,7 @@ const totalUsers = usersResult?.total ?? 0;
             </h3>
 
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center w-full lg:w-auto mt-3 sm:mt-0">
-              <SearchInput value={filters.searchText} onChange={(val) => setFilters((s) => ({ ...s, searchText: val }))} disabled={isFetchingUsers} placeholder="Search users..." className="w-full sm:w-64"/>
+              <SearchInput value={filters.searchText} onChange={(val) => setFilters((s) => ({ ...s, searchText: val }))} placeholder="Search users..." className="w-full sm:w-64"/>
               
               <Select
                 value={filters.roleFilter}
