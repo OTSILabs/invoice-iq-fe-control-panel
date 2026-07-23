@@ -53,6 +53,7 @@ function orgDropdownReducer(state: OrgDropdownState, action: OrgDropdownAction):
 }
 
 
+
 export function TenantsPage() {
   const navigate = useNavigate()
   const { data: organizations = [], isLoading: isOrgsLoading } = useOrganizations()

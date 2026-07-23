@@ -1,4 +1,3 @@
-/* eslint-disable react-refresh/only-export-components */
 import { Link } from "react-router-dom"
 import type { CustomColumnDef } from "@/components/ui/data-table"
 import { Button } from "@/components/ui/button"
@@ -38,10 +37,6 @@ import type { EntityKeyMetadata } from "@/pages/organization/components/use-enti
 import { StatusBadge } from "@/components/invoice-ui/status-badge"
 import { ActiveStatusBadge } from "@/components/invoice-ui/active-status-badge"
 import { RoleBadge } from "@/components/invoice-ui/role-badge"
-
-export { StatusBadge } from "@/components/invoice-ui/status-badge"
-export { ActiveStatusBadge } from "@/components/invoice-ui/active-status-badge"
-export { RoleBadge } from "@/components/invoice-ui/role-badge"
 
 // User role parsing utility
 export const getRolesList = (u: PlatformUser | null | undefined): string[] => {
