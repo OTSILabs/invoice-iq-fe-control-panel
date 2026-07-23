@@ -34,7 +34,7 @@ The target quality is a modern SaaS dashboard comparable to Linear, Stripe Dashb
 - Professional dark sidebar integrated with the main product shell
 - Excellent light and dark mode behavior
 
-Avoid generated CRUD-page aesthetics, heavy borders, cramped controls, decorative top borders, and flat white containers.
+Avoid generated CRUD-page aesthetics, heavy card drop-shadows (e.g. shadow-md/shadow-lg), heavy borders, cramped controls, decorative top borders, and flat white containers. Prefer crisp, subtle borders (`border border-border/50`), clean surface layering (`bg-card`), and flat or minimal shadow styles (`shadow-none` or `shadow-sm`) for a sleek, modern enterprise aesthetic.
 
 ## Design System Primitives
 
@@ -195,7 +195,12 @@ The sidebar is the primary navigation product frame:
 
 Use `SemanticBadge` and `StatusBadge` from `src/components/invoice-ui/design-system.tsx` for readable, consistent badges.
 
-Existing exports from `src/columns.tsx` such as `ActiveStatusBadge` and `StatusBadge` are compatibility wrappers around the design-system badge primitives. Prefer the design-system primitives for new code.
+Import badge components directly from their canonical UI paths:
+- `@/components/invoice-ui/status-badge`
+- `@/components/invoice-ui/active-status-badge`
+- `@/components/invoice-ui/role-badge`
+
+Do not import badges from legacy barrel files. `src/columns.tsx` was deleted as an unused file.
 
 Use tones deliberately:
 
@@ -211,6 +216,9 @@ Hard-coded semantic color classes are acceptable for destructive menu actions, p
 
 Follow clean React architecture and React 19 practices:
 
+- **Centralized Type Architecture**: All `interface` and `type` definitions (API response contracts, schema form values, component props, and hook options) must be declared in or re-exported from `src/types.ts`. Component and page files must import types from `@/types` instead of defining duplicate inline interfaces.
+- **Standardized Date Formatting**: Use the `useDateFormat` hook (`import { useDateFormat } from "@/hooks/use-date-format"`) or core date helpers (`formatDateShort`, `formatDateTime`, `formatDate` from `@/lib/utils`) for all date rendering across components and tables. Never use raw `toLocaleDateString` or manual regex string builders.
+- **Table Column Configurations**: Table column generators live in `src/config/column-data/columns-data.tsx` and are forwarded via `src/columns-data.ts`. Import column definitions via `@/columns-data`.
 - **React 19 Context**: Prefer importing and using `use` from `"react"` over `React.useContext` for reading context.
 - **Rules of Hooks**: Always call hooks at the top level of a component. Never call hooks conditionally or after early returns. Control conditional behavior via configuration properties (such as the `enabled` option in TanStack Query hooks).
 - **Hook Dependencies**: Maintain complete dependency arrays for hooks like `useCallback`, `useMemo`, and `useEffect`. If a dependency is recreated every render, stabilize it using `useCallback`/`useMemo` or move its definition inside the hook.
