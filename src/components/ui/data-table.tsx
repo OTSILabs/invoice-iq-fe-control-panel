@@ -1,5 +1,5 @@
 import type { FilterProps } from "@/types";
-import { Fragment, useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useMemo, useRef, useState } from "react";
 import {
   flexRender,
   getFilteredRowModel,
@@ -201,13 +201,11 @@ export function DataTable<TData, TValue = unknown>({
     pageSize,
   }));
 
-  const prevDataRef = useRef(data);
-  useEffect(() => {
-    if (!isControlled && data !== prevDataRef.current) {
-      prevDataRef.current = data;
-      setClientPagination((prev) => ({ ...prev, pageIndex: 0 }));
-    }
-  }, [data, isControlled]);
+  const [prevData, setPrevData] = useState(data);
+  if (!isControlled && data !== prevData) {
+    setPrevData(data);
+    setClientPagination((prev) => ({ ...prev, pageIndex: 0 }));
+  }
 
   const paginationState = isControlled
     ? { pageIndex: page - 1, pageSize }
@@ -518,7 +516,7 @@ function DataTableBody<TData, TValue>({
         <TableRow className="hover:bg-transparent">
           <TableCell colSpan={columns.length} className="h-48 text-center p-0">
             {emptyState || (
-              <div className="flex flex-col items-center justify-center py-12 px-4 text-center animate-in fade-in slide-in-from-bottom-2 duration-300">
+              <div className="flex flex-col items-center justify-center py-12 px-4 text-center animate-in fade-in slide-in-from-bottom-2 transition-[opacity,transform] duration-300">
                 <div className="mb-3 rounded-xl bg-background p-3 text-muted-foreground/75 shadow-sm ring-1 ring-border/60">
                   <FileX2 className="size-6" />
                 </div>

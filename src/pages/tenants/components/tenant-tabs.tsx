@@ -47,7 +47,7 @@ export function TenantTabs({
       {/* OVERVIEW TAB */}
       <TabsContent
         value="overview"
-        className="m-0 animate-in space-y-6 duration-300 fade-in"
+        className="m-0 animate-in space-y-6 transition-opacity duration-300 fade-in"
       >
         <TenantOverviewTab tenant={tenant} onAction={onAction} />
       </TabsContent>
@@ -55,7 +55,7 @@ export function TenantTabs({
       {/* CONFIGURATIONS TAB */}
       <TabsContent
         value="configuration"
-        className="m-0 animate-in duration-300 fade-in"
+        className="m-0 animate-in transition-opacity duration-300 fade-in"
       >
         <ConfigurationsTable entityId={tenant.id} entityType="tenant" />
       </TabsContent>
@@ -63,7 +63,7 @@ export function TenantTabs({
       {/* PROFILE TAB */}
       <TabsContent
         value="profile"
-        className="m-0 animate-in duration-300 fade-in"
+        className="m-0 animate-in transition-opacity duration-300 fade-in"
       >
         <ProfileTable entityId={tenant.id} entityType="tenant" />
       </TabsContent>
@@ -71,7 +71,7 @@ export function TenantTabs({
       {/* DATABASE TAB */}
       <TabsContent
         value="database"
-        className="m-0 animate-in duration-300 fade-in"
+        className="m-0 animate-in transition-opacity duration-300 fade-in"
       >
         <TenantDatabaseTab
           tenant={tenant}
@@ -85,7 +85,7 @@ export function TenantTabs({
       {/* EVENTS TAB */}
       <TabsContent
         value="events"
-        className="m-0 animate-in duration-300 fade-in"
+        className="m-0 animate-in transition-opacity duration-300 fade-in"
       >
         <TenantEventsTable tenantId={tenant.id} />
       </TabsContent>

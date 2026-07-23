@@ -25,8 +25,8 @@ export function ReplicationStep({
   return (
     <>
       <div className="flex flex-col items-center space-y-3 pt-2 text-center">
-        <div className="flex size-14 animate-pulse items-center justify-center rounded-full border border-primary/20 bg-primary/10 text-primary shadow-sm duration-1500">
-          <RefreshCw className="size-6 animate-in text-primary duration-300 zoom-in" />
+        <div className="flex size-14 animate-pulse items-center justify-center rounded-full border border-primary/20 bg-primary/10 text-primary shadow-sm transition-opacity duration-1500">
+          <RefreshCw className="size-6 animate-in text-primary transition-transform duration-300 zoom-in" />
         </div>
         <div className="space-y-1">
           <h2 className="text-lg font-bold tracking-tight text-foreground">Confirm Replication</h2>

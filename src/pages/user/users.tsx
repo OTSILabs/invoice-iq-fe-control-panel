@@ -15,9 +15,6 @@ import { getUsersColumns } from "@/columns-data"
 import { EmptyState, FilterBar, PageShell } from "@/components/invoice-ui/design-system"
 
 export function Users() {
-
-
-
   const { data: roles = [], isLoading: isLoadingRoles, isError: isErrorRoles, refetch: refetchRoles } = usePlatformRoles()
 
   const [filters, setFilters] = useState({
@@ -180,7 +177,7 @@ const totalUsers = usersResult?.total ?? 0;
             tableContainerClassName="border-0 rounded-none bg-transparent"
             onRowClick={(user) => navigate(`/users/${user.id}`)}
             emptyState={
-              <div className="flex flex-col items-center justify-center px-4 py-10 text-center animate-in fade-in slide-in-from-bottom-2 duration-300">
+              <div className="flex flex-col items-center justify-center px-4 py-10 text-center animate-in fade-in slide-in-from-bottom-2 transition-[opacity,transform] duration-300">
                 <EmptyState
                   icon={UsersIcon}
                   title={filters.searchText || filters.status !== "all" || filters.roleFilter !== "all" ? "No users match filters" : "No platform users"}

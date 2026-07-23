@@ -225,7 +225,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   )}
 
                   {!isCollapsed && isMenuExpanded && (
-                    <div className="mt-1 ml-3 flex animate-in flex-col gap-0.5 border-l border-sidebar-border/70 pl-2 duration-200 slide-in-from-top-1">
+                    <div className="mt-1 ml-3 flex animate-in flex-col gap-0.5 border-l border-sidebar-border/70 pl-2 transition-[opacity,transform] duration-200 slide-in-from-top-1">
                       {route.children.map((child) => {
                         const isChildActive = location.pathname.startsWith(
                           child.path

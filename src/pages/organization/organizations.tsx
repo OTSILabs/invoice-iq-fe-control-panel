@@ -103,8 +103,6 @@ export function Organizations() {
               <div className="grid grid-cols-1 gap-3 px-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
                 {organizations.map(org => <OrgCard key={org.id} org={org} />)}
               </div>
-
-            
                 <PaginationComponent
                   currentPage={page + 1}
                   totalItems={total}

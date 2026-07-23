@@ -141,7 +141,7 @@ export function Plans() {
             tableContainerClassName="border-0 rounded-none bg-transparent"
             onRowClick={(plan) => navigate(`/plan/${plan.id}`)}
             emptyState={
-              <div className="flex flex-col items-center justify-center px-4 py-10 text-center animate-in fade-in slide-in-from-bottom-2 duration-300">
+              <div className="flex flex-col items-center justify-center px-4 py-10 text-center animate-in fade-in slide-in-from-bottom-2 transition-[opacity,transform] duration-300">
                 <EmptyState
                   icon={CreditCard}
                   title={searchText || status !== "all" || planTypeFilter !== "all" ? "No plans match filters" : "No subscription plans"}

@@ -51,7 +51,7 @@ function orgDropdownReducer(state: OrgDropdownState, action: OrgDropdownAction):
   }
 }
 
-const PAGE_SIZE = 1
+const PAGE_SIZE = 10
 
 export function TenantsPage() {
   const navigate = useNavigate()
@@ -65,11 +65,11 @@ export function TenantsPage() {
   const [debouncedTenantSearch, setDebouncedTenantSearch] = useState("")
   const [page, setPage] = useState(0)
 
-const handleTenantSearchChange = (val: string) => {
-  setTenantSearch(val)
-  setDebouncedTenantSearch(val)
-  setPage(0)
-}
+  const handleTenantSearchChange = (val: string) => {
+    setTenantSearch(val)
+    setDebouncedTenantSearch(val)
+    setPage(0)
+  }
 
   // Derive active organization ID: default to first organization if no selection is made
   const activeOrgId = selectedOrgId || organizations[0]?.id || ""
@@ -193,7 +193,7 @@ const handleTenantSearchChange = (val: string) => {
               Tenants under organization <strong className="text-primary">{selectedOrg?.name}</strong>. Click a row to view tenant details.
             </p>
           </div>
-          
+
           {/* Header actions (Search, Dropdown and Add Tenant button side-by-side) */}
           <div className="relative z-50 flex w-full flex-col gap-2.5 self-start sm:w-auto sm:flex-row sm:items-center sm:self-auto">
             <SearchInput
@@ -221,54 +221,53 @@ const handleTenantSearchChange = (val: string) => {
               {isOrgDropdownOpen && (
                 createPortal(
                   <>
-                  <button
-                    type="button"
-                    className="fixed inset-0 z-[90] h-full w-full cursor-default border-0 bg-transparent"
-                    onClick={() => dispatch({ type: "TOGGLE_DROPDOWN", open: false })}
-                    aria-label="Close dropdown"
-                  />
-                  <div
-                    className="fixed z-[100] animate-in rounded-xl bg-popover p-2 text-popover-foreground shadow-2xl ring-1 ring-border/70 duration-150 fade-in slide-in-from-top-1"
-                    style={{
-                      top: orgDropdownPosition?.top ?? 0,
-                      left: orgDropdownPosition?.left ?? 0,
-                      width: orgDropdownPosition?.width ?? 288,
-                    }}
-                  >
-                    <Input
-                      type="text"
-                      value={orgSearch}
-                      onChange={(e) => dispatch({ type: "SET_SEARCH", search: e.target.value })}
-                      placeholder="Search organization..."
-                      className="mb-2 h-8 text-xs"
-                      aria-label="Search organization"
+                    <button
+                      type="button"
+                      className="fixed inset-0 z-[90] h-full w-full cursor-default border-0 bg-transparent"
+                      onClick={() => dispatch({ type: "TOGGLE_DROPDOWN", open: false })}
+                      aria-label="Close dropdown"
                     />
-                    <div className="max-h-48 overflow-y-auto space-y-0.5 scrollbar-thin">
-                      {filteredOrgs.length === 0 ? (
-                        <p className="text-xxs text-muted-foreground p-2 text-center">No organizations found</p>
-                      ) : (
-                        filteredOrgs.map((org) => (
-                          <button
-                            key={org.id}
-                            type="button"
-                            onClick={() => {
-                              dispatch({ type: "SELECT_ORG", id: org.id })
-                              dispatch({ type: "TOGGLE_DROPDOWN", open: false })
-                              dispatch({ type: "SET_SEARCH", search: "" })
-                            }}
-                            className={`w-full text-left px-2 py-1.5 rounded-md text-xs transition-colors flex items-center justify-between cursor-pointer ${
-                              org.id === activeOrgId
-                                ? "bg-primary/10 text-primary font-semibold"
-                                : "hover:bg-muted text-foreground"
-                            }`}
-                          >
-                            <span className="truncate">{org.name}</span>
-                            {org.id === activeOrgId && <span className="h-1.5 w-1.5 rounded-full bg-primary" />}
-                          </button>
-                        ))
-                      )}
+                    <div
+                      className="fixed z-[100] animate-in rounded-xl bg-popover p-2 text-popover-foreground shadow-2xl ring-1 ring-border/70 transition-[opacity,transform] duration-150 fade-in slide-in-from-top-1"
+                      style={{
+                        top: orgDropdownPosition?.top ?? 0,
+                        left: orgDropdownPosition?.left ?? 0,
+                        width: orgDropdownPosition?.width ?? 288,
+                      }}
+                    >
+                      <Input
+                        type="text"
+                        value={orgSearch}
+                        onChange={(e) => dispatch({ type: "SET_SEARCH", search: e.target.value })}
+                        placeholder="Search organization..."
+                        className="mb-2 h-8 text-xs"
+                        aria-label="Search organization"
+                      />
+                      <div className="max-h-48 overflow-y-auto space-y-0.5 scrollbar-thin">
+                        {filteredOrgs.length === 0 ? (
+                          <p className="text-xxs text-muted-foreground p-2 text-center">No organizations found</p>
+                        ) : (
+                          filteredOrgs.map((org) => (
+                            <button
+                              key={org.id}
+                              type="button"
+                              onClick={() => {
+                                dispatch({ type: "SELECT_ORG", id: org.id })
+                                dispatch({ type: "TOGGLE_DROPDOWN", open: false })
+                                dispatch({ type: "SET_SEARCH", search: "" })
+                              }}
+                              className={`w-full text-left px-2 py-1.5 rounded-md text-xs transition-colors flex items-center justify-between cursor-pointer ${org.id === activeOrgId
+                                  ? "bg-primary/10 text-primary font-semibold"
+                                  : "hover:bg-muted text-foreground"
+                                }`}
+                            >
+                              <span className="truncate">{org.name}</span>
+                              {org.id === activeOrgId && <span className="h-1.5 w-1.5 rounded-full bg-primary" />}
+                            </button>
+                          ))
+                        )}
+                      </div>
                     </div>
-                  </div>
                   </>,
                   document.body,
                 )

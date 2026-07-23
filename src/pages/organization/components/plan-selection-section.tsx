@@ -73,7 +73,7 @@ export function PlanSelectionSection({
       </div>
 
       {isCreatingPlan && (
-        <div className="mt-4 animate-in border-t border-border pt-6 duration-300 fade-in slide-in-from-bottom-4">
+        <div className="mt-4 animate-in border-t border-border pt-6 transition-[opacity,transform] duration-300 fade-in slide-in-from-bottom-4">
           <div className="mb-4 flex items-start justify-between">
             <div>
               <h4 className="mb-1 text-sm font-bold text-foreground">Create New Plan</h4>

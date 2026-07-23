@@ -208,7 +208,7 @@ export function ErpSettingsCards({
   }
 
   return (
-    <div className="grid animate-in gap-4 duration-200 fade-in sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+    <div className="grid animate-in gap-4 transition-opacity duration-200 fade-in sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
       {records.map((record) => (
         <ErpSettingCard
           key={record.erp_id}

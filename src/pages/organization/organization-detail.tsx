@@ -129,15 +129,15 @@ export function OrganizationDetail() {
           <TabsTrigger value="profile">Profile</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="tenants" className="m-0 animate-in fade-in duration-300">
+        <TabsContent value="tenants" className="m-0 animate-in fade-in transition-opacity duration-300">
           <OrganizationTenantsTab orgId={organization.id} organizationName={organization.name} />
         </TabsContent>
 
-        <TabsContent value="configuration" className="m-0 animate-in fade-in duration-300">
+        <TabsContent value="configuration" className="m-0 animate-in fade-in transition-opacity duration-300">
           <ConfigurationsTable entityId={organization.id} entityType="organization" />
         </TabsContent>
 
-        <TabsContent value="profile" className="m-0 animate-in fade-in duration-300">
+        <TabsContent value="profile" className="m-0 animate-in fade-in transition-opacity duration-300">
           <ProfileTable entityId={organization.id} entityType="organization" />
         </TabsContent>
       </Tabs>

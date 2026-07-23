@@ -92,7 +92,7 @@ export function LoginForm({
 
             {/* Error Message */}
             {error && (
-              <div className="mt-2 rounded-lg border border-destructive/20 bg-destructive/10 p-3 animate-in fade-in zoom-in-95 duration-200">
+              <div className="mt-2 rounded-lg border border-destructive/20 bg-destructive/10 p-3 animate-in fade-in zoom-in-95 transition-[opacity,transform] duration-200">
                 <p className="text-center text-sm font-medium text-destructive">
                   Invalid credentials. Please try again.
                 </p>
