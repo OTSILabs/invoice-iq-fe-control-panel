@@ -1,4 +1,4 @@
-/* eslint-disable react-refresh/only-export-components, react-doctor/only-export-components */
+/* eslint-disable react-refresh/only-export-components */
 import { Link } from "react-router-dom"
 import type { CustomColumnDef } from "@/components/ui/data-table"
 import { Button } from "@/components/ui/button"

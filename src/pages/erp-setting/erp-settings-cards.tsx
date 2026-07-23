@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { format } from "date-fns"
 import { Loader2, Trash2 } from "lucide-react"
 import { toast } from "sonner"
@@ -84,10 +84,12 @@ function ErpSettingCard({
   onDelete: (record: ErpSetting) => void
 }) {
   const [isEnabled, setIsEnabled] = useState(Boolean(record.is_enabled))
+  const [prevRecordEnabled, setPrevRecordEnabled] = useState(record.is_enabled)
 
-  useEffect(() => {
+  if (record.is_enabled !== prevRecordEnabled) {
+    setPrevRecordEnabled(record.is_enabled)
     setIsEnabled(Boolean(record.is_enabled))
-  }, [record.is_enabled])
+  }
   const { mutate: updateSetting, isPending: isUpdating } = useUpdateErpSettingMutation()
 
   const handleToggleEnabled = (checked: boolean) => {

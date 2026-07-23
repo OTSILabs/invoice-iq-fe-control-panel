@@ -8,7 +8,8 @@ const getString = (value: unknown): string | undefined => {
   return typeof value === "string" ? value : undefined
 }
 
-const getErrorMessage = (error: unknown, fallback: string): string => {
+const getErrorMessage = (error: unknown, fallback: string = "An unexpected error occurred"): string => {
+  if (typeof error === "string") return error
   if (!isRecord(error)) return fallback
 
   const response = error.response
@@ -27,8 +28,8 @@ export const toast = {
   success: (message: string, description?: string) => {
     sonnerToast.success(message, { description })
   },
-  error: (error: unknown, fallback: string, description?: string) => {
-    const message = typeof error === "string" ? error : getErrorMessage(error, fallback)
+  error: (error: unknown, fallback?: string, description?: string) => {
+    const message = typeof error === "string" ? error : getErrorMessage(error, fallback || "An error occurred")
     sonnerToast.error(message, { description })
   },
   info: (message: string, description?: string) => {

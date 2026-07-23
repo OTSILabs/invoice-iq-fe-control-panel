@@ -52,7 +52,11 @@ export function ExtractionManagement() {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const urlTab = searchParams.get("tab") || "fields";
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(
+    reducer,
+    urlTab,
+    (tab) => ({ ...initialState, activeTab: tab })
+  );
   const [deletingDerived, setDeletingDerived] = useState<StandardDerivedTemplateResponse | null>(null);
 
   useEffect(() => {

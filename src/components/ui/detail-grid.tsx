@@ -64,7 +64,7 @@ const GridContext = React.createContext<GridCtx>({ cols: { default: 1 }, total: 
 
 function DetailGrid({ cols = 3, children, className }: DetailGridProps) {
   const resolved = React.useMemo<ColsConfig>(
-    () => (typeof cols === "number" ? shorthandMap[cols as ColsShorthand] : cols),
+    () => (typeof cols === "number" ? (shorthandMap[cols as ColsShorthand] ?? { default: cols }) : cols),
     [cols]
   )
 

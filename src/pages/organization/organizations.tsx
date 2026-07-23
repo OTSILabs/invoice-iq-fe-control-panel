@@ -42,9 +42,7 @@ export function Organizations() {
 
   const isTrulyEmpty = total === 0 && !debouncedQuery
   const hasResults = organizations.length > 0
-  console.log(hasResults,'hasResults')
-  const totalPages = Math.ceil(total / PAGE_SIZE)
-  console.log(totalPages,total,PAGE_SIZE)
+  const avgTenants = organizations.length > 0 ? Math.round(totalTenants / organizations.length) : 0
 
   return (
     <PageShell>
@@ -60,7 +58,7 @@ export function Organizations() {
           <StatsCard label="Total tenants" value={totalTenants} icon={UserCheck} />
           <StatsCard
             label="Avg tenants / org"
-            value={Math.round(totalTenants / organizations.length) || 0}
+            value={avgTenants}
             icon={BarChart3}
           />
         </div>

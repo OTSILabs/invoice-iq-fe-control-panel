@@ -7,7 +7,14 @@ import "./index.css"
 import App from "./App.tsx"
 import { ThemeProvider } from "@/components/nav-actions/theme-provider.tsx"
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5, // 5 minutes data fresh time
+      refetchOnWindowFocus: false,
+    },
+  },
+})
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
