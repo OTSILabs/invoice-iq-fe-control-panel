@@ -3,11 +3,6 @@ import type { UseFormRegister, FieldErrors, UseFormReturn } from "react-hook-for
 import type { ExtractionFieldFormValues } from "@/schemas/extraction-schema"
 import type { LucideIcon } from "lucide-react"
 import type { QueryKey } from "@tanstack/react-query"
-import type {
-  CategorizedFieldSelectorCategory,
-  CategorizedFieldSelectorItem,
-  CategorizedFieldSelectorLoadResult,
-} from "@/components/ui/categorized-field-selector.utils"
 
 export interface LoginPayload {
   email: string
@@ -1087,5 +1082,217 @@ export type BulkOptions = {
 
 export type ColsShorthand = 2 | 3 | 4 | 6;
 export type ColsProp = ColsShorthand | ColsConfig;
+
+// ── Re-exported Schema Form Values & Utility Types ──
+export type { FormValues as OnboardingFormValues } from "@/schemas/onboarding-schema"
+export type { CreateUserFormValues, EditUserFormValues } from "@/schemas/user-schema"
+export type { ChangePasswordFormValues } from "@/schemas/profile-schema"
+export type { ErpSettingFormValues } from "@/schemas/erp-setting-schema"
+export type { PlanFormValues } from "@/schemas/plan-schema"
+export type { CreateDataTypeFormValues } from "@/schemas/data-type-schema"
+export type { FieldCategoryFormValues } from "@/schemas/field-category-schema"
+export type { NormalizationRuleFormValues } from "@/schemas/normalization-rule-schema"
+export type { ValidationRuleFormValues } from "@/schemas/validation-rule-schema"
+export type { ReferenceRegistryFormValues, ReferenceValueFormValues } from "@/schemas/reference-schema"
+export type { ExtractionFieldFormValues } from "@/schemas/extraction-schema"
+export type { DateFormatOptions } from "@/hooks/use-date-format"
+export type { AppRoute, AppSubRoute } from "@/config/routes"
+export * from "@/api/templates/templates.types"
+
+// ── Centralized Component Props & State Interfaces ──
+export interface PageMetadataProps {
+  title: string
+  description: string
+  keywords: string
+}
+
+export interface OrgDropdownState {
+  selectedOrgId: string
+  orgSearch: string
+  isOrgDropdownOpen: boolean
+  orgDropdownPosition: { top: number; left: number; width: number } | null
+}
+
+export interface TemplateCloneFormProps {
+  template: import("@/api/api.helpers").ApiRecord | null | undefined
+  onSubmit: (values: import("@/components/invoice-ui/templates/template-clone-dialog").CloneTemplateFormValues) => void
+  isPending?: boolean
+}
+
+export interface DerivedTemplateFormProps {
+  mode: "create" | "edit"
+  template?: StandardDerivedTemplateResponse | null
+  onCancel: () => void
+  onSuccess: () => void
+}
+
+// ── Re-exported API Helpers, Design System & UI Types ──
+export interface ApiActionResponse extends Record<string, unknown> {
+  message?: string
+  success?: boolean
+}
+
+export interface ApiErrorResponse extends Record<string, unknown> {
+  detail?: unknown
+  message?: string
+}
+
+export type { SemanticTone } from "@/components/invoice-ui/design-system"
+export type { CloneTemplateFormValues } from "@/components/invoice-ui/templates/template-clone-dialog"
+export type { CustomColumnDef } from "@/components/ui/data-table"
+
+export interface EntityKeyMetadata {
+  defaultValue: string
+  isBoolean: boolean
+  isRequired: boolean
+  label: string
+  description: string
+  referenceKey?: string | null
+}
+
+export interface NormalizationRulesEmptyStateProps {
+  searchText: string
+  rulesLength: number
+  onCreateClick: () => void
+  disabled?: boolean
+}
+
+export interface ValidationRulesEmptyStateProps {
+  searchText: string
+  rulesLength: number
+  onCreateClick: () => void
+  disabled?: boolean
+}
+
+export interface TemplateIdentityFieldsProps {
+  isEdit: boolean
+  isSaving: boolean
+  erpSettings: any
+  selectedErpType: string
+  form: any
+}
+
+export interface TemplateFormFooterProps {
+  isSaving: boolean
+  isEdit: boolean
+  onCancel: () => void
+  formId: string
+}
+
+// ── Categorized Field Selector Interfaces ──
+export interface CategorizedFieldSelectorCategory {
+  id: string
+  label: string
+  description?: string
+  sortOrder?: number | null
+  activeFieldCount?: number | null
+  inactiveFieldCount?: number | null
+  disabled?: boolean
+  [key: string]: unknown
+}
+
+export interface CategorizedFieldSelectorItemDetails {
+  longDescription?: string
+  labels?: string[]
+  instructions?: string[]
+  examples?: string[]
+  sourceMode?: string
+  editable?: boolean | null
+  allowedValueMode?: string
+  allowedValues?: string[]
+  referenceRegistryKey?: string
+  defaultValue?: string
+}
+
+export interface CategorizedFieldSelectorItem {
+  id: string
+  label: string
+  description?: string
+  categoryId?: string
+  disabled?: boolean
+  metadata?: {
+    position?: string
+    type?: string
+    contentType?: string
+    [key: string]: unknown
+  }
+  details?: CategorizedFieldSelectorItemDetails
+  [key: string]: unknown
+}
+
+export interface CategorizedFieldSelectorLoadResult {
+  items: CategorizedFieldSelectorItem[]
+  total?: number
+}
+
+// ── Hook Interfaces ──
+export interface UsePaginationOptions<TFilter extends Record<string, any> = Record<string, any>> {
+  initialPageSize?: number
+  initialSearch?: string
+  initialFilters?: TFilter
+}
+
+// ── DataTable Component Interfaces ──
+export interface DataTableHeaderProps<TData> {
+  table: import("@tanstack/react-table").Table<TData>
+  stickyHeader?: boolean
+}
+
+export interface DataTableBodyProps<TData, TValue> {
+  table: import("@tanstack/react-table").Table<TData>
+  columns: import("@/components/ui/data-table").CustomColumnDef<TData, TValue>[]
+  isLoading?: boolean
+  onRowClick?: (rowData: TData, row: import("@tanstack/react-table").Row<TData>) => void
+  emptyState?: React.ReactNode
+  emptyMessage?: string
+}
+
+export interface ColumnHeaderProps<TData, TValue> {
+  header: import("@tanstack/react-table").Header<TData, TValue>
+}
+
+export interface DataTableProps<TData, TValue = unknown> {
+  data: TData[]
+  columns: import("@/components/ui/data-table").CustomColumnDef<TData, TValue>[]
+  isLoading?: boolean
+  enablePagination?: boolean
+  pageSize?: number
+  pageSizeOptions?: number[]
+  totalItems?: number
+  page?: number
+  onPageChange?: (page: number) => void
+  onPageSizeChange?: (pageSize: number) => void
+  manualPagination?: boolean
+  manualFiltering?: boolean
+  manualSorting?: boolean
+  sorting?: import("@tanstack/react-table").SortingState
+  onSortingChange?: (sorting: import("@tanstack/react-table").SortingState) => void
+  onFilterChange?: (filters: import("@tanstack/react-table").ColumnFiltersState) => void
+  onRowSelectionChange?: (rowSelection: import("@tanstack/react-table").Updater<import("@tanstack/react-table").RowSelectionState>) => void
+  rowSelection?: import("@tanstack/react-table").RowSelectionState
+  searchQuery?: string
+  onSearchChange?: (value: string) => void
+  searchPlaceholder?: string
+  headerActions?: React.ReactNode
+  title?: string
+  description?: string
+  badgeText?: string
+  badgeVariant?: import("@/components/invoice-ui/design-system").SemanticTone
+  toolbarVariant?: "compact" | "cards" | "bordered"
+  onRowClick?: (rowData: TData, row: import("@tanstack/react-table").Row<TData>) => void
+  rowClassName?: string | ((rowData: TData, index: number) => string)
+  className?: string
+  containerClassName?: string
+  tableContainerClassName?: string
+  columnPinning?: { left?: string[]; right?: string[] }
+  stickyHeader?: boolean
+  tableScrollClassName?: string
+  fillAvailableHeight?: boolean
+  emptyState?: React.ReactNode
+  emptyMessage?: string
+  enableSorting?: boolean
+  isFetching?: boolean
+}
+
 
 

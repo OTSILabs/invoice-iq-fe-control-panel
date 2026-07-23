@@ -51,11 +51,7 @@ function getTemplateCloneName(template: ApiRecord | null | undefined) {
     : `${templateName} (Clone)`;
 }
 
-interface TemplateCloneFormProps {
-  template: ApiRecord | null | undefined;
-  onSubmit: (values: CloneTemplateFormValues) => void;
-  isPending?: boolean;
-}
+import type { TemplateCloneFormProps } from "@/types";
 
 function TemplateCloneForm({
   template,

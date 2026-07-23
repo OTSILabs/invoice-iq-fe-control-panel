@@ -1,10 +1,7 @@
 import { useState, useCallback, useMemo } from "react"
+import type { UsePaginationOptions } from "@/types"
 
-export interface UsePaginationOptions<TFilter extends Record<string, any> = Record<string, any>> {
-  initialPageSize?: number
-  initialSearch?: string
-  initialFilters?: TFilter
-}
+export type { UsePaginationOptions }
 
 export function usePagination<TFilter extends Record<string, any> = Record<string, any>>(
   options: UsePaginationOptions<TFilter> = {}

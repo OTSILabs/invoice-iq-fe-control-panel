@@ -1,10 +1,5 @@
 import { Helmet } from "@dr.pogodin/react-helmet"
-
-interface PageMetadataProps {
-  title: string
-  description: string
-  keywords: string
-}
+import type { PageMetadataProps } from "@/types"
 
 export function PageMetadata({ title, description, keywords }: PageMetadataProps) {
   return (

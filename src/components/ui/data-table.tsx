@@ -1,4 +1,4 @@
-import type { FilterProps } from "@/types";
+import type { FilterProps, DataTableHeaderProps, DataTableBodyProps, ColumnHeaderProps, DataTableProps } from "@/types";
 import { Fragment, useMemo, useRef, useState } from "react";
 import {
   flexRender,
@@ -13,11 +13,8 @@ import type {
   SortingState,
   ColumnFiltersState,
   Column,
-  Header,
-  Row,
   Updater,
   RowSelectionState,
-  Table as ReactTable,
 } from "@tanstack/react-table";
 import {
   Table,
@@ -122,37 +119,7 @@ function getPinnedColumnClassName<TData, TValue>(column: Column<TData, TValue>):
   );
 }
 
-export interface DataTableProps<TData, TValue = unknown> {
-  data: TData[];
-  columns: CustomColumnDef<TData, TValue>[];
-  isLoading?: boolean;
-  enablePagination?: boolean;
-  pageSize?: number;
-  pageSizeOptions?: number[];
-  totalItems?: number;
-  page?: number;
-  onPageChange?: (page: number) => void;
-  onPageSizeChange?: (pageSize: number) => void;
-  manualPagination?: boolean;
-  manualFiltering?: boolean;
-  manualSorting?: boolean;
-  sorting?: SortingState;
-  onSortingChange?: (sorting: SortingState) => void;
-  onFilterChange?: (filters: ColumnFiltersState) => void;
-  onRowSelectionChange?: (rowSelection: Updater<RowSelectionState>) => void;
-  rowSelection?: RowSelectionState;
-  onRowClick?: (rowData: TData, row: Row<TData>) => void;
-  className?: string;
-  containerClassName?: string;
-  tableContainerClassName?: string;
-  columnPinning?: { left?: string[]; right?: string[] };
-  stickyHeader?: boolean;
-  tableScrollClassName?: string;
-  fillAvailableHeight?: boolean;
-  emptyState?: React.ReactNode;
-  emptyMessage?: string;
-  enableSorting?: boolean;
-}
+
 
 export function DataTable<TData, TValue = unknown>({
   data,
@@ -344,10 +311,7 @@ const table = useReactTable({
   );
 }
 
-interface DataTableHeaderProps<TData> {
-  table: ReactTable<TData>;
-  stickyHeader?: boolean;
-}
+
 
 function DataTableHeader<TData, TValue>({
   table,
@@ -426,14 +390,7 @@ function DataTableHeader<TData, TValue>({
   );
 }
 
-interface DataTableBodyProps<TData, TValue> {
-  table: ReactTable<TData>;
-  columns: CustomColumnDef<TData, TValue>[];
-  isLoading?: boolean;
-  onRowClick?: (rowData: TData, row: Row<TData>) => void;
-  emptyState?: React.ReactNode;
-  emptyMessage?: string;
-}
+
 
 function DataTableBody<TData, TValue>({
   table,
@@ -552,9 +509,7 @@ function Filter({ filter, onChange, type, header }: FilterProps) {
   );
 }
 
-interface ColumnHeaderProps<TData, TValue> {
-  header: Header<TData, TValue>;
-}
+
 
 function ColumnHeader<TData, TValue>({ header }: ColumnHeaderProps<TData, TValue>) {
   const canSort = header.column.getCanSort();

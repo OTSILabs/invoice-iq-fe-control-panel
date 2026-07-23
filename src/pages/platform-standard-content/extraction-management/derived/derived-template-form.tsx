@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useCallback } from "react";
-import { useForm, Controller, type UseFormReturn } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, Plus, Save, X } from "lucide-react";
 import { z } from "zod";
@@ -14,7 +14,7 @@ import { CategorizedFieldSelector } from "@/components/ui/categorized-field-sele
 import { useCreateDerivedTemplate, useUpdateDerivedTemplate } from "@/api/hooks/useDerivedTemplates";
 import { useExtractionFields } from "@/api/hooks/useExtractionFields";
 import { useErpSettings } from "@/api/hooks/useErp";
-import type { StandardDerivedTemplateResponse } from "@/types";
+import type { DerivedTemplateFormProps, TemplateIdentityFieldsProps, TemplateFormFooterProps } from "@/types";
 import { toast } from "sonner";
 import { RequiredLabel } from "@/components/invoice-ui/templates/RequiredLabel";
 
@@ -33,13 +33,6 @@ const derivedTemplateSchema = z.object({
 });
 
 type DerivedTemplateFormValues = z.infer<typeof derivedTemplateSchema>;
-
-interface DerivedTemplateFormProps {
-  mode: "create" | "edit";
-  template?: StandardDerivedTemplateResponse | null;
-  onCancel: () => void;
-  onSuccess: () => void;
-}
 
 export function DerivedTemplateForm({ mode, template, onCancel, onSuccess }: DerivedTemplateFormProps) {
   const isEdit = mode === "edit";
@@ -271,13 +264,7 @@ export function DerivedTemplateForm({ mode, template, onCancel, onSuccess }: Der
   );
 }
 
-interface TemplateIdentityFieldsProps {
-  isEdit: boolean;
-  isSaving: boolean;
-  erpSettings: any;
-  selectedErpType: string;
-  form: UseFormReturn<DerivedTemplateFormValues>;
-}
+
 
 function TemplateIdentityFields({
   isEdit,
@@ -379,12 +366,7 @@ function TemplateIdentityFields({
   );
 }
 
-interface TemplateFormFooterProps {
-  isSaving: boolean;
-  isEdit: boolean;
-  onCancel: () => void;
-  formId: string;
-}
+
 
 function TemplateFormFooter({
   isSaving,

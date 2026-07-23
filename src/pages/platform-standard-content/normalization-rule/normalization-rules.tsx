@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button"
 import { DataTable } from "@/components/ui/data-table"
 import { SearchInput } from "@/components/search-input"
 import { useNormalizationRules, useDeleteNormalizationRuleMutation } from "@/api/hooks/usenormalization-rules"
-import type { NormalizationRule, DeleteNormalizationRuleDialogProps } from "@/types";
+import type { NormalizationRule, DeleteNormalizationRuleDialogProps, NormalizationRulesEmptyStateProps } from "@/types";
 import { cn } from "@/lib/utils"
 import { getNormalizationRuleColumns } from "@/columns-data"
 import {
@@ -154,12 +154,7 @@ export function NormalizationRules() {
   )
 }
 
-interface NormalizationRulesEmptyStateProps {
-  searchText: string
-  rulesLength: number
-  onCreateClick: () => void
-  disabled?: boolean
-}
+
 
 function NormalizationRulesEmptyState({
   searchText,

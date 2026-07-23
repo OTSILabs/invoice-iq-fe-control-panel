@@ -1,47 +1,16 @@
-export interface CategorizedFieldSelectorCategory {
-  id: string;
-  label: string;
-  description?: string;
-  sortOrder?: number | null;
-  activeFieldCount?: number | null;
-  inactiveFieldCount?: number | null;
-  disabled?: boolean;
-  [key: string]: unknown;
-}
+import type {
+  CategorizedFieldSelectorCategory,
+  CategorizedFieldSelectorItemDetails,
+  CategorizedFieldSelectorItem,
+  CategorizedFieldSelectorLoadResult,
+} from "@/types";
 
-export interface CategorizedFieldSelectorItemDetails {
-  longDescription?: string;
-  labels?: string[];
-  instructions?: string[];
-  examples?: string[];
-  sourceMode?: string;
-  editable?: boolean | null;
-  allowedValueMode?: string;
-  allowedValues?: string[];
-  referenceRegistryKey?: string;
-  defaultValue?: string;
-}
-
-export interface CategorizedFieldSelectorItem {
-  id: string;
-  label: string;
-  description?: string;
-  categoryId?: string;
-  disabled?: boolean;
-  metadata?: {
-    position?: string;
-    type?: string;
-    contentType?: string;
-    [key: string]: unknown;
-  };
-  details?: CategorizedFieldSelectorItemDetails;
-  [key: string]: unknown;
-}
-
-export interface CategorizedFieldSelectorLoadResult {
-  items: CategorizedFieldSelectorItem[];
-  total?: number;
-}
+export type {
+  CategorizedFieldSelectorCategory,
+  CategorizedFieldSelectorItemDetails,
+  CategorizedFieldSelectorItem,
+  CategorizedFieldSelectorLoadResult,
+};
 
 export function normalizeLoadResult(
   result: CategorizedFieldSelectorLoadResult | CategorizedFieldSelectorItem[],

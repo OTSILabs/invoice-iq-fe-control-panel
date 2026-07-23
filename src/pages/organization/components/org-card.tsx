@@ -1,20 +1,15 @@
 import { Link } from "react-router-dom"
 import { UserCheck, ArrowRight, Calendar, Globe } from "lucide-react"
 import { getInitials } from "@/lib/utils"
+import { useDateFormat } from "@/hooks/use-date-format"
+
 import type { Organization } from "@/types"
 import { ActiveStatusBadge } from "@/components/invoice-ui/active-status-badge"
 
-
 export function OrgCard({ org }: { org: Organization }) {
+  const { formatDateShort } = useDateFormat()
   const initials = org.name ? getInitials(org.name) : "OR"
-
-  const formattedDate = org.created_at
-    ? new Date(org.created_at).toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-        year: "numeric",
-      })
-    : null
+  const formattedDate = org.created_at ? formatDateShort(org.created_at) : null
 
   return (
     <Link

@@ -8,7 +8,7 @@ import { PageHeader } from "@/components/layout/PageHeader"
 import { DataTable } from "@/components/ui/data-table"
 import { Loader2, Building, ChevronDown, Plus, UserCheck } from "lucide-react"
 import { useNavigate } from "react-router-dom"
-import type { Tenant, TenantActionType } from "@/types"
+import type { Tenant, TenantActionType, OrgDropdownState } from "@/types"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { SearchInput } from "@/components/search-input"
@@ -16,13 +16,6 @@ import { TenantActionDialog } from "./tenant-actions/tenant-action-dialog"
 import { getTenantColumns } from "@/columns-data"
 import { EmptyState, FilterBar, PageShell } from "@/components/invoice-ui/design-system"
 import { usePagination } from "@/hooks/use-pagination"
-
-interface OrgDropdownState {
-  selectedOrgId: string
-  orgSearch: string
-  isOrgDropdownOpen: boolean
-  orgDropdownPosition: { top: number; left: number; width: number } | null
-}
 
 const initialOrgDropdownState: OrgDropdownState = {
   selectedOrgId: "",

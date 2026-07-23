@@ -8,19 +8,12 @@ import APIClient from "@/lib/axios";
 //   return session.access_token || session.token;
 // };
 
+import type { ApiActionResponse, ApiErrorResponse } from "@/types";
+
 export type ApiId = string | number;
 export type ApiRecord = Record<string, unknown>;
 export type ApiParams = Record<string, unknown>;
-
-export interface ApiActionResponse extends ApiRecord {
-  message?: string;
-  success?: boolean;
-}
-
-export interface ApiErrorResponse extends ApiRecord {
-  detail?: unknown;
-  message?: string;
-}
+export type { ApiActionResponse, ApiErrorResponse };
 
 export type ApiRequestError = AxiosError<ApiErrorResponse>;
 

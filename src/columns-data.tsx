@@ -7,7 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { getInitials } from "@/lib/utils"
+import { getInitials, formatDateShort } from "@/lib/utils"
 import { MaskedValue } from "@/components/ui/copyable-field"
 import { EditableValueCell } from "@/pages/organization/components/editable-value-cell"
 import { EditableValueCell as ProfileEditableValueCell } from "@/pages/organization/components/profile-editable-value-cell"
@@ -31,8 +31,8 @@ import type {
   Configuration,
   ProfileEntry,
   TenantActionType,
+  EntityKeyMetadata,
 } from "@/types"
-import type { EntityKeyMetadata } from "@/pages/organization/components/use-entity-keys-metadata"
 
 import { StatusBadge } from "@/components/invoice-ui/status-badge"
 import { ActiveStatusBadge } from "@/components/invoice-ui/active-status-badge"
@@ -120,9 +120,7 @@ export const planColumns: CustomColumnDef<Plan>[] = [
     width: 140,
     cell: ({ row }) => (
       <span className="text-xs text-muted-foreground">
-        {row.original.created_at
-          ? new Date(row.original.created_at).toLocaleDateString()
-          : "N/A"}
+        {formatDateShort(row.original.created_at)}
       </span>
     ),
   },
@@ -465,9 +463,7 @@ export const getDataTypeColumns = (
     rowClassName: "hidden md:table-cell",
     cell: ({ row }) => (
       <span className="text-xs text-muted-foreground">
-        {row.original.created_at
-          ? new Date(row.original.created_at).toLocaleDateString()
-          : "—"}
+        {formatDateShort(row.original.created_at, "—")}
       </span>
     ),
   },

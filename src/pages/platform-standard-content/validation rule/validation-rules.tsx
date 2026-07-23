@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button"
 import { DataTable } from "@/components/ui/data-table"
 import { SearchInput } from "@/components/search-input"
 import { useValidationRules, useDeleteValidationRuleMutation } from "@/api/hooks/usevalidation-rules"
-import type { ValidationRule, DeleteValidationRuleDialogProps } from "@/types";
+import type { ValidationRule, DeleteValidationRuleDialogProps, ValidationRulesEmptyStateProps } from "@/types";
 import { cn } from "@/lib/utils"
 import { getValidationRuleColumns } from "@/columns-data"
 import {
@@ -154,12 +154,7 @@ export function ValidationRules() {
   )
 }
 
-interface ValidationRulesEmptyStateProps {
-  searchText: string
-  rulesLength: number
-  onCreateClick: () => void
-  disabled?: boolean
-}
+
 
 function ValidationRulesEmptyState({
   searchText,

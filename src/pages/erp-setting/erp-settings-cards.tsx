@@ -1,5 +1,4 @@
 import { useState } from "react"
-import { format } from "date-fns"
 import { Loader2, Trash2 } from "lucide-react"
 import { toast } from "sonner"
 import {
@@ -14,6 +13,7 @@ import { Button } from "@/components/ui/button"
 import type { ErpSetting } from "@/types"
 import { EmptyState } from "@/components/invoice-ui/design-system"
 import { useUpdateErpSettingMutation } from "@/api/hooks/useErp"
+import { formatDateShort } from "@/lib/utils"
 
 const SENSITIVE_KEYS = [
   "password",
@@ -60,13 +60,7 @@ function maskJsonValues(val: unknown, key = ""): unknown {
   return typeof val === "string" ? maskSensitiveSegmentsInString(val) : val
 }
 
-const getFormattedDate = (value: string) => {
-  try {
-    return format(new Date(value), "dd MMM yyyy")
-  } catch {
-    return "N/A"
-  }
-}
+const getFormattedDate = (value: string) => formatDateShort(value)
 
 const JSONRenderer = ({ value }: { value: unknown }) => (
   <pre className="h-32 scrollbar-thin overflow-y-auto rounded-lg border border-zinc-900 bg-black p-3.5 font-mono text-[11px] break-all whitespace-pre-wrap text-emerald-400 select-all">

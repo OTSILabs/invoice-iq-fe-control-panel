@@ -60,27 +60,39 @@ export function getInitials(name: string): string {
     .toUpperCase();
 }
 
-export function formatDate(dateStr?: string | number): string {
-  if (!dateStr) return "N/A";
+export function formatDateShort(
+  dateStr?: string | number | Date | null,
+  fallback = "N/A"
+): string {
+  if (!dateStr) return fallback;
   try {
     const d = new Date(dateStr);
-    if (isNaN(d.getTime())) return "N/A";
-    const day = String(d.getDate()).padStart(2, '0');
-    const allMonths = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    const month = allMonths[d.getMonth()];
-    const year = d.getFullYear();
-    
-    let hours = d.getHours();
-    const minutes = String(d.getMinutes()).padStart(2, '0');
-    const ampm = hours >= 12 ? 'PM' : 'AM';
-    hours = hours % 12;
-    hours = hours ? hours : 12;
-    const hourStr = String(hours).padStart(2, '0');
-    
-    return `${day} ${month} ${year}, ${hourStr}:${minutes} ${ampm}`;
+    if (isNaN(d.getTime())) return fallback;
+    return format(d, "dd MMM yyyy");
   } catch {
-    return "N/A";
+    return fallback;
   }
+}
+
+export function formatDateTime(
+  dateStr?: string | number | Date | null,
+  fallback = "N/A"
+): string {
+  if (!dateStr) return fallback;
+  try {
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return fallback;
+    return format(d, "dd MMM yyyy, hh:mm a");
+  } catch {
+    return fallback;
+  }
+}
+
+export function formatDate(
+  dateStr?: string | number | Date | null,
+  fallback = "N/A"
+): string {
+  return formatDateShort(dateStr, fallback);
 }
 
 export function humanizeDateTime(

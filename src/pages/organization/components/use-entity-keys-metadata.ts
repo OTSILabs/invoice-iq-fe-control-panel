@@ -1,13 +1,5 @@
 import { useMemo } from "react"
-
-export interface EntityKeyMetadata {
-  defaultValue: string
-  isBoolean: boolean
-  isRequired: boolean
-  label: string
-  description: string
-  referenceKey?: string | null
-}
+import type { EntityKeyMetadata } from "@/types"
 
 export function useEntityKeysMetadata(
   keysList: unknown[],
