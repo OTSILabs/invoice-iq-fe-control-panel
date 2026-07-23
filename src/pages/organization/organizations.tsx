@@ -1,5 +1,5 @@
 import { PageMetadata } from "@/components/layout/PageMetadata"
-import { useState, useMemo, useEffect } from "react"
+import { useMemo } from "react"
 import { Button } from "@/components/ui/button"
 import { useOrganizations, useOrganizationsTotal } from "@/api/hooks/useOrganizations"
 import { Plus, Building2, UserCheck, BarChart3, Search } from "lucide-react"
@@ -10,28 +10,11 @@ import { PageHeader } from "@/components/layout/PageHeader"
 import { StatsCard } from "@/components/StatsCard"
 import { EmptyState, PageShell } from "@/components/invoice-ui/design-system"
 import { PaginationComponent } from "@/components/ui/pagination-component"
-
-const PAGE_SIZE = 10
+import { usePagination } from "@/hooks/use-pagination"
 
 export function Organizations() {
   const navigate = useNavigate()
-  const [searchQuery, setSearchQuery] = useState("")
-  const [debouncedQuery, setDebouncedQuery] = useState("")
-  const [page, setPage] = useState(0)
-
-  useEffect(() => {
-    const t = setTimeout(() => {
-      setDebouncedQuery(searchQuery)
-      setPage(0)
-    }, 350)
-    return () => clearTimeout(t)
-  }, [searchQuery])
-
-  const queryParams = {
-    search: debouncedQuery,
-    limit: PAGE_SIZE,
-    offset: page * PAGE_SIZE,
-  }
+  const { search, setSearch, queryParams, paginationProps } = usePagination()
 
   const { data: organizations = [], isLoading } = useOrganizations(queryParams)
   const { data: total = 0 } = useOrganizationsTotal(queryParams)
@@ -40,7 +23,7 @@ export function Organizations() {
     organizations.reduce((sum, org) => sum + (org.tenant_count ?? 0), 0)
   , [organizations])
 
-  const isTrulyEmpty = total === 0 && !debouncedQuery
+  const isTrulyEmpty = total === 0 && !search
   const hasResults = organizations.length > 0
   const avgTenants = organizations.length > 0 ? Math.round(totalTenants / organizations.length) : 0
 
@@ -81,8 +64,8 @@ export function Organizations() {
           <div className="flex flex-col gap-2 px-4 py-4 sm:flex-row sm:items-center sm:justify-end">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
               <SearchInput
-                value={searchQuery}
-                onChange={setSearchQuery}
+                value={search}
+                onChange={setSearch}
                 placeholder="Search organizations..."
                 className="w-full sm:w-56"
               />
@@ -102,11 +85,7 @@ export function Organizations() {
                 {organizations.map(org => <OrgCard key={org.id} org={org} />)}
               </div>
                 <PaginationComponent
-                  currentPage={page + 1}
-                  totalItems={total}
-                  pageSize={PAGE_SIZE}
-                  onPageChange={(p) => setPage(p - 1)}
-                  enablePagination
+                  {...paginationProps(total)}
                   className="border-t border-border/60 bg-muted/20 px-4 py-3 mt-4"
                 />
            
@@ -116,7 +95,7 @@ export function Organizations() {
               <EmptyState
                 icon={Search}
                 title="No organizations found"
-                description={`No organizations match "${searchQuery}". Try a different search term.`}
+                description={`No organizations match "${search}". Try a different search term.`}
               />
             </div>
           )}

@@ -1,5 +1,5 @@
 import { PageMetadata } from "@/components/layout/PageMetadata"
-import { useState, useMemo } from "react"
+import { useMemo } from "react"
 import type { PlatformUser } from "@/types"
 import { useNavigate } from "react-router-dom"
 import { Loader2, AlertCircle, RefreshCw, Plus, Users as UsersIcon } from "lucide-react"
@@ -13,32 +13,36 @@ import { PageHeader } from "@/components/layout/PageHeader"
 import { SearchInput } from "@/components/search-input"
 import { getUsersColumns } from "@/columns-data"
 import { EmptyState, FilterBar, PageShell } from "@/components/invoice-ui/design-system"
+import { usePagination } from "@/hooks/use-pagination"
 
 export function Users() {
+  const navigate = useNavigate()
   const { data: roles = [], isLoading: isLoadingRoles, isError: isErrorRoles, refetch: refetchRoles } = usePlatformRoles()
 
-  const [filters, setFilters] = useState({
-    searchText: "",
-    status: "all",
-    roleFilter: "all",
+  const {
+    search: searchText,
+    setSearch,
+    filters,
+    setFilters,
+    queryParams,
+    paginationProps,
+  } = usePagination({
+    initialFilters: { status: "all", roleFilter: "all" },
   })
-  const pageSize = 10;
 
-const [page, setPage] = useState(0);
-  const navigate = useNavigate()
- const {
-  data: usersResult,
-  isLoading: isLoadingUsers,
-  isError: isErrorUsers,
-  refetch: refetchUsers,
-  isFetching: isFetchingUsers,
-} = usePlatformUsers({
-  search: filters.searchText,
-  limit: pageSize,
-  offset: page * pageSize,
-});
-const users = usersResult ?? [];
-const totalUsers = usersResult?.total ?? 0;
+  const {
+    data: usersResult,
+    isLoading: isLoadingUsers,
+    isError: isErrorUsers,
+    refetch: refetchUsers,
+    isFetching: isFetchingUsers,
+  } = usePlatformUsers({
+    search: queryParams.search,
+    limit: queryParams.limit,
+    offset: queryParams.offset,
+  })
+  const users = usersResult ?? []
+  const totalUsers = usersResult?.total ?? 0
 
 
   // const roleCounts = useMemo(() => {
@@ -108,11 +112,11 @@ const totalUsers = usersResult?.total ?? 0;
             </h3>
 
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center w-full lg:w-auto mt-3 sm:mt-0">
-              <SearchInput value={filters.searchText} onChange={(val) => setFilters((s) => ({ ...s, searchText: val }))} placeholder="Search users..." className="w-full sm:w-64"/>
+              <SearchInput value={searchText} onChange={setSearch} placeholder="Search users..." className="w-full sm:w-64"/>
               
               <Select
                 value={filters.roleFilter}
-                onValueChange={(val) => setFilters((s) => ({ ...s, roleFilter: val }))}
+                onValueChange={(val) => setFilters("roleFilter", val)}
                 disabled={isFetchingUsers}
               >
                 <SelectTrigger className="h-9 w-full sm:w-44 bg-background/50">
@@ -133,7 +137,7 @@ const totalUsers = usersResult?.total ?? 0;
                 </SelectContent>
               </Select>
 
-              <Select value={filters.status} onValueChange={(val) => setFilters((s) => ({ ...s, status: val }))} disabled={isFetchingUsers}>
+              <Select value={filters.status} onValueChange={(val) => setFilters("status", val)} disabled={isFetchingUsers}>
                 <SelectTrigger className="h-9 w-full sm:w-40 bg-background/50">
                   <SelectValue placeholder="All Status" />
                 </SelectTrigger>
@@ -166,12 +170,7 @@ const totalUsers = usersResult?.total ?? 0;
             data={users}
             columns={columns}
             isLoading={isLoadingUsers || isFetchingUsers}
-            enablePagination
-            pageSize={pageSize}
-            totalItems={totalUsers}
-             page={page + 1}
-            manualPagination
-            onPageChange={(page) => setPage(page - 1)}
+            {...paginationProps(totalUsers)}
             stickyHeader
             fillAvailableHeight
             tableContainerClassName="border-0 rounded-none bg-transparent"
@@ -180,8 +179,8 @@ const totalUsers = usersResult?.total ?? 0;
               <div className="flex flex-col items-center justify-center px-4 py-10 text-center animate-in fade-in slide-in-from-bottom-2 transition-[opacity,transform] duration-300">
                 <EmptyState
                   icon={UsersIcon}
-                  title={filters.searchText || filters.status !== "all" || filters.roleFilter !== "all" ? "No users match filters" : "No platform users"}
-                  description={filters.searchText || filters.status !== "all" || filters.roleFilter !== "all" ? "We couldn't find any users matching your search or filters. Try adjusting your search query or filters." : "Add your first platform user to manage system access accounts and user permissions."}
+                  title={searchText || filters.status !== "all" || filters.roleFilter !== "all" ? "No users match filters" : "No platform users"}
+                  description={searchText || filters.status !== "all" || filters.roleFilter !== "all" ? "We couldn't find any users matching your search or filters. Try adjusting your search query or filters." : "Add your first platform user to manage system access accounts and user permissions."}
                   className="min-h-0 border-0 bg-transparent py-6"
                   actions={users.length === 0 ? (
                     <Button onClick={() => navigate("/users/create")} size="sm" disabled={isFetchingUsers}>

@@ -8,42 +8,33 @@ import { Button } from "@/components/ui/button"
 import { DataTable } from "@/components/ui/data-table"
 import { cn } from "@/lib/utils"
 import { AlertCircle, CreditCard, Loader2, Plus, RefreshCw } from "lucide-react"
-import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { usePagination } from "@/hooks/use-pagination"
 
 export function Plans() {
   const navigate = useNavigate()
-  const [searchText, setSearchText] = useState("")
-  const [status, setStatus] = useState("all")
-  const [planTypeFilter, setPlanTypeFilter] = useState("all")
-  const [page, setPage] = useState(0)
-  const pageSize = 10
+  const {
+    search: searchText,
+    setSearch: handleSearchChange,
+    filters,
+    setFilters,
+    queryParams,
+    paginationProps,
+  } = usePagination({
+    initialFilters: { status: "all", planTypeFilter: "all" },
+  })
 
+  const { status, planTypeFilter } = filters
 
- const handleSearchChange = (val: string) => {
-  setSearchText(val)
-  setPage(0)
-}
-
-  const handleStatusChange = (val: string) => {
-    setStatus(val)
-    setPage(0)
-  }
-
-  const handleTypeChange = (val: string) => {
-    setPlanTypeFilter(val)
-    setPage(0)
-  }
-
- const { data: plansResult, isLoading, isError, refetch, isFetching } = usePlans({
-  search: searchText,
-  status: status !== "all" ? status : undefined,
-  plan_type: planTypeFilter !== "all" ? planTypeFilter : undefined,
-  limit: pageSize,
-  offset: page * pageSize,
-})
+  const { data: plansResult, isLoading, isError, refetch, isFetching } = usePlans({
+    search: queryParams.search,
+    status: status !== "all" ? status : undefined,
+    plan_type: planTypeFilter !== "all" ? planTypeFilter : undefined,
+    limit: queryParams.limit,
+    offset: queryParams.offset,
+  })
 
   const plans = plansResult ?? []
   const total = plansResult?.total ?? plans.length
@@ -96,7 +87,7 @@ export function Plans() {
                 placeholder="Search plans..."
                 className="w-full sm:w-64"
               />
-              <Select value={planTypeFilter} onValueChange={handleTypeChange} disabled={isFetching}>
+              <Select value={planTypeFilter} onValueChange={(val) => setFilters("planTypeFilter", val)} disabled={isFetching}>
                 <SelectTrigger className="h-9 w-full text-xs font-medium sm:w-44 bg-background/50">
                   <SelectValue placeholder="All Plan Types" />
                 </SelectTrigger>
@@ -110,7 +101,7 @@ export function Plans() {
                   ))}
                 </SelectContent>
               </Select>
-              <Select value={status} onValueChange={handleStatusChange} disabled={isFetching}>
+              <Select value={status} onValueChange={(val) => setFilters("status", val)} disabled={isFetching}>
                 <SelectTrigger className="h-9 w-full text-xs font-medium sm:w-44 bg-background/50">
                   <SelectValue placeholder="All Statuses" />
                 </SelectTrigger>
@@ -130,12 +121,7 @@ export function Plans() {
             data={plans}
             columns={columns}
             isLoading={isLoading || isFetching}
-            enablePagination
-            manualPagination
-            pageSize={pageSize}
-            totalItems={total}
-            page={page + 1}
-            onPageChange={(p) => setPage(p - 1)}
+            {...paginationProps(total)}
             stickyHeader
             fillAvailableHeight
             tableContainerClassName="border-0 rounded-none bg-transparent"

@@ -15,6 +15,7 @@ import { SearchInput } from "@/components/search-input"
 import { TenantActionDialog } from "./tenant-actions/tenant-action-dialog"
 import { getTenantColumns } from "@/columns-data"
 import { EmptyState, FilterBar, PageShell } from "@/components/invoice-ui/design-system"
+import { usePagination } from "@/hooks/use-pagination"
 
 interface OrgDropdownState {
   selectedOrgId: string
@@ -51,7 +52,6 @@ function orgDropdownReducer(state: OrgDropdownState, action: OrgDropdownAction):
   }
 }
 
-const PAGE_SIZE = 10
 
 export function TenantsPage() {
   const navigate = useNavigate()
@@ -61,27 +61,15 @@ export function TenantsPage() {
   const [tenantAction, setTenantAction] = useState<{ type: TenantActionType; tenant: Tenant } | null>(null)
   const orgDropdownTriggerRef = useRef<HTMLButtonElement>(null)
 
-  const [tenantSearch, setTenantSearch] = useState("")
-  const [debouncedTenantSearch, setDebouncedTenantSearch] = useState("")
-  const [page, setPage] = useState(0)
-
-  const handleTenantSearchChange = (val: string) => {
-    setTenantSearch(val)
-    setDebouncedTenantSearch(val)
-    setPage(0)
-  }
+  const {
+    search: tenantSearch,
+    setSearch: handleTenantSearchChange,
+    queryParams: tenantsParams,
+    paginationProps,
+  } = usePagination()
 
   // Derive active organization ID: default to first organization if no selection is made
   const activeOrgId = selectedOrgId || organizations[0]?.id || ""
-
-  // reset tenant page/search when switching organizations (no useEffect — done inline during render)
-
-
-  const tenantsParams = {
-    search: debouncedTenantSearch,
-    limit: PAGE_SIZE,
-    offset: page * PAGE_SIZE,
-  }
 
   // Fetch tenants for the active organization
   const [tenantsQuery] = useQueries({
@@ -290,12 +278,7 @@ export function TenantsPage() {
           data={tenants}
           columns={columns}
           isLoading={isTenantsLoading}
-          enablePagination
-          manualPagination
-          pageSize={PAGE_SIZE}
-          totalItems={totalTenants}
-          page={page + 1}
-          onPageChange={(p) => setPage(p - 1)}
+          {...paginationProps(totalTenants)}
           stickyHeader
           tableContainerClassName="border-0 rounded-none bg-transparent"
           containerClassName="relative z-0 rounded-b-xl"
