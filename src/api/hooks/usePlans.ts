@@ -36,3 +36,31 @@ const useCreatePlan = () => {
 
 // Backwards compatibility alias
 export const useCreatePlanMutation = useCreatePlan;
+
+export const useUpdatePlan = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: ({ id, payload }: { id: string; payload: any }) =>
+      plansService.update(id, payload),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['plans'] });
+      queryClient.invalidateQueries({ queryKey: ['plan', variables.id] });
+    },
+  });
+};
+
+export const useUpdatePlanMutation = useUpdatePlan;
+
+export const useDeletePlan = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: (id: string) => plansService.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['plans'] });
+    },
+  });
+};
+
+export const useDeletePlanMutation = useDeletePlan;

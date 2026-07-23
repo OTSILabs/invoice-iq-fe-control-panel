@@ -26,6 +26,7 @@ const UserDetail = React.lazy(() => import("./pages/user/user-detail").then(m =>
 const UserCreate = React.lazy(() => import("./pages/user/user-create").then(m => ({ default: m.UserCreate })))
 const UserEdit = React.lazy(() => import("./pages/user/user-edit").then(m => ({ default: m.UserEdit })))
 const PlanDetail = React.lazy(() => import("./pages/plans/plan-detail").then(m => ({ default: m.PlanDetail })))
+const EditPlan = React.lazy(() => import("./pages/plans/edit-plan").then(m => ({ default: m.EditPlan })))
 const ErpSettingFormPage = React.lazy(() => import("./pages/erp-setting/erp-setting-form-page").then(m => ({ default: m.ErpSettingFormPage })))
 const ExtractionFieldFormPage = React.lazy(() => import("./pages/platform-standard-content/extraction-management/extraction-field-form-page").then(m => ({ default: m.ExtractionFieldFormPage })))
 const ExtractionFieldDetailsPage = React.lazy(() => import("./pages/platform-standard-content/extraction-management/extraction-field-details.page").then(m => ({ default: m.ExtractionFieldDetailsPage })))
@@ -126,6 +127,7 @@ export function App() {
           <Route path="erp-settings/create" element={<ErpSettingFormPage mode="create" />} />
           <Route path="erp-settings/:id/edit" element={<ErpSettingFormPage mode="edit" />} />
           <Route path="plan/:id" element={<PlanDetail />} />
+          <Route path="plan/:id/edit" element={<EditPlan />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/organizations" replace />} />

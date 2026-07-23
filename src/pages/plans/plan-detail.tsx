@@ -1,11 +1,21 @@
+import { useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
-import { ArrowLeft, CreditCard } from "lucide-react"
+import { ArrowLeft, CreditCard, Trash2, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { usePlan } from "@/api/hooks/usePlans"
+import { usePlan, useDeletePlanMutation } from "@/api/hooks/usePlans"
 import { ActiveStatusBadge } from "@/components/invoice-ui/active-status-badge"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { PageShell } from "@/components/invoice-ui/design-system"
 import { DetailGrid } from "@/components/ui/detail-grid"
+import { toast } from "sonner"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
 
 const formatDate = (dateStr?: string) => {
   if (!dateStr) return "—"
@@ -23,8 +33,24 @@ const formatDate = (dateStr?: string) => {
 export function PlanDetail() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false)
 
   const { data: plan, isLoading, isError } = usePlan(id || "")
+  const { mutate: deletePlan, isPending: isDeleting } = useDeletePlanMutation()
+
+  const handleDelete = () => {
+    deletePlan(id || "", {
+      onSuccess: () => {
+        toast.success("Plan deleted successfully!")
+        setConfirmDeleteOpen(false)
+        navigate("/plan")
+      },
+      onError: (err: any) => {
+        console.error(err)
+        toast.error(err?.response?.data?.detail || "Failed to delete plan.")
+      }
+    })
+  }
 
   if (isLoading) {
     return (
@@ -56,14 +82,31 @@ export function PlanDetail() {
         title="Plan Details"
         description="View configuration details, limits, and interval configuration for this billing plan."
       >
-        <Button
-          variant="outline"
-          size="sm"
-          className="font-medium gap-1.5 border-border "
-          onClick={() => navigate("/plan")}
-        >
-          <ArrowLeft className="h-4 w-4" /> Back
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            className="font-medium gap-1.5 border-border "
+            onClick={() => navigate("/plan")}
+          >
+            <ArrowLeft className="h-4 w-4" /> Back
+          </Button>
+          <Button
+            size="sm"
+            className="font-medium gap-1.5"
+            onClick={() => navigate(`/plan/${plan.id}/edit`)}
+          >
+            Edit Plan
+          </Button>
+          <Button
+            variant="destructive"
+            size="sm"
+            className="font-medium gap-1.5"
+            onClick={() => setConfirmDeleteOpen(true)}
+          >
+            <Trash2 className="h-4 w-4" /> Delete Plan
+          </Button>
+        </div>
       </PageHeader>
 
       {/* Details Card */}
@@ -127,6 +170,36 @@ export function PlanDetail() {
           ))}
         </DetailGrid>
       </div>
+
+      {confirmDeleteOpen && (
+        <Dialog open={confirmDeleteOpen} onOpenChange={(open) => !open && setConfirmDeleteOpen(false)}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Delete Plan</DialogTitle>
+              <DialogDescription>
+                Are you sure you want to delete the plan <strong>{plan.plan_type} - {plan.description}</strong>? This action cannot be undone.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => setConfirmDeleteOpen(false)}
+                disabled={isDeleting}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={handleDelete}
+                disabled={isDeleting}
+              >
+                {isDeleting && <Loader2 className="mr-2 size-4 animate-spin" />}
+                Delete
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
     </PageShell>
   )
 }

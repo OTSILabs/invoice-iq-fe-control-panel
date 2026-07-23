@@ -57,7 +57,9 @@ export const getRolesList = (u: PlatformUser | null | undefined): string[] => {
 }
 
 // 1. Subscription Plans Columns
-export const planColumns: CustomColumnDef<Plan>[] = [
+export const getPlanColumns = (
+  onDeleteClick: (plan: Plan) => void
+): CustomColumnDef<Plan>[] => [
   {
     accessorKey: "plan_type",
     header: "Plan Type",
@@ -133,18 +135,14 @@ export const planColumns: CustomColumnDef<Plan>[] = [
         <div className="flex items-center" onClick={(e) => e.stopPropagation()}>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-8 w-8  p-0"
-              >
+              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
                 <MoreVertical className="h-4 w-4 text-muted-foreground" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-45">
               <DropdownMenuItem
                 asChild
-                className="gap-1.5 text-xs cursor-pointer"
+                className="cursor-pointer gap-1.5 text-xs"
               >
                 <Link to={`/plan/${row.original.id}`}>
                   <Eye className="h-3.5 w-3.5 text-muted-foreground" />
@@ -152,15 +150,17 @@ export const planColumns: CustomColumnDef<Plan>[] = [
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem
-                disabled
-                className="cursor-not-allowed gap-1.5 text-xs opacity-50"
+                asChild
+                className="cursor-pointer gap-1.5 text-xs"
               >
-                <Edit className="h-3.5 w-3.5 text-muted-foreground" />
-                Edit
+                <Link to={`/plan/${row.original.id}/edit`}>
+                  <Edit className="h-3.5 w-3.5 text-muted-foreground" />
+                  Edit
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem
-                disabled
-                className="cursor-not-allowed gap-1.5 text-xs text-red-600 opacity-50 focus:text-red-700"
+                className="cursor-pointer gap-1.5 text-xs text-red-600 focus:bg-red-50 focus:text-red-600"
+                onClick={() => onDeleteClick(row.original)}
               >
                 <Trash2 className="h-3.5 w-3.5" />
                 Delete
@@ -322,7 +322,7 @@ export const getConfigurationsColumns = (
           <div className="flex items-center">
             <Link
               to={`/platform-standard-content/reference-lists/${metadata.referenceKey}/${row.original.value}`}
-              className=" rounded border border-border bg-muted/50 px-2 py-0.5 text-left text-xs font-semibold text-foreground transition-colors hover:bg-muted hover:underline"
+              className="rounded border border-border bg-muted/50 px-2 py-0.5 text-left text-xs font-semibold text-foreground transition-colors hover:bg-muted hover:underline"
               title="Click to view reference item details"
             >
               {String(row.original.value)}
@@ -475,17 +475,13 @@ export const getDataTypeColumns = (
       <div onClick={(e) => e.stopPropagation()}>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8 w-8  p-0"
-            >
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
               <MoreVertical className="h-4 w-4 text-muted-foreground" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-45">
             <DropdownMenuItem
-              className=" text-xs"
+              className="text-xs"
               onClick={() =>
                 navigate(
                   `/platform-standard-content/data-types/${row.original.data_type_code}`
@@ -496,7 +492,7 @@ export const getDataTypeColumns = (
               View Details
             </DropdownMenuItem>
             <DropdownMenuItem
-              className=" text-xs"
+              className="text-xs"
               onClick={() => setEditingDataType(row.original)}
             >
               <Edit className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
@@ -596,24 +592,20 @@ export const getFieldsTableColumns = (
         <div onClick={(e) => e.stopPropagation()}>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-8 w-8  p-0"
-              >
+              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
                 <MoreVertical className="h-4 w-4 text-muted-foreground" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-45">
               <DropdownMenuItem
-                className=" text-xs"
+                className="text-xs"
                 onClick={() => onView && onView(row.original)}
               >
                 <Eye className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
                 View
               </DropdownMenuItem>
               <DropdownMenuItem
-                className=" text-xs"
+                className="text-xs"
                 onClick={() => onEdit(row.original)}
               >
                 <Edit className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
@@ -705,17 +697,13 @@ export const getFieldCategoriesColumns = (
       <div className="flex items-center" onClick={(e) => e.stopPropagation()}>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8 w-8  p-0"
-            >
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
               <MoreVertical className="h-4 w-4 text-muted-foreground" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-45">
             <DropdownMenuItem
-              className=" text-xs"
+              className="text-xs"
               onClick={() =>
                 navigate(
                   `/platform-standard-content/field-categories/${row.original.field_category_code}`
@@ -726,7 +714,7 @@ export const getFieldCategoriesColumns = (
               View Details
             </DropdownMenuItem>
             <DropdownMenuItem
-              className=" text-xs"
+              className="text-xs"
               onClick={() => handleOpenEdit(row.original)}
             >
               <Edit2 className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
@@ -828,17 +816,10 @@ export const getNormalizationRuleColumns = (
     header: "Action",
     width: 70,
     cell: ({ row }) => (
-      <div
-        className="flex items-center"
-        onClick={(e) => e.stopPropagation()}
-      >
+      <div className="flex items-center" onClick={(e) => e.stopPropagation()}>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8 w-8  p-0"
-            >
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
               <MoreVertical className="h-4 w-4 text-muted-foreground" />
             </Button>
           </DropdownMenuTrigger>
@@ -849,21 +830,21 @@ export const getNormalizationRuleColumns = (
                   `/platform-standard-content/normalization-rules/${row.original.rule_code}`
                 )
               }
-              className=" gap-1.5"
+              className="gap-1.5"
             >
               <Eye className="h-3.5 w-3.5 text-muted-foreground" />
               View Details
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => setEditingRule(row.original)}
-              className=" gap-1.5"
+              className="gap-1.5"
             >
               <Edit className="h-3.5 w-3.5 text-muted-foreground" />
               Edit
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => setDeletingRule(row.original)}
-              className=" gap-1.5 text-red-600 focus:bg-red-50 focus:text-red-600"
+              className="gap-1.5 text-red-600 focus:bg-red-50 focus:text-red-600"
             >
               <Trash2 className="h-3.5 w-3.5" />
               Delete
@@ -964,17 +945,10 @@ export const getValidationRuleColumns = (
     header: "Action",
     width: 70,
     cell: ({ row }) => (
-      <div
-        className="flex items-center"
-        onClick={(e) => e.stopPropagation()}
-      >
+      <div className="flex items-center" onClick={(e) => e.stopPropagation()}>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8 w-8  p-0"
-            >
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
               <MoreVertical className="h-4 w-4 text-muted-foreground" />
             </Button>
           </DropdownMenuTrigger>
@@ -985,21 +959,21 @@ export const getValidationRuleColumns = (
                   `/platform-standard-content/validation-rules/${row.original.rule_code}`
                 )
               }
-              className=" gap-1.5"
+              className="gap-1.5"
             >
               <Eye className="h-3.5 w-3.5 text-muted-foreground" />
               View Details
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => setEditingRule(row.original)}
-              className=" gap-1.5"
+              className="gap-1.5"
             >
               <Edit className="h-3.5 w-3.5 text-muted-foreground" />
               Edit
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => setDeletingRule(row.original)}
-              className=" gap-1.5 text-red-600 focus:bg-red-50 focus:text-red-600"
+              className="gap-1.5 text-red-600 focus:bg-red-50 focus:text-red-600"
             >
               <Trash2 className="h-3.5 w-3.5" />
               Delete
@@ -1088,17 +1062,13 @@ export const getReferenceListsColumns = (
       <div className="flex items-center" onClick={(e) => e.stopPropagation()}>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8 w-8  p-0"
-            >
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
               <MoreVertical className="h-4 w-4 text-muted-foreground" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-45">
             <DropdownMenuItem
-              className=" text-xs"
+              className="text-xs"
               onClick={() =>
                 navigate(
                   `/platform-standard-content/reference-lists/${row.original.registry_key}`
@@ -1109,7 +1079,7 @@ export const getReferenceListsColumns = (
               View Details
             </DropdownMenuItem>
             <DropdownMenuItem
-              className=" text-xs"
+              className="text-xs"
               onClick={() => handleOpenEdit(row.original)}
             >
               <Edit2 className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
@@ -1208,17 +1178,13 @@ export const getReferenceListDetailsColumns = (
       <div className="flex items-center" onClick={(e) => e.stopPropagation()}>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8 w-8  p-0"
-            >
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
               <MoreVertical className="h-4 w-4 text-muted-foreground" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-45">
             <DropdownMenuItem
-              className=" text-xs"
+              className="text-xs"
               onClick={() =>
                 navigate(
                   `/platform-standard-content/reference-lists/${registryKey}/${row.original.value_code}`
@@ -1229,7 +1195,7 @@ export const getReferenceListDetailsColumns = (
               View Details
             </DropdownMenuItem>
             <DropdownMenuItem
-              className=" text-xs"
+              className="text-xs"
               onClick={() => handleOpenEdit(row.original)}
             >
               <Edit2 className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
@@ -1354,24 +1320,20 @@ export const getUsersColumns = (
       <div className="flex items-center" onClick={(e) => e.stopPropagation()}>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8 w-8  p-0"
-            >
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
               <MoreVertical className="h-4 w-4 text-muted-foreground" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-45">
             <DropdownMenuItem
-              className=" gap-1.5 text-xs"
+              className="gap-1.5 text-xs"
               onClick={() => navigate(`/users/${row.original.id}`)}
             >
               <Eye className="h-3.5 w-3.5 text-muted-foreground" />
               View Details
             </DropdownMenuItem>
             <DropdownMenuItem
-              className=" gap-1.5 text-xs"
+              className="gap-1.5 text-xs"
               onClick={() => handleOpenEditDialog(row.original)}
             >
               <Edit2 className="h-3.5 w-3.5 text-muted-foreground" />

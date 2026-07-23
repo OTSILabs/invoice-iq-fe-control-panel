@@ -1,6 +1,6 @@
 import { PageMetadata } from "@/components/layout/PageMetadata"
-import { usePlans } from "@/api/hooks/usePlans"
-import { planColumns as columns } from "@/columns-data"
+import { usePlans, useDeletePlanMutation } from "@/api/hooks/usePlans"
+import { getPlanColumns } from "@/columns-data"
 import { EmptyState, FilterBar, PageShell } from "@/components/invoice-ui/design-system"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { SearchInput } from "@/components/search-input"
@@ -9,12 +9,43 @@ import { DataTable } from "@/components/ui/data-table"
 import { cn } from "@/lib/utils"
 import { AlertCircle, CreditCard, Loader2, Plus, RefreshCw } from "lucide-react"
 import { useNavigate } from "react-router-dom"
+import { useState, useMemo } from "react"
+import type { Plan } from "@/types"
+import { toast } from "sonner"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { usePagination } from "@/hooks/use-pagination"
 
 export function Plans() {
   const navigate = useNavigate()
+  const [deletingPlan, setDeletingPlan] = useState<Plan | null>(null)
+
+  const columns = useMemo(() => getPlanColumns(setDeletingPlan), [])
+
+  const { mutate: deletePlan, isPending: isDeleting } = useDeletePlanMutation()
+
+  const handleDeleteConfirm = () => {
+    if (!deletingPlan) return
+    deletePlan(deletingPlan.id, {
+      onSuccess: () => {
+        toast.success("Plan deleted successfully!")
+        setDeletingPlan(null)
+      },
+      onError: (err: any) => {
+        console.error(err)
+        toast.error(err?.response?.data?.detail || "Failed to delete plan.")
+      }
+    })
+  }
+
   const {
     search: searchText,
     setSearch: handleSearchChange,
@@ -144,6 +175,36 @@ export function Plans() {
           />
         </div>
       </div>
+
+      {deletingPlan && (
+        <Dialog open={!!deletingPlan} onOpenChange={(open) => !open && setDeletingPlan(null)}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Delete Plan</DialogTitle>
+              <DialogDescription>
+                Are you sure you want to delete the plan <strong>{deletingPlan.plan_type} - {deletingPlan.description}</strong>? This action cannot be undone.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => setDeletingPlan(null)}
+                disabled={isDeleting}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={handleDeleteConfirm}
+                disabled={isDeleting}
+              >
+                {isDeleting && <Loader2 className="mr-2 size-4 animate-spin" />}
+                Delete
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
     </PageShell>
   )
 }

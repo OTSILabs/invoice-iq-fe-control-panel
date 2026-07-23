@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
 import { InputField } from "@/components/ui/input-field"
 import { Label } from "@/components/ui/label"
-import { useCreatePlanMutation } from "@/api/hooks/usePlans"
+import { useCreatePlanMutation, useUpdatePlanMutation } from "@/api/hooks/usePlans"
 import type { PlanFormProps } from "@/types"
 import {
   DEFAULT_PLAN_VALUES,
@@ -24,6 +24,7 @@ export function PlanForm({
   formId = "plan-form-inner",
 }: PlanFormProps) {
   const createPlan = useCreatePlanMutation()
+  const updatePlan = useUpdatePlanMutation()
 
   const { register, handleSubmit, control, reset, formState: { errors } } = useForm<FormValues>({
     resolver: zodResolver(planSchema),
@@ -45,14 +46,31 @@ export function PlanForm({
         reset()
         onSuccess?.(created)
       } else {
-        toast.info("Edit plan is not implemented yet.")
-        onSuccess?.()
+        if (!plan?.id) {
+          toast.error("Plan ID is missing.")
+          return
+        }
+        const updated = await updatePlan.mutateAsync({
+          id: plan.id,
+          payload: {
+            description: data.description,
+            plan_type: data.plan_type,
+            plan_interval: data.plan_interval,
+            price_per_invoice_amount: Number(data.price_per_invoice_amount),
+            price_per_invoice_currency: data.price_per_invoice_currency,
+            is_active: data.is_active,
+          },
+        })
+        toast.success("Plan updated successfully!")
+        onSuccess?.(updated)
       }
     } catch (error) {
       console.error(error)
       toast.error(`Failed to ${mode} plan.`)
     }
   }
+
+  const isPending = createPlan.isPending || updatePlan.isPending
 
   return (
     <form id={formId} onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
@@ -141,12 +159,12 @@ export function PlanForm({
             type="button"
             variant="outline"
             onClick={onCancel}
-            disabled={createPlan.isPending}
+            disabled={isPending}
           >
             Cancel
           </Button>
-          <Button type="submit" className="font-medium" disabled={createPlan.isPending}>
-            {createPlan.isPending
+          <Button type="submit" className="font-medium" disabled={isPending}>
+            {isPending
               ? <><Loader2 className="mr-2 size-4 animate-spin" />Saving...</>
               : "Save Plan"
             }
