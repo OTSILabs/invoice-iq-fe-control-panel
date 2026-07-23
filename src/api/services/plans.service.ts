@@ -24,6 +24,16 @@ export const plansService = {
     return response.data;
   },
 
+  update: async (id: string, payload: any): Promise<any> => {
+    const response = await api.patch<any>(`/plans/${id}`, payload);
+    return response.data;
+  },
+
+  delete: async (id: string): Promise<any> => {
+    const response = await api.delete<any>(`/plans/${id}`);
+    return response.data;
+  },
+
   getById: async (id: string): Promise<any> => {
     try {
       const response = await api.get<any>(`/plans/${id}`);
