@@ -234,14 +234,14 @@ export function ValidationRuleDetail() {
           <div className="grid grid-cols-1 gap-6 border-t border-border/45 bg-muted/20 px-5 py-5 md:grid-cols-2">
             <div className="flex flex-col gap-2 h-full">
               <p className="text-xs font-bold  text-muted-foreground">Parameter Schema</p>
-              <pre className="min-h-[120px] max-h-72 flex-1 overflow-x-auto rounded-xl border border-slate-800 bg-slate-950 p-3.5 font-mono text-[10px] text-slate-100 shadow-inner">
+              <pre className="min-h-[120px] max-h-72 flex-1 overflow-x-auto rounded-xl border border-slate-800 bg-slate-950 p-3.5 font-mono text-[10px] text-slate-100">
                 {JSON.stringify(rule.parameter_schema_json, null, 2)}
               </pre>
             </div>
 
             <div className="flex flex-col gap-2 h-full">
               <p className="text-xs font-bold  text-muted-foreground">Engine Configuration</p>
-              <pre className="min-h-[120px] max-h-72 flex-1 overflow-x-auto rounded-xl border border-slate-800 bg-slate-950 p-3.5 font-mono text-[10px] text-slate-100 shadow-inner">
+              <pre className="min-h-[120px] max-h-72 flex-1 overflow-x-auto rounded-xl border border-slate-800 bg-slate-950 p-3.5 font-mono text-[10px] text-slate-100">
                 {JSON.stringify(rule.engine_config_json, null, 2)}
               </pre>
             </div>

@@ -63,7 +63,7 @@ export function ReferenceValueDetails() {
         title="Reference Item Details"
         description="View detailed specifications of the selected lookup registry value."
       >
-        <Button variant="outline" size="sm" className="font-medium gap-1.5 border-border shadow-sm " onClick={() => navigate(`/platform-standard-content/reference-lists/${key}`)}>
+        <Button variant="outline" size="sm" className="font-medium gap-1.5 border-border" onClick={() => navigate(`/platform-standard-content/reference-lists/${key}`)}>
           <ArrowLeft className="h-4 w-4" /> Back to registry
         </Button>
       </PageHeader>
@@ -109,7 +109,7 @@ export function ReferenceValueDetails() {
           <div className="flex flex-col gap-1.5 border-t border-border/45 bg-card px-5 py-4">
             <p className="text-xs font-bold  text-muted-foreground">Custom JSON Attributes</p>
             {detail.attributes && Object.keys(detail.attributes).length > 0 ? (
-              <pre className="max-w-full overflow-x-auto whitespace-pre-wrap rounded-xl border border-slate-800 bg-slate-950 p-4 font-mono text-xs text-slate-100 shadow-inner mt-1">
+              <pre className="max-w-full overflow-x-auto whitespace-pre-wrap rounded-xl border border-slate-800 bg-slate-950 p-4 font-mono text-xs text-slate-100  mt-1">
                 {JSON.stringify(detail.attributes, null, 2)}
               </pre>
             ) : (

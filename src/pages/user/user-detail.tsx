@@ -68,7 +68,7 @@ export function UserDetail() {
           <Button
             variant="outline"
             size="sm"
-            className="font-medium gap-1.5 border-border shadow-sm "
+            className="font-medium gap-1.5 border-border  "
             onClick={() => navigate("/users")}
           >
             <ArrowLeft className="h-4 w-4" /> Back
@@ -76,7 +76,7 @@ export function UserDetail() {
           <Button
             variant="destructive"
             size="sm"
-            className="font-medium gap-1.5 cursor-not-allowed shadow-sm opacity-50"
+            className="font-medium gap-1.5 cursor-not-allowed opacity-50"
             disabled
           >
             <Trash2 className="h-4 w-4" /> Delete User

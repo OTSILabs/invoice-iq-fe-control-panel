@@ -52,10 +52,10 @@ export function Profile() {
             <div className="relative px-6 pb-6">
               <div className="-mt-12 mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
                 <div className="relative">
-                  <Avatar className="h-24 w-24 rounded-2xl border-4 border-card bg-card shadow-md">
+                  <Avatar className="h-24 w-24 rounded-2xl border-4 border-card bg-card">
                     <AvatarFallback className="rounded-2xl bg-primary/10 text-3xl font-extrabold  text-primary">{user.initials}</AvatarFallback>
                   </Avatar>
-                  <span className="absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full border-2 border-card bg-emerald-500 shadow-sm" />
+                  <span className="absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full border-2 border-card bg-emerald-500" />
                 </div>
 
                 <div className="min-w-0 flex-1 sm:pb-2">
@@ -79,7 +79,7 @@ export function Profile() {
                   { label: "Account ID", value: user.id, icon: User },
                 ].map(({ label, value, icon: Icon }) => (
                   <div key={label} className="flex items-center gap-3 rounded-xl bg-muted/30 p-3 transition-colors duration-200 hover:bg-muted/45">
-                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-background text-muted-foreground shadow-xs ring-1 ring-border/60">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-background text-muted-foreground  ring-1 ring-border/60">
                       <Icon className="h-4 w-4" />
                     </div>
                     <div className="min-w-0 flex-1">
@@ -107,7 +107,7 @@ export function Profile() {
                 variant="outline"
                 size="sm"
                 onClick={() => setIsChangingPassword(true)}
-                className="w-full h-8 text-xs font-semibold gap-1.5 border-primary/20 hover:bg-primary/10 text-primary bg-primary/5  shadow-none"
+                className="w-full h-8 text-xs font-semibold gap-1.5 border-primary/20 hover:bg-primary/10 text-primary bg-primary/5 "
               >
                 <Key className="size-3.5" /> Change Password
               </Button>
@@ -127,7 +127,7 @@ export function Profile() {
                   { title: "Password Updated", date: user.pwdUpdated, icon: <Key className="size-3" /> },
                 ].map((item) => (
                   <div key={item.title} className="relative">
-                    <span className="absolute -left-[26px] top-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-card text-muted-foreground shadow-xs ring-1 ring-border/60">{item.icon}</span>
+                    <span className="absolute -left-[26px] top-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-card text-muted-foreground  ring-1 ring-border/60">{item.icon}</span>
                     <div className="space-y-0.5">
                       <h5 className="text-xs font-semibold text-foreground">{item.title}</h5>
                       <p className="text-[10px] text-muted-foreground">{item.date}</p>

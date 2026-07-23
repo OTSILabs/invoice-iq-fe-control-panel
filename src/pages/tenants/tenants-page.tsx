@@ -210,7 +210,7 @@ export function TenantsPage() {
                       aria-label="Close dropdown"
                     />
                     <div
-                      className="fixed z-[100] animate-in rounded-xl bg-popover p-2 text-popover-foreground shadow-2xl ring-1 ring-border/70 transition-[opacity,transform] duration-150 fade-in slide-in-from-top-1"
+                      className="fixed z-[100] animate-in rounded-xl bg-popover p-2 text-popover-foreground  ring-1 ring-border/70 transition-[opacity,transform] duration-150 fade-in slide-in-from-top-1"
                       style={{
                         top: orgDropdownPosition?.top ?? 0,
                         left: orgDropdownPosition?.left ?? 0,
@@ -260,7 +260,7 @@ export function TenantsPage() {
             <Button
               size="sm"
               variant="outline"
-              className="h-9 text-xs font-semibold  shadow-sm inline-flex items-center gap-1.5 border-border"
+              className="h-9 text-xs font-semibold   inline-flex items-center gap-1.5 border-border"
               onClick={() => navigate(activeOrgId ? `/organizations/${activeOrgId}/tenants/create` : "/organizations/create")}
             >
               <Plus className="h-3.5 w-3.5" /> Add Tenant

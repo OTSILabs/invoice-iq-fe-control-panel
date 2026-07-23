@@ -89,7 +89,7 @@ export function TenantDetailHeader({
         <Button
           variant="outline"
           size="sm"
-          className="font-medium gap-1.5 border-border shadow-sm  ml-1"
+          className="font-medium gap-1.5 border-border  ml-1"
           onClick={() => navigate(backUrl)}
         >
           <ArrowLeft className="h-4 w-4" />
