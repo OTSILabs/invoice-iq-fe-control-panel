@@ -19,6 +19,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DetailGrid } from "@/components/ui/detail-grid";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CategorizedFieldSelector } from "@/components/ui/categorized-field-selector";
+import { formatDateTime } from "@/lib/utils";
 
 const TEMPLATE_DETAILS_TABS = {
   DETAILS: "details",
@@ -235,16 +236,16 @@ export default function DerivedTemplateDetailsPage() {
                        {template?.base_template?.name || "—"}
                      </p>
                    </DetailGrid.Item>
-                   <DetailGrid.Item label="Created">
-                     <p className="text-xs font-semibold text-foreground">
-                       {template?.created_at ? new Date(template.created_at).toLocaleString() : "—"}
-                     </p>
-                   </DetailGrid.Item>
-                   <DetailGrid.Item label="Updated">
-                     <p className="text-xs font-semibold text-foreground">
-                       {template?.updated_at ? new Date(template.updated_at).toLocaleString() : "—"}
-                     </p>
-                   </DetailGrid.Item>
+                    <DetailGrid.Item label="Created">
+                      <p className="text-xs font-semibold text-foreground">
+                        {formatDateTime(template?.created_at, "—")}
+                      </p>
+                    </DetailGrid.Item>
+                    <DetailGrid.Item label="Updated">
+                      <p className="text-xs font-semibold text-foreground">
+                        {formatDateTime(template?.updated_at, "—")}
+                      </p>
+                    </DetailGrid.Item>
                  </DetailGrid>
                  <div className="flex flex-col gap-1.5 border-t border-border/40 bg-card px-4 py-3">
                    <p className="text-xs text-muted-foreground">Description</p>

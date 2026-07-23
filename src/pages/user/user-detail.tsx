@@ -3,26 +3,13 @@ import { ArrowLeft, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { usePlatformUser } from "@/api/hooks/useUsers"
-import { getInitials } from "@/lib/utils"
+import { getInitials, formatDateTime } from "@/lib/utils"
 import { ActiveStatusBadge } from "@/components/invoice-ui/active-status-badge"
 import { RoleBadge } from "@/components/invoice-ui/role-badge"
 import { getRolesList } from "@/columns-data"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { PageShell } from "@/components/invoice-ui/design-system"
 import { DetailGrid } from "@/components/ui/detail-grid"
-
-const formatDate = (dateStr?: string) => {
-  if (!dateStr) return "—"
-  const d = new Date(dateStr)
-  return isNaN(d.getTime()) ? "—" : d.toLocaleString("en-US", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: true
-  })
-}
 
 export function UserDetail() {
   const { id } = useParams<{ id: string }>()
@@ -133,11 +120,11 @@ export function UserDetail() {
               },
               {
                 label: "Created At",
-                content: <p className="text-xs font-semibold text-foreground">{formatDate(user.created_at)}</p>
+                content: <p className="text-xs font-semibold text-foreground">{formatDateTime(user.created_at, "—")}</p>
               },
               {
                 label: "Updated At",
-                content: <p className="text-xs font-semibold text-foreground">{formatDate(user.created_at)}</p>
+                content: <p className="text-xs font-semibold text-foreground">{formatDateTime((user as any).updated_at || user.created_at, "—")}</p>
               }
             ].map((item) => (
               <DetailGrid.Item key={item.label} label={item.label}>

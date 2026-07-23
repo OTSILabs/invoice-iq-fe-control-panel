@@ -6,20 +6,8 @@ import { Button } from "@/components/ui/button"
 import { useFieldCategory } from "@/api/hooks/useFieldCategories"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { PageShell, SemanticBadge } from "@/components/invoice-ui/design-system"
+import { formatDateTime } from "@/lib/utils"
 import { DetailGrid } from "@/components/ui/detail-grid"
-
-const formatDate = (dateStr?: string) => {
-  if (!dateStr) return "—"
-  const d = new Date(dateStr)
-  return isNaN(d.getTime()) ? "—" : d.toLocaleString("en-US", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: true
-  })
-}
 
 export function FieldCategoryDetails() {
   const { code } = useParams<{ code: string }>()
@@ -87,8 +75,8 @@ export function FieldCategoryDetails() {
               { label: "Sort Sequence", content: <p className="text-sm font-semibold text-foreground">{category.sort_sequence}</p> },
               { label: "Fields Count", content: <SemanticBadge tone="accent">{category.example_fields?.length || 0} Fields</SemanticBadge> },
               { label: "Version Number", content: <p className="text-xs font-mono font-bold text-foreground">v{category.version_no}</p> },
-              { label: "Created At", content: <p className="text-xs font-semibold text-foreground">{formatDate(category.created_at || undefined)}</p> },
-              { label: "Updated At", content: <p className="text-xs font-semibold text-foreground">{formatDate(category.updated_at || undefined)}</p> },
+              { label: "Created At", content: <p className="text-xs font-semibold text-foreground">{formatDateTime(category.created_at, "—")}</p> },
+              { label: "Updated At", content: <p className="text-xs font-semibold text-foreground">{formatDateTime(category.updated_at, "—")}</p> },
               { label: "Category ID / Code", content: <p className="font-mono text-xs font-medium text-foreground truncate" title={category.field_category_code}>{category.field_category_code}</p> }
             ].map((item) => (
               <DetailGrid.Item key={item.label} label={item.label}>

@@ -18,18 +18,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog"
 
-const formatDate = (dateStr?: string) => {
-  if (!dateStr) return "—"
-  const d = new Date(dateStr)
-  return isNaN(d.getTime()) ? "—" : d.toLocaleString("en-US", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: true
-  })
-}
+import { formatDateTime } from "@/lib/utils"
 
 export function ValidationRuleDetail() {
   const { code } = useParams<{ code: string }>()
@@ -179,11 +168,11 @@ export function ValidationRuleDetail() {
               },
               {
                 label: "Created At",
-                content: <p className="text-xs font-semibold text-foreground">{formatDate(rule.created_at)}</p>
+                content: <p className="text-xs font-semibold text-foreground">{formatDateTime(rule.created_at, "—")}</p>
               },
               {
                 label: "Updated At",
-                content: <p className="text-xs font-semibold text-foreground">{formatDate(rule.updated_at)}</p>
+                content: <p className="text-xs font-semibold text-foreground">{formatDateTime(rule.updated_at, "—")}</p>
               }
             ].map((item) => (
               <DetailGrid.Item key={item.label} label={item.label}>

@@ -3,7 +3,7 @@ import { useParams, useNavigate, useSearchParams } from "react-router-dom"
 import { ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ActiveStatusBadge } from "@/components/invoice-ui/active-status-badge"
-import { getInitials } from "@/lib/utils"
+import { getInitials, formatDateTime } from "@/lib/utils"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { useOrganizationDetail, useOrganizationTenants } from "@/api/hooks/useOrganizations"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
@@ -12,20 +12,6 @@ import { OrganizationTenantsTab } from "@/pages/organization/components/organiza
 import { ProfileTable } from "@/pages/organization/components/profile-table"
 import { PageShell } from "@/components/invoice-ui/design-system"
 import { DetailGrid } from "@/components/ui/detail-grid"
-
-
-const formatDate = (dateStr?: string) => {
-  if (!dateStr) return "—"
-  const d = new Date(dateStr)
-  return isNaN(d.getTime()) ? "—" : d.toLocaleString("en-US", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: true,
-  })
-}
 
 export function OrganizationDetail() {
   const { id } = useParams<{ id: string }>()
@@ -104,10 +90,10 @@ export function OrganizationDetail() {
             </p>
           </DetailGrid.Item>
           <DetailGrid.Item label="Created">
-            <p className="text-xs font-medium text-foreground">{formatDate(organization.created_at)}</p>
+            <p className="text-xs font-medium text-foreground">{formatDateTime(organization.created_at, "—")}</p>
           </DetailGrid.Item>
           <DetailGrid.Item label="Updated">
-            <p className="text-xs font-medium text-foreground">{formatDate(organization.updated_at)}</p>
+            <p className="text-xs font-medium text-foreground">{formatDateTime(organization.updated_at, "—")}</p>
           </DetailGrid.Item>
           <DetailGrid.Item label="Organization ID">
             <p className="truncate font-mono text-xs text-foreground" title={organization.id}>

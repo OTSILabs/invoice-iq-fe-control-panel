@@ -8,6 +8,7 @@ import { PageHeader } from "@/components/layout/PageHeader"
 import { PageShell } from "@/components/invoice-ui/design-system"
 import { DetailGrid } from "@/components/ui/detail-grid"
 import { toast } from "sonner"
+import { formatDateTime } from "@/lib/utils"
 import {
   Dialog,
   DialogContent,
@@ -16,19 +17,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-
-const formatDate = (dateStr?: string) => {
-  if (!dateStr) return "—"
-  const d = new Date(dateStr)
-  return isNaN(d.getTime()) ? "—" : d.toLocaleString("en-US", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: true
-  })
-}
 
 export function PlanDetail() {
   const { id } = useParams<{ id: string }>()
@@ -161,7 +149,7 @@ export function PlanDetail() {
             },
             {
               label: "Created At",
-              content: <p className="text-xs font-semibold text-foreground">{formatDate(plan.created_at)}</p>
+              content: <p className="text-xs font-semibold text-foreground">{formatDateTime(plan.created_at, "—")}</p>
             }
           ].map((item) => (
             <DetailGrid.Item key={item.label} label={item.label}>

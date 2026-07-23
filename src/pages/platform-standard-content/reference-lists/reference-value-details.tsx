@@ -6,20 +6,8 @@ import { Button } from "@/components/ui/button"
 import { useReferenceValueDetail } from "@/api/hooks/useReferenceLists"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { PageShell } from "@/components/invoice-ui/design-system"
+import { formatDateTime } from "@/lib/utils"
 import { DetailGrid } from "@/components/ui/detail-grid"
-
-const formatDate = (dateStr?: string) => {
-  if (!dateStr) return "—"
-  const d = new Date(dateStr)
-  return isNaN(d.getTime()) ? "—" : d.toLocaleString("en-US", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: true
-  })
-}
 
 export function ReferenceValueDetails() {
   const { key = "", valueCode = "" } = useParams<{ key: string; valueCode: string }>()
@@ -87,8 +75,8 @@ export function ReferenceValueDetails() {
               { label: "Sort Sequence", content: <p className="text-sm font-semibold text-foreground">{detail.sort_sequence}</p> },
               { label: "Registry Key / Code", content: <p className="font-mono text-xs font-medium text-foreground truncate" title={detail.registry_key}>{detail.registry_key}</p> },
               { label: "Version Number", content: <p className="text-xs font-mono font-bold text-foreground">v{detail.version_no}</p> },
-              { label: "Created At", content: <p className="text-xs font-semibold text-foreground">{formatDate(detail.created_at || undefined)}</p> },
-              { label: "Updated At", content: <p className="text-xs font-semibold text-foreground">{formatDate(detail.updated_at || undefined)}</p> },
+              { label: "Created At", content: <p className="text-xs font-semibold text-foreground">{formatDateTime(detail.created_at, "—")}</p> },
+              { label: "Updated At", content: <p className="text-xs font-semibold text-foreground">{formatDateTime(detail.updated_at, "—")}</p> },
               { label: "Value Key / Code", content: <p className="font-mono text-xs font-medium text-foreground truncate" title={detail.value_code}>{detail.value_code}</p> }
             ].map((item) => (
               <DetailGrid.Item key={item.label} label={item.label}>

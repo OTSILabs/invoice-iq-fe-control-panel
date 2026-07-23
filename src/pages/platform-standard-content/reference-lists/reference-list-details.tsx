@@ -7,27 +7,13 @@ import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { DataTable } from "@/components/ui/data-table"
 import { SearchInput } from "@/components/ui/search-input"
-import { cn } from "@/lib/utils"
+import { cn, formatDateTime } from "@/lib/utils"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { EmptyState, PageShell, SemanticBadge } from "@/components/invoice-ui/design-system"
 import { DetailGrid } from "@/components/ui/detail-grid"
-
 import { useReferenceListDetail, useReferenceValues } from "@/api/hooks/useReferenceLists"
-import type { RegistryDetailsCardProps, ReferenceValueResponse } from "@/types";
+import type { RegistryDetailsCardProps, ReferenceValueResponse } from "@/types"
 import { getReferenceListDetailsColumns } from "@/columns-data"
-
-const formatDate = (dateStr?: string) => {
-  if (!dateStr) return "—"
-  const d = new Date(dateStr)
-  return isNaN(d.getTime()) ? "—" : d.toLocaleString("en-US", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: true
-  })
-}
 
 
 
@@ -51,8 +37,8 @@ function RegistryDetailsCard({ registry }: RegistryDetailsCardProps) {
             { label: "Source Type", content: <SemanticBadge tone="neutral" className="capitalize">{registry.source_type || "custom"}</SemanticBadge> },
             { label: "Sort Sequence", content: <p className="text-sm font-semibold text-foreground">{registry.sort_sequence}</p> },
             { label: "Version Number", content: <p className="text-xs font-mono font-bold text-foreground">v{registry.version_no}</p> },
-            { label: "Created At", content: <p className="text-xs font-semibold text-foreground">{formatDate(registry.created_at || undefined)}</p> },
-            { label: "Updated At", content: <p className="text-xs font-semibold text-foreground">{formatDate(registry.updated_at || undefined)}</p> },
+            { label: "Created At", content: <p className="text-xs font-semibold text-foreground">{formatDateTime(registry.created_at, "—")}</p> },
+            { label: "Updated At", content: <p className="text-xs font-semibold text-foreground">{formatDateTime(registry.updated_at, "—")}</p> },
             { label: "Registry Key / Code", content: <p className="font-mono text-xs font-medium text-foreground truncate" title={registry.registry_key}>{registry.registry_key}</p> }
           ].map((item) => (
             <DetailGrid.Item key={item.label} label={item.label}>

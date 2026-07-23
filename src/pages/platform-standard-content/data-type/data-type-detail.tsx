@@ -5,20 +5,8 @@ import { Button } from "@/components/ui/button"
 import { useDataType } from "@/api/hooks/usedata-types"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { PageShell } from "@/components/invoice-ui/design-system"
+import { formatDateTime } from "@/lib/utils"
 import { DetailGrid } from "@/components/ui/detail-grid"
-
-const formatDate = (dateStr?: string) => {
-  if (!dateStr) return "—"
-  const d = new Date(dateStr)
-  return isNaN(d.getTime()) ? "—" : d.toLocaleString("en-US", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: true
-  })
-}
 
 export function DataTypeDetail() {
   const { code } = useParams<{ code: string }>()
@@ -113,11 +101,11 @@ export function DataTypeDetail() {
               },
               {
                 label: "Created At",
-                content: <p className="text-xs font-semibold text-foreground">{formatDate(dataType.created_at)}</p>
+                content: <p className="text-xs font-semibold text-foreground">{formatDateTime(dataType.created_at, "—")}</p>
               },
               {
                 label: "Updated At",
-                content: <p className="text-xs font-semibold text-foreground">{formatDate(dataType.updated_at)}</p>
+                content: <p className="text-xs font-semibold text-foreground">{formatDateTime(dataType.updated_at, "—")}</p>
               }
             ].map((item) => (
               <DetailGrid.Item key={item.label} label={item.label}>
