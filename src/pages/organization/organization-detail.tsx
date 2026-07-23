@@ -2,7 +2,7 @@ import { useParams, useNavigate, useSearchParams } from "react-router-dom"
 
 import { ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { ActiveStatusBadge } from "@/columns"
+import { ActiveStatusBadge } from "@/components/invoice-ui/active-status-badge"
 import { getInitials } from "@/lib/utils"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { useOrganizationDetail, useOrganizationTenants } from "@/api/hooks/useOrganizations"

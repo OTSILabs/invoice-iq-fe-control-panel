@@ -1,4 +1,5 @@
-import { StatusBadge, ActiveStatusBadge } from "@/columns"
+import { StatusBadge } from "@/components/invoice-ui/status-badge"
+import { ActiveStatusBadge } from "@/components/invoice-ui/active-status-badge"
 import { CopyButton } from "@/components/ui/copyable-field"
 import { formatDate, getInitials } from "@/lib/utils"
 import type { TenantOverviewCardProps } from "@/types"

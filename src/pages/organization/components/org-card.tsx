@@ -2,7 +2,7 @@ import { Link } from "react-router-dom"
 import { UserCheck, ArrowRight, Calendar, Globe } from "lucide-react"
 import { getInitials } from "@/lib/utils"
 import type { Organization } from "@/types"
-import { ActiveStatusBadge } from "@/columns-data"
+import { ActiveStatusBadge } from "@/components/invoice-ui/active-status-badge"
 
 
 export function OrgCard({ org }: { org: Organization }) {

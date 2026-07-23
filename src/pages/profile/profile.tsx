@@ -6,7 +6,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { useAuthMe } from "@/api/hooks/useAuth"
 import { getInitials, formatDate, getDecodedToken, formatRole } from "@/lib/utils"
 import { ChangePasswordDialog } from "./change-password-dialog"
-import { ActiveStatusBadge } from "@/columns"
+import { ActiveStatusBadge } from "@/components/invoice-ui/active-status-badge"
 
 import { PageHeader } from "@/components/layout/PageHeader"
 import { PageShell, SectionCard } from "@/components/invoice-ui/design-system"

@@ -2,7 +2,7 @@ import { User, FileText, Building2, Info } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { formatDate } from "@/lib/utils"
 import type { TenantOverviewTabProps } from "@/types"
-import { ActiveStatusBadge } from "@/columns"
+import { ActiveStatusBadge } from "@/components/invoice-ui/active-status-badge"
 
 
 
