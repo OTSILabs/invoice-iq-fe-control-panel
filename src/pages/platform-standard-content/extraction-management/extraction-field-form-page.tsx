@@ -6,7 +6,7 @@ import { useNavigate, useParams } from "react-router-dom"
 import { ArrowLeft, FileText, Loader2 } from "lucide-react"
 import { toast } from "sonner"
 
-import { useDataTypes } from "@/api/hooks/data-types"
+import { useDataTypes } from "@/api/hooks/usedata-types"
 import { useCreateExtractionField, useExtractionField, useUpdateExtractionField } from "@/api/hooks/useExtractionFields"
 import { useFieldCategories } from "@/api/hooks/useFieldCategories"
 import { useReferenceLists } from "@/api/hooks/useReferenceLists"

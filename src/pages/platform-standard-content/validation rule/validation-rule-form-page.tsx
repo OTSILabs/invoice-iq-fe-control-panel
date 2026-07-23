@@ -9,7 +9,7 @@ import {
   useCreateValidationRuleMutation,
   useUpdateValidationRuleMutation,
   useValidationRule,
-} from "@/api/hooks/validation-rules"
+} from "@/api/hooks/usevalidation-rules"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { PageShell, SectionCard } from "@/components/invoice-ui/design-system"
 import { Button } from "@/components/ui/button"

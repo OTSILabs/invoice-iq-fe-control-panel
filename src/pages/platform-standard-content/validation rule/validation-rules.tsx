@@ -7,7 +7,7 @@ import { PageHeader } from "@/components/layout/PageHeader"
 import { Button } from "@/components/ui/button"
 import { DataTable } from "@/components/ui/data-table"
 import { SearchInput } from "@/components/search-input"
-import { useValidationRules, useDeleteValidationRuleMutation } from "@/api/hooks/validation-rules"
+import { useValidationRules, useDeleteValidationRuleMutation } from "@/api/hooks/usevalidation-rules"
 import type { ValidationRule, DeleteValidationRuleDialogProps } from "@/types";
 import { cn } from "@/lib/utils"
 import { getValidationRuleColumns } from "@/columns-data"

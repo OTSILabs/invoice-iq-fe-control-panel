@@ -12,9 +12,9 @@ import { resolveBreadcrumbs } from "@/components/layout/breadcrumb-utils"
 
 import { clearSession } from "@/lib/auth-store"
 
-import { useDataTypes } from "@/api/hooks/data-types"
-import { useValidationRules } from "@/api/hooks/validation-rules"
-import { useNormalizationRules } from "@/api/hooks/normalization-rules"
+import { useDataTypes } from "@/api/hooks/usedata-types"
+import { useValidationRules } from "@/api/hooks/usevalidation-rules"
+import { useNormalizationRules } from "@/api/hooks/usenormalization-rules"
 import { useExtractionTemplates } from "@/api/hooks/useExtractionTemplates"
 import { useExtractionFields } from "@/api/hooks/useExtractionFields"
 import { useDerivedTemplates } from "@/api/hooks/useDerivedTemplates"

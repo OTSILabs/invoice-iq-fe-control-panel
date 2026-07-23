@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { ArrowLeft, Database, Loader2 } from "lucide-react"
 import { toast } from "sonner"
 
-import { useCreateDataTypeMutation, useDataType, useUpdateDataTypeMutation } from "@/api/hooks/data-types"
+import { useCreateDataTypeMutation, useDataType, useUpdateDataTypeMutation } from "@/api/hooks/usedata-types"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { PageShell, SectionCard } from "@/components/invoice-ui/design-system"
 import { Button } from "@/components/ui/button"

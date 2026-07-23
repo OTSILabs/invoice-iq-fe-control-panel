@@ -7,7 +7,7 @@ import { PageHeader } from "@/components/layout/PageHeader"
 import { Button } from "@/components/ui/button"
 import { DataTable } from "@/components/ui/data-table"
 import { SearchInput } from "@/components/search-input"
-import { useNormalizationRules, useDeleteNormalizationRuleMutation } from "@/api/hooks/normalization-rules"
+import { useNormalizationRules, useDeleteNormalizationRuleMutation } from "@/api/hooks/usenormalization-rules"
 import type { NormalizationRule, DeleteNormalizationRuleDialogProps } from "@/types";
 import { cn } from "@/lib/utils"
 import { getNormalizationRuleColumns } from "@/columns-data"

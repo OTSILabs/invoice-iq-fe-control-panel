@@ -9,7 +9,7 @@ import {
   useCreateNormalizationRuleMutation,
   useNormalizationRule,
   useUpdateNormalizationRuleMutation,
-} from "@/api/hooks/normalization-rules"
+} from "@/api/hooks/usenormalization-rules"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { PageShell, SectionCard } from "@/components/invoice-ui/design-system"
 import { Button } from "@/components/ui/button"
