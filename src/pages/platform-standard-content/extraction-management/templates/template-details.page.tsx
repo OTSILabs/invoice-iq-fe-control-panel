@@ -10,7 +10,7 @@ import {
   useState, 
 } from "react";
 
-import type { ApiRecord } from "@/api/api.helpers";
+import type { ApiRecord } from "@/api/templates/api.helpers";
 import {
   useCloneTemplate,
   useDeleteTemplate,

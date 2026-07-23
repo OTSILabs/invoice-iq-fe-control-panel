@@ -1,4 +1,4 @@
-import type { ApiId, ApiParams, ApiRecord } from "@/api/api.helpers";
+import type { ApiId, ApiParams, ApiRecord } from "@/api/templates/api.helpers";
 
 type Nullable<T> = T | null;
 

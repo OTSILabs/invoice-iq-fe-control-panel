@@ -36,7 +36,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { cn } from "@/lib/utils"
-import { PoweredByFooter } from "@/components/poweredby"
+import { PoweredByFooter } from "@/components/ui/poweredby"
 
 // ── Logo + collapse trigger ──────────────────────────────────────────────────
 function SidebarLogoHeader() {

@@ -1,4 +1,4 @@
-import type { ApiRecord } from "@/api/api.helpers";
+import type { ApiRecord } from "@/api/templates/api.helpers";
 import { getTemplateIsActive } from "@/components/invoice-ui/templates/template-data";
 import { StatusBadge } from "@/components/invoice-ui/design-system";
 

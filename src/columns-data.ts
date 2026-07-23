@@ -1,1 +1,1 @@
-export * from "./columns-data.tsx"
+export * from "./config/column-data/columns-data"

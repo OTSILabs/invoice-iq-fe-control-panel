@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 
-import type { ApiRecord } from "@/api/api.helpers";
+import type { ApiRecord } from "@/api/templates/api.helpers";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,

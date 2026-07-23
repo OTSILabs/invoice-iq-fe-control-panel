@@ -1,4 +1,4 @@
-import type { ApiRecord } from "@/api/api.helpers";
+import type { ApiRecord } from "@/api/templates/api.helpers";
 import { IqActiveStatusBadge, IqContentTypeBadge } from "@/components/invoice-ui/iq-status-badges";
 import { DetailGrid } from "@/components/ui/detail-grid";
 

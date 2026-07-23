@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { v4 as uuidv4 } from "uuid";
 import { z } from "zod";
 
-import type { ApiRecord } from "@/api/api.helpers";
+import type { ApiRecord } from "@/api/templates/api.helpers";
 import {
   useCreateTemplateField,
   useFieldCategoriesList,

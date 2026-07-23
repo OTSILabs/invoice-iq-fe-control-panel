@@ -3,7 +3,7 @@ import {
   requestApiData,
   type ApiParams,
   type ApiRecord,
-} from "@/api/api.helpers";
+} from "@/api/templates/api.helpers";
 
 import type {
   ActiveToggleRequest,

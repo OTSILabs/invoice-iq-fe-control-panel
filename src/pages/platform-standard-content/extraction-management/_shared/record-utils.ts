@@ -1,4 +1,4 @@
-import type { ApiRecord } from "@/api/api.helpers";
+import type { ApiRecord } from "@/api/templates/api.helpers";
 
 const asRecord = (value: unknown): ApiRecord =>
   value && typeof value === "object" && !Array.isArray(value)

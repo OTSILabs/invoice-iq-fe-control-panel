@@ -1,4 +1,4 @@
-import { SearchInput } from "@/components/search-input"
+import { SearchInput } from "@/components/ui/search-input"
 import { Button } from "@/components/ui/button"
 import { DataTable } from "@/components/ui/data-table"
 import { FilterBar } from "@/components/invoice-ui/design-system"

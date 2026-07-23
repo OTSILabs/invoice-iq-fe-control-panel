@@ -11,7 +11,7 @@ import {
   Trash2,
 } from "lucide-react";
 
-import type { ApiRecord } from "@/api/api.helpers";
+import type { ApiRecord } from "@/api/templates/api.helpers";
 import { IqStatusBadges } from "@/components/invoice-ui/iq-status-badges";
 import { EmptyState } from "@/components/invoice-ui/design-system";
 import { TemplateTagList } from "@/components/invoice-ui/template-tag-list";

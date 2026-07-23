@@ -1114,7 +1114,7 @@ export interface OrgDropdownState {
 }
 
 export interface TemplateCloneFormProps {
-  template: import("@/api/api.helpers").ApiRecord | null | undefined
+  template: import("@/api/templates/api.helpers").ApiRecord | null | undefined
   onSubmit: (values: import("@/components/invoice-ui/templates/template-clone-dialog").CloneTemplateFormValues) => void
   isPending?: boolean
 }

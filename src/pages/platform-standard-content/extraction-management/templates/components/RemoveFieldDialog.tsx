@@ -1,4 +1,4 @@
-import type { ApiRecord } from "@/api/api.helpers";
+import type { ApiRecord } from "@/api/templates/api.helpers";
 import { getFieldLabel } from "@/components/invoice-ui/templates/template-data";
 import {
   Dialog,

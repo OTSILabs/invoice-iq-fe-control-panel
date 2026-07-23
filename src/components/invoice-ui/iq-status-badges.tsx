@@ -1,4 +1,4 @@
-import type { ApiRecord } from "@/api/api.helpers";
+import type { ApiRecord } from "@/api/templates/api.helpers";
 import { cn } from "@/lib/utils";
 import { IqContentTypeBadge } from "./iq-content-type-badge";
 import { IqActiveStatusBadge } from "./iq-active-status-badge";

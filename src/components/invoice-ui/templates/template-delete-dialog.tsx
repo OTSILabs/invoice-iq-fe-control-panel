@@ -1,6 +1,6 @@
 import { Loader2, Trash2 } from "lucide-react";
 
-import type { ApiRecord } from "@/api/api.helpers";
+import type { ApiRecord } from "@/api/templates/api.helpers";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,

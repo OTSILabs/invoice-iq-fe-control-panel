@@ -10,10 +10,10 @@ import { cn } from "@/lib/utils"
 import { toast } from "sonner"
 import { usePlatformUsers, usePlatformRoles } from "@/api/hooks/useUsers"
 import { PageHeader } from "@/components/layout/PageHeader"
-import { SearchInput } from "@/components/search-input"
-import { getUsersColumns } from "@/columns-data"
+import { SearchInput } from "@/components/ui/search-input"
 import { EmptyState, FilterBar, PageShell } from "@/components/invoice-ui/design-system"
 import { usePagination } from "@/hooks/use-pagination"
+import { getUsersColumns } from "@/config/column-data/columns-data"
 
 export function Users() {
   const navigate = useNavigate()

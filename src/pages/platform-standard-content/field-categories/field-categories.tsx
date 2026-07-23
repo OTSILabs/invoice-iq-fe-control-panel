@@ -10,7 +10,7 @@ import { DataTable } from "@/components/ui/data-table"
 import { cn } from "@/lib/utils"
 
 import { PageHeader } from "@/components/layout/PageHeader"
-import { SearchInput } from "@/components/search-input"
+import { SearchInput } from "@/components/ui/search-input"
 import { useFieldCategories } from "@/api/hooks/useFieldCategories"
 import { getFieldCategoriesColumns } from "@/columns-data"
 import { EmptyState, FilterBar, PageShell } from "@/components/invoice-ui/design-system"

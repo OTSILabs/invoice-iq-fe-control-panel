@@ -11,7 +11,7 @@ import {
   Percent,
 } from "lucide-react";
 
-import type { ApiRecord } from "@/api/api.helpers";
+import type { ApiRecord } from "@/api/templates/api.helpers";
 
 const EMPTY_TEMPLATES: ApiRecord[] = [];
 import { IqStatusBadges } from "@/components/invoice-ui/iq-status-badges";

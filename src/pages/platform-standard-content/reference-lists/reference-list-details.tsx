@@ -6,7 +6,7 @@ import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
 import { DataTable } from "@/components/ui/data-table"
-import { SearchInput } from "@/components/search-input"
+import { SearchInput } from "@/components/ui/search-input"
 import { cn } from "@/lib/utils"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { EmptyState, PageShell, SemanticBadge } from "@/components/invoice-ui/design-system"

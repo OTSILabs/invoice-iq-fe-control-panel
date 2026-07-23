@@ -1,4 +1,4 @@
-import type { ApiRecord } from "@/api/api.helpers";
+import type { ApiRecord } from "@/api/templates/api.helpers";
 import { TEMPLATE_CONTENT_TYPES } from "@/api/templates/templates.types";
 
 function asRecord(value: unknown): ApiRecord {

@@ -5,7 +5,7 @@ import { Loader2, Plus, Save, X } from "lucide-react";
 import { z } from "zod";
 import { TemplateFormDetails } from "./components/TemplateFormDetails";
 
-import type { ApiRecord } from "@/api/api.helpers";
+import type { ApiRecord } from "@/api/templates/api.helpers";
 import {
 	templateQueryKeys,
 	useCreateTemplate,

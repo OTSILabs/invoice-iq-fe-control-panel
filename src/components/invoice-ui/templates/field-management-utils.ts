@@ -1,4 +1,4 @@
-import type { ApiRecord } from "@/api/api.helpers";
+import type { ApiRecord } from "@/api/templates/api.helpers";
 import {
   type ExtractionFieldResponse,
 } from "@/api/templates/templates.types";

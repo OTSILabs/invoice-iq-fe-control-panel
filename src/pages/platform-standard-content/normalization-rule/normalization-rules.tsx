@@ -6,7 +6,7 @@ import { toast } from "sonner"
 import { PageHeader } from "@/components/layout/PageHeader"
 import { Button } from "@/components/ui/button"
 import { DataTable } from "@/components/ui/data-table"
-import { SearchInput } from "@/components/search-input"
+import { SearchInput } from "@/components/ui/search-input"
 import { useNormalizationRules, useDeleteNormalizationRuleMutation } from "@/api/hooks/usenormalization-rules"
 import type { NormalizationRule, DeleteNormalizationRuleDialogProps, NormalizationRulesEmptyStateProps } from "@/types";
 import { cn } from "@/lib/utils"

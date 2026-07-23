@@ -11,11 +11,11 @@ import { useNavigate } from "react-router-dom"
 import type { Tenant, TenantActionType, OrgDropdownState } from "@/types"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { SearchInput } from "@/components/search-input"
+import { SearchInput } from "@/components/ui/search-input"
 import { TenantActionDialog } from "./tenant-actions/tenant-action-dialog"
-import { getTenantColumns } from "@/columns-data"
 import { EmptyState, FilterBar, PageShell } from "@/components/invoice-ui/design-system"
 import { usePagination } from "@/hooks/use-pagination"
+import { getTenantColumns } from "@/config/column-data/columns-data"
 
 const initialOrgDropdownState: OrgDropdownState = {
   selectedOrgId: "",
